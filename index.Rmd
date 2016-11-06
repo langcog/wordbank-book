@@ -1,0 +1,15 @@
+--- 
+title: "Wordbank: Language acquisition at scale"
+author: "Mika Braginsky, Daniel Yurovsky, Virginia Marchman, Michael Frank"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: book.bib
+biblio-style: apalike
+link-citations: yes
+github-repo: langcog/wordbank-book
+description: ""
+---
+
+# Overview
+
+This is a magical internet book that will solve language acquisition...

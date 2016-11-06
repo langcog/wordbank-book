@@ -1,0 +1,3 @@
+# Items
+
+By-item stuff like overall item trajectories, `gender-input`, and `uni_lemma` based cross-linguistic consistency things.

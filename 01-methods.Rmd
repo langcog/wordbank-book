@@ -1,4 +1,4 @@
-# Data {#data}
+# Methods {#methods}
 
 Stuff about the CDI, data collection, population statistics...
 
@@ -18,7 +18,12 @@ We use a number of shorthand terms throughout to make precise references to aspe
 **Language**: A particular language or language community for which an instrument has been adapted. Note that this definition of language distinguishes e.g. American and British English. 
 
 
-## Overview of the data
+## Data
+
+### Data Provenance
+
+
+### Overview of the Data
 
 ```{r setup-data, include=FALSE}
 library(tidyverse)
@@ -70,3 +75,8 @@ admins %>%
             max_age = max(age)) %>%
   kable
 ```
+
+## Wordbank Architecture
+
+## Statistical Methods
+

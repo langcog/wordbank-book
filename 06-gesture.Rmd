@@ -1,0 +1,3 @@
+# Gesture and Early Language
+
+Overall stuff about gestures and sentences, `grammar-lex`.

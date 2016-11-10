@@ -1,3 +1,72 @@
 # Data {#data}
 
 Stuff about the CDI, data collection, population statistics...
+
+## Terminology
+
+We use a number of shorthand terms throughout to make precise references to aspects of the CDI data. These are defined here. 
+
+
+**Intrument**: A specific parent-report survey or questionnaire.
+
+**Item**: A particular question on an instrument. Includes words (with either produces or produces/understands responses), as well as other questions like questions about morphological or syntactic complexity.
+
+**Administration**: A particular instance of an instrument being given to a child. 
+
+**Child**: A unique individual.
+
+**Language**: A particular language or language community for which an instrument has been adapted. Note that this definition of language distinguishes e.g. American and British English. 
+
+
+## Overview of the data
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(wordbankr)
+library(langcog)
+library(knitr)
+```
+
+
+```{r itemsadmins}
+items <- get_item_data() 
+admins <- get_administration_data()
+```
+
+Wordbank curently has data from `r length(unique(items$language))` language communities. 
+
+Many of these are in the original Words & Gestures (infant/toddler) / Words & Sentences (child) format, with around 400 items in WG and 700 in the WS.
+
+
+```{r}
+items %>%
+  group_by(language, form) %>%
+  summarise(items = n(), 
+            words = sum(type=="word"), 
+            categories = length(unique(category))) %>%
+  filter(form %in% c("WS","WG")) %>%
+  kable
+```
+As well as some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall. 
+
+```{r}
+items %>%
+  group_by(language, form) %>%
+  summarise(items = n(), 
+            words = sum(type=="word"), 
+            categories = length(unique(category))) %>%
+  filter(!(form %in% c("WS","WG"))) %>%
+  kable
+```
+
+The number of administrations is variable across instruments and languages, however.
+
+```{r}
+admins %>%
+  group_by(language, form) %>%
+  summarise(n = n(), 
+            n_unique = length(unique(data_id)), 
+            min_age = min(age), 
+            max_age = max(age)) %>%
+  kable
+```

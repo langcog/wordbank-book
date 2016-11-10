@@ -1,3 +1,4 @@
 book_filename: "wordbank-book"
 chapter_name: ""
 edit: https://github.com/langcog/wordbank-book/edit/master/%s
+before_chapter_script: "_common.R"

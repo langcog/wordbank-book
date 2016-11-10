@@ -1,5 +1,5 @@
 --- 
-title: "Wordbank: Language acquisition at scale"
+title: "Investigating Early Language Learning Using Cross-Linguistic Parent-Report Data"
 author: "Mika Braginsky, Daniel Yurovsky, Virginia Marchman, Michael Frank"
 site: bookdown::bookdown_site
 documentclass: book
@@ -8,6 +8,8 @@ biblio-style: apalike
 link-citations: yes
 github-repo: langcog/wordbank-book
 description: ""
+output:
+  bookdown::gitbook
 ---
 
 # Overview

@@ -17,6 +17,7 @@ library(langcog)
 library(dplyr)
 library(ggplot2)
 library(directlabels)
+library(forcats)
 ```
 
 Get administration data and filter to administrations of Words & Sentences that have sex/gender coded.
@@ -63,4 +64,73 @@ ggplot(filter(vocab_data),
 
 ## SES
 
+We use maternal education as a proxy for socio-economic status. 
+
+```{r mom_ed}
+vocab_admins <- get_administration_data() %>%
+  select(data_id, language, form, age, mom_ed, production) %>%
+  filter(!is.na(mom_ed))
+
+num_words <- get_item_data() %>%
+  filter(type == "word") %>%
+  group_by(form, language) %>%
+  summarise(n = n())
+
+vocab_data <- vocab_admins %>%
+  left_join(num_words) %>%
+  mutate(production = as.numeric(production) / n) %>%
+  group_by(language, form, mom_ed, age) %>%
+  summarise(median = median(production))
+
+min_age <- min(vocab_data$age)
+max_age <- max(vocab_data$age)
+ggplot(filter(vocab_data),
+       aes(x = age, y = median, colour = mom_ed, label = mom_ed)) +
+  facet_wrap(~language) +
+  geom_point() +
+  geom_smooth(span = 1, se=FALSE) + 
+  scale_colour_solarized(guide = FALSE) +
+  scale_x_continuous(breaks = seq(min_age, max_age, 4),
+                     limits = c(min_age, max_age + 5),
+                     name = "Age (months)") +
+  ylab("Median Productive Vocabulary (proportion of total words)") +
+  ylim(c(0, 1)) +
+  geom_dl(method = list(dl.trans(x = x + 0.1), "last.points",
+                        cex = 0.8))
+```
+
+
 ## Birth order
+
+
+```{r mom_ed}
+vocab_admins <- get_administration_data() %>%
+  select(data_id, language, form, age, birth_order, production) %>%
+  filter(!is.na(birth_order)) %>%
+  mutate(birth_order = fct_collapse(birth_order, 
+                                    "Third+" = c("Third","Fourth",
+                                                 "Fifth","Sixth",
+                                                 "Seventh","Eighth")))
+
+vocab_data <- vocab_admins %>%
+  left_join(num_words) %>%
+  mutate(production = as.numeric(production) / n) %>%
+  group_by(language, form, birth_order, age) %>%
+  summarise(median = median(production))
+
+min_age <- min(vocab_data$age)
+max_age <- max(vocab_data$age)
+ggplot(filter(vocab_data),
+       aes(x = age, y = median, colour = birth_order, label = birth_order)) +
+  facet_wrap(~language) +
+  geom_point() +
+  geom_smooth(span = 1, se=FALSE) + 
+  scale_colour_solarized(guide = FALSE) +
+  scale_x_continuous(breaks = seq(min_age, max_age, 4),
+                     limits = c(min_age, max_age + 5),
+                     name = "Age (months)") +
+  ylab("Median Productive Vocabulary (proportion of total words)") +
+  ylim(c(0, 1)) +
+  geom_dl(method = list(dl.trans(x = x + 0.1), "last.points",
+                        cex = 0.8))
+```

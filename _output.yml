@@ -1,7 +1,27 @@
-bookdown::html_book:
-  css:
-    - style.css
-    - toc.css
-  theme: spacelab
-  highlight: tango
-  toc_float: TRUE
+bookdown::gitbook:
+  config:
+    toc:
+      collapse: subsection
+      scroll_highlight: yes
+      before: null
+      after: null
+    toolbar:
+      position: fixed
+    edit : null
+    download: null
+    search: yes
+    fontsettings:
+      theme: white
+      family: sans
+      size: 2
+    sharing:
+      facebook: yes
+      twitter: yes
+      google: no
+      weibo: no
+      instapper: no
+      vk: no
+      all: ['facebook', 'google', 'twitter', 'weibo', 'instapaper']
+    theme: spacelab
+    highlight: tango
+

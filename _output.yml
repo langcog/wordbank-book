@@ -1,3 +1,10 @@
+bookdown::html_book:
+  css:
+    - style.css
+    - toc.css
+  theme: spacelab
+  highlight: tango
+  toc_float: TRUE
 bookdown::gitbook:
   config:
     toc:

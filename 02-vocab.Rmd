@@ -102,8 +102,7 @@ ggplot(filter(vocab_data),
 
 ## Birth order
 
-
-```{r mom_ed}
+```{r birth_order}
 vocab_admins <- get_administration_data() %>%
   select(data_id, language, form, age, birth_order, production) %>%
   filter(!is.na(birth_order)) %>%

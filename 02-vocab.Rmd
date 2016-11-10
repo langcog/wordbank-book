@@ -11,7 +11,7 @@ This analysis examines how vocabulary development differs by children's reported
 
 Eriksson, M., Marschik, P. B., Tulviste, T., Almgren, M., Pérez Pereira, M., Wehberg, S., ... Gallego, C. (2012). Differences between girls and boys in emerging language skills: Evidence from 10 language communities. British Journal of Developmental Psychology 30, 326–343.
 
-```{r setup, include=FALSE}
+```{r setup-gender, include=FALSE}
 library(wordbankr)
 library(langcog)
 library(dplyr)

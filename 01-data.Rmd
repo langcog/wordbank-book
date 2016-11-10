@@ -20,7 +20,7 @@ We use a number of shorthand terms throughout to make precise references to aspe
 
 ## Overview of the data
 
-```{r setup, include=FALSE}
+```{r setup-data, include=FALSE}
 library(tidyverse)
 library(wordbankr)
 library(langcog)

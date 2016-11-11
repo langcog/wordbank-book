@@ -20,8 +20,15 @@ We use a number of shorthand terms throughout to make precise references to aspe
 
 ## Data
 
+This section gives a broad overview of the data we have available. 
+
 ### Data Provenance
 
+Many languages are inherited from CLEX. 
+
+Contributors are cited on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html).
+
+Importing is a process of standardizing idiosyncratic datasets into a common format.
 
 ### Overview of the Data
 
@@ -50,9 +57,10 @@ items %>%
             words = sum(type=="word"), 
             categories = length(unique(category))) %>%
   filter(form %in% c("WS","WG")) %>%
-  kable
+  datatable
 ```
-As well as some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall. 
+
+Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall. 
 
 ```{r}
 items %>%
@@ -61,7 +69,7 @@ items %>%
             words = sum(type=="word"), 
             categories = length(unique(category))) %>%
   filter(!(form %in% c("WS","WG"))) %>%
-  kable
+  datatable
 ```
 
 The number of administrations is variable across instruments and languages, however.
@@ -73,10 +81,13 @@ admins %>%
             n_unique = length(unique(data_id)), 
             min_age = min(age), 
             max_age = max(age)) %>%
-  kable
+  datatable
 ```
 
 ## Wordbank Architecture
 
 ## Statistical Methods
 
+We use medians instead of means.
+
+We use robust GLMs

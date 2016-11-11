@@ -1,3 +1,14 @@
+library(wordbankr)
+library(langcog)
+library(tidyverse)
+library(ggplot2)
+library(directlabels)
+library(forcats)
+library(purrr)
+library(DT)
+library(quantregGrowth)
+library(stringr)
+
 knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,

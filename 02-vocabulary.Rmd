@@ -98,12 +98,12 @@ ggplot(comp_data,
 
 ### Production
 
+Words and Gestures.
+
 ```{r}
 prod_data <- vocab_data %>%
-  mutate(mean = production / n, 
-         form = fct_collapse(form, other = c("FormA","FormBOne","FormBTwo",
-                                             "FormC", "IC","TC",
-                                             "TEDS Threes","TEDS Twos")))
+  filter(form == "WG") %>%
+  mutate(mean = production / n)
 
 prod_models <- prod_data %>%
   split(.$language) %>%
@@ -119,12 +119,45 @@ prod_preds <- prod_data %>%
 ggplot(prod_data,
        aes(x = age, y = mean)) +
   facet_wrap(~language) +
-  geom_jitter(aes(pch = form), width = .4, size = 1, alpha = .1) +
+  geom_jitter(width = .4, size = 1, alpha = .1) +
   geom_line(data = prod_preds, 
             aes(y = pred, col = percentile, group = percentile)) + 
   scale_colour_solarized(name="Percentile") +
-  scale_x_continuous(breaks = seq(min_age, max_age, 4),
-                     limits = c(min_age, max_age),
+  scale_x_continuous(breaks = seq(8, 36, 4),
+                     limits = c(8, 36),
+                     name = "Age (months)") +
+  ylab("Production Vocabulary (proportion of total words)") +
+  ylim(c(0, 1)) + 
+  theme(legend.position = "bottom")
+```
+
+Words and Sentences
+
+```{r}
+prod_data <- vocab_data %>%
+  filter(form == "WS") %>%
+  mutate(mean = production / n)
+
+prod_models <- prod_data %>%
+  split(.$language) %>%
+  map(fit_gcrq) 
+
+prod_preds <- prod_data %>%
+  group_by(language, age) %>%
+  summarise(n = n()) %>%
+  data.frame() %>%
+  split(.$language) %>%
+  map_df(function(x) pred_gcrq(x, prod_models)) 
+
+ggplot(prod_data,
+       aes(x = age, y = mean)) +
+  facet_wrap(~language) +
+  geom_jitter(width = .4, size = 1, alpha = .05) +
+  geom_line(data = prod_preds, 
+            aes(y = pred, col = percentile, group = percentile)) + 
+  scale_colour_solarized(name="Percentile") +
+  scale_x_continuous(breaks = seq(16, 36, 4),
+                     limits = c(16, 36),
                      name = "Age (months)") +
   ylab("Production Vocabulary (proportion of total words)") +
   ylim(c(0, 1)) + 
@@ -201,7 +234,7 @@ ggplot(sex_means,
   theme(legend.position = "bottom")
 ```
 
-### SES
+### Maternal education
 
 We use maternal education as a proxy for socio-economic status. 
 
@@ -315,7 +348,7 @@ ggplot(ord_means,
   theme(legend.position = "bottom")
 ```
 
-## Comparisons of magnitudes 
+### Demographic effect sizes 
 
 How can we compare the size of these different demographic effects? One simple way to do so is to integrate the area between curves. 
 

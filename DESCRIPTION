@@ -1,5 +1,10 @@
 Package: placeholder
-Title: Does not matter.
+Title: placeholder
+Description: Does not matter.
+Author: placeholder
+Maintainer: Mika Braginsky <mika.br@gmail.com>
 Version: 0.0.1
 Imports: bookdown
 Remotes: rstudio/bookdown
+License: GPL-3
+Suggests: testthat, rmarkdown

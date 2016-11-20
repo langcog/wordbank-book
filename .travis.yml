@@ -1,5 +1,7 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
 language: R
 sudo: false
 cache: packages
+notifications:
+  slack:
+    secure: aE3Rwe+H8Ye3YaQVEL3OIOP3tGD/IzAgcpN4INcOFU3mqcvEHz/BMTJDraUVcyHia6ao99HCtIQhf8UljsFgXbf428V7STSXbCPkJLW9178w7VZGwRzcyP/bnp+brEgz8tA4n1AESgc3qBLfWgSPzb4XEes9ev5Lar/91qV2HqaGJFrDc0SyBkHVDvfRpK//Eg9u8DapR9zIxycKovRwPMj350aE4jkJRcuwHAvivdZB+kNhEzfnwznNpVaB0rRdY2lePcIk3nqc2IrQl1l59bKuTtZLoKgXF6I7RY3fYKO2qGlhqp+IPHnuvFVB6x6KQi58izHGld1HzqdCgxc5CW6vbhBG2ItcJf7obJE7T93+fEpAJrjXPMXUheBoLGmkRC4ssL5E7rRryp/1qLdfLY/uxPhoghy579SLdM0lKx3mh1K/gQgezAddcDrjS8+Z91AzkhXlx/vhE2xshOOdhnZeFODboGO3zjfciDOqKPP06nJg39cUIBcjfUgfNr2Ob8qWVuxd6YvQxaOU1C6/OL9VrxRchPvI2qLqVDPC6Q+IfuxEe4xydvioG6XWCxrcVA6jIBTkC853wdkMEygSE6aK3yDbptenqcYMKmH/VcOnYzE8hpGkHBPn846Xex+EFfA3OMLlQCm4DCTako+whvoZFqKCCYeuA86QMy/6Kro=
+after_script: Rscript inst/render.R

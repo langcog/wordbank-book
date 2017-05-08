@@ -1,0 +1,52 @@
+# Introduction {#intro}
+
+The emergence of children's early language is one of the most miraculous parts of human development. The ability to communicate using language arrives with incredible rapidity -- most parents judge that their child is producing words with the intent to communicate before his or her first word before their first birthday [@schneider2015] and now several reports indicate that the onset of comprehension is even earlier [e.g., @bergelson2012,@tincoff2005]. Yet the path towards linguistic mastery is slow 
+
+Almost uniquely in cognitive development, early language learning also offers an opportunity to study both consistency a
+
+## Practical Foundations: The MB-CDI and the Wordbank Project
+
+### The MacArthur-Bates Communicative Development Inventory
+
+The original norming study. [@fenson1994]
+
+
+### The Wordbank Project
+
+@frank2016
+
+Overview of our efforts to archive existing datasets 
+
+## Theoretical Foudnations: Theories of Language Acquisition
+
+There are many approaches to studying language learning. We distinguish a couple of major touchstones theories so that we can refer back to them.
+
+Theories of vocabulary acquisition:
+
++ Constraints and Biases [@markman1990]
++ Cross-situational Learning [@yu2007]
+
+Theories of grammatical acquisition:
+
++ Constructivist
++ Principles and Parameters
+
+
+### The Process Universals Viewpoint
+
++ Variation: Children vary tremendously. What predicts that variation? 
++ Consistency: Are there theoretical 
+
+## Outline of the Book
+
+Our analyses are organized by different ways of cutting our data:
+
++ Vocabulary: total numbers of words said or understood by individuals, examined via demographic and longitudinal methods.
++ Word categories: What word categories are learned earlier or later? How do these patterns vary across languages?
++ Individual words: What words are learned earlier or later? Are there demographic or category differences in words? 
++ Grammatical items: How does grammatical complexity change across development? How is it related to the growth of the lexicon?
++ Gesture items: How does gesture relate to early language?
+
+But, we also discuss cross-cutting theoretical themes for each analysis. 
+
+

@@ -1,0 +1,91 @@
+Our second chapter introduces descriptive facts about the dataset as well as details of data formatting and access using the `wordbankr` package (for the R statistical programming environment). 
+
+Statistical Methods. Description of our approach to visualization and analysis, including specifications of the statistical models we use for quantifying effect sizes and comparing across studies..
+
+Approach to cross-linguistic analysis. Since comparisons across languages are a key part of our contribution, we outline two different approaches that we use. We identify the difficulties in comparing across CDI forms (including across different languages and even across different forms in a single language). We provide some empirical analysis of how form length affects reporting.
+
+Every form an island. In this approach (EFAI), we compare scale-free measures of effect size across forms, not attempting to bridge the gaps between forms that have different items and different lengths (as well as being designed for different languages).
+
+Universal lemmas. We describe how, for a subset of languages, we identified and checked conceptual mappings that could be used to compare particular concepts across languages, which we call “universal lemmas” (ULs). 
+
+
+# Methods {#methods}
+
+Stuff about the CDI, data collection, population statistics...
+
+## Terminology
+
+We use a number of shorthand terms throughout to make precise references to aspects of the CDI data. These are defined here. 
+
+
+**Intrument**: A specific parent-report survey or questionnaire.
+
+**Item**: A particular question on an instrument. Includes words (with either produces or produces/understands responses), as well as other questions like questions about morphological or syntactic complexity.
+
+**Administration**: A particular instance of an instrument being given to a child. 
+
+**Child**: A unique individual.
+
+**Language**: A particular language or language community for which an instrument has been adapted. Note that this definition of language distinguishes e.g. American and British English. 
+
+
+## Data
+
+This section gives a broad overview of the data we have available. 
+
+### Data Provenance
+
+Many languages are inherited from CLEX. 
+
+Contributors are cited on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html).
+
+Importing is a process of standardizing idiosyncratic datasets into a common format.
+
+### Overview of the Data
+
+Wordbank curently has data from `r length(unique(items$language))` language communities. 
+
+Many of these are in the original Words & Gestures (infant/toddler) / Words & Sentences (child) format, with around 400 items in WG and 700 in the WS.
+
+
+```{r}
+items %>%
+  group_by(language, form) %>%
+  summarise(items = n(), 
+            words = sum(type=="word"), 
+            categories = length(unique(category))) %>%
+  filter(form %in% c("WS","WG")) %>%
+  datatable
+```
+
+Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall. 
+
+```{r}
+items %>%
+  group_by(language, form) %>%
+  summarise(items = n(), 
+            words = sum(type=="word"), 
+            categories = length(unique(category))) %>%
+  filter(!(form %in% c("WS","WG"))) %>%
+  datatable
+```
+
+The number of administrations is variable across instruments and languages, however.
+
+```{r}
+admins %>%
+  group_by(language, form) %>%
+  summarise(n = n(), 
+            n_unique = length(unique(data_id)), 
+            min_age = min(age), 
+            max_age = max(age)) %>%
+  datatable
+```
+
+## Wordbank Architecture
+
+## Statistical Methods
+
+We use medians instead of means.
+
+We use robust GLMs

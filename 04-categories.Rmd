@@ -342,6 +342,6 @@ In all four languages, the age coefficient is substantially larger for function 
 
 ## Semantic Category Representation
 
-The same analyses could be done with CDI categories, which are semantic rather than lexical
+The same analyses could be done with CDI categories, which are semantic rather than lexical.
 
 

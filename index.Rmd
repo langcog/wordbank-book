@@ -1,5 +1,5 @@
 --- 
-title: "Variability and Consistency in Early Language Learning"
+title: "Variability and Consistency in Early Language Learning: The Wordbank Project"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
 site: bookdown::bookdown_site
 documentclass: book
@@ -12,7 +12,7 @@ output:
   bookdown::gitbook
 ---
 
-# Preface {#preface}
+# Preface {-}
 
 How do children learn their first language? Despite the importance of this question, establishing the mechanisms of early language acquisition has been difficult. Early language learning involves the accumulation of thousands of words, grammatical rules, and constructions, and takes place over the course of years of growth and millions of separate interactions. Further complicating the study of this process is the fact that, during the period in which language emerges, language ability varies wildly from child to child and most children are at best reluctant experimental participants. These two observations mean that accurate measurement of language development across individuals is a major challenge.
 

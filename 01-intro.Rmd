@@ -59,7 +59,7 @@ Theories of grammatical acquisition:
 Our analyses are organized by different ways of cutting our data:
 
 + Vocabulary: total numbers of words said or understood by individuals, examined via demographic and longitudinal methods.
-+ Word categories: What word categories are learned earlier or later? How do these patterns vary across languages?
++ Word categories: What word categories (syntactic and semantic) are learned earlier or later? How do these patterns vary across languages?
 + Individual words: What words are learned earlier or later? Are there demographic or category differences in words? 
 + Grammatical items: How does grammatical complexity change across development? How is it related to the growth of the lexicon?
 + Gesture items: How does gesture relate to early language?

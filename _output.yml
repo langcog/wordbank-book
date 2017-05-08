@@ -1,4 +1,4 @@
 bookdown::gitbook:
-  split_bib: no
+  split_bib: yes
 
 

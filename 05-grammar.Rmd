@@ -1,3 +1,0 @@
-# The Growth of Grammar
-
-Overall stuff about gestures and sentences, `grammar-lex`.

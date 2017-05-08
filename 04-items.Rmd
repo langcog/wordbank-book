@@ -1,3 +1,0 @@
-# Variability in Learning Individual Words
-
-By-item stuff like overall item trajectories, `gender-input`, and `uni_lemma` based cross-linguistic consistency things.

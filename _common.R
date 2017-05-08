@@ -9,6 +9,7 @@ library(DT)
 library(quantregGrowth)
 library(stringr)
 library(feather)
+library(ggrepel)
 
 knitr::opts_chunk$set(
   message = FALSE,

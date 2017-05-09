@@ -1,3 +1,5 @@
+# Methods {#methods}
+
 Our second chapter introduces descriptive facts about the dataset as well as details of data formatting and access using the `wordbankr` package (for the R statistical programming environment).
 
 Statistical Methods. Description of our approach to visualization and analysis, including specifications of the statistical models we use for quantifying effect sizes and comparing across studies..
@@ -8,15 +10,12 @@ Every form an island. In this approach (EFAI), we compare scale-free measures of
 
 Universal lemmas. We describe how, for a subset of languages, we identified and checked conceptual mappings that could be used to compare particular concepts across languages, which we call “universal lemmas” (ULs).
 
-
-# Methods {#methods}
-
 Stuff about the CDI, data collection, population statistics...
 
 We use a number of shorthand terms throughout to make precise references to aspects of the CDI data. These are defined here.
 
 
-**Intrument**: A specific parent-report survey or questionnaire.
+**Instrument**: A specific parent-report survey or questionnaire.
 
 **Item**: A particular question on an instrument. Includes words (with either produces or produces/understands responses), as well as other questions like questions about morphological or syntactic complexity.
 
@@ -68,7 +67,7 @@ Wordbank curently has data from `r length(unique(items$language))` language comm
 Many of these are in the original Words & Gestures (infant/toddler) / Words & Sentences (child) format, with around 400 items in WG and 700 in the WS.
 
 
-```{r}
+```{r 2_overview}
 items %>%
   group_by(language, form) %>%
   summarise(items = n(),
@@ -80,7 +79,7 @@ items %>%
 
 Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall.
 
-```{r}
+```{r 2_otherforms}
 items %>%
   group_by(language, form) %>%
   summarise(items = n(),
@@ -92,7 +91,7 @@ items %>%
 
 The number of administrations is variable across instruments and languages, however.
 
-```{r}
+```{r 2_admins}
 admins %>%
   group_by(language, form) %>%
   summarise(n = n(),

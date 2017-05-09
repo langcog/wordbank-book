@@ -1,14 +1,14 @@
+# Vocabulary Development {#vocab}
+
 Vocabulary Development. This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. 
 
 Normative growth curves. We quantify the nature of variability across languages and note differences in form ceilings across languages.
 
 Demographic effects. The bulk of this chapter is devoted to different demographic predictors of vocabulary growth across languages (following the EFAI approach). We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). 
 
-# Vocabulary Development {#vocab}
-
 This set of analyses examines general patterns of vocabulary development. 
 
-```{r vocab_admins}
+```{r 3_vocab_admins}
 num_words <- items %>%
   filter(type == "word") %>%
   group_by(language, form) %>%
@@ -31,7 +31,7 @@ Here we examine general patterns of variability across languages.
 
 ### Comprehension
 
-```{r}
+```{r 3_models}
 taus <-  c(0.1, 0.25, 0.5, 0.75, 0.9)
 ages <- 8:18
 
@@ -69,7 +69,9 @@ pred_gcrq <- function(x, mods) {
     return(preds)
   }
 }
+```
 
+```{r 3_comprehension}
 comp_data <- vocab_data %>%
   filter(form == "WG") %>%
   mutate(mean = comprehension / n)
@@ -104,7 +106,7 @@ ggplot(comp_data,
 
 Words and Gestures.
 
-```{r}
+```{r 3_production_wg}
 prod_data <- vocab_data %>%
   filter(form == "WG") %>%
   mutate(mean = production / n)
@@ -137,7 +139,7 @@ ggplot(prod_data,
 
 Words and Sentences
 
-```{r}
+```{r 3_production_ws}
 prod_data <- vocab_data %>%
   filter(form == "WS") %>%
   mutate(mean = production / n)
@@ -193,7 +195,7 @@ An earlier version of this analysis was reported in @frank2016.
 
 Plot vocabulary size over age by gender.
 
-```{r plot, fig.width=13, fig.height=8}
+```{r 3_gender_plot, fig.width=13, fig.height=8}
 sex_data <- vocab_data %>%
   filter(!is.na(sex), form == "WS") 
 
@@ -242,7 +244,7 @@ ggplot(sex_means,
 
 We use maternal education as a proxy for socio-economic status. 
 
-```{r mom_ed}
+```{r 3_mom_ed}
 ses_data <- vocab_data %>%
   filter(!is.na(mom_ed), form == "WS") %>%
   mutate(mom_ed = fct_collapse(mom_ed, 
@@ -300,7 +302,7 @@ ggplot(ses_means,
 
 Only `r length(unique(filter(vocab_data,!is.na(birth_order))$language))` languages have birth order data, and only `r length(unique(filter(vocab_data,!is.na(birth_order), form == "WS")$language))` languages have it for WS.
 
-```{r birth_order}
+```{r 3_birth_order}
 ord_data <- vocab_data %>%
   filter(!is.na(birth_order), form == "WS") %>%
   mutate(birth_order = fct_collapse(birth_order, 
@@ -358,7 +360,7 @@ How can we compare the size of these different demographic effects? One simple w
 
 The units for this analysis are arbitrary and (right now) can't be compared across languages, since the curves have different lengths. To overcome this limitation, we'd need to look at 
 
-```{r}
+```{r 3_effect_size}
 momed_levels <- levels(ses_means$mom_ed)
 
 ses_abc <- ses_preds %>%
@@ -392,7 +394,7 @@ abcs <- left_join(sex_abc, ord_abc) %>%
 
 First look at gender advantage. 
 
-```{r}
+```{r 3_gender_advantage}
 ggplot(filter(abcs, demographic == "female"), 
        aes(x = fct_reorder(language, area_diff), y = area_diff)) + 
   geom_point() + 
@@ -405,7 +407,7 @@ ggplot(filter(abcs, demographic == "female"),
 
 Visualizing demographic advantages against one another. 
 
-```{r}
+```{r 3_demographic_advantages}
 n_missing <- abcs %>%
   group_by(language) %>%
   summarise(n_missing = sum(is.na(area_diff)))

@@ -1,10 +1,10 @@
+# Categorical Composition {#categories}
+
 The Categorical Composition of Early Vocabulary. This chapter focuses on splitting vocabulary data into syntactic and semantic categories and analyzing consistency and variability across languages in the acquisition of these. 
 
 Syntactic category biases. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words. Previously presented in Braginsky et al. (2015b).
 
 Conceptual categories. We investigate the consistency of colors, spatial terms, logical terms, and other conceptual categories of interest. Some of these semantic categories have been argued to be learned as a group, so we investigate whether they are more consistently correlated within children than would be expected by chance. 
-
-# Categorical Composition {#categories}
 
 An earlier version of this work was reported to BUCLD 2015 by Braginsky, Marchman, Yurovsky, & Frank.
 
@@ -20,13 +20,13 @@ Each CDI form contains a mixture of words in different classes. We adopt the cat
 
 For each of the four languages in our sample, we plot these proportions against total vocabulary. Each dot represents a child's knowledge of a particular class, while curves show the relationship between a class and the whole vocabulary. If categories grow independently of one another, these curves should approximate the diagonal. This pattern is not what we observe, however: Across the languages in our sample, nouns are systematically over-represented in smaller vocabularies (shown by a curve that is above the diagonal), while function words---and to some extent, predicates---are under-represented. 
 
-```{r database}
+```{r 4_items}
 items <- items %>%
   filter(type == "word") %>%
   mutate(num_item_id = as.numeric(substr(item_id, 6, nchar(item_id))))
 ```
 
-```{r vocab_comp_fun}
+```{r 4_vocab_comp_fun}
 get_vocab_comp <- function(input_language, input_form) {
   print(paste(input_language,input_form))
   
@@ -64,7 +64,7 @@ get_vocab_comp <- function(input_language, input_form) {
 }
 ```
 
-```{r vocab_comp, eval=FALSE}
+```{r 4_vocab_comp, eval=FALSE}
 instruments <- instruments %>%
   filter(form %in% c("WS","WG")) %>%
   select(language, form) %>%
@@ -75,13 +75,13 @@ vocab_comp_data <- map2(instruments$language,
   bind_rows()
 ```
 
-```{r cached}
+```{r 4_cached_data}
 vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
 ```
 
 We limit our analysis to traditional WS and WG forms for now because short forms like the British English TEDS don't have category information. The sample sizes included in this analysis are given below. 
 
-```{r sample_sizes}
+```{r 4_sample_sizes}
 sample_sizes <- vocab_comp_data %>%
   group_by(language, form, measure, lexical_category) %>%
   summarise(n = n()) %>%
@@ -98,7 +98,7 @@ sample_sizes %>%
 How do we estimate over-representation or under-representation of a particular vocabulary item?
 
 
-```{r plot_area_demo, fig.width = 9, fig.height = 3.5}
+```{r 4_plot_area_demo, fig.width = 9, fig.height = 3.5}
 demo_langs <- c("English", "Mandarin")
 demo_data <- filter(vocab_comp_data, form == "WS", language %in% demo_langs) %>%
   mutate(panel = paste(language, "(data)"),
@@ -161,7 +161,7 @@ ggplot(filter(predictions, language == "English"),
 
 Function for resampling data and computing area estimate for each sample.
 
-```{r resample}
+```{r 4_resample}
 sample_areas <- function(d, nboot = 1000) {
   
   poly_area <- function(group_data) {
@@ -193,13 +193,13 @@ sample_areas <- function(d, nboot = 1000) {
 
 Resample data and find the mean and CI of the area estimate.
 
-```{r areas, eval=FALSE}
+```{r 4_areas, eval=FALSE}
 areas <- sample_areas(vocab_comp_data, 100)
 write_feather(areas,"data/vocab_comp_areas.feather")
 ```
 
 
-```{r areas2}
+```{r 4_areas2}
 areas <- read_feather("data/vocab_comp_areas.feather")
 area_summary <- areas %>%
   group_by(language, form, measure, lexical_category) %>%
@@ -232,7 +232,7 @@ area_summary_ordered <- area_summary %>%
 
 Base plot for looking at vocabulary composition.
 
-```{r base_plot}
+```{r 4_base_plot}
 base_plot <- function(input_form, input_measure) {
   vocab_comp_data %>%
     filter(form == input_form, measure == input_measure) %>%
@@ -256,7 +256,7 @@ base_plot <- function(input_form, input_measure) {
 
 Plot WS productive vocabulary composition as a function of vocabulary size for each language.
 
-```{r plot_points_ws, fig.width=8, fig.height=8}
+```{r 4_plot_points_ws, fig.width=8, fig.height=8}
 base_plot("WS", "produces") + 
   geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3)  +
@@ -270,7 +270,7 @@ Plot WG productive vocabulary composition as a function of vocabulary size for e
 
 These data are *much* sparser and don't really license strong inferences in many cases. (Most children produce a relatively small number of the words on WG forms).
 
-```{r plot_points_wg, fig.width=8, fig.height=8}
+```{r 4_plot_points_wg, fig.width=8, fig.height=8}
 base_plot("WG", "produces") + 
   geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3)  +
@@ -281,7 +281,7 @@ base_plot("WG", "produces") +
 
 Plot WG receptive vocabulary composition as a function of vocabulary size for each language.
 
-```{r plot_points_wg_comp, fig.width=8, fig.height=8}
+```{r 4_plot_points_wg_comp, fig.width=8, fig.height=8}
 base_plot("WG", "understands") + 
   geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3)  +
@@ -294,7 +294,7 @@ base_plot("WG", "understands") +
 
 Plot each lexical category's area estimate by language, form, and measure.
 
-```{r plot_areas, fig.width=6, fig.height=6}
+```{r 4_plot_areas, fig.width=6, fig.height=6}
 ggplot(area_summary_ordered,
        aes(y = language, x = mean, colour = lexical_category)) +
   facet_grid(lexical_category ~ form + measure) +
@@ -309,7 +309,7 @@ ggplot(area_summary_ordered,
 
 Plot WS production vocab composition proportions. 
 
-```{r prod_vs_comp_vocab_comp}
+```{r 4_prod_vs_comp_vocab_comp}
 area_scatter_data <- area_summary %>%
   filter(form=="WS", 
          lexical_category %in% c("nouns","predicates"), 

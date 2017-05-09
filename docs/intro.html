@@ -48,6 +48,11 @@
 
 
 
+<script src="libs/htmlwidgets-0.8/htmlwidgets.js"></script>
+<script src="libs/datatables-binding-0.2/datatables.js"></script>
+<link href="libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
 
 
 
@@ -66,20 +71,60 @@
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#practical-foundations-the-mb-cdi-and-the-wordbank-project"><i class="fa fa-check"></i><b>1.1</b> Practical Foundations: The MB-CDI and the Wordbank Project</a><ul>
 <li class="chapter" data-level="1.1.1" data-path="intro.html"><a href="intro.html#measuring-early-vocabulary"><i class="fa fa-check"></i><b>1.1.1</b> Measuring early vocabulary</a></li>
-<li class="chapter" data-level="1.1.2" data-path="intro.html"><a href="intro.html#limitations-of-parent-report"><i class="fa fa-check"></i><b>1.1.2</b> Limitations of parent report</a></li>
-<li class="chapter" data-level="1.1.3" data-path="intro.html"><a href="intro.html#wordbank"><i class="fa fa-check"></i><b>1.1.3</b> Wordbank</a></li>
+<li class="chapter" data-level="1.1.2" data-path="intro.html"><a href="intro.html#adaptation-not-translation"><i class="fa fa-check"></i><b>1.1.2</b> Adaptation, not translation!</a></li>
+<li class="chapter" data-level="1.1.3" data-path="intro.html"><a href="intro.html#limitations-of-parent-report"><i class="fa fa-check"></i><b>1.1.3</b> Limitations of parent report</a></li>
+<li class="chapter" data-level="1.1.4" data-path="intro.html"><a href="intro.html#wordbank"><i class="fa fa-check"></i><b>1.1.4</b> Wordbank</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#theoretical-foundations-theories-of-language-acquisition"><i class="fa fa-check"></i><b>1.2</b> Theoretical Foundations: Theories of Language Acquisition</a><ul>
 <li class="chapter" data-level="1.2.1" data-path="intro.html"><a href="intro.html#the-process-universals-viewpoint"><i class="fa fa-check"></i><b>1.2.1</b> The Process Universals Viewpoint</a></li>
 </ul></li>
 <li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#outline-of-the-book"><i class="fa fa-check"></i><b>1.3</b> Outline of the Book</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>2</b> Methods</a></li>
-<li class="chapter" data-level="3" data-path="vocab.html"><a href="vocab.html"><i class="fa fa-check"></i><b>3</b> Vocabulary Development</a></li>
-<li class="chapter" data-level="4" data-path="categories.html"><a href="categories.html"><i class="fa fa-check"></i><b>4</b> Categorical Composition</a></li>
-<li class="chapter" data-level="5" data-path="individual-words.html"><a href="individual-words.html"><i class="fa fa-check"></i><b>5</b> Individual Words</a></li>
-<li class="chapter" data-level="6" data-path="gesture.html"><a href="gesture.html"><i class="fa fa-check"></i><b>6</b> Gesture</a></li>
-<li class="chapter" data-level="7" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>7</b> Conclusions</a></li>
+<li class="chapter" data-level="2" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>2</b> Methods</a><ul>
+<li class="chapter" data-level="2.1" data-path="methods.html"><a href="methods.html#database-architecture"><i class="fa fa-check"></i><b>2.1</b> Database Architecture</a></li>
+<li class="chapter" data-level="2.2" data-path="methods.html"><a href="methods.html#data"><i class="fa fa-check"></i><b>2.2</b> Data</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="methods.html"><a href="methods.html#data-provenance"><i class="fa fa-check"></i><b>2.2.1</b> Data Provenance</a></li>
+<li class="chapter" data-level="2.2.2" data-path="methods.html"><a href="methods.html#overview-of-the-data"><i class="fa fa-check"></i><b>2.2.2</b> Overview of the Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="methods.html"><a href="methods.html#wordbank-architecture"><i class="fa fa-check"></i><b>2.3</b> Wordbank Architecture</a></li>
+<li class="chapter" data-level="2.4" data-path="methods.html"><a href="methods.html#statistical-methods"><i class="fa fa-check"></i><b>2.4</b> Statistical Methods</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="vocab.html"><a href="vocab.html"><i class="fa fa-check"></i><b>3</b> Vocabulary Development</a><ul>
+<li class="chapter" data-level="3.1" data-path="vocab.html"><a href="vocab.html#norms"><i class="fa fa-check"></i><b>3.1</b> Norms</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="vocab.html"><a href="vocab.html#comprehension"><i class="fa fa-check"></i><b>3.1.1</b> Comprehension</a></li>
+<li class="chapter" data-level="3.1.2" data-path="vocab.html"><a href="vocab.html#production"><i class="fa fa-check"></i><b>3.1.2</b> Production</a></li>
+<li class="chapter" data-level="3.1.3" data-path="vocab.html"><a href="vocab.html#comparions-of-variability-on-comprehension-and-production"><i class="fa fa-check"></i><b>3.1.3</b> Comparions of Variability on Comprehension and Production</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="vocab.html"><a href="vocab.html#demographic-variables"><i class="fa fa-check"></i><b>3.2</b> Demographic Variables</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="vocab.html"><a href="vocab.html#gender"><i class="fa fa-check"></i><b>3.2.1</b> Gender</a></li>
+<li class="chapter" data-level="3.2.2" data-path="vocab.html"><a href="vocab.html#maternal-education"><i class="fa fa-check"></i><b>3.2.2</b> Maternal education</a></li>
+<li class="chapter" data-level="3.2.3" data-path="vocab.html"><a href="vocab.html#birth-order"><i class="fa fa-check"></i><b>3.2.3</b> Birth order</a></li>
+<li class="chapter" data-level="3.2.4" data-path="vocab.html"><a href="vocab.html#demographic-effect-sizes"><i class="fa fa-check"></i><b>3.2.4</b> Demographic effect sizes</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="categories.html"><a href="categories.html"><i class="fa fa-check"></i><b>4</b> Categorical Composition</a><ul>
+<li class="chapter" data-level="4.1" data-path="methods.html"><a href="methods.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="categories.html"><a href="categories.html#estimation-method"><i class="fa fa-check"></i><b>4.1.1</b> Estimation Method</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="categories.html"><a href="categories.html#syntactic-vocabulary-composition"><i class="fa fa-check"></i><b>4.2</b> Syntactic Vocabulary Composition</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="categories.html"><a href="categories.html#production-words-and-sentences"><i class="fa fa-check"></i><b>4.2.1</b> Production: Words and Sentences</a></li>
+<li class="chapter" data-level="4.2.2" data-path="categories.html"><a href="categories.html#production-words-and-gestures"><i class="fa fa-check"></i><b>4.2.2</b> Production: Words and Gestures</a></li>
+<li class="chapter" data-level="4.2.3" data-path="categories.html"><a href="categories.html#summary-across-and-measures"><i class="fa fa-check"></i><b>4.2.3</b> Summary across and measures</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="categories.html"><a href="categories.html#age-effects-on-vocabulary-composition"><i class="fa fa-check"></i><b>4.3</b> Age effects on vocabulary composition</a></li>
+<li class="chapter" data-level="4.4" data-path="categories.html"><a href="categories.html#semantic-category-representation"><i class="fa fa-check"></i><b>4.4</b> Semantic Category Representation</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="items.html"><a href="items.html"><i class="fa fa-check"></i><b>5</b> Individual Words</a></li>
+<li class="chapter" data-level="6" data-path="gesturess.html"><a href="gesturess.html"><i class="fa fa-check"></i><b>6</b> Gesture and Communication</a></li>
+<li class="chapter" data-level="7" data-path="grammar.html"><a href="grammar.html"><i class="fa fa-check"></i><b>7</b> The Growth of Grammar</a><ul>
+<li class="chapter" data-level="7.1" data-path="grammar.html"><a href="grammar.html#abstract"><i class="fa fa-check"></i><b>7.1</b> Abstract</a></li>
+<li class="chapter" data-level="7.2" data-path="grammar.html"><a href="grammar.html#introduction"><i class="fa fa-check"></i><b>7.2</b> Introduction</a></li>
+<li class="chapter" data-level="7.3" data-path="grammar.html"><a href="grammar.html#methods-1"><i class="fa fa-check"></i><b>7.3</b> Methods</a></li>
+<li class="chapter" data-level="7.4" data-path="grammar.html"><a href="grammar.html#grammar-and-the-lexicon"><i class="fa fa-check"></i><b>7.4</b> Grammar and the lexicon</a></li>
+<li class="chapter" data-level="7.5" data-path="grammar.html"><a href="grammar.html#grammar-development-and-the-lexicon"><i class="fa fa-check"></i><b>7.5</b> Grammar, development, and the lexicon</a></li>
+<li class="chapter" data-level="7.6" data-path="grammar.html"><a href="grammar.html#discussion"><i class="fa fa-check"></i><b>7.6</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>8</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
@@ -100,27 +145,32 @@
             <section class="normal" id="section-">
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>Some material in this chapter comes from <span class="citation">Frank et al. (<a href="#ref-frank2016">2016</a>)</span>.</p>
+<p>(Some material in this chapter comes from <span class="citation">M. C. Frank et al. (<a href="references.html#ref-frank2016">2016</a>)</span>.)</p>
 <p>The emergence of children’s early language is one of the most miraculous parts of human development. The ability to communicate using language arrives with incredible rapidity – most parents judge that their child is producing words with the intent to communicate before his or her first word before their first birthday <span class="citation">(<span class="citeproc-not-found" data-reference-id="schneider2015"><strong>???</strong></span>)</span> and now several reports indicate that the onset of comprehension is even earlier <span class="citation">(e.g., <span class="citeproc-not-found" data-reference-id="bergelson2012"><strong>???</strong></span>,<span class="citation">(<span class="citeproc-not-found" data-reference-id="tincoff2005"><strong>???</strong></span>)</span>)</span>. Yet the path towards linguistic mastery is slow</p>
 <p>Almost uniquely in cognitive development, early language learning also offers an opportunity to study both consistency and variability in a single phenomenon. Often researchers interested in consistency have measured theoretically-important, carefully chosen phenomena using small convenience samples that suffice to show a proof-of-concept but do not provide information about variability. In contrast, work on variability between individuals has often focused on larger samples with more reliable tasks, that – perhaps as a consequence of their reliability – are less tightly linked to a particular theoretical construct of interest.</p>
-<p>The nature and course of early word learning is an important window into children’s growing understanding of the world. Early words cross-cut a variety of linguistic categories, but generally consist of names for caregivers (e.g., mama), common objects (e.g., bottle, shoe), social expressions (e.g., bye-bye), and actions or routines (e.g., peekaboo, throw) . New words enter children’s expressive vocabularies slowly at first, but this process accelerates over the second year such that children reach an average of 300 words by 24 months and more than 60,000 by the time they graduate from high school . At the same time, there are significant individual differences in language acquisition. For example, according to detailed observational studies, although some 18-month-olds already produce 50–75 words, others produce no words at all, and will not do so until they are 22 months or older &lt;e.g.,&gt;{brown1973,bloom2002,clark2003}. How can such differences be measured accurately and efficiently? And can we promote early detection of differences in vocabulary growth that will be clinically significant later in development?</p>
+<p>The nature and course of early word learning is an important window into children’s growing understanding of the world. Early words cross-cut a variety of linguistic categories, but generally consist of names for caregivers (e.g., mama), common objects (e.g., bottle, shoe), social expressions (e.g., bye-bye), and actions or routines (e.g., peekaboo, throw) <span class="citation">(Nelson <a href="references.html#ref-nelson1973">1973</a>; Tardif et al. <a href="references.html#ref-tardif2008">2008</a>)</span>. New words enter children’s expressive vocabularies slowly at first, but this process accelerates over the second year such that children reach an average of 300 words by 24 months and more than 60,000 by the time they graduate from high school <span class="citation">(Larry Fenson et al. <a href="references.html#ref-fenson2007">2007</a>)</span>. At the same time, there are significant individual differences in language acquisition. For example, according to detailed observational studies, although some 18-month-olds already produce 50–75 words, others produce no words at all, and will not do so until they are 22 months or older <span class="citation">(e.g., Brown <a href="references.html#ref-brown1973">1973</a>; Bloom <a href="references.html#ref-bloom2002">2002</a>; Clark <a href="references.html#ref-clark2003">2003</a>)</span>. How can such differences be measured accurately and efficiently? And can we promote early detection of differences in vocabulary growth that will be clinically significant later in development?</p>
 <div id="practical-foundations-the-mb-cdi-and-the-wordbank-project" class="section level2">
 <h2><span class="header-section-number">1.1</span> Practical Foundations: The MB-CDI and the Wordbank Project</h2>
 <div id="measuring-early-vocabulary" class="section level3">
 <h3><span class="header-section-number">1.1.1</span> Measuring early vocabulary</h3>
-<p>Traditional studies of language development typically apply a combination of observational assessment and structured tests, frequently relying on short samples of interactions and small samples of children. Discerning both the universal features and natural variation of early lexical development has been greatly facilitated by the development of parent report instruments like the MacArthur-Bates CDI <span class="citation">(L. Fenson et al. <a href="#ref-fenson1994">1994</a>; Larry Fenson et al. <a href="#ref-fenson2007">2007</a>)</span> and the Language Development Survey <span class="citation">(LDS; Rescorla <a href="#ref-rescorla1989">1989</a>)</span>. The CDIs in particular were developed across a period of more than 40 years. Originally designed for use in a research study <span class="citation">(E. Bates <a href="#ref-bates1976">1976</a>)</span>, the instruments have evolved from a structured interview to the current paper-and-pencil format and are now increasingly administered online <span class="citation">(e.g., Kristoffersen et al. <a href="#ref-kristoffersen2013">2013</a>)</span> for Norwegian or  for Slovak). While other assessment tools exist for slightly older children, to our knowledge, no other measure allows cost-effective global language assessment for children in the critical age ranges between the emergence of language and the period when children become more able to engage in structured, face-to-face activities (around 30 months).</p>
-<p>Naturalistic observations are the other leading candidate for measurement of early language, but such observations are extremely costly and time-consuming to transcribe and annotate. These difficulties lead to a tradeoff where most studies either include dense data about a small number of children or smaller amounts of data with a larger sample size. Dense datasets currently provide the best method for in-depth study of the interaction between learning mechanisms and language input in individuals <span class="citation">(e.g., Lieven, Salomo, and Tomasello <a href="#ref-lieven2009">2009</a>; B. C. Roy et al. <a href="#ref-roy2015">2015</a>)</span>, although the generality of these studies is necessarily limited by their small sample sizes. At the other end of the spectrum, assessment of many individual language samples can yield information about individual variability [e.g., dickinson2001,cartmill2013,weisleder2013], but at some cost in terms of depth.</p>
-<p>In addition, naturalistic observations do not measure children’s language comprehension, a variable of interest for many early language researchers. Estimates of production vocabulary from naturalistic observation are highly correlated with the CDI within studies [e.g., bornstein1998], but are likely to be affected substantially by length of the session, context, and interlocutor when comparing across studies <span class="citation">(see e.g., Hidaka <a href="#ref-hidaka2015">2015</a> for discussion)</span>. And although there exist methods to extract insights about global vocabulary from naturalistic observation, these statistical extrapolations are relatively new and have not been validated extensively <span class="citation">(Hidaka <a href="#ref-hidaka2015">2015</a>)</span>. Other comprehension vocabulary measures are also available across some range of languages <span class="citation">(e.g., the Peabody Picture Vocabulary Test 4; L. M. Dunn and Dunn <a href="#ref-dunn2007">2007</a>)</span>, but these assessments are tailored for substantially older children.</p>
-<p>Parent-report measures like the CDI and LDS take advantage of the fact that parents are expert observers of their child. CDI instruments ask about use of communicative gestures, grammar, and symbolic play, as well as vocabulary, which is measured using checklists consisting of representative samples of words. Parents choose the words their child currently <code>understands'' (comprehension, measured for younger children) or</code>says’’ (production, measured for both younger and older children). The checklists contain words from many different semantic (e.g., animal names, household items) and syntactic (e.g., action words, connectives) categories, resulting in broader samples of lexical knowledge than are available from other methods. In their English and Spanish instantiations, the instruments come in two versions: Words &amp; Gestures (8–18 months) and Words &amp; Sentences (16–30 months). Originally designed for English, parallel instruments have now been adapted for more than 60 languages <span class="citation">(P. S. Dale and Penfold <a href="#ref-dale2011">2011</a>)</span>.</p>
+<p>Traditional studies of language development typically apply a combination of observational assessment and structured tests, frequently relying on short samples of interactions and small samples of children. Discerning both the universal features and natural variation of early lexical development has been greatly facilitated by the development of parent report instruments like the MacArthur-Bates CDI <span class="citation">(L. Fenson et al. <a href="references.html#ref-fenson1994">1994</a>; Larry Fenson et al. <a href="references.html#ref-fenson2007">2007</a>)</span> and the Language Development Survey <span class="citation">(LDS; Rescorla <a href="references.html#ref-rescorla1989">1989</a>)</span>. The CDIs in particular were developed across a period of more than 40 years. Originally designed for use in a research study <span class="citation">(E. Bates <a href="references.html#ref-bates1976">1976</a>)</span>, the instruments have evolved from a structured interview to the current paper-and-pencil format and are now increasingly administered online <span class="citation">(e.g., Kristoffersen et al. <a href="references.html#ref-kristoffersen2013">2013</a>)</span> for Norwegian or  for Slovak). While other assessment tools exist for slightly older children, to our knowledge, no other measure allows cost-effective global language assessment for children in the critical age ranges between the emergence of language and the period when children become more able to engage in structured, face-to-face activities (around 30 months).</p>
+<p>Naturalistic observations are the other leading candidate for measurement of early language, but such observations are extremely costly and time-consuming to transcribe and annotate. These difficulties lead to a tradeoff where most studies either include dense data about a small number of children or smaller amounts of data with a larger sample size. Dense datasets currently provide the best method for in-depth study of the interaction between learning mechanisms and language input in individuals <span class="citation">(e.g., E. Lieven, Salomo, and Tomasello <a href="references.html#ref-lieven2009">2009</a>; B. C. Roy et al. <a href="references.html#ref-roy2015">2015</a>)</span>, although the generality of these studies is necessarily limited by their small sample sizes. At the other end of the spectrum, assessment of many individual language samples can yield information about individual variability [e.g., dickinson2001,cartmill2013,weisleder2013], but at some cost in terms of depth.</p>
+<p>In addition, naturalistic observations do not measure children’s language comprehension, a variable of interest for many early language researchers. Estimates of production vocabulary from naturalistic observation are highly correlated with the CDI within studies [e.g., bornstein1998], but are likely to be affected substantially by length of the session, context, and interlocutor when comparing across studies <span class="citation">(see e.g., Hidaka <a href="references.html#ref-hidaka2015">2015</a> for discussion)</span>. And although there exist methods to extract insights about global vocabulary from naturalistic observation, these statistical extrapolations are relatively new and have not been validated extensively <span class="citation">(Hidaka <a href="references.html#ref-hidaka2015">2015</a>)</span>. Other comprehension vocabulary measures are also available across some range of languages <span class="citation">(e.g., the Peabody Picture Vocabulary Test 4; L. M. Dunn and Dunn <a href="references.html#ref-dunn2007">2007</a>)</span>, but these assessments are tailored for substantially older children.</p>
+<p>Parent-report measures like the CDI and LDS take advantage of the fact that parents are expert observers of their child. CDI instruments ask about use of communicative gestures, grammar, and symbolic play, as well as vocabulary, which is measured using checklists consisting of representative samples of words. Parents choose the words their child currently <code>understands'' (comprehension, measured for younger children) or</code>says’’ (production, measured for both younger and older children). The checklists contain words from many different semantic (e.g., animal names, household items) and syntactic (e.g., action words, connectives) categories, resulting in broader samples of lexical knowledge than are available from other methods. In their English and Spanish instantiations, the instruments come in two versions: Words &amp; Gestures (8–18 months) and Words &amp; Sentences (16–30 months).</p>
+</div>
+<div id="adaptation-not-translation" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Adaptation, not translation!</h3>
+<p>Originally designed for English, parallel instruments have now been adapted for more than 60 languages <span class="citation">(P. S. Dale and Penfold <a href="references.html#ref-dale2011">2011</a>)</span>. The ethic behind these instruments has been summarized as “adaptation, not translation” – in other words, to create forms with the same spirit as the English form, rather than to translate the items of the English form (which may be uninformative or inappropriate for another language community). EXAMPLES</p>
 </div>
 <div id="limitations-of-parent-report" class="section level3">
-<h3><span class="header-section-number">1.1.2</span> Limitations of parent report</h3>
+<h3><span class="header-section-number">1.1.3</span> Limitations of parent report</h3>
 <p>Although the standardization of parent reports using the CDI contributes to the availability of large amounts of data in a comparable format, there are significant limitations to the parent report methodology as well . First, parents may be biased observers; some may overestimate, while others likely underestimate their children’s abilities. There is also some evidence that some variability may be due to reporting biases linked to factors such as SES . Second, parent reports of comprehension for younger children likely suffer from a number of biases and are probably substantially more accurate for content words than function words. Third, the items on the original CDI instruments were chosen to be a representative sample of vocabulary for the appropriate age and language , not with the intention that they would be a complete set of words that could be compared across instruments or that they would be individually reliable and license the conclusion that a particular child knows a particular word. Fourth, although the length of the CDI may give the impression that it yields an estimate of the child’s full vocabulary, in fact it likely understates the size of a child’s vocabulary substantially, especially for older children .</p>
-<p>Despite these limitations, when used appropriately the CDI instruments are still an important tool. The instruments were designed to minimize bias by targeting current behaviors and asking parents about highly salient features of their child’s abilities. They yield reliable and valid estimates of total vocabulary size, with dozens of studies demonstrating concurrent and predictive relations with naturalistic and observational measures, in both typically-developing and at-risk populations <span class="citation">(e.g., P. S. Dale and Fenson <a href="#ref-dale1996">1996</a>; D. Thal, Jackson-Maldonado, and Acosta <a href="#ref-thal2000">2000</a>; Marchman and Martínez-Sussmann <a href="#ref-marchman2002">2002</a>)</span>. In addition, a variety of recent work has shown that individual item-level responses can yield exciting new insights, for example about the growth patterns of semantic networks [<span class="citation">Hills et al. (<a href="#ref-hills2009">2009</a>)</span>;hills2010]. Such analyses have the potential to be even more powerful when applied to larger samples and across languages.</p>
+<p>Despite these limitations, when used appropriately the CDI instruments are still an important tool. The instruments were designed to minimize bias by targeting current behaviors and asking parents about highly salient features of their child’s abilities. They yield reliable and valid estimates of total vocabulary size, with dozens of studies demonstrating concurrent and predictive relations with naturalistic and observational measures, in both typically-developing and at-risk populations <span class="citation">(e.g., P. S. Dale and Fenson <a href="references.html#ref-dale1996">1996</a>; D. Thal, Jackson-Maldonado, and Acosta <a href="references.html#ref-thal2000">2000</a>; Marchman and Martínez-Sussmann <a href="references.html#ref-marchman2002">2002</a>)</span>. In addition, a variety of recent work has shown that individual item-level responses can yield exciting new insights, for example about the growth patterns of semantic networks <span class="citation">(Hills et al. <a href="references.html#ref-hills2009">2009</a>; Hills et al. <a href="references.html#ref-hills2010">2010</a>)</span>. Such analyses have the potential to be even more powerful when applied to larger samples and across languages.</p>
+<p>Need to add sections/material on: + Limitations on cross-population comparison + Limitations on cross-linguistic comparison</p>
 </div>
 <div id="wordbank" class="section level3">
-<h3><span class="header-section-number">1.1.3</span> Wordbank</h3>
-<p>To take advantage of the opportunity posed by the broad use of CDI instruments in the child language community, in 2014 we began constructing Wordbank, an open repository for CDI data that allows for interactive analysis and visualization. Our inspiration for Wordbank came from two successful projects for sharing data on children’s language acquisition. The first is the Child Language Data Exchange System <span class="citation">(CHILDES; MacWhinney <a href="#ref-macwhinney2000">2000</a>)</span>. A database of transcripts of children’s speech and speech to children, CHILDES has grown into a robust and important tool for the community, with many contributors and affiliated projects. The second is the Cross-Linguistic Lexical Norms site <span class="citation">(CLEX; ; R. N. Jørgensen et al. <a href="#ref-jorgensen2010">2010</a>})</span>, which is closer in content to Wordbank, and effectively our precursor. CLEX archives normative data from a range of CDI adaptations across languages, allowing browsing of acquisition trajectories for individual items or age groups.</p>
+<h3><span class="header-section-number">1.1.4</span> Wordbank</h3>
+<p>To take advantage of the opportunity posed by the broad use of CDI instruments in the child language community, in 2014 we began constructing Wordbank, an open repository for CDI data that allows for interactive analysis and visualization. Our inspiration for Wordbank came from two successful projects for sharing data on children’s language acquisition. The first is the Child Language Data Exchange System <span class="citation">(CHILDES; MacWhinney <a href="references.html#ref-macwhinney2000">2000</a>)</span>. A database of transcripts of children’s speech and speech to children, CHILDES has grown into a robust and important tool for the community, with many contributors and affiliated projects. The second is the Cross-Linguistic Lexical Norms site <span class="citation">(CLEX; ; R. N. Jørgensen et al. <a href="references.html#ref-jorgensen2010">2010</a>})</span>, which is closer in content to Wordbank, and effectively our precursor. CLEX archives normative data from a range of CDI adaptations across languages, allowing browsing of acquisition trajectories for individual items or age groups.</p>
 <p>Wordbank builds on CLEX, offering the same functionality but allowing flexible and interactive visualization and analysis, as well as direct database access and data download. In addition, Wordbank’s goal was always toextend beyond normative data by dynamically incorporating data from many different researchers and projects of varying sizes and scopes. While the resulting datasets in Wordbank are much more heterogeneous than norming data, they are also larger and more representative than the individual norming datasets (in some cases), and available in languages where no norms exist (for others).</p>
 </div>
 </div>
@@ -129,8 +179,8 @@
 <p>There are many approaches to studying language learning. We distinguish a couple of major touchstones theories so that we can refer back to them.</p>
 <p>Theories of vocabulary acquisition:</p>
 <ul>
-<li>Constraints and Biases <span class="citation">(Markman <a href="#ref-markman1990">1990</a>)</span></li>
-<li>Cross-situational Learning <span class="citation">(Yu and Ballard <a href="#ref-yu2007">2007</a>)</span></li>
+<li>Constraints and Biases <span class="citation">(Markman <a href="references.html#ref-markman1990">1990</a>)</span></li>
+<li>Cross-situational Learning <span class="citation">(Yu and Ballard <a href="references.html#ref-yu2007">2007</a>)</span></li>
 </ul>
 <p>Theories of grammatical acquisition:</p>
 <ul>
@@ -147,76 +197,18 @@
 </div>
 <div id="outline-of-the-book" class="section level2">
 <h2><span class="header-section-number">1.3</span> Outline of the Book</h2>
-<p>Our analyses are organized by different ways of cutting our data:</p>
-<ul>
-<li>Vocabulary: total numbers of words said or understood by individuals, examined via demographic and longitudinal methods.</li>
-<li>Word categories: What word categories (syntactic and semantic) are learned earlier or later? How do these patterns vary across languages?</li>
-<li>Individual words: What words are learned earlier or later? Are there demographic or category differences in words?</li>
-<li>Grammatical items: How does grammatical complexity change across development? How is it related to the growth of the lexicon?</li>
-<li>Gesture items: How does gesture relate to early language?</li>
-</ul>
-<p>But, we also discuss cross-cutting theoretical themes for each analysis.</p>
+<p>Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item x child data. Considering the data in this way (shown in Figure @ref(fig:1_diagram)), leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data.</p>
+<div class="figure" style="text-align: center">
+<img src="wordbank-book_files/figure-html/1_diagram-1.png" alt="A graphical outline of the book." width="672" />
+<p class="caption">
+(#fig:1_diagram)A graphical outline of the book.
+</p>
+</div>
+<p>For example, averaging across items leads to <em>by-child averages</em>, where each child receives a comprehension or production score. Chapter <a href="vocab.html#vocab">3</a> considers this view of the data, examining predictors of individual children’s vocabulary. Of course, chief among these is age, and developmental growth patterns as well as variability in development is considered in the first part of this chapter. But beyond age, even the limited demographic data available in Wordbank can be used to explore the data; we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-cultually valid proxy for socio-economic status). These demographic predictors reveal both consistent and variable patterns across languages: while gender and birth-order effects are relatively constant, socio-economic effects vary widely in magnitude.</p>
+<p>Averaging across the other margin of the data leads to <em>by-item averages</em>. These can be examined in a number of different ways. First, items can be grouped into categories (both syntactic and semantic). Chapter <a href="categories.html#categories">4</a> considers the categorical composition of early vocabulary, giving special consideration to the “noun bias” that is found in many – but not all – of the languages in Wordbank. Chapter <a href="items.html#items">5</a> considers the growth trajectories for individual words and adopts the approach of predicting the trajectories of individual words based on both environmental and conceptual features of these words. This approach calls for the incorporation of other resources, and so we use a variety of English and cross-linguistic resources to supplement Wordbank data in this chapter.</p>
+<p>Not all items denote individual words, however, so in Chapters <a href="#gestures"><strong>??</strong></a> and <a href="grammar.html#grammar">7</a> we consider the gesture/communication and grammatical items that are included in some CDI forms. Chapter <a href="#gestures"><strong>??</strong></a> follows up on the early work of <span class="citation">(<span class="citeproc-not-found" data-reference-id="batesXZY"><strong>???</strong></span>)</span> who explored the relationship between gesture and early vocabulary. Chapter <a href="grammar.html#grammar">7</a> explores the work of <span class="citation">(<span class="citeproc-not-found" data-reference-id="batesXYZ"><strong>???</strong></span>)</span>, who considered the relationship between vocabulary growth and the growth of grammar and first reported the striking relationship between these variables. Both of these chapters (as well as the rest of the book) are deeply indebted to the Batesian vision of exploring the process of language learning.</p>
+<p>Many of the analyses reported here were first described in earlier publications <span class="citation">(e.g., M. C. Frank et al. <a href="references.html#ref-frank2016">2016</a>,<span class="citation">M. Braginsky et al. (<a href="references.html#ref-braginsky2015">2015</a>)</span>,<span class="citation">(<span class="citeproc-not-found" data-reference-id="braginsky2016"><strong>???</strong></span>)</span>)</span>. Rather than reprinting these, this manuscript updates them using the unified analytic approach and larger dataset described in Chapter <a href="methods.html#methods">2</a>.</p>
 
-</div>
-</div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-frank2016">
-<p>Frank, Michael C, Mika Braginsky, DANIEL Yurovsky, and Virginia A Marchman. 2016. “Wordbank: An Open Repository for Developmental Vocabulary Data.” <em>Journal of Child Language</em>.</p>
-</div>
-<div id="ref-fenson1994">
-<p>Fenson, L., P.S. Dale, J.S. Reznick, E. Bates, D.J. Thal, S.J. Pethick, M. Tomasello, C.B. Mervis, and J. Stiles. 1994. “Variability in Early Communicative Development.” <em>Monographs of the Society for Research in Child Development</em> 59 (5). JSTOR.</p>
-</div>
-<div id="ref-fenson2007">
-<p>Fenson, Larry, Virginia A. Marchman, D. Thal, P. Dale, J. S. Reznick, and E. Bates. 2007. <em>MacArthur-Bates Communicative Development Inventories: User’s Guide and Technical Manual</em>. 2nd ed. Baltimore, MD: Brookes Publishing Company.</p>
-</div>
-<div id="ref-rescorla1989">
-<p>Rescorla, Leslie. 1989. “The Language Development Surveya Screening Tool for Delayed Language in Toddlers.” <em>Journal of Speech and Hearing Disorders</em> 54 (4). ASHA: 587–99.</p>
-</div>
-<div id="ref-bates1976">
-<p>Bates, Elizabeth. 1976. <em>Language and Context: The Acquisition of Pragmatics</em>. Vol. 13. New York, NY: Academic Press.</p>
-</div>
-<div id="ref-kristoffersen2013">
-<p>Kristoffersen, Kristian E, Hanne Gram Simonsen, Dorthe Bleses, Sonja Wehberg, Rune Nørgård Jørgensen, Eli Anne Eiesland, and Laila Yvonne Henriksen. 2013. “The Use of the Internet in Collecting Cdi Data–an Example from Norway.” <em>Journal of Child Language</em> 40 (03). Cambridge Univ Press: 567–85.</p>
-</div>
-<div id="ref-lieven2009">
-<p>Lieven, Elena, Dorothé Salomo, and Michael Tomasello. 2009. “Two-Year-Old Children’s Production of Multiword Utterances: A Usage-Based Analysis.” <em>Cognitive Linguistics</em> 20 (3): 481–507.</p>
-</div>
-<div id="ref-roy2015">
-<p>Roy, Brandon C, Michael C Frank, Philip DeCamp, Matthew Miller, and Deb Roy. 2015. “Predicting the Birth of a Spoken Word.” <em>Proceedings of the National Academy of Sciences</em> 112 (41). National Acad Sciences: 12663–8.</p>
-</div>
-<div id="ref-hidaka2015">
-<p>Hidaka, Shohei. 2015. “Estimating the Latent Number of Types in Growing Corpora with Reduced Cost–accuracy Trade-Off.” <em>Journal of Child Language</em>. Cambridge Univ Press, 1–28.</p>
-</div>
-<div id="ref-dunn2007">
-<p>Dunn, Lloyd M, and Leota M Dunn. 2007. <em>Peabody Picture Vocabulary Test</em>. 4th Edition. Parsippany, NJ: AGS Publishing/Pearson Assessments.</p>
-</div>
-<div id="ref-dale2011">
-<p>Dale, Philip S, and Melissa Penfold. 2011. “Adaptations of the MacArthur-Bates CDI Into Non-US English Languages.” <a href="http://mb-cdi.stanford.edu/documents/AdaptationsSurvey7-5-11Web. pdf" class="uri">http://mb-cdi.stanford.edu/documents/AdaptationsSurvey7-5-11Web. pdf</a>.</p>
-</div>
-<div id="ref-dale1996">
-<p>Dale, Philip S, and Larry Fenson. 1996. “Lexical Development Norms for Young Children.” <em>Behavior Research Methods, Instruments, &amp; Computers</em> 28 (1). Springer: 125–27.</p>
-</div>
-<div id="ref-thal2000">
-<p>Thal, Donna, Donna Jackson-Maldonado, and Dora Acosta. 2000. “Validity of a Parent-Report Measure of Vocabulary and Grammar for Spanish-Speaking Toddlers.” <em>Journal of Speech, Language, and Hearing Research</em> 43 (5). ASHA: 1087–1100.</p>
-</div>
-<div id="ref-marchman2002">
-<p>Marchman, Virginia A, and Carmen Martínez-Sussmann. 2002. “Concurrent Validity of Caregiver/Parent Report Measures of Language for Children Who Are Learning Both English and Spanish.” <em>Journal of Speech, Language, and Hearing Research</em> 45 (5). ASHA: 983–97.</p>
-</div>
-<div id="ref-hills2009">
-<p>Hills, Thomas T, Mounir Maouene, Josita Maouene, Adam Sheya, and Linda Smith. 2009. “Longitudinal Analysis of Early Semantic Networks Preferential Attachment or Preferential Acquisition?” <em>Psychological Science</em> 20 (6). SAGE Publications: 729–39.</p>
-</div>
-<div id="ref-macwhinney2000">
-<p>MacWhinney, B. 2000. <em>The CHILDES Project: Tools for Analyzing Talk. Third Edition.</em> Mahwah, NJ: Lawrence Erlbaum Associates.</p>
-</div>
-<div id="ref-jorgensen2010">
-<p>Jørgensen, Rune Nørgaard, Philip S Dale, Dorthe Bleses, and Larry Fenson. 2010. “CLEX: A cross-linguistic lexical norms database.” <em>Journal of Child Language</em> 37 (02). Cambridge Univ Press: 419–28.</p>
-</div>
-<div id="ref-markman1990">
-<p>Markman, Ellen M. 1990. “Constraints Children Place on Word Meanings.” <em>Cognitive Science</em> 14 (1). Elsevier: 57–77.</p>
-</div>
-<div id="ref-yu2007">
-<p>Yu, C., and D.H. Ballard. 2007. “A Unified Model of Early Word Learning: Integrating Statistical and Social Cues.” <em>Neurocomputing</em> 70. Elsevier: 2149–65. <a href="http://linkinghub.elsevier.com/retrieve/pii/S092523120600508X" class="uri">http://linkinghub.elsevier.com/retrieve/pii/S092523120600508X</a>.</p>
 </div>
 </div>
             </section>

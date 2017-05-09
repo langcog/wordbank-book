@@ -4,6 +4,6 @@ Demographic effects. In this part, we focus on demographic differences in the le
 
 Predicting early learning. Braginsky et al. (2016a) provides an analysis in which independent data sources (including transcripts of child-directed speech) are brought to bear as predictors of acquisition differences between words. This “age of acquisition prediction” model allows us to quantify the consistency and variability in predictor values across languages for particular words, using the UL approach to cross-linguistic analysis. 
 
-# Variability in Learning Individual Words
+# Individual Words
 
 By-item stuff like overall item trajectories, `gender-input`, and `uni_lemma` based cross-linguistic consistency things.

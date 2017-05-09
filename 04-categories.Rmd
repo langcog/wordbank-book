@@ -4,7 +4,7 @@ Syntactic category biases. We quantify the “noun bias” across languages. In 
 
 Conceptual categories. We investigate the consistency of colors, spatial terms, logical terms, and other conceptual categories of interest. Some of these semantic categories have been argued to be learned as a group, so we investigate whether they are more consistently correlated within children than would be expected by chance. 
 
-# The Categorical Composition of Early Vocabulary {#categories}
+# Categorical Composition {#categories}
 
 An earlier version of this work was reported to BUCLD 2015 by Braginsky, Marchman, Yurovsky, & Frank.
 
@@ -12,7 +12,7 @@ Early vocabulary development is typically characterized by learning of names for
 
 Differences in early vocabulary composition have been argued to emerge from typological differences (e.g., word order, subject drop), and from cultural practices (e.g., focus on picture book reading) [@tardif1999;@gopnik1996;@choi1995]---we are agnostic as to the source of this variability.
 
-[Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary.](figures/bates1994.png)
+[Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary.](images/bates1994.png)
 
 ## Methods
 
@@ -309,7 +309,7 @@ ggplot(area_summary_ordered,
 
 Plot WS production vocab composition proportions. 
 
-```{r}
+```{r prod_vs_comp_vocab_comp}
 area_scatter_data <- area_summary %>%
   filter(form=="WS", 
          lexical_category %in% c("nouns","predicates"), 

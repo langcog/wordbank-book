@@ -65,9 +65,9 @@ Theories of grammatical acquisition:
 
 ## Outline of the Book
 
-Although our goal is a full exploration of the phenomena of child language acquisition,  the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item x child data. Considering the data in this way (shown in Figure \@ref(fig:1_diagram)), leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. 
+Although our goal is a full exploration of the phenomena of child language acquisition,  the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item x child data. Considering the data in this way (shown in Figure \@ref(fig:1_outline_diagram)), leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. 
 
-```{r 1_diagram, fig.cap="A graphical outline of the book."}
+```{r 1_outline_diagram, fig.cap="A graphical outline of the book."}
 p <- png::readPNG("images/outline.png")
 plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE, mai=c(0,0,0,0))
 rasterImage(p, xleft=0, xright=1, ybottom=0, ytop=1)

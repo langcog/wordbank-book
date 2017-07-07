@@ -35,13 +35,21 @@ A relational database such as Wordbank is at its heart a series of tables linked
 
 One strength of the Wordbank framework is that it allows the storage of subsidiary information about the words that are included in a particular instrument, so that this information can be used in future analyses. For example, information about grammatical and semantic categories or norms like concreteness and imageability could all be appended to particular words. This functionality is not yet present in Wordbank, however. The difficulty of compiling this kind of information for a particular set of words is compounded by the large number of languages that the database includes. We hope that in future this functionality will allow the gradual accumulation of information about the words included in the database.
 
-\subsubsection{Technical details}
+### A note on age
+
+Developmental psychologists are very fond of using temporal units like months and years as rough guides. Children tend to begin to crawl between 5 and 8 months, and say their first word around one year. This practice is fine for rules of thumb, but we also use these units for measurement as though they wre precise (e.g. "infants with ages between 7;0 and 8;0") when in fact such infants will vary in the number of days since their birth depending on whether their seven months of life encompassed February or not. A similar problem is true of years (because of leap years) though the problem is less dire. Yet months are the currency of language development research, and we often receive contributed datasets with months alone reported. 
+
+In Wordbank, we define a *standardized month* as 365.2524 / 12 = `r 365.2524 / 12` days. When possible, we compute the number of days from birth to testing and then compute the number of standardized months that the child has lived. 
+
+We also define an eight-month-old (`age == 8`) as a child who has lived between 8 and 9 standard months: their age is in the range [8 - 9) standard months.
+
+### Implementation
 
 Wordbank is constructed using free, open-source tools. The database is a standard \texttt{MySQL} database, managed using \texttt{Python} and \texttt{Django}. Analysis apps are constructed using the \texttt{Shiny} package for \texttt{R}, an open-source statistical programming language.  The code is hosted in a GitHub repository (\url{github.com/langcog/wordbank}) where interested users can browse, leave comments, and contribute modifications.
 
 All data uploaded to Wordbank are open and freely available for download, both through the site itself and through the GitHub repository. The site includes only de-identified data that cannot be linked to the parents and children who provided it. Because of these features, the Stanford Institutional Review Board has determined that the Wordbank project does not constitute human subjects research.
 
-\subsubsection{Cross-linguistic and cross-instrument architecture}
+### Cross-linguistic and cross-instrument architecture
 
 The general philosophy of the CDI has been summarized as ``adaptation, not translation'' \cite{dale2015}. In other words, CDIs are a useful tool for many languages, but the forms differ between languages---words and even whole sections are added, dropped, and modified to ensure that the form captures the details of the particular language for which it is designed. To date, more than 60 adaptations of the original English CDI have been documented \cite{dale2011}. These forms vary widely, including differences in length and intended age range. Some forms include hundreds of items more than the original 680 words on the English Words \& Sentences form; others are so-called ``short forms'' and include only a hundred or a few hundred carefully selected words. Some are designed to capture development from the emergence of language through ages 3--4 years, while others are focused on very early development (like the English Words \& Gestures form, designed for ages 8--18 months). All of these differences make it problematic to compare scores and score distributions across forms, even using percentile ranks, since some instruments will have more or more difficult items than others.
 

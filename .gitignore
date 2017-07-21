@@ -5,3 +5,7 @@ _publish.R
 _book
 _bookdown_files
 rsconnect
+libs/
+wordbank-book.Rmd
+_cache/
+_files/

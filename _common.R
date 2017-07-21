@@ -1,10 +1,8 @@
 library(wordbankr)
 library(langcog)
 library(tidyverse)
-library(ggplot2)
 library(directlabels)
 library(forcats)
-library(purrr)
 library(DT)
 library(quantregGrowth)
 library(stringr)
@@ -34,7 +32,10 @@ if (local_data) {
   items <- read_feather("data/items.feather")
 } else {
   instruments <- get_instruments()
+  write_feather(instruments, "data/instruments.feather")
   admins <- get_administration_data()
+  write_feather(admins, "data/admins.feather")
   items <- get_item_data()
+  write_feather(items, "data/items.feather")
 
 }

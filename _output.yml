@@ -1,4 +1,4 @@
 bookdown::gitbook:
   split_bib: no
-
-
+  config:
+    edit: https://github.com/langcog/wordbank-book/edit/master/%s

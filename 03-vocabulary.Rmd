@@ -1,12 +1,10 @@
 # Vocabulary Development {#vocab}
 
-Vocabulary Development. This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. 
+## Abstract
 
-Normative growth curves. We quantify the nature of variability across languages and note differences in form ceilings across languages.
+This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by examining quantify the nature of variability across individuals and languages. We also note differences in form ceilings across languages. Then, the bulk of this chapter is devoted to different demographic predictors of vocabulary growth across languages (following the EFAI approach). We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). 
 
-Demographic effects. The bulk of this chapter is devoted to different demographic predictors of vocabulary growth across languages (following the EFAI approach). We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). 
-
-This set of analyses examines general patterns of vocabulary development. 
+## Variability in vocabulary development
 
 ```{r 3_vocab_admins}
 num_words <- items %>%
@@ -23,13 +21,6 @@ vocab_data <- admins %>%
 min_age <- min(vocab_data$age)
 max_age <- max(vocab_data$age)
 ```
-
-
-## Norms
-
-Here we examine general patterns of variability across languages. 
-
-### Comprehension
 
 ```{r 3_models}
 taus <-  c(0.1, 0.25, 0.5, 0.75, 0.9)
@@ -70,6 +61,126 @@ pred_gcrq <- function(x, mods) {
   }
 }
 ```
+
+One of the most important features of early vocabulary development is its variability [@fenson1994]. Consider the English production data from the Words and Sentences form.
+
+```{r 3_eng_prod}
+eng_prod_data <- vocab_data %>%
+  filter(form == "WS", language == "English") %>%
+  mutate(mean = production)
+
+eng_prod_model <- list()
+eng_prod_model$English <- eng_prod_data %>%
+  fit_gcrq
+
+eng_prod_preds <- eng_prod_data %>%
+  group_by(age, language) %>%
+  summarise(n = n()) %>%
+  data.frame() %>% 
+  pred_gcrq(eng_prod_model)
+
+ggplot(eng_prod_data,
+       aes(x = age, y = mean)) +
+  geom_jitter(width = .4, size = 1, alpha = .1) +
+  geom_line(data = eng_prod_preds, 
+            aes(y = pred, col = percentile, group = percentile)) + 
+  scale_colour_solarized(name="Percentile") +
+  scale_x_continuous(breaks = seq(16, 30, 4),
+                     limits = c(16, 30),
+                     name = "Age (months)") +
+  ylab("Production (Number of Words)") +
+  ylim(c(0, 680)) + 
+  theme(legend.position = "bottom")
+```
+
+It's immediately clear that there is tremendous variability in vocabulary. Consider just a single age group, two-year-olds (24 months). The distribution of vocabularies across children is far from normally-distributed, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing more than 600 listed on the form, with the total number higher than that even.^[It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every sentence, so we will acknowledge them up front and then mention them only when relevant throughout.] 
+
+```{r}
+ggplot(filter(eng_prod_data, age == 24), 
+       aes(x = production)) + 
+  geom_histogram(aes(y = ..density..), binwidth=30) + 
+  geom_density(col = "red", aes(y = ..density..)) +
+  xlim(0,680) + 
+  xlab("Number of words produced")
+       
+```
+
+One way to describe these data is to consider the relationship of the variance to the central tendency. For example, in this age group, the mean productive vocabulary is `r round(mean(eng_prod_data$production[eng_prod_data$age == 24]))` words, and the standard deviation is `r round(sd(eng_prod_data$production[eng_prod_data$age == 24]))` words. But this distribution is far from normal (especially at the younger and older ages), so a non-parametric approach is warranted. We can  compute the median absolute deviation from the median (MAD), which captures how far away values are from the median (a measure of variance, similar to the inter-quantile range or IQR) and divide by the median itself, giving us an intuitive sense of how the spread of the data relates to the central tendency. We'll call this number the MMAD.
+
+```{r 3_madm1}
+mmad <- function(x) {median(x) / mad(x) }
+m_sd <- vocab_data %>%
+  filter(language == "English") %>%
+  group_by(form, age) %>%
+  summarise(median = median(production), 
+            mad = mad(production), 
+            ratio = median / mad)
+
+ggplot(m_sd, aes(x = age, y = ratio, col = form)) + 
+  geom_line() + 
+  ylim(0,2) + 
+  xlim(8,30) + 
+  ylab("MADM (median / MAD)") + 
+  xlab("Age (months)")
+```
+
+In English production, this ratio is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! The decline begins before variability is substantially truncated by the ceiling of the form, suggesting that variability between kids is really highest before the second birthday. The same pattern is generally found across the languages in our database, with very high variance between the first and second birthdays. What does this MADM measure mean, exactly? It's a non-parametric version of Cohen's $d$. In fact, they are very highly correlated. 
+
+```{r 3_madm_normal}
+madm_ratio <- vocab_data %>%
+  group_by(language, form, age) %>%
+  filter(n() > 20) %>%
+  summarise(median = median(production), 
+            mad = mad(production), 
+            ratio = median / mad, 
+            cov_madm = mad / median,
+            normal_ratio = mean(production) / sd(production) )
+
+qplot(ratio, normal_ratio, 
+      data = madm_ratio, geom = c("point","smooth")) + 
+  ylim(0,3) + xlim(0,3) + 
+  geom_abline(lty = 2) + 
+  ylab("Cohen's d") + 
+  xlab("MADM")
+```
+
+Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
+
+```{r 3_madm2}
+
+ggplot(madm_ratio, aes(x = age, y = ratio, col = language)) + 
+  geom_jitter(size = 1, alpha = 1) + 
+  geom_smooth(aes(group  = 1)) + 
+  ylim(0,2) + 
+  ylab("median / MAD") + 
+  xlab("Age (months)") + 
+  scale_color_discrete(guide = FALSE)
+```
+
+```{r 3_madm3}
+
+ggplot(madm_ratio, aes(x = age, y = cov_madm, col = language)) + 
+  geom_jitter(size = 1, alpha = 1) + 
+  geom_smooth(aes(group  = 1)) + 
+  ylim(0,1.6) + 
+  ylab("MAD / median") + 
+  xlab("Age (months)") + 
+  scale_color_discrete(guide = FALSE)
+```
+
+The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable. Below, we will use this variability as a way to measure the size of demographic effects. For example, how much variability is due to gender, compared with simple population variability?
+
+
+
+## Norms
+
+This set of analyses examines general patterns of vocabulary development. 
+
+
+Here we examine general patterns of variability across languages. 
+
+### Comprehension
+
 
 ```{r 3_comprehension}
 comp_data <- vocab_data %>%
@@ -240,6 +351,27 @@ ggplot(sex_means,
   theme(legend.position = "bottom")
 ```
 
+Get gender in terms of MMAD
+
+```{r 3_gender_madm}
+gender_mmad_ratio <- vocab_data %>%
+  group_by(language, form, age, sex) %>%
+  filter(n() > 20) %>%
+  summarise(median_prod = median(production), 
+            mad_prod = mad(production), 
+            n = n()) %>%
+  group_by(language, form, age) %>%
+  filter(n() == 2) %>%
+  summarise(ratio = (median_prod[sex == "Female"] - median_prod[sex == "Male"]) / mean(mad_prod))
+
+ggplot(gender_mmad_ratio, 
+       aes(x = age, y = ratio, col = language)) + 
+  geom_jitter() + 
+  geom_smooth(aes(group = 1)) + 
+  scale_color_discrete(guide = FALSE)
+```
+
+
 ### Maternal education
 
 We use maternal education as a proxy for socio-economic status. 
@@ -356,6 +488,52 @@ ggplot(ord_means,
 
 ### Demographic effect sizes 
 
+
+## MMAD method
+
+
+Demographics in terms of MMAD
+
+```{r 3_ses_mmad}
+ses_mmad_ratio <- ses_data %>%
+  group_by(language, form, age, mom_ed) %>%
+  filter(n() > 10) %>%
+  summarise(median_prod = median(production), 
+            mad_prod = mad(production), 
+            n = n()) %>%
+  group_by(language, form, age) %>%
+  filter(sum(mom_ed == "Secondary") == 1 & sum(mom_ed == "Below Secondary") == 1) %>%
+  summarise(bs_ratio = (median_prod[mom_ed == "Secondary"] - median_prod[mom_ed == "Below Secondary"]) / mean(mad_prod[mom_ed %in% c("Below Secondary","Secondary")]))
+
+ggplot(ses_mmad_ratio, 
+       aes(x = age, y = bs_ratio, col = language)) + 
+  geom_jitter() + 
+  geom_smooth(se=FALSE, span = 1) + 
+  scale_color_discrete()+ 
+  ylim(c(-1,1))
+```
+
+
+```{r 3_ses_mmad_sps}
+ses_mmad_ratio <- ses_data %>%
+  group_by(language, form, age, mom_ed) %>%
+  filter(n() > 10) %>%
+  summarise(median_prod = median(production), 
+            mad_prod = mad(production), 
+            n = n()) %>%
+  group_by(language, form, age) %>%
+  filter(sum(mom_ed == "College and Above") == 1 & sum(mom_ed == "Secondary") == 1) %>%
+  summarise(ps_ratio = (median_prod[mom_ed == "College and Above"] - median_prod[mom_ed == "Secondary"]) / mean(mad_prod[mom_ed %in% c("College and Above","Secondary")]))
+
+ggplot(ses_mmad_ratio, 
+       aes(x = age, y = ps_ratio, col = language)) + 
+  geom_jitter() + 
+  geom_smooth(se=FALSE, span = 1) + 
+  scale_color_discrete()+ 
+  ylim(c(-1,1))
+```
+
+## ABC method
 How can we compare the size of these different demographic effects? One simple way to do so is to integrate the area between curves. 
 
 The units for this analysis are arbitrary and (right now) can't be compared across languages, since the curves have different lengths. To overcome this limitation, we'd need to look at 

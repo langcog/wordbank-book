@@ -118,12 +118,16 @@ get_grammar_data <- function(lang) {
     ungroup() %>%
     select(-complexity_category, -no_section, -type)
   
-  num.words <- nrow(filter(items, language == lang, form == "WS", type == "word"))
+  num_words <- items %>%
+    filter(language == lang, form == "WS", type == "word") %>%
+    nrow()
   
   lang_admins <- admins %>%
     filter(language == lang) %>%
     select(data_id, age, production, language) %>%
-    left_join(complexity_forms %>% select(language, word) %>% rename(num_words = word)) %>%
+    left_join(complexity_forms %>%
+                select(language, word) %>%
+                rename(num_words = word)) %>%
     mutate(vocab_mean = production / num_words)
   
   lang_data <- left_join(lang_grammar_data, lang_admins) 
@@ -134,9 +138,10 @@ get_grammar_data <- function(lang) {
 ```
 
 ```{r 7_get_grammar_data, eval = FALSE}
-grammar_data <- map_df(complexity_forms$language,
-                       get_grammar_data)
-write_feather(grammar_data, "data/grammar_data.feather")
+# grammar_data <- map_df(complexity_forms$language,
+#                       get_grammar_data) %>%
+#   filter(!is.na(langauge))
+# write_feather(grammar_data, "data/grammar_data.feather")
 ```
 
 Get by kid summary data for all languages.
@@ -157,13 +162,11 @@ Plot score as a function of vocabulary size for each language and measure with m
 Note that cubic clms don't work that well here. 
 
 ```{r 7_grammar_data_plot}
-ggplot(filter(grammar_summary, 
-              !is.na(language), 
-              !(language %in% c("Slovak","Mandarin"))),
+ggplot(grammar_summary %>% filter(!(language %in% c("Slovak","Mandarin"))),
        aes(x = vocab_mean, y = mean)) + 
-  geom_jitter(alpha=.2, size=.75) +
-  facet_grid(coded_type~language) + 
-  geom_smooth(span=1)
+  geom_jitter(alpha = 0.2, size = 0.75) +
+  facet_grid(coded_type ~ language) + 
+  geom_smooth(span = 1)
   # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
   #             size = 1, se = FALSE)
 ```
@@ -229,15 +232,13 @@ grammar_summary_age <- grammar_data %>%
             diff = length(value) - sum,
             mean = sum / length(value))
 
-ggplot(filter(grammar_summary_age, 
-              !is.na(language), 
-              !(language %in% c("Slovak","Mandarin"))),
+ggplot(grammar_summary_age %>% filter(!(language %in% c("Slovak","Mandarin"))),
        aes(x = vocab_mean, y = mean, fill = age_group, col = age_group)) + 
-  geom_jitter(alpha=.2, size=.75) +
-  facet_grid(coded_type~language) + 
+  geom_jitter(alpha = 0.2, size = 0.75) +
+  facet_grid(coded_type ~ language) + 
   # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
   #             size = 1, se = FALSE) + 
-  geom_smooth(method = "loess", se=FALSE, span = 1) + 
+  geom_smooth(method = "loess", se = FALSE, span = 1) + 
   scale_colour_solarized() + 
   scale_fill_solarized()
 ```

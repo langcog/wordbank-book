@@ -109,6 +109,8 @@ One way to describe these data is to consider the relationship of the variance t
 
 ```{r 3_madm1}
 mmad <- function(x) {median(x) / mad(x) }
+madm <- function(x) {mad(x) / median(x) }
+
 m_sd <- vocab_data %>%
   filter(language == "English") %>%
   group_by(form, age) %>%

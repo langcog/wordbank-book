@@ -585,6 +585,8 @@ ggplot(filter(abcs, demographic == "female"),
   theme(legend.position = "bottom")
 ```
 
+From this perspective it is quite clear that the Italian effect is anomalous. FIXME: what do we say about this?
+
 Visualizing demographic advantages against one another. 
 
 ```{r 3_demographic_advantages}

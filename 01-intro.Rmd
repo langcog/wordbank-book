@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Introduction {#intro}
 
 (Some material in this chapter comes from @frank2016 and Marchman & Dale, in press)
@@ -72,19 +77,19 @@ There are many approaches to studying language learning. We distinguish a couple
 
 Theories of vocabulary acquisition:
 
-+ Constraints and Biases [@markman1990]
-+ Cross-situational Learning [@yu2007]
+* Constraints and Biases [@markman1990]
+* Cross-situational Learning [@yu2007]
 
 Theories of grammatical acquisition:
 
-+ Constructivist
-+ Principles and Parameters
+* Constructivist
+* Principles and Parameters
 
 
 ### The Process Universals Viewpoint
 
-+ Variation: Children vary tremendously. What predicts that variation? 
-+ Consistency: Are there theoretical 
+* Variation: Children vary tremendously. What predicts that variation? 
+* Consistency: Are there theoretical 
 
 ## Outline of the Book
 

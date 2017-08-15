@@ -22,9 +22,9 @@ Wordbank Book Notes
 + subsampling analyses
 
 
-## gender 
+## gender
   - look at cohort effects  
-  
+
 # lexical grammar
 
 push further on why are there more age-related effects on syntax than morphology; if age related effects on syntax could be due to either innate (domain specific) or environmental (domain general) effects, then could we look to see if SES has more impact on syntactic (rather than morphological) development?
@@ -36,13 +36,7 @@ push further on why are there more age-related effects on syntax than morphology
   - preregister size of gender / SES / noun advantage stuff
   - comparison of
 
-# reorganization
-
-1.3 should go in the preface
-
-
-
 # Methodological issues
 
-* minimum data inclusion criterion 
-* should scales_x be free for age? 
+* minimum data inclusion criterion
+* should scales_x be free for age?

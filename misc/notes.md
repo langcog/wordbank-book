@@ -24,6 +24,10 @@ Wordbank Book Notes
 
 ## gender 
   - look at cohort effects  
+  
+# lexical grammar
+
+push further on why are there more age-related effects on syntax than morphology; if age related effects on syntax could be due to either innate (domain specific) or environmental (domain general) effects, then could we look to see if SES has more impact on syntactic (rather than morphological) development?
 
 ## categories
 * do we want to use effect sizes (as in 3) rather than area between the curve (in 4 currently)?

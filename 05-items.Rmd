@@ -1,4 +1,4 @@
-# Individual Words {#items}
+# Individual Words: Consistencies {#items}
 
 ## Baby's First Words are Consistent Across Languages
 
@@ -423,7 +423,8 @@ ggplot(data = predict.params,
 
 
 
-Look at age distributions
+Look at age distributions.
+
 ```{r,fig.width=3,fig.height=8}
 # all.by.age <- vocab.admins %>%
 #   group_by(language,age) %>%

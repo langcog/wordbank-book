@@ -3,7 +3,10 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Introduction {#intro}
+
+# Practical Foundations {#intro}
+
+<!-- The MB-CDI and the Wordbank Project -->
 
 (Some material in this chapter comes from @frank2016 and Marchman & Dale, in press)
 
@@ -13,9 +16,7 @@ Almost uniquely in cognitive development, early language learning also offers an
 
 The nature and course of early word learning is an important window into children's growing understanding of the world. Early words cross-cut a variety of linguistic categories, but generally consist of names for caregivers (e.g., mama), common objects (e.g., bottle, shoe), social expressions (e.g., bye-bye), and actions or routines (e.g., peekaboo, throw) [@nelson1973;@tardif2008]. New words enter children's expressive vocabularies slowly at first, but this process accelerates over the second year such that children reach an average of 300 words by 24 months and more than 60,000 by the time they graduate from high school [@fenson2007]. At the same time, there are significant individual differences in the rate and timing of language acquisition. For example, according to detailed observational studies, although some 18-month-olds already produce 50--75 words, others produce no words at all, and will not do so until they are 22 months or older [e.g., @brown1973;@bloom2002;@clark2003]. Moreover, some children show increases in their rate of vocabulary growth well before the end of the 2nd year, others not until well after their 2nd birthday, and still others may not "spurt" at all (@fenson2007; Goldfield & Reznick, 1990; Ganger & Brent, 2004). How can such differences be measured accurately and efficiently? And can we promote early detection of differences in vocabulary growth that will be clinically significant later in development?
 
-## Practical Foundations: The MB-CDI and the Wordbank Project
-
-### Measuring early vocabulary
+## Measuring early vocabulary
 
 Traditional studies of language development typically apply a combination of observational assessment and structured tests, frequently relying on short samples of interactions and small samples of children. Discerning both the universal features and natural variation of early lexical development has been greatly facilitated by the development of parent report instruments like the MacArthur-Bates CDI [@fenson1994;@fenson2007] and the Language Development Survey [LDS; @rescorla1989]. The CDIs in particular were developed across a period of more than 40 years. Originally designed for use in a research study [@bates1976], the instruments have evolved from a structured interview to the current paper-and-pencil format and are now increasingly administered online [e.g., @kristoffersen2013] for Norwegian or \url{http://laboratorium.detskarec.sk} for Slovak). While other assessment tools exist for slightly older children, to our knowledge, no other measure allows cost-effective global language assessment for children in the critical age ranges between the emergence of language and the period when children become more able to engage in structured, face-to-face activities (around 30 months).
 
@@ -23,7 +24,7 @@ Naturalistic observations are the other leading candidate for measurement of ear
 
 In addition, naturalistic observations do not measure children's language comprehension, a variable of interest for many early language researchers. Estimates of production vocabulary from naturalistic observation are highly correlated with the CDI within studies [e.g., @bornstein1998], but are likely to be affected substantially by length of the session, context, and interlocutor when comparing across studies [see e.g., @hidaka2015 for discussion]. And although there exist methods to extract insights about global vocabulary from naturalistic observation, these statistical extrapolations are relatively new and have not been validated extensively [@hidaka2015]. Other comprehension vocabulary measures are also available across some range of languages [e.g., the Peabody Picture Vocabulary Test 4; @dunn2007], but these assessments are tailored for children older than 2 1/2 years.
 
-### Logic of Parent Report
+## Logic of Parent Report
 
 Parent-report instruments like the CDI and LDS take advantage of the fact that parents (or other primary caregivers) are expert observers of their child. Parent reports are based on experiences with the child which are not only more extensive than any researcher or clinician can obtain, but are more representative of the child's ability. Parents have experience with children at play, at meals, at bath and bedtime, at tantrums -- in short, with the full range of the child's life and therefore with the full range of language structures used in these contexts.  Parents also have had opportunities to hear the child interact with other people: the other parent, grandparents, siblings, and friends. Because responses on these instruments represent an aggregation over much time and many situations, they are less influenced by factors that can mask a child's true ability in the laboratory or clinic, such as shyness or compliance, or that can impact the validity of naturalistic sampling, such as word frequency. As Bates, Bretherton, and Snyder (1988) point out, “parental report is likely to reflect what a child knows, whereas [a sample of] free speech reflects those forms that she is more likely to use.” (p. 57).
 
@@ -33,7 +34,7 @@ An additional advantage of the parent-report method is that parents can also rep
 
 The main core of the CDIs is the vocabulary checklist. This list is essentially a 'bag of words' which represents the set of words that best capture variation in lexical development across the full spectrum of child ages and abilities.  Parents choose the words their child currently "understands" (comprehension, measured for younger children) or "says" (production, measured for both younger and older children).  The checklists contain words from many different semantic (e.g., animal names, household items) and syntactic (e.g., action words, connectives) categories, resulting in broader samples of lexical knowledge than are available from other methods. In their English and Spanish instantiations, the vocabulary checklists come in two versions: Words & Gestures (W&G) (8--18 months) which contains about 400 words, and the Words & Sentences (W&S) (16--30 months), which contains about 700 words. A child's score on a vocabulary checklist represents their comprehension or production "vocabulary size," indexing that child's relative status against other children assessed with the same list.
 
-### Limitations of parent report
+## Limitations of parent report
 
 Although the standardization of parent reports using the CDI contributes to the availability of large amounts of data in a comparable format, there are significant limitations to the parent report methodology as well [@tomasello1994,@feldman2000]. Clearly there are legitimate concerns about the ability of parents to provide detailed and specific knowledge about their children's language. First, parents may be biased observers. Most parents do not have specialized training in language development, and may not be sensitive to subtle aspects of language structure and use. Further, a natural pride in the child and a failure to critically test their impressions may cause parents to overestimate the child's ability; conversely, frustration in the case of delayed language may lead to underestimates. Parent report is most likely to be accurate under three general conditions: (1) when assessment is limited to current behaviors, (2) when assessment is focused on emergent behaviors, and (3) when a primarily recognition format is used. Each of these conditions acts to reduce demands on the respondent's memory, for example, parents are better able to report on their child's language at the present than at times past and when their child is actively learning the particular words on the list (e.g., names for animals). 
 
@@ -47,7 +48,7 @@ Fifth, while the lengths of the vocabulary checklists on the CDIs may give the i
 
 In sum, despite these limitations, when used appropriately, the CDI instruments yield reliable and valid estimates of total vocabulary size. Because the instruments were designed to minimize bias by targeting current behaviors and asking parents about highly salient features of their child's abilities, they have proven to be an important tool in the field, dozens of studies demonstrating concurrent and predictive relations with naturalistic and observational measures, in both typically-developing and at-risk populations [e.g., @dale1996;@thal2000;@marchman2002]. In addition, a variety of recent work has shown that individual item-level responses can yield exciting new insights, for example about the growth patterns of semantic networks [@hills2009;@hills2010]. [NEED MORE HERE GIVEN STATEMENT ABOVE.] Such analyses have the potential to be even more powerful when applied to larger samples and across languages as they are within Wordbank.
 
-### Adaptations, not translations!
+## Adaptations, not translations!
 
 Originally designed for English, parallel CDI instruments have now been adapted for more than 90 languages (http://mb-cdi.stanford.edu/adaptations.html), with data from 25 of those languages currently available in Wordbank. The ethic behind the development of these instruments is "adaptation, not translation" -- in other words, to create forms with the same spirit as the English form, but not to simply translate the items. Instead, developers have been strongly encouraged to craft instruments that reflect the linguistic and cultural contexts that influence the early acquisition of vocabulary and other aspects of language in that particular language.  While many words on the English-language checklist may easily translate to other languages, others will simply not be relevant within the same developmental time frame for children learning that new language, e.g., ‘cheese’ in Japanese or ‘snow’ in Arabic.  Conversely, additional words may be needed in the new language which were not included on the English-language vocabulary checklist, e.g., ‘tortilla’ in Mexican Spanish.  
 
@@ -65,46 +66,9 @@ IS ANYTHING MISSING IN THE ABOVE?  Need to add sections/material on:
 + Limitations on cross-population comparison
 + Limitations on cross-linguistic comparison
 
-### Wordbank
+## Wordbank
 
 To take advantage of the opportunity posed by the broad use of CDI instruments in the child language community, in 2014 we began constructing Wordbank, an open repository for CDI data that allows for interactive analysis and visualization. Our inspiration for Wordbank came from two successful projects for sharing data on children's language acquisition. The first is the Child Language Data Exchange System [CHILDES; @macwhinney2000]. A database of transcripts of children's speech and speech to children, CHILDES has grown into a robust and important tool for the community, with many contributors and affiliated projects. The second is the Cross-Linguistic Lexical Norms site [CLEX; \url{www.cdi-clex.org}; @jorgensen2010}], which is closer in content to Wordbank, and effectively our precursor. CLEX archives normative data from a range of CDI adaptations across languages, allowing browsing of acquisition trajectories for individual items or age groups.
 
 Wordbank builds on CLEX, offering the same functionality but allowing flexible and interactive visualization and analysis, as well as direct database access and data download. In addition, Wordbank's goal was always to extend beyond normative data by dynamically incorporating data from many different researchers and projects of varying sizes and scopes.  While the resulting datasets in Wordbank are much more heterogeneous than norming data, they are also larger and more representative than the individual norming datasets (in some cases), and available in languages where no norms exist (for others).  
 
-## Theoretical Foundations: Theories of Language Acquisition
-
-There are many approaches to studying language learning. We distinguish a couple of major touchstones theories so that we can refer back to them.
-
-Theories of vocabulary acquisition:
-
-* Constraints and Biases [@markman1990]
-* Cross-situational Learning [@yu2007]
-
-Theories of grammatical acquisition:
-
-* Constructivist
-* Principles and Parameters
-
-
-### The Process Universals Viewpoint
-
-* Variation: Children vary tremendously. What predicts that variation? 
-* Consistency: Are there theoretical 
-
-## Outline of the Book
-
-Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item x child data. Considering the data in this way (shown in Figure \@ref(fig:1_outline_diagram)), leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. 
-
-```{r 1_outline_diagram, fig.cap="A graphical outline of the book."}
-p <- png::readPNG("images/outline.png")
-plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE, mai=c(0,0,0,0))
-rasterImage(p, xleft=0, xright=1, ybottom=0, ytop=1)
-```
-
-For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocab) considers this view of the data, examining predictors of individual children's vocabulary. Of course, chief among these is age, and developmental growth patterns as well as variability in development is considered in the first part of this chapter. But beyond age, even the limited demographic data available in Wordbank can be used to explore the data; we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-cultually valid proxy for socio-economic status). These demographic predictors reveal both consistent and variable patterns across languages: while gender and birth-order effects are relatively constant, socio-economic effects vary widely in magnitude. 
-
-Averaging across the other margin of the data leads to *by-item averages*. These can be examined in a number of different ways. First, items can be grouped into categories (both syntactic and semantic). Chapter \@ref(categories) considers the categorical composition of early vocabulary, giving special consideration to the "noun bias" that is found in many -- but not all -- of the languages in Wordbank. Chapter \@ref(items) considers the growth trajectories for individual words and adopts the approach of predicting the trajectories of individual words based on both environmental and conceptual features of these words. This approach calls for the incorporation of other resources, and so we use a variety of English and cross-linguistic resources to supplement Wordbank data in this chapter. 
-
-Not all items denote individual words, however, so in Chapters \@ref(gestures) and \@ref(grammar), we consider the gesture/communication and grammatical items that are included in some CDI forms. Chapter \@ref(gestures) follows up on the early work of @fenson1994 who explored the relationship between gesture and early vocabulary. Chapter \@ref(grammar) explores the work of @bates1999 and @marchman1994, who considered the relationship between vocabulary growth and the growth of grammar and first reported the striking relationship between these variables. Both of these chapters (as well as the rest of the book) are deeply indebted to the Batesian vision of exploring the process of language learning.
-
-Many of the analyses reported here were first described in earlier publications [e.g., @frank2016,@braginsky2015,@braginsky2016]. Rather than reprinting these, this manuscript updates them using the unified analytic approach and larger dataset described in Chapter \@ref(methods). 

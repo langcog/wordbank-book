@@ -21,6 +21,8 @@ morphosyntax_fields <- c("combine", "complexity", "word_forms", "word_endings",
 #   select_(.dots = c("language", "word", morphosyntax_fields)) #%>%
 # 
 # num_langs <- n_distinct(complexity_forms$language)
+
+num_langs <- 4   # TODO!
 ```
 
 <!--## Abstract 
@@ -65,6 +67,7 @@ To analyze lexical and grammatical development, we derive several measures. Each
 
 
 <!-- In the current study, we present data from XYZ children XYZ months old, using adaptations of the CDI Words \& Sentences form in four languages: English, Spanish, Norwegian, and Danish. We replicate classic findings of strong lexicon-grammar relations and patterns of vocabulary composition across four languages. We also extend these findings through novel analyses afforded by the Wordbank database.  -->
+
 
 Show number of items in each relevant section.
 ```{r 7_n_items, fig.cap="Number of items in the words, word forms, and complexity sections for all those instruments with complexity items."}
@@ -162,12 +165,12 @@ get_grammar_data <- function(lang) {
 }
 ```
 
-```{r 7_get_grammar_data, eval = FALSE}
-# grammar_data <- grammar_items$language %>%
-#   unique() %>%
-#   sort() %>%
-#   map_df(get_grammar_data)
-# write_feather(grammar_data, "data/grammar_data.feather")
+```{r 7_get_grammar_data, eval=FALSE}
+grammar_data <- grammar_items$language %>%
+  unique() %>%
+  sort() %>%
+  map_df(get_grammar_data)
+write_feather(grammar_data, "data/grammar_data.feather")
 ```
 
 Get by kid summary data for all languages.
@@ -183,6 +186,21 @@ grammar_summary <- grammar_data %>%
 ```
 
 
+```{r 7_items}
+grammar_items %>%
+  filter(coded_type == "Word Form") %>%
+  select(language, type, definition) %>%
+  arrange(language, type) %>%
+  datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
+            options = list(pageLenth = 20))
+  
+grammar_items %>%
+  filter(coded_type == "Complexity") %>%
+  select(language, type, definition) %>%
+  arrange(language, type) %>%
+  datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
+            options = list(pageLenth = 20))
+```
 
 Plot score as a function of vocabulary size for each language and measure with model prediction curves.
 
@@ -277,34 +295,35 @@ For all languages, the curves for Word Form are near-overlapping, showing little
 <!-- \end{figure*} -->
 
 ```{r 7_age_hist}
-ggplot(grammar_data, aes(x=age)) + 
-  geom_histogram() + 
-  facet_wrap(~language)
+# ggplot(grammar_data, aes(x=age)) + 
+#   geom_histogram() + 
+#   facet_wrap(~language)
 ```
 
 Choosing cut points here is hard, since the age distribution/density is different from language to language. 
 
 ```{r 7_age_plot, fig.width=8}
-grammar_summary_age <- grammar_data %>%
-  filter(!is.na(age)) %>%
-  mutate(age_group = cut(age, c(12, 20, 28, 36))) %>%
-  group_by(language, coded_type, data_id, age_group, vocab_mean) %>%
-  summarise(sum = sum(value),
-            diff = length(value) - sum,
-            mean = sum / length(value))
-
-ggplot(grammar_summary_age %>% filter(!(language %in% c("Slovak","Mandarin"))),
-       aes(x = vocab_mean, y = mean, fill = age_group, col = age_group)) + 
-  geom_jitter(alpha = 0.2, size = 0.75) +
-  facet_grid(coded_type ~ language) + 
-  # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-  #             size = 1, se = FALSE) + 
-  geom_smooth(method = "loess", se = FALSE, span = 1) + 
-  scale_colour_solarized() + 
-  scale_fill_solarized()
+# grammar_summary_age <- grammar_data %>%
+#   filter(!is.na(age)) %>%
+#   mutate(age_group = cut(age, c(12, 20, 28, 36))) %>%
+#   group_by(language, coded_type, data_id, age_group, vocab_mean) %>%
+#   summarise(sum = sum(value),
+#             diff = length(value) - sum,
+#             mean = sum / length(value))
+# 
+# ggplot(grammar_summary_age %>% filter(!(language %in% c("Slovak","Mandarin"))),
+#        aes(x = vocab_mean, y = mean, fill = age_group, col = age_group)) + 
+#   geom_jitter(alpha = 0.2, size = 0.75) +
+#   facet_grid(coded_type ~ language) + 
+#   # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
+#   #             size = 1, se = FALSE) + 
+#   geom_smooth(method = "loess", se = FALSE, span = 1) + 
+#   scale_colour_solarized() + 
+#   scale_fill_solarized()
 ```
 
 
+<!--
 UNUSED MODEL BASED ANALYSES BELOW
 
 Plot age effect coefficients for each language and measure.
@@ -391,7 +410,7 @@ Plot item interactions for Spanish.
 plot.item.coefs(item.models, "Spanish")
 ```
 
-
+-->
 
 Because of the size of our samples, all main effects and interactions are highly significant. To assess the extent of the age contribution to children's morphological and syntactic development, we compared the coefficients of Word Form and Complexity models. Figure~\ref{fig:coefs_grammar} shows the coefficient of the age effect for each measure across languages. In each language, the age effect coefficient is substantially larger for Complexity than Word Form, indicating a greater age effect on those items that generally align with syntax than morphology.
 
@@ -410,6 +429,8 @@ The current study revisits classic findings but also explores novel questions re
 Our analyses suggest interesting new areas of research regarding possible mechanisms driving children's early lexical development and how those mechanisms might support children's transition from single words to more morphosyntactically complex utterances. One possibility is that these developments are dependent on maturational factors that operate on grammatical development in a domain-specific way, independent of lexical-semantic processes. Another possibility is that age-related effects represent more domain-general learning mechanisms, such as attention or working memory, that provide differential support for sentence-level processes than word-internal ones \cite{gathercole2014}. Future studies should also explore the extent to which lexical and age-related processes are shaped, either independently or in tandem, by features of the learning environments that children experience \cite<e.g.,>{weisleder2013}.
 
 Questions about the nature of morphosyntactic representations in early language have often seemed deadlocked. But by mapping out developmental change across large samples and multiple languages, our findings here challenge theories across the full range of perspectives to more fully describe the mechanistic factors underlying the interaction of vocabulary, grammar, and development. 
+
+<!--
 
 ```{r}
 # + 
@@ -476,3 +497,5 @@ Show AICs of grammar models.
 kable(select(grammar.model.metrics,
              language, measure, AIC.vocab, AIC.vocab.age, deltaAIC))
 ```
+
+-->

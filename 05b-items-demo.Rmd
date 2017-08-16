@@ -1,4 +1,4 @@
-# Individual Words: Demographic Predictors
+# Individual Words: Demographics
 
 THIS IS ALL JUST STRAIGHT FROM https://github.com/mikabr/gender-input
 

@@ -1,4 +1,4 @@
-# Categorical Composition {#categories}
+# Categorical Composition: Syntax {#categories}
 
 The Categorical Composition of Early Vocabulary. This chapter focuses on splitting vocabulary data into syntactic and semantic categories and analyzing consistency and variability across languages in the acquisition of these. 
 
@@ -97,20 +97,7 @@ sample_sizes %>%
 
 How do we estimate over-representation or under-representation of a particular vocabulary item?
 
-
-```{r 4_plot_area_demo, fig.width = 9, fig.height = 3.5}
-demo_langs <- c("English", "Mandarin")
-demo_data <- filter(vocab_comp_data, form == "WS", language %in% demo_langs) %>%
-  mutate(panel = paste(language, "(data)"),
-         lexical_category = factor(lexical_category,
-                                   levels = c("nouns", "predicates", "function_words"),
-                                   labels = c("Nouns", "Predicates", "Function Words")))
-pts <- seq(0, 1, 0.01)
-
-models <- demo_data %>%
-  group_by(language, lexical_category) %>%
-  do(model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = .))
-
+```{r 4_area_funs}
 get_lang_lexcat_predictions <- function(lang, lexcat) {
   model <- filter(models, language == lang, lexical_category == lexcat)$model[[1]]
   data.frame(vocab = pts,
@@ -124,6 +111,22 @@ get_lang_predictions <- function(lang) {
                    function(lexcat) get_lang_lexcat_predictions(lang, lexcat),
                    simplify = FALSE))
 }
+```
+
+
+
+```{r 4_plot_area_demo, fig.width = 9, fig.height = 3.5}
+demo_langs <- c("English", "Mandarin")
+demo_data <- filter(vocab_comp_data, form == "WS", language %in% demo_langs) %>%
+  mutate(panel = paste(language, "(data)"),
+         lexical_category = factor(lexical_category,
+                                   levels = c("nouns", "predicates", "function_words"),
+                                   labels = c("Nouns", "Predicates", "Function Words")))
+pts <- seq(0, 1, 0.01)
+
+models <- demo_data %>%
+  group_by(language, lexical_category) %>%
+  do(model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = .))
 
 predictions <- bind_rows(sapply(demo_langs, get_lang_predictions, simplify = FALSE))
 
@@ -340,8 +343,5 @@ In all four languages, the age coefficient is substantially larger for function 
 
 
 
-## Semantic Category Representation
-
-The same analyses could be done with CDI categories, which are semantic rather than lexical.
 
 

@@ -1,0 +1,317 @@
+# Categorical Composition: Semantics
+
+The same analyses as in the previous chapter could be done with CDI categories, which are semantic rather than lexical.
+
+## Data Prep
+
+```{r  ccs_items}
+items <- items %>%
+  filter(type == "word") %>%
+  mutate(num_item_id = as.numeric(substr(item_id, 6, nchar(item_id))))
+```
+
+
+What are the most common categories?
+
+```{r}
+category_freqs <- items %>%
+  filter(!is.na(category), form == "WS") %>%
+  group_by(category, lexical_category, language) %>%
+  summarise(items = n()) %>%
+  group_by(category, lexical_category) %>%
+  summarise(items = mean(items), 
+            langs = n()) %>%
+  ungroup %>%
+  mutate(category = fct_reorder(category, langs, .desc = TRUE))
+
+ggplot(category_freqs,
+       aes(x = category, y = langs, fill = lexical_category)) + 
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+```
+
+Seems reasonable to take high-freuqency and 
+
+
+```{r cat_comp_fun}
+
+get_cat_comp <- function(input_language, input_form) {
+  print(paste(input_language,input_form))
+  
+  lang_vocab_items <- filter(items, 
+                             language == input_language, 
+                             form == input_form) %>%
+    filter(category %in% category_freqs$category)
+  
+  lang_vocab_data <- get_instrument_data(instrument_language = input_language,
+                                         instrument_form = input_form,
+                                         items = lang_vocab_items$item_id, 
+                                         iteminfo = lang_vocab_items) %>%
+    mutate(value = ifelse(is.na(value), "", value),
+           produces = value == "produces",
+           understands = value == "produces" | value == "understands") %>%
+    select(-value) %>%
+    gather(measure, value, produces, understands)
+  
+  num_words <- nrow(lang_vocab_items)
+  
+  lang_vocab_summary <- lang_vocab_data %>%
+    group_by(data_id, measure, category) %>%
+    summarise(num_true = sum(value),
+              prop = sum(value) / n())
+  
+  lang_vocab_sizes <- lang_vocab_summary %>%
+    summarise(vocab_num = sum(num_true),
+              vocab = sum(num_true) / num_words)
+  
+  lang_vocab_summary %>%
+    left_join(lang_vocab_sizes) %>%
+    mutate(prop_vocab = num_true / vocab_num) %>%
+    select(-num_true) %>%
+    mutate(language = input_language, form = input_form)
+}
+```
+
+```{r ccs_vocab_comp, eval=FALSE}
+included_instruments <- instruments %>%
+  filter(form %in% c("WS", "WG")) %>%
+  select(language, form) %>%
+  distinct()
+
+cat_comp_data <- map2(included_instruments$language,
+                      included_instruments$form, get_cat_comp) %>%
+  bind_rows()
+
+write_feather(cat_comp_data, "data/cat_comp_data.feather")
+```
+
+```{r ccs_cached_data}
+cat_comp_data <- read_feather("data/cat_comp_data.feather")
+```
+
+We limit our analysis to traditional WS and WG forms for now because short forms like the British English TEDS don't have category information. The sample sizes included in this analysis are given below. 
+
+```{r ccs_sample_sizes}
+sample_sizes <- cat_comp_data %>%
+  group_by(language, form, measure, category) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  select(language, form, n) %>%
+  distinct() 
+
+sample_sizes %>%
+  datatable
+```
+```{r ccs_funs}
+get_lang_cat_predictions <- function(lang, cat) {
+  model <- filter(models, language == lang, category == cat)$model[[1]]
+  data.frame(vocab = pts,
+             prop = predict(model, newdata = data.frame(vocab = pts)),
+             category = cat,
+             language = lang)
+}
+
+get_lang_predictions <- function(lang) {
+  bind_rows(sapply(unique(demo_data$category),
+                   function(cat) get_lang_cat_predictions(lang, cat),
+                   simplify = FALSE))
+}
+```
+
+## Illustrating the Approach
+
+English data alone. 
+
+```{r ccs_plot_area_demo, fig.width = 9, fig.height = 3.5}
+demo_langs <- "English (American)"
+demo_data <- filter(cat_comp_data, form == "WS", language %in% demo_langs) %>%
+  mutate(panel = paste(language, "(data)"))
+
+pts <- seq(0, 1, 0.01)
+
+models <- demo_data %>%
+  group_by(language, category) %>%
+  do(model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = .))
+
+predictions <- bind_rows(sapply(demo_langs, get_lang_predictions, simplify = FALSE))
+
+diagonal <- expand.grid(vocab = rep(rev(pts)),
+                        language = demo_langs,
+                        lexical_category = unique(demo_data$lexical_category))
+diagonal$prop <- diagonal$vocab
+
+area_poly <- bind_rows(predictions, diagonal) %>%
+  mutate(panel = paste(language, "(models)"))
+
+ggplot(filter(predictions, language == "English (American)"), 
+       aes(x = vocab, y = prop)) +
+  facet_wrap( ~ category) +
+  geom_line(aes(colour = category), size = 1) +
+  geom_polygon(data = filter(area_poly, language == "English (American)"),
+               aes(fill = category), alpha = 0.2) +
+  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
+  scale_y_continuous(limits = c(0, 1), breaks = c(),
+                     name = "") +
+  scale_x_continuous(limits = c(0, 1), breaks = c(),
+                     name = "") +
+  scale_colour_solarized(guide = FALSE) +
+  scale_fill_solarized(guide = FALSE) 
+```
+
+
+
+Function for resampling data and computing area estimate for each sample.
+
+```{r ccs_resample}
+sample_areas <- function(d, nboot = 1000) {
+  
+  poly_area <- function(group_data) {
+    model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1,
+                data = group_data)
+    return((model$solution %*% c(1/4, 1/3, 1/2) - 0.5)[1])
+  }
+  
+  counter <- 1
+  sample_area <- function(d) {
+    d_frame <- d %>%
+      group_by(language, form, measure) %>%
+      sample_frac(replace = TRUE) %>%
+      group_by(language, form, measure, category) %>%
+      do(area = poly_area(.)) %>%
+      mutate(area = area[1]) %>%
+      rename_(.dots = setNames("area", counter))
+    
+    counter <<- counter + 1 # increment counter outside scope
+    return(d_frame)
+  }
+  
+  areas <- replicate(nboot, sample_area(d), simplify = FALSE)
+  
+  Reduce(left_join, areas) %>%
+    gather(sample, area, -language, -form, -measure, -category)
+}
+```
+
+Resample data and find the mean and CI of the area estimate.
+
+```{r ccs_areas, eval=FALSE}
+areas <- sample_areas(cat_comp_data, nboot=100)
+write_feather(areas,"data/vocab_comp_areas.feather")
+```
+
+
+```{r ccs_areas2}
+areas <- read_feather("data/vocab_comp_areas.feather")
+
+area_summary <- areas %>%
+  group_by(language, form, measure, category) %>%
+  summarise(mean =  mean(area),
+            ci_lower = ci_lower(area),
+            ci_upper = ci_upper(area)) %>%
+  ungroup() %>%
+  mutate(language = factor(language),
+         instrument = paste(language, form))
+
+area_summary_ordered <- area_summary %>%
+  mutate(category = fct_reorder(category, mean))
+```
+
+## Across languages
+
+```{r ccs_base_plot}
+base_plot <- function(input_form, input_measure, included_cats) {
+  cat_comp_data %>%
+    filter(form == input_form, measure == input_measure, 
+           category %in% included_cats)  %>%
+    ggplot(aes(x = vocab, y = prop, col = category)) + 
+    facet_wrap(~language) +
+    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
+                       name = "Proportion of Category\n") +
+    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
+                       name = "\nVocabulary Size") +
+    scale_colour_solarized(name = "") +
+    theme(legend.position = "top",
+          legend.key = element_blank(),
+          legend.background = element_rect(fill = "transparent"))
+}
+```
+
+```{r}
+included_cats <- filter(category_freqs, 
+                        langs > 20, items > 10,
+                        lexical_category %in% c("nouns","other")) %>%
+  pull(category)
+
+```
+
+
+```{r ccs_plot_points_ws}
+base_plot("WS", "produces", included_cats) + 
+  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
+  geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
+              size = 1, se = FALSE)
+```
+
+
+```{r ccs_plot_areas}
+ggplot(filter(area_summary_ordered, 
+              form == "WS", 
+              measure == "produces", 
+              category %in% included_cats),
+       aes(x = category, y = mean, colour = category)) +
+  facet_wrap(~language ) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") + 
+  scale_colour_solarized(name = "", guide = FALSE) + 
+  xlab("\nRelative representation in early vocabulary") 
+```
+## Dimensionality Reduction Approach
+
+### WS Production Nouns
+
+```{r}
+areas <- filter(area_summary_ordered, 
+              form == "WS", 
+              measure == "produces", 
+              category %in% included_cats)
+
+areas %<>%
+  select(language, category, mean) %>%
+  spread(category, mean) 
+
+
+areas_matrix <- as.matrix(select(areas, -language))
+row.names(areas_matrix) <- areas$language
+
+# remove NAs 
+areas_matrix <- areas_matrix[!rowSums(!is.finite(areas_matrix)),]
+
+pcs <- princomp(areas_matrix)
+```
+
+Scree plot, indicating that PC1 dominates (for nouns, at least). 
+
+```{r}
+plot(pcs)
+```
+
+```{r}
+knitr::kable(as.data.frame(pcs$loadings[,]), digits = 2)
+```
+
+```{r}
+pc_df <- data_frame(c1 = pcs$scores[,"Comp.1"], 
+                     c2 = pcs$scores[,"Comp.2"], 
+                    language = row.names(pcs$scores))
+                    
+                    
+ggplot(pc_df, aes(x = c1, y = c2, col = language, label = language)) + 
+  geom_point() +
+  ggrepel::geom_label_repel() + 
+  xlab("Sounds, Vehicles, Games, Animals, Clothing (PC1)") + 
+  ylab("Sounds, not Vehicles (PC2)") + 
+  scale_color_solarized(guide = FALSE)
+```
+
+

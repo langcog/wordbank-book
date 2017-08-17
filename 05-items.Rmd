@@ -2,424 +2,517 @@
 
 ## Baby's First Words are Consistent Across Languages
 
-Get a script that provides interface functions for pulling data out of Wordbank.
-```{r wordbank.funs, cache=FALSE}
-url <- 'https://raw.githubusercontent.com/langcog/wordbank/master/shiny_apps/data_loading.R'
-script <- getURL(url, ssl.verifypeer = FALSE)
-eval(parse(text = script))
-```
-
-Connect to the Wordbank database.
-```{r connect, cache=FALSE}
-wordbank <- connect.to.wordbank("prod")
-```
-
-Load tables
-```{r tables}
-common.tables <- get.common.tables(wordbank)
-instrument.tables <- get.instrument.tables(wordbank, common.tables)
-
-admins <- get.administration.data(common.tables)
-items <- get.item.data(common.tables)
-```
-
-Filter down to appropriate kids
-```{r}
-vocab.admins <- admins %>%
-  select(data_id, language, form, age, sex, production) %>%
-  filter(form == "WG")
-```
-
-Function that get's one language's data from wordbank
-```{r}
-get.language.data <- function(lang, vocab.data) {
+```{r load_consistency_data}
+if(local_data) {
+  wg_data <- read_feather("data/wg_data.feather")
+  ws_sub_data <- read_feather("data/ws_sub_data.feather")
+}
+else {
+  wg_langs <- instruments %>%
+    filter(form == "WG") %>%
+    distinct(language) %>%
+    pull(language)
   
-  lang.table <- filter(instrument.tables, language==lang, form=="WG")$table[[1]]
+  ws_langs <- instruments %>%
+    filter(form == "WS") %>%
+    distinct(language) %>%
+    pull(language)
   
-  words <- items %>%
-    filter(type == "word", language == lang, form == "WG") %>%
-    select(definition, item.id, uni_lemma, category, lexical_category) %>%
-    rename(item_id = item.id)
+  ws_sub_langs <- intersect(wg_langs, ws_langs)
   
-  lang.data <- lang.table %>%
-    filter(basetable_ptr_id %in% vocab.data$data_id) %>%
-    select_(.dots=c("basetable_ptr_id", words$item_id)) %>%
-    as.data.frame %>% 
-    gather(item_id, value, -basetable_ptr_id) %>%
-    rename(data_id = basetable_ptr_id) %>%
-    mutate(value = ifelse(is.na(value), "", value)) %>%
-    left_join(vocab.data)
+  wg_data <- map( wg_langs, function(lang) {
+    get_instrument_data(lang, "WG") %>%
+      mutate(language = lang)
+    }) %>%
+    bind_rows
   
-  return(left_join(lang.data, words))
+  ws_sub_data <-  map(ws_sub_langs, function(lang) {
+    get_instrument_data(lang, "WS") %>%
+      mutate(language = lang)
+    }) %>%
+    bind_rows
+  
+  write_feather(wg_data, "data/wg_data.feather")
+  write_feather(ws_sub_data, "data/ws_sub_data.feather")
+}
 
-  }
+kid_wg_data <- wg_data %>%
+  left_join(items) %>%
+  left_join(admins) %>%
+  filter(form == "WG", type == "word", !is.na(uni_lemma), !is.na(age)) %>%
+  select(data_id, value, age, language, uni_lemma, category, lexical_category, lexical_class)
+
+stitch_items <- items %>%
+  filter(language %in% unique(ws_sub_data$language)) %>%
+  group_by(language, lexical_category, uni_lemma) %>%
+  summarise(n = n()) %>%
+  filter(n > 1) %>%
+  select(-n) %>%
+  mutate(form = "WS") %>%
+  left_join(items)
+
+stitched_data <- ws_sub_data %>%
+  left_join(stitch_items) %>%
+  left_join(admins) %>%
+  filter(!is.na(age)) %>%
+  select(data_id, value, age, language, uni_lemma, category, 
+         lexical_category, form) %>%
+  bind_rows(kid_wg_data %>%
+              filter(language %in% unique(ws_sub_data$language)) %>%
+              mutate(form = "WG"))
 ```
 
-Get all data
-```{r}
-languages <- c("English", "Norwegian", "Croatian", "Hebrew",
-               "Russian","Spanish","Swedish","Turkish")
+Estimate aoas
+```{r compute_aoa}
+fit_rglm <- function(data) {
+  
+  if(any(str_detect(names(data), "produces")))
+    model <- robustbase::glmrob(cbind(produces, total - produces) ~ age,
+               family = "binomial",
+               data = data)
+  else
+    model <- robustbase::glmrob(cbind(understands, total - understands) ~ age,
+               family = "binomial",
+               data = data)
+  
+  aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
+  
+  data.frame(uni_lemma = data$uni_lemma[1],
+             language = data$language[1],
+             lexical_category = data$lexical_category[1],
+             rglm_aoa = aoa)
 
-all.data <- bind_rows(sapply(languages, 
-                             function(lang) get.language.data(lang,vocab.admins),
-                             simplify = FALSE))
+}
 
-get.lang.lemmas <- function(lang) unique(filter(all.data,
-                                                language == lang)$uni_lemma)
-common.lemmas <- Reduce(intersect, sapply(languages, get.lang.lemmas))
+production_data <- stitched_data %>%
+  group_by(form, language, lexical_category, age, uni_lemma) %>%
+  summarise(produces = sum(value == "produces", na.rm = T), 
+            total = n()) %>%
+  filter(!is.na(uni_lemma)) %>%
+  filter(!language %in% c("French (Quebec)", "Hebrew"))
+
+both_form_data <- production_data %>%
+  group_by(language, uni_lemma) %>%
+  summarise(num_forms = length(unique(form))) %>%
+  filter(num_forms > 1) %>%
+  select(-num_forms) %>%
+  left_join(production_data)
+
+understanding_data <- kid_wg_data %>%
+  group_by(language, lexical_category, age, uni_lemma) %>%
+  summarise(understands = sum(value %in% c("understands", "produces"), 
+                              na.rm = T),  
+            total = n()) %>%
+  filter(!is.na(uni_lemma)) %>%
+  filter(!language %in% c("French (Quebec)", "Hebrew"))
+
+production_aoas <- both_form_data%>%
+  split(paste(.$language, .$uni_lemma, sep = "_")) %>%
+  map(fit_rglm) %>%
+  bind_rows %>%
+  mutate(measure = "produces")
+
+understanding_aoas <- understanding_data %>%
+  split(paste(.$language, .$uni_lemma, sep = "_")) %>%
+  map(fit_rglm) %>%
+  bind_rows %>%
+  mutate(measure = "understands")
+
+all_aoas <- bind_rows(production_aoas, understanding_aoas)
 ```
 
-Compute cross-linguistic order
-```{r}
-order.data <- all.data %>%
-  ungroup() %>%
-  filter(uni_lemma %in% common.lemmas) %>%
-  mutate(language = factor(language)) %>%
-  group_by(language, uni_lemma,item_id) %>%
-  summarise(produces = mean(value == "produces"),
-            understands = mean(value == "produces" | value == "understands"),
-            only.understands = mean(value == "understands")) %>%
-  summarise(produces = max(produces),
-            understands = max(understands),
-            only.understands = max(only.understands)) %>%
-  gather(measure, prop, produces, understands, only.understands) %>%
-  group_by(language, measure) %>%
-  mutate(order = rank(-prop))
-
-unilemma.order <- order.data %>%
+```{r uni_lemma_completeness}
+lemma_completeness <- all_aoas %>%
   group_by(measure, uni_lemma) %>%
-  summarise(mean.order = mean(order),
-            mean.prop = mean(prop))
+  summarise(in_langs = sum(!is.na(rglm_aoa)))
 
-order.mean.data <- order.data %>%
-  left_join(unilemma.order) %>%
-  mutate(held.out.prop = (mean.prop*length(languages) - prop)/
-           (length(languages)-1),
-         held.out.order = (mean.order*length(languages) - order)/
-           (length(languages)-1)) %>%
-  arrange(mean.order)
-
-# Two baseline languages
-# random.language <- order.mean.data %>%
-#   filter(language == "English") %>%
-#   ungroup() %>%
-#   mutate(order = mean(order),
-#          language = "Random")
-
-# mean.language <- order.mean.data %>%
-#   filter(language == "English") %>%
-#   ungroup() %>%
-#   mutate(order = mean.order,
-#          language = "Mean")
-
-baseline.order.data <- order.mean.data %>%
-#  bind_rows(random.language) %>%
-#  bind_rows(mean.language) %>%
- # mutate(order.diff = abs(order - held.out.order)) %>%
-  mutate(order.diff = abs(order - mean.order)) %>%
-  group_by(language, measure) %>%
-  arrange(mean.order) %>%
-  mutate(mean.order.diff = cumsum(order.diff))
+lemma_completeness %>%
+  group_by(measure, in_langs) %>%
+  summarise(n = n()) %>%
+  arrange(measure, desc(in_langs)) %>%
+  mutate(prop = n/sum(n)) %>%
+  mutate(cum_prop = cumsum(prop),
+         cum_n = cumsum(n)) %>%
+  datatable
 ```
 
-Pairwise correlations
-```{r}
-pairwise.corr.data <- baseline.order.data %>%
-  filter(measure == "produces") %>%
-  select(prop,language,uni_lemma) %>%
-  spread(language,prop) %>%
-  select(Croatian:Turkish) %>%
-  cor %>%
-  as.data.frame 
-
-pairwise.corr.data$language1 <- row.names(pairwise.corr.data) 
-
-pairwise.corr.data %<>%
-  gather(language2,cor,Croatian:Turkish) %>%
-  filter(language1 != language2)
-
-min(pairwise.corr.data$cor)
-```
-Plot cross-linguistic acquisition order
-```{r}
-aq.order.data <- baseline.order.data %>%
-  filter(measure == "produces")
-
-quartz(width = 4,height = 3.3)
-ggplot(aq.order.data, 
-       aes(x = mean.order, y = mean.order.diff, 
-           color = language, fill = language,
-           label=language)) +
-  geom_point(size=.8) +
-  geom_smooth(method="loess")+
-  geom_dl(method = list(dl.trans(x=x +.15), "last.bumpup", cex=.7))+ 
-  scale_color_brewer(palette = "Dark2") +
-  scale_fill_brewer(palette = "Dark2") +
-  scale_x_continuous(limits = c(0,150),breaks = seq(0,140,20),
-                     name = "Mean Cross-Linguistic Acquisition Order")+
-  scale_y_continuous(name = "Cumulative Difference from Mean Order",
-                     limits = c(0,3200),breaks=seq(0,3200,400))+
-  theme_bw(base_size=11) +
-  theme(panel.grid = element_blank(), legend.position="none")
-```
-
-Get frequency and phoneme data and merge.
-```{r}
-eng.phons <- read_delim('mrc.phons.txt',delim='\t')
-
-eng.freqs <- read.csv('english.freqs.csv') %>%
-  gather(word, count) %>%
-  group_by(word) %>%
-  summarize(frequency = mean(count)) %>%
-  ungroup() %>%
-  mutate(word = str_trim(tolower(gsub('\\.', ' ', word)))) %>%
-  left_join(eng.phons)
-
-eng.cats <- all.data %>%
-  filter(language=="English") %>%
-  select(uni_lemma,category,lexical_category) %>%
-  distinct() %>%
-  filter(uni_lemma %in% common.lemmas)
-
-held.out.order.preds <- order.mean.data %>%
-  filter(language == "English") %>%
-  select(uni_lemma,measure,held.out.order,held.out.prop)
-
-freqs.data <- order.mean.data %>%
- # select(-order,-mean.order,-lexical_category) %>%
-  select(language,order,uni_lemma,measure) %>%
-#  spread(language,prop) %>%
-  spread(language,order) %>%
-  left_join(held.out.order.preds) %>%
-  left_join(eng.cats) %>%
-  mutate(word = gsub(' \\(.*\\)', '', uni_lemma)) %>%
-  left_join(eng.freqs) %>%
-  filter(!is.na(frequency)) %>%
-  group_by(measure) %>%
-  arrange(English)
-  #arrange(desc(English))
-
-```
-
-Construct acquisition order models 
-```{r}
-freqs.models <- freqs.data %>%
-  do(lm.freq = lm(English ~ category + log(1000*frequency) + phones, 
-                   data=.),
-     lm.lang = lm(English ~ held.out.order, data=.))
-  
-get.model <- function(select.measure, model_type) {
-  filter(freqs.models, measure == select.measure)[[model_type]][[1]]
-}
-
-get.prediction.lm.cor <- function(model_type, meas, group_data) {
-    filtered_data <- filter(group_data, measure == meas)
-    predicted = (predict(get.model(meas, model_type),
-                                  newdata = filtered_data))
-#     predicted = predict(get.model(meas, model_type),
-#                               newdata = filtered_data)
-    cor(filtered_data$English, predicted)
-}
-
-cum.model <- function(order.num) {
-  
-  order.model.data <- freqs.data %>%
-    group_by(measure) %>%
-    filter(row_number() <= order.num) %>%
-#       filter(row_number() >= order.num - 10,
-#              row_number() <= order.num + 10) %>%
-    summarise(freq = get.prediction.lm.cor("lm.freq", unique(measure), .),
-              lang = get.prediction.lm.cor("lm.lang", unique(measure), .)) %>%
-  mutate(order.num = order.num)
-}
-
-cors <- bind_rows(sapply(seq(10, length(common.lemmas), 1),
-                         cum.model, simplify = FALSE)) %>%
-    gather(model,cor,freq,lang)
-  
-
-cors.plot.data <- cors %>%
-  filter(measure == "produces") %>%
-  select(-measure) %>%
-  mutate(model = factor(model,levels = c("lang","freq"), 
-                        labels = c("Cross-Linguistic","Distributional")))
-```
-
-Plot predictive models
-```{r}
-quartz(width = 4,height = 3.3)
-ggplot(cors.plot.data, 
-       aes(x = order.num, y = cor, 
-           color = model, fill=model,label=model)) +
-  geom_point(size=1) +
-  geom_smooth(method="loess",span=.25)+
-  geom_dl(method = list(dl.trans(x=x +.2), "smart.grid", cex=.8))+ 
-  scale_color_brewer(palette = "Set1") +
-  scale_fill_brewer(palette = "Set1") +
-  scale_x_continuous(limits = c(0,140),breaks = seq(0,140,20),
-                     name = "English Acquisition Order")+
-  scale_y_continuous(name = "Cumulative Correlation with English Order",
-                     limits = c(-.1,1),breaks=seq(-1,1,.25))+
-  theme_bw(base_size=11) +
-  theme(panel.grid = element_blank(), legend.position="none")
-```
-
-Top words
-```{r}
-top.words <- baseline.order.data %>%
-  group_by(language) %>%
-  arrange(desc(prop)) %>%
+```{r top10}
+top10 <- all_aoas %>%
+  group_by(measure,language) %>%
+  arrange(rglm_aoa) %>%
   slice(1:10) %>%
-  select(language,uni_lemma,prop)
+  select(-rglm_aoa, -lexical_category) %>%
+  mutate(order = 1:n()) %>%
+  spread(language, uni_lemma) 
 
-tab.words <- top.words %>%
-  mutate(order = 1:10) %>%
-  rowwise() %>%
-  select(language,uni_lemma,order) %>%
-  spread(language,uni_lemma) %>%
-  select(-order)
-
-kable(tab.words)
+datatable(top10)
 ```
 
-```{r}
-prod.data <- filter(freqs.data, measure=="produces") %>%
-  mutate(freq = inv.logit(predict(get.model("produces","lm.freq"))),
-         nor = inv.logit(predict(get.model("produces","lm.lang")))) %>%
-  gather(model,predicted,freq:nor) %>%
-  group_by(measure,model) %>%
-  mutate(resid = (English - predicted),
-         order = rank(-English))
+Understands and Produces
+```{r understands_and_produces}
+median_aoas <- all_aoas %>%
+  group_by(measure, uni_lemma) %>%
+  summarise(n = sum(!is.na(rglm_aoa)),
+            rglm_aoa = median(rglm_aoa, na.rm = T)) %>%
+  filter(n >= 6) %>%
+  arrange(measure, rglm_aoa)
 
-ggplot(prod.data, aes(x=order,y=resid,color=model))+
-  geom_point() +
+
+wide_medians <- median_aoas %>%
+  spread(measure, rglm_aoa) %>%
+  group_by(uni_lemma) %>%
+  summarise_at(vars(n, produces, understands), mean, na.rm=T)
+
+ggplot(wide_medians, aes(x = produces, y = understands, label = uni_lemma)) + 
+  geom_text() +
+  theme_bw()
+```
+
+Consistency across languages
+```{r aoa_consistency}
+
+aoa_corr <- function(df, lang1, lang2) {
+
+ corrs <- df %>%
+    select(-lexical_category, -measure) %>%
+    filter(language == lang1 | language == lang2) %>%
+    spread(language, rglm_aoa) %>%
+    select(-uni_lemma) %>%
+    cor(., use = "complete") 
+ 
+ return(corrs[2,1])
+}
+
+compute_corrs <- function(aoas, top_n = NA) {
+  
+  if(!is.na(top_n)) {
+    
+    sub_words <- median_aoas %>%
+      filter(measure == unique(aoas$measure)) %>%
+      slice(median_aoas, 1:top_n)
+    
+    filtered_aoas <- aos %>%
+      filter(uni_lemma %in% sub_words$uni_lemma)
+  } 
+  else 
+    filtered_aoas <- aoas
+  
+  
+  langs <- unique(filtered_aoas$language)
+  
+  lang_pairs <- combn(langs, 2) %>%
+    t() %>%
+    as_data_frame() %>%
+    rename(lang1 = V1, lang2 = V2)
+
+  
+  lang_pairs %>%
+    mutate(cor = unlist(map(1:nrow(lang_pairs), function(x) {
+      aoa_corr(filtered_aoas,
+               as.character(lang_pairs[x,"lang1"]), 
+               as.character(lang_pairs[x,"lang2"]))})))
+
+}
+
+
+production_corrs <- compute_corrs(filter(all_aoas, measure == "produces"))
+
+ggplot(production_corrs, aes(x = lang1, y = lang2, fill = cor)) +
+  geom_tile() + 
+  geom_text(aes(label = round(cor, 2))) +
   theme_bw()
 
-model <- lm(English~ frequency*category,data=filter(eng.data,measure=="produces"))
-model2 <- lm(English~ Norwegian,data=filter(eng.data,measure=="produces"))
 
-cor.test(filter(eng.data,measure=="produces")$order,filter(eng.data,measure=="produces")$freq.order,method="kendall")
+understanding_corrs <- compute_corrs(filter(all_aoas, measure == "understands"))
 
+ggplot(understanding_corrs, aes(x = lang1, y = lang2, fill = cor)) +
+  geom_tile() + 
+  geom_text(aes(label = round(cor, 2))) +
+  theme_bw()
 ```
 
+```{r step_corrs, eval = FALSE}
+step_cors <- map(5:nrow(filter(median_aoas, measure == "produces")), 
+                 function(x) mutate(compute_corrs(filter(all_aoas, measure == "produces"),
+                                                  x), words = x)) %>%
+  bind_rows
+
+running_avg_corr <- step_cors %>%
+  group_by(words, lang1) %>%
+  summarise(cor = mean(cor, na.rm = T)) %>%
+  summarise(mean = mean(cor), sd = sd(cor))
 
 
-```{r}
-measure.diff <- order.mean.data %>%
-  select(-mean.order, -prop) %>%
-  spread(measure, order) %>%
-  group_by(language, uni_lemma) %>%
-  mutate(measure.diff = abs(produces - only.understands)) %>%
-  group_by(language) %>%
-  arrange(only.understands) %>%
-  mutate(mean.measure.diff = cumsum(measure.diff))
+ggplot(running_avg_corr, aes(x = words, y = mean)) + 
+  geom_ribbon(aes(ymin = mean-sd, ymax = mean+sd), alpha = .5, fill = "red") + 
+  geom_line() +
+  theme_bw()
 ```
 
-```{r}
-ggplot(measure.diff, aes(x = only.understands, y = mean.measure.diff, color = language)) +
-  geom_point() +
-  scale_color_brewer(palette = "Set1") +
-  theme_bw() +
-  theme(text = element_text(family = "Open Sans"))
-```
+<!-- Plot cross-linguistic acquisition order -->
+<!-- ```{r} -->
+<!-- aq.order.data <- baseline.order.data %>% -->
+<!--   filter(measure == "produces") -->
 
-```{r}
-kids.by.lang <- vocab.data %>%
-  group_by(language) %>%
-  summarise(num.kids = n())
+<!-- quartz(width = 4,height = 3.3) -->
+<!-- ggplot(aq.order.data,  -->
+<!--        aes(x = mean.order, y = mean.order.diff,  -->
+<!--            color = language, fill = language, -->
+<!--            label=language)) + -->
+<!--   geom_point(size=.8) + -->
+<!--   geom_smooth(method="loess")+ -->
+<!--   geom_dl(method = list(dl.trans(x=x +.15), "last.bumpup", cex=.7))+  -->
+<!--   scale_color_brewer(palette = "Dark2") + -->
+<!--   scale_fill_brewer(palette = "Dark2") + -->
+<!--   scale_x_continuous(limits = c(0,150),breaks = seq(0,140,20), -->
+<!--                      name = "Mean Cross-Linguistic Acquisition Order")+ -->
+<!--   scale_y_continuous(name = "Cumulative Difference from Mean Order", -->
+<!--                      limits = c(0,3200),breaks=seq(0,3200,400))+ -->
+<!--   theme_bw(base_size=11) + -->
+<!--   theme(panel.grid = element_blank(), legend.position="none") -->
+<!-- ``` -->
 
-produced.data <- all.data %>%
-  filter(value == "produces") %>%
-  group_by(language,category,definition,gloss) %>%
-  summarise(mean.age = mean(age),
-            n = n()) %>%
-  group_by(language) %>%
-  left_join(kids.by.lang) %>%
-  mutate(prop = n/num.kids) %>%
-  arrange(desc(prop))
-```
+<!-- Get frequency and phoneme data and merge. -->
+<!-- ```{r} -->
+<!-- eng.phons <- read_delim('mrc.phons.txt',delim='\t') -->
 
-Top words
-```{r}
-top.words <- produced.data %>%
-  slice(1:10) %>%
-  select(language,gloss,prop,definition)
+<!-- eng.freqs <- read.csv('english.freqs.csv') %>% -->
+<!--   gather(word, count) %>% -->
+<!--   group_by(word) %>% -->
+<!--   summarize(frequency = mean(count)) %>% -->
+<!--   ungroup() %>% -->
+<!--   mutate(word = str_trim(tolower(gsub('\\.', ' ', word)))) %>% -->
+<!--   left_join(eng.phons) -->
 
-tab.words <- top.words %>%
-  mutate(order = 1:10) %>%
-  rowwise() %>%
-  mutate(word = paste0(gloss," (",round(prop,digits=2),")")) %>%
-  select(language,word,order) %>%
-  spread(language,word) %>%
-  select(-order)
+<!-- eng.cats <- all.data %>% -->
+<!--   filter(language=="English") %>% -->
+<!--   select(uni_lemma,category,lexical_category) %>% -->
+<!--   distinct() %>% -->
+<!--   filter(uni_lemma %in% common.lemmas) -->
 
-kable(tab.words)
-```
+<!-- held.out.order.preds <- order.mean.data %>% -->
+<!--   filter(language == "English") %>% -->
+<!--   select(uni_lemma,measure,held.out.order,held.out.prop) -->
 
-Models
-```{r,}
-model.words <- items %>%
-  select(definition,language,gloss,category) %>%
-  filter(language %in% unique(produced.data$language)) %>%
-  left_join(produced.data) %>%
-  rowwise() %>%
-  mutate(n = as.numeric(ifelse(is.na(n),0,n)),
-         prop = as.numeric(ifelse(is.na(prop),0,prop)),
-         len = nchar(definition))
+<!-- freqs.data <- order.mean.data %>% -->
+<!--  # select(-order,-mean.order,-lexical_category) %>% -->
+<!--   select(language,order,uni_lemma,measure) %>% -->
+<!-- #  spread(language,prop) %>% -->
+<!--   spread(language,order) %>% -->
+<!--   left_join(held.out.order.preds) %>% -->
+<!--   left_join(eng.cats) %>% -->
+<!--   mutate(word = gsub(' \\(.*\\)', '', uni_lemma)) %>% -->
+<!--   left_join(eng.freqs) %>% -->
+<!--   filter(!is.na(frequency)) %>% -->
+<!--   group_by(measure) %>% -->
+<!--   arrange(English) -->
+<!--   #arrange(desc(English)) -->
 
-outputs <- NULL
-components = c("count","zero")
-params = c("len")
+<!-- ``` -->
 
-languages <- unique(model.words$language) 
+<!-- Construct acquisition order models  -->
+<!-- ```{r} -->
+<!-- freqs.models <- freqs.data %>% -->
+<!--   do(lm.freq = lm(English ~ category + log(1000*frequency) + phones,  -->
+<!--                    data=.), -->
+<!--      lm.lang = lm(English ~ held.out.order, data=.)) -->
 
-predict.params <- expand.grid(language = languages,
-                              component = components,
-                              param = params)%>%
-  arrange(language,component,param)
+<!-- get.model <- function(select.measure, model_type) { -->
+<!--   filter(freqs.models, measure == select.measure)[[model_type]][[1]] -->
+<!-- } -->
 
-for(lang in languages) {
-  
-  hurd <- hurdle(n ~ len, 
-                 data = filter(model.words,language==lang))
-  
+<!-- get.prediction.lm.cor <- function(model_type, meas, group_data) { -->
+<!--     filtered_data <- filter(group_data, measure == meas) -->
+<!--     predicted = (predict(get.model(meas, model_type), -->
+<!--                                   newdata = filtered_data)) -->
+<!-- #     predicted = predict(get.model(meas, model_type), -->
+<!-- #                               newdata = filtered_data) -->
+<!--     cor(filtered_data$English, predicted) -->
+<!-- } -->
+
+<!-- cum.model <- function(order.num) { -->
+
+<!--   order.model.data <- freqs.data %>% -->
+<!--     group_by(measure) %>% -->
+<!--     filter(row_number() <= order.num) %>% -->
+<!-- #       filter(row_number() >= order.num - 10, -->
+<!-- #              row_number() <= order.num + 10) %>% -->
+<!--     summarise(freq = get.prediction.lm.cor("lm.freq", unique(measure), .), -->
+<!--               lang = get.prediction.lm.cor("lm.lang", unique(measure), .)) %>% -->
+<!--   mutate(order.num = order.num) -->
+<!-- } -->
+
+<!-- cors <- bind_rows(sapply(seq(10, length(common.lemmas), 1), -->
+<!--                          cum.model, simplify = FALSE)) %>% -->
+<!--     gather(model,cor,freq,lang) -->
 
 
-  for(component in components) {
+<!-- cors.plot.data <- cors %>% -->
+<!--   filter(measure == "produces") %>% -->
+<!--   select(-measure) %>% -->
+<!--   mutate(model = factor(model,levels = c("lang","freq"),  -->
+<!--                         labels = c("Cross-Linguistic","Distributional"))) -->
+<!-- ``` -->
 
-    model.outs <- summary(hurd)$coefficients[as.character(component)][[1]]
-    
-    outputs <- rbind(outputs,model.outs[c("len"),
-                                        c("Estimate", "Std. Error","Pr(>|z|)")])
-  }
-    
-}
-colnames(outputs) = c("estimate","se","p")
+<!-- Plot predictive models -->
+<!-- ```{r} -->
+<!-- quartz(width = 4,height = 3.3) -->
+<!-- ggplot(cors.plot.data,  -->
+<!--        aes(x = order.num, y = cor,  -->
+<!--            color = model, fill=model,label=model)) + -->
+<!--   geom_point(size=1) + -->
+<!--   geom_smooth(method="loess",span=.25)+ -->
+<!--   geom_dl(method = list(dl.trans(x=x +.2), "smart.grid", cex=.8))+  -->
+<!--   scale_color_brewer(palette = "Set1") + -->
+<!--   scale_fill_brewer(palette = "Set1") + -->
+<!--   scale_x_continuous(limits = c(0,140),breaks = seq(0,140,20), -->
+<!--                      name = "English Acquisition Order")+ -->
+<!--   scale_y_continuous(name = "Cumulative Correlation with English Order", -->
+<!--                      limits = c(-.1,1),breaks=seq(-1,1,.25))+ -->
+<!--   theme_bw(base_size=11) + -->
+<!--   theme(panel.grid = element_blank(), legend.position="none") -->
+<!-- ``` -->
 
-predict.params <- cbind(predict.params,outputs) %>%
-  mutate(ci = 1.96*se) %>%
-  mutate(component = factor(component, labels = c("Count Estimate", "Hurdle")))
-```
+<!-- Top words -->
+<!-- ```{r} -->
+<!-- top.words <- baseline.order.data %>% -->
+<!--   group_by(language) %>% -->
+<!--   arrange(desc(prop)) %>% -->
+<!--   slice(1:10) %>% -->
+<!--   select(language,uni_lemma,prop) -->
 
-Plot parameters
-```{r, fig.width=5.5, fig.height=5}
-ggplot(data = predict.params, 
-       aes(x = language, y = estimate, fill=component))+
-  geom_histogram(stat="identity",position="identity")+
-  geom_linerange(aes(ymax =estimate+ci,
-                      ymin = estimate-ci)) +
-  facet_grid(component ~ param)+
-  ylab("Parameter Estimate (+/- 95% CI)")+
-  xlab("Dataset") + 
-  geom_hline(yintercept=0, lty=2,size=.7) + 
-  #scale_color_brewer(name="Dataset",palette="Set1")+
-  scale_fill_brewer(palette="Set1")+
-  theme_bw(base_size=14) +
-  theme(legend.position="none",
-        axis.text.x = element_text(angle=-45, hjust = 0),
-        axis.title.x = element_text(vjust=-0.5),
-        panel.grid = element_blank())
-```
+<!-- tab.words <- top.words %>% -->
+<!--   mutate(order = 1:10) %>% -->
+<!--   rowwise() %>% -->
+<!--   select(language,uni_lemma,order) %>% -->
+<!--   spread(language,uni_lemma) %>% -->
+<!--   select(-order) -->
+
+<!-- kable(tab.words) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- prod.data <- filter(freqs.data, measure=="produces") %>% -->
+<!--   mutate(freq = inv.logit(predict(get.model("produces","lm.freq"))), -->
+<!--          nor = inv.logit(predict(get.model("produces","lm.lang")))) %>% -->
+<!--   gather(model,predicted,freq:nor) %>% -->
+<!--   group_by(measure,model) %>% -->
+<!--   mutate(resid = (English - predicted), -->
+<!--          order = rank(-English)) -->
+
+<!-- ggplot(prod.data, aes(x=order,y=resid,color=model))+ -->
+<!--   geom_point() + -->
+<!--   theme_bw() -->
+
+<!-- model <- lm(English~ frequency*category,data=filter(eng.data,measure=="produces")) -->
+<!-- model2 <- lm(English~ Norwegian,data=filter(eng.data,measure=="produces")) -->
+
+<!-- cor.test(filter(eng.data,measure=="produces")$order,filter(eng.data,measure=="produces")$freq.order,method="kendall") -->
+
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+<!-- measure.diff <- order.mean.data %>% -->
+<!--   select(-mean.order, -prop) %>% -->
+<!--   spread(measure, order) %>% -->
+<!--   group_by(language, uni_lemma) %>% -->
+<!--   mutate(measure.diff = abs(produces - only.understands)) %>% -->
+<!--   group_by(language) %>% -->
+<!--   arrange(only.understands) %>% -->
+<!--   mutate(mean.measure.diff = cumsum(measure.diff)) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- ggplot(measure.diff, aes(x = only.understands, y = mean.measure.diff, color = language)) + -->
+<!--   geom_point() + -->
+<!--   scale_color_brewer(palette = "Set1") + -->
+<!--   theme_bw() + -->
+<!--   theme(text = element_text(family = "Open Sans")) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- kids.by.lang <- vocab.data %>% -->
+<!--   group_by(language) %>% -->
+<!--   summarise(num.kids = n()) -->
+
+<!-- produced.data <- all.data %>% -->
+<!--   filter(value == "produces") %>% -->
+<!--   group_by(language,category,definition,gloss) %>% -->
+<!--   summarise(mean.age = mean(age), -->
+<!--             n = n()) %>% -->
+<!--   group_by(language) %>% -->
+<!--   left_join(kids.by.lang) %>% -->
+<!--   mutate(prop = n/num.kids) %>% -->
+<!--   arrange(desc(prop)) -->
+<!-- ``` -->
+
+
+<!-- Models -->
+<!-- ```{r,} -->
+<!-- model.words <- items %>% -->
+<!--   select(definition,language,gloss,category) %>% -->
+<!--   filter(language %in% unique(produced.data$language)) %>% -->
+<!--   left_join(produced.data) %>% -->
+<!--   rowwise() %>% -->
+<!--   mutate(n = as.numeric(ifelse(is.na(n),0,n)), -->
+<!--          prop = as.numeric(ifelse(is.na(prop),0,prop)), -->
+<!--          len = nchar(definition)) -->
+
+<!-- outputs <- NULL -->
+<!-- components = c("count","zero") -->
+<!-- params = c("len") -->
+
+<!-- languages <- unique(model.words$language)  -->
+
+<!-- predict.params <- expand.grid(language = languages, -->
+<!--                               component = components, -->
+<!--                               param = params)%>% -->
+<!--   arrange(language,component,param) -->
+
+<!-- for(lang in languages) { -->
+
+<!--   hurd <- hurdle(n ~ len,  -->
+<!--                  data = filter(model.words,language==lang)) -->
+
+
+
+<!--   for(component in components) { -->
+
+<!--     model.outs <- summary(hurd)$coefficients[as.character(component)][[1]] -->
+
+<!--     outputs <- rbind(outputs,model.outs[c("len"), -->
+<!--                                         c("Estimate", "Std. Error","Pr(>|z|)")]) -->
+<!--   } -->
+
+<!-- } -->
+<!-- colnames(outputs) = c("estimate","se","p") -->
+
+<!-- predict.params <- cbind(predict.params,outputs) %>% -->
+<!--   mutate(ci = 1.96*se) %>% -->
+<!--   mutate(component = factor(component, labels = c("Count Estimate", "Hurdle"))) -->
+<!-- ``` -->
+
+<!-- Plot parameters -->
+<!-- ```{r, fig.width=5.5, fig.height=5} -->
+<!-- ggplot(data = predict.params,  -->
+<!--        aes(x = language, y = estimate, fill=component))+ -->
+<!--   geom_histogram(stat="identity",position="identity")+ -->
+<!--   geom_linerange(aes(ymax =estimate+ci, -->
+<!--                       ymin = estimate-ci)) + -->
+<!--   facet_grid(component ~ param)+ -->
+<!--   ylab("Parameter Estimate (+/- 95% CI)")+ -->
+<!--   xlab("Dataset") +  -->
+<!--   geom_hline(yintercept=0, lty=2,size=.7) +  -->
+<!--   #scale_color_brewer(name="Dataset",palette="Set1")+ -->
+<!--   scale_fill_brewer(palette="Set1")+ -->
+<!--   theme_bw(base_size=14) + -->
+<!--   theme(legend.position="none", -->
+<!--         axis.text.x = element_text(angle=-45, hjust = 0), -->
+<!--         axis.title.x = element_text(vjust=-0.5), -->
+<!--         panel.grid = element_blank()) -->
+<!-- ``` -->
 
 
 

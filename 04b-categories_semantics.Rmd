@@ -1,6 +1,6 @@
-# Categorical Composition: Semantics
+# Categorical Composition: Semantics {#categories-semantic} 
 
-The same analyses as in the previous chapter could be done with CDI categories, which are semantic rather than lexical.
+Following the approach in the previous chapter, we investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," are some languages "vehicle-focused"? These analyses are expected to reveal cultural and linguistic differences in the specific words learned by children (perhaps due to differences in the content of their environment). 
 
 ## Data Prep
 

@@ -1,6 +1,9 @@
-# Individual Words: Demographics
+# Individual Words: Demographics {#words-demographics}
 
-THIS IS ALL JUST STRAIGHT FROM https://github.com/mikabr/gender-input
+In Chapter \@ref(demographics), we documented demographic differences in total vocabulary. In this chapter, we consider the possibility that individual words carry this demographic signal. Which words are learned differentially earlier or later by girls vs. boys or by first-born vs. later-born children? 
+
+
+<!-- THIS IS ALL JUST STRAIGHT FROM https://github.com/mikabr/gender-input -->
 
 <!-- ## Get word counts -->
 
@@ -60,7 +63,7 @@ THIS IS ALL JUST STRAIGHT FROM https://github.com/mikabr/gender-input
 <!-- #                   data = filter(spread_counts, diff > diff_cutoff)) -->
 <!-- ``` -->
 
-## Get CDI data
+## Gender
 
 
 ```{r gender_raw_data, eval=FALSE}

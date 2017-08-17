@@ -1,9 +1,6 @@
 # The Growth of Grammar {#grammar}
 
-<!-- Descriptive generalizations. We summarize the state of grammatical development across languages, noting the challenges posed by radically different representations of grammar across forms.  -->
-<!-- Relationship between grammar and the lexicon. We replicate and generalize the analyses, first reported by Bates and colleagues, that link grammatical generalization to children’s vocabulary size.  <!--
-
-<!-- Developmental effects. We follow up on an effect, first reported in Braginsky et al. (2015a), that age modulates the relationship between grammar and the lexicon, and we link this idea to the “process universals” conception.  -->
+How does abstract structure emerge during language learning? On some accounts, children's early syntax emerges from direct generalizations from particular lexical items, while on others, syntactic structure is acquired independently and follows its own timetable. We summarize the state of grammatical development across languages, noting the challenges posed by radically different representations of grammar across forms. We also replicate and generalize analyses linking grammatical generalization to children’s vocabulary size. We end by investigating the idea that that age modulates the relationship between grammar and the lexicon.^[Material in this chapter first reported in @braginsky2015b.]
 
 ```{r 7_complexity_forms}
 morphosyntax_fields <- c("combine", "complexity", "word_forms", "word_endings",
@@ -24,10 +21,6 @@ morphosyntax_fields <- c("combine", "complexity", "word_forms", "word_endings",
 
 num_langs <- 4   # TODO!
 ```
-
-<!--## Abstract 
-
-How does abstract structure emerge during language learning? On some accounts, children's early syntax emerges from direct generalizations from particular lexical items, while on others, syntactic structure is acquired independently and follows its own timetable. Progress on differentiating these views requires detailed developmental data. Using parent reports of vocabulary and grammar abilities, previous analyses have shown that early syntactic abstraction strongly depends on the growth of the lexicon, providing support for lexicalist and emergentist theories. Using a large crosslinguistic database in four languages, we replicate and extend these findings, demonstrating similar patterns in each language. At the same time, the power of our dataset reveals measurable effects of age over and above those attributable to vocabulary size, and that these effects are greater for aspects of language ability more closely tied to syntax. These findings suggest non-lexical contributions to the growth of syntactic abstraction that all theories must address.-->
 
 
 ## Introduction

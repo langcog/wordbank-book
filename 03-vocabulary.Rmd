@@ -1,8 +1,8 @@
 # Vocabulary Development {#vocab}
 
-## Abstract
 
-This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by examining quantify the nature of variability across individuals and languages. We also note differences in form ceilings across languages. Then, the bulk of this chapter is devoted to different demographic predictors of vocabulary growth across languages (following the EFAI approach). We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). 
+This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
+
 
 ## Variability in vocabulary development
 

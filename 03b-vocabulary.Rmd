@@ -1,12 +1,17 @@
 # Demographic Variables {#demographics}
 
-We examine the patterns of vocabulary growth for individual demographic variables.
+<!-- We also note differences in form ceilings across languages. Then, the bulk of this chapter is devoted to different demographic predictors of vocabulary growth across languages (following the EFAI approach).   -->
 
-To make these analyses work, we assume that all demographics interact with age in a simple way in the models, such that there is only one coefficient associated with the effect:
+We examine the patterns of vocabulary growth for individual demographic variables. We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). We develop a framework for comparing the magnitude of these effects.
 
-  age * demographic - demographic
 
-All of these analyses are carried out on production data.
+
+
+<!-- To make these analyses work, we assume that all demographics interact with age in a simple way in the models, such that there is only one coefficient associated with the effect: -->
+
+<!--   age * demographic - demographic -->
+
+<!-- All of these analyses are carried out on production data. -->
 
 
 ### Gender

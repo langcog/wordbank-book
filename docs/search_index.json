@@ -1,3 +1,3 @@
 [
-["appendix-variability.html", "B Measures of Variability", " B Measures of Variability In Chapter @ref{vocab}, we switch between parametric and non-parametric measures of variability (CV vs. MADM) and Cohen’s \\(d\\) vs. MMAD. Here we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. "]
+["categorical-composition-individual-variability.html", "7 Categorical Composition: Individual Variability 7.1 Variation in Production/Comprehension Tradeoffs 7.2 Variation in Vocabulary Composition", " 7 Categorical Composition: Individual Variability 7.1 Variation in Production/Comprehension Tradeoffs 7.2 Variation in Vocabulary Composition See Bates et al. (1994). "]
 ]

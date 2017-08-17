@@ -3,7 +3,7 @@
 ## Variation in Production/Comprehension Tradeoffs
 
 ```{r}
-eng_wg <- filter(admins, language == "English", form == "WG")
+eng_wg <- filter(admins, language == "English (American)", form == "WG")
 
 ggplot(eng_wg, 
        aes(x = comprehension, y = production)) + 

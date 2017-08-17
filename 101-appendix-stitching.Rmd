@@ -1,0 +1,83 @@
+# Stitching Across Forms {#appendix-stitching}
+
+Because we use different forms for different ages, there are sometimes good reasons to combine data across forms to get a broader range of ages in a particular analysis. We call this combination "stitching." This appendix provides some motivation for the practice. 
+
+
+## Item Stitching
+
+For arbitrary items, stitching across English WS and WG tends to look pretty good. 
+
+```{r}
+target_items <- c("dog","table","run")
+
+eng_wg <- get_instrument_data(instrument_language = "English (American)",
+                              instrument_form = "WG", 
+                              iteminfo = TRUE, 
+                              items = items %>%
+                                filter(language == "English (American)", 
+                                       form == "WG", 
+                                       uni_lemma %in% target_items)  %>%
+                                pull(item_id)) %>%
+  filter(uni_lemma %in% target_items)
+
+eng_ws <- get_instrument_data(instrument_language = "English (American)",
+                              instrument_form = "WS", 
+                              iteminfo = TRUE, 
+                              items = items %>%
+                                filter(language == "English (American)", 
+                                       form == "WS", 
+                                       uni_lemma %in% target_items)  %>%
+                                pull(item_id)) %>%
+  filter(uni_lemma %in% target_items)
+
+eng_items <- bind_rows(eng_wg, eng_ws) %>%
+  left_join(admins) %>%
+  group_by(age, form, uni_lemma) %>%
+  summarise(produces = mean(value == "produces", na.rm=TRUE))
+
+ggplot(eng_items, 
+       aes(x = age, y = produces, col = form)) + 
+  facet_wrap(~uni_lemma) +
+  geom_point() + 
+  geom_smooth()
+```
+
+
+## Form Stitching
+
+We can "stitch" across WS and WG forms to get a fuller picture of production across ages. There are several ways to accomplish this. The simplest is to use proportions for each form. 
+This isn't particularly good.
+
+```{r}
+num_words <- items %>%
+  filter(type == "word") %>%
+  group_by(language, form) %>%
+  summarise(n = n())
+
+vocab_data <- admins %>%
+  select(data_id, language, form, age, sex, 
+         mom_ed, birth_order, production, comprehension) %>% 
+  left_join(num_words) %>%
+  mutate(no_production = n - production)
+
+eng_prod_data <- vocab_data %>%
+  filter(language == "English (American)") %>%
+  mutate(mean = production / n)
+
+ggplot(eng_prod_data,
+       aes(x = age, y = mean, col = form)) +
+  facet_wrap(~language) +
+  geom_jitter(width = .4, size = 1, alpha = .1) +
+  geom_smooth() + 
+  # geom_line(data = ws_prod_preds,
+  #           aes(y = pred, col = percentile, group = percentile)) +
+  scale_colour_solarized(name="Percentile") +
+  scale_x_continuous(name = "Age (months)",
+                     breaks = seq(8, 30, 4),
+                     limits = c(8, 30)) +
+  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1),
+                     name = "Production Vocabulary") +
+  theme(legend.position = "bottom")
+```
+
+You can also stitch item by item, this is trickier but better. 

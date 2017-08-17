@@ -3,8 +3,6 @@
 This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
 
 
-## Quantifying Variability
-
 ```{r 3_vocab_admins}
 num_words <- items %>%
   filter(type == "word") %>%
@@ -61,6 +59,126 @@ pred_gcrq <- function(x, mods) {
 }
 ```
 
+## Norms
+
+We begin with the general pattern of data across the instruments. 
+
+### Comprehension
+
+Comprehension is typically meausured only for younger children, using Words and Gestures instruments.^[With the exception of populations like signers, e.g. in the case of British Sign Language, which is truncated here.] 
+
+```{r 3_comprehension}
+comp_data <- vocab_data %>%
+  filter(form == "WG") %>%
+  mutate(mean = comprehension / n)
+
+comp_models <- comp_data %>%
+  split(.$language) %>%
+  map(fit_gcrq) 
+
+comp_preds <- comp_data %>%
+  group_by(language, age) %>%
+  summarise(n = n()) %>%
+  data.frame() %>%
+  split(.$language) %>%
+  map_df(function(x) pred_gcrq(x, comp_models)) 
+
+# breaks = seq(8, 18, 4),
+#                      limits = c(8, 18),
+ggplot(comp_data, 
+       aes(x = age, y = mean)) +
+  facet_wrap(~language) +
+  geom_jitter(width = .4, size = 1, alpha = .1) +
+  geom_line(data = comp_preds, 
+            aes(y = pred, col = percentile, group = percentile)) + 
+  scale_colour_solarized(name="Percentile") +
+  scale_x_continuous(name = "Age (months)", 
+                     seq(8, 18, 4),
+                     limits = c(8, 18)) +
+  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
+                     name = "Comprehension Vocabulary") +
+  theme(legend.position = "bottom")
+```
+
+### Production
+
+Production is measured both on Words and Gestures (WG) forms and Words and Sentences (WS) forms, though it is often at floor for younger children and so is not a reliable individual difference measure. 
+
+```{r 3_production_wg}
+wg_prod_data <- vocab_data %>%
+  filter(form == "WG") %>%
+  mutate(mean = production / n)
+
+wg_prod_models <- wg_prod_data %>%
+  split(.$language) %>%
+  map(fit_gcrq) 
+
+wg_prod_preds <- wg_prod_data %>%
+  group_by(language, age) %>%
+  summarise(n = n()) %>%
+  data.frame() %>%
+  split(.$language) %>%
+  map_df(function(x) pred_gcrq(x, wg_prod_models)) 
+
+ggplot(wg_prod_data,
+       aes(x = age, y = mean)) +
+  facet_wrap(~language) +
+  geom_jitter(width = .4, size = 1, alpha = .1) +
+  geom_line(data = wg_prod_preds, 
+            aes(y = pred, col = percentile, group = percentile)) + 
+  scale_colour_solarized(name="Percentile") +
+  scale_x_continuous(name = "Age (months)", 
+                     breaks = seq(8, 20, 4),
+                     limits = c(8, 20)) +
+  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
+                     name = "Production Vocabulary") +
+  theme(legend.position = "bottom")
+```
+
+Words and Sentences
+
+```{r 3_production_ws}
+ws_prod_data <- vocab_data %>%
+  filter(form == "WS") %>%
+  mutate(mean = production / n)
+
+ws_prod_models <- ws_prod_data %>%
+  split(.$language) %>%
+  map(fit_gcrq) 
+
+ws_prod_preds <- ws_prod_data %>%
+  group_by(language, age) %>%
+  summarise(n = n()) %>%
+  data.frame() %>%
+  split(.$language) %>%
+  map_df(function(x) pred_gcrq(x, ws_prod_models)) 
+
+ggplot(ws_prod_data,
+       aes(x = age, y = mean)) +
+  facet_wrap(~language) +
+  geom_jitter(width = .4, size = 1, alpha = .02) +
+  geom_line(data = ws_prod_preds, 
+            aes(y = pred, col = percentile, group = percentile)) + 
+  scale_colour_solarized(name="Percentile") +
+  scale_x_continuous(name = "Age (months)", 
+                     breaks = seq(16, 36, 4),
+                     limits = c(16, 36)) +
+  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
+                     name = "Production Vocabulary") +
+  theme(legend.position = "bottom")
+```
+
+Stiched across forms. See \@ref(appendix-stitching).
+
+```{r 3_production_stitched}
+
+```
+
+
+
+
+## Quantifying Variability
+
 One of the most important features of early vocabulary development is its variability [@fenson1994]. Consider the English production data from the Words and Sentences form.
 
 ```{r 3_eng_prod}
@@ -114,17 +232,17 @@ $$MADM(x) = \frac{\frac{1}{n} \sum_{i = 1..n}{|x_i - m(x)|}}{m(x)}$$
 
 
 ```{r 3_madm1}
-MADM <- function(x) { mad(x) / median(x) }
 
 madm_data <- vocab_data %>%
   filter(form %in% c("WS","WG")) %>%
   group_by(language, form, age) %>%
-  summarise(madm = MADM(production), 
+  summarise(madm_p = madm(production), 
+            madm_c = madm(comprehension),
             n = n()) %>%
   filter(n > 20) 
 
 ggplot(filter(madm_data, language == "English (American)"), 
-       aes(x = age, y = madm, col = form)) + 
+       aes(x = age, y = madm_p, col = form)) + 
   geom_point() + 
   geom_smooth(aes(group = 1)) + 
   ylim(0,2) +
@@ -144,11 +262,11 @@ Imagine groups of three children. A group where one produced 30 words, one produ
 The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable.
 
 ```{r 3_madm2}
-ggplot(madm_data, aes(x = age, y = madm, col = language)) + 
+ggplot(madm_data, aes(x = age, y = madm_p, col = language)) + 
   geom_jitter(aes(size = n), alpha = 1) + 
   geom_smooth(aes(group  = 1)) + 
   ylim(0,2) + 
-  ylab("median / MAD") + 
+  ylab("MADM (Production)") + 
   xlab("Age (months)") + 
   scale_color_solarized(name = "") + 
   theme(legend.position = "bottom")
@@ -159,135 +277,52 @@ Yet this variability is quite *consistent*!
 ```{r 3_madm_summary}
 madm_summary <- madm_data %>%
   filter(language != "Kigiriama") %>%
-  group_by(language) %>%
+  group_by(language, form) %>%
   filter(age >= 12, age <= 24) %>%
-  summarise(madm_mean = mean(madm), 
-            madm_ci_lower = mean(madm) - ci.t(madm),
-            madm_ci_upper = mean(madm) + ci.t(madm)) 
+  summarise(madm_mean = mean(madm_p), 
+            madm_ci_lower = mean(madm_p) - ci.t(madm_p),
+            madm_ci_upper = mean(madm_p) + ci.t(madm_p)) 
+
+ggplot(madm_summary, aes(x = language, y = madm_mean, col = form)) + 
+  geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper), 
+                  position = position_dodge(width = .1)) + 
+  ylim(0,1.5) + 
+  coord_flip() + 
+  ylab("Language") + 
+  xlab("MADM (Production 12-24 mo)") +
+  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
+  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
+```
+
+```{r 3_madm_comprehension}
+ggplot(filter(madm_data, form == "WG"), 
+       aes(x = age, y = madm_c, col = language)) + 
+  geom_jitter(aes(size = n), alpha = 1) + 
+  geom_smooth(aes(group  = 1)) + 
+  ylim(0,2) + 
+  ylab("MADM (Comprehension)") + 
+  xlab("Age (months)") + 
+  scale_color_solarized(name = "") + 
+  theme(legend.position = "bottom")
+```
+
+```{r 3_madm_summary}
+madm_summary <- madm_data %>%
+  filter(form == "WG", language != "Kigiriama") %>%
+  group_by(language, form) %>%
+  summarise(madm_mean = mean(madm_c), 
+            madm_ci_lower = mean(madm_c) - ci.t(madm_c),
+            madm_ci_upper = mean(madm_c) + ci.t(madm_c)) 
 
 ggplot(madm_summary, aes(x = language, y = madm_mean)) + 
   geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper)) + 
   ylim(0,1.5) + 
   coord_flip() + 
   ylab("Language") + 
-  xlab("MADM") +
+  xlab("MADM (Comprehension)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
-### Comparions of Variability on Comprehension and Production
-
-
-
-
-## Norms
-
-This set of analyses examines general patterns of vocabulary development. 
-
-
-Here we examine general patterns of variability across languages. 
-
-### Comprehension
-
-
-```{r 3_comprehension}
-comp_data <- vocab_data %>%
-  filter(form == "WG") %>%
-  mutate(mean = comprehension / n)
-
-comp_models <- comp_data %>%
-  split(.$language) %>%
-  map(fit_gcrq) 
-
-comp_preds <- comp_data %>%
-  group_by(language, age) %>%
-  summarise(n = n()) %>%
-  data.frame() %>%
-  split(.$language) %>%
-  map_df(function(x) pred_gcrq(x, comp_models)) 
-
-# breaks = seq(8, 18, 4),
-#                      limits = c(8, 18),
-ggplot(comp_data,
-       aes(x = age, y = mean)) +
-  facet_wrap(~language, scales = "free_x") +
-  geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_line(data = comp_preds, 
-            aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
-  scale_x_continuous(name = "Age (months)") +
-  ylab("Comprehension Vocabulary (proportion)") +
-  ylim(c(0, 1)) + 
-  theme(legend.position = "bottom")
-```
-
-### Production
-
-Words and Gestures.
-
-```{r 3_production_wg}
-prod_data <- vocab_data %>%
-  filter(form == "WG") %>%
-  mutate(mean = production / n)
-
-prod_models <- prod_data %>%
-  split(.$language) %>%
-  map(fit_gcrq) 
-
-prod_preds <- prod_data %>%
-  group_by(language, age) %>%
-  summarise(n = n()) %>%
-  data.frame() %>%
-  split(.$language) %>%
-  map_df(function(x) pred_gcrq(x, prod_models)) 
-
-# breaks = seq(8, 36, 4),
-#                      limits = c(8, 36),
-ggplot(prod_data,
-       aes(x = age, y = mean)) +
-  facet_wrap(~language, scales = "free_x") +
-  geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_line(data = prod_preds, 
-            aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
-  scale_x_continuous(name = "Age (months)") +
-  ylab("Production Vocabulary (proportion of total words)") +
-  ylim(c(0, 1)) + 
-  theme(legend.position = "bottom")
-```
-
-Words and Sentences
-
-```{r 3_production_ws}
-prod_data <- vocab_data %>%
-  filter(form == "WS") %>%
-  mutate(mean = production / n)
-
-prod_models <- prod_data %>%
-  split(.$language) %>%
-  map(fit_gcrq) 
-
-prod_preds <- prod_data %>%
-  group_by(language, age) %>%
-  summarise(n = n()) %>%
-  data.frame() %>%
-  split(.$language) %>%
-  map_df(function(x) pred_gcrq(x, prod_models)) 
-
-# breaks = seq(16, 36, 4),
-#                      limits = c(16, 36),
-ggplot(prod_data,
-       aes(x = age, y = mean)) +
-  facet_wrap(~language, scales = "free_x") +
-  geom_jitter(width = .4, size = 1, alpha = .05) +
-  geom_line(data = prod_preds, 
-            aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
-  scale_x_continuous(name = "Age (months)") +
-  ylab("Production Vocabulary (proportion of total words)") +
-  ylim(c(0, 1)) + 
-  theme(legend.position = "bottom")
-```
-
 
 
 

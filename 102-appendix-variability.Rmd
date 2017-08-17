@@ -1,0 +1,56 @@
+# Measures of Variability {#appendix-variability}
+
+In Chapter \@ref{vocab}, we switch between parametric and non-parametric measures of variability (CV vs. MADM) and Cohen's $d$ vs. MMAD. Here we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
+
+
+```{r}
+num_words <- items %>%
+  filter(type == "word") %>%
+  group_by(language, form) %>%
+  summarise(n = n())
+
+vocab_data <- admins %>%
+  select(data_id, language, form, age, sex, 
+         mom_ed, birth_order, production, comprehension) %>% 
+  left_join(num_words) %>%
+  mutate(no_production = n - production)
+
+```
+
+
+```{r 3_madm_normal}
+ratios <- vocab_data %>%
+  filter(form %in% c("WS","WG")) %>%
+  group_by(language, form, age) %>%
+  filter(n() > 20) %>%
+  summarise(mmad = mmad(production), 
+            madm = madm(production), 
+            cv = cv(production), 
+            d = d(production), 
+            n = n())
+```
+
+
+```{r}
+ggplot(ratios, aes(x = madm, y = cv)) + 
+  geom_point(aes(size = n, col = language), alpha = .3) + 
+  geom_smooth(method = "lm") +
+  ylim(0,3) + xlim(0,3) +
+  geom_abline(lty = 2) +
+  ylab("Cohen's d") + 
+  xlab("MADM") + 
+  scale_color_discrete(guide = FALSE)
+```
+
+
+```{r}
+ggplot(ratios, aes(x = mmad, y = d)) + 
+  geom_point(aes(size = n, col = language), alpha = .3) + 
+  geom_smooth(method = "lm") +
+  ylim(0,3) + xlim(0,3) +
+  geom_abline(lty = 2) +
+  ylab("Cohen's d") + 
+  xlab("MADM") + 
+  scale_color_discrete(guide = FALSE)
+```
+

@@ -39,3 +39,10 @@ if (local_data) {
   write_feather(items, "data/items.feather")
 
 }
+
+
+## functions
+ci.t <- function (x) {
+  n = sum(is.finite(x))
+  qt(0.975, df=n - 1) * sd(x, na.rm=TRUE)/sqrt(n)
+}

@@ -1,10 +1,9 @@
 # Vocabulary Development {#vocab}
 
-
 This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
 
 
-## Variability in vocabulary development
+## Quantifying Variability
 
 ```{r 3_vocab_admins}
 num_words <- items %>%
@@ -66,11 +65,11 @@ One of the most important features of early vocabulary development is its variab
 
 ```{r 3_eng_prod}
 eng_prod_data <- vocab_data %>%
-  filter(form == "WS", language == "English") %>%
+  filter(form == "WS", language == "English (American)") %>%
   mutate(mean = production)
 
 eng_prod_model <- list()
-eng_prod_model$English <- eng_prod_data %>%
+eng_prod_model$`English (American)` <- eng_prod_data %>%
   fit_gcrq
 
 eng_prod_preds <- eng_prod_data %>%
@@ -93,85 +92,88 @@ ggplot(eng_prod_data,
   theme(legend.position = "bottom")
 ```
 
-It's immediately clear that there is tremendous variability in vocabulary. Consider just a single age group, two-year-olds (24 months). The distribution of vocabularies across children is far from normally-distributed, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing more than 600 listed on the form, with the total number higher than that even.^[It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every sentence, so we will acknowledge them up front and then mention them only when relevant throughout.] 
+It's immediately clear that there is tremendous variability in vocabulary. Consider just a single age group, 24-month-olds. The distribution of vocabularies across children is far from normally distributed, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing more than 600 listed on the form, with the total number higher than that even.^[It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every sentence, so we will acknowledge them up front and then mention them only when relevant throughout.] 
 
-```{r}
+```{r v_histogram}
 ggplot(filter(eng_prod_data, age == 24), 
        aes(x = production)) + 
   geom_histogram(aes(y = ..density..), binwidth=30) + 
   geom_density(col = "red", aes(y = ..density..)) +
   xlim(0,680) + 
   xlab("Number of words produced")
-       
 ```
 
-One way to describe these data is to consider the relationship of the variance to the central tendency. For example, in this age group, the mean productive vocabulary is `r round(mean(eng_prod_data$production[eng_prod_data$age == 24]))` words, and the standard deviation is `r round(sd(eng_prod_data$production[eng_prod_data$age == 24]))` words. But this distribution is far from normal (especially at the younger and older ages), so a non-parametric approach is warranted. We can  compute the median absolute deviation from the median (MAD), which captures how far away values are from the median (a measure of variance, similar to the inter-quantile range or IQR) and divide by the median itself, giving us an intuitive sense of how the spread of the data relates to the central tendency. We'll call this number the MMAD.
+One way to describe these data is to consider the relationship of the variance to the central tendency. The "coefficient of variation" (CV) is a common measure used for this purpose: 
+
+$$CV = \frac{\sigma}{\mu}$$
+This statistic allows standardized comparison of variability across measurements with different scales, an important concern when we want to compare forms with very different numbers of vocabulary items. For example, for two-year-olds, the mean productive vocabulary is `r round(mean(eng_prod_data$production[eng_prod_data$age == 24]))` words, and the standard deviation is `r round(sd(eng_prod_data$production[eng_prod_data$age == 24]))`, words, leading to a CV of `r signif(sd(eng_prod_data$production[eng_prod_data$age == 24])/mean(eng_prod_data$production[eng_prod_data$age == 24]), digits = 2)`. 
+
+But, as seen in Figure \@ref(fig:v_histogram), the distribution of productive vocabulary scores is far from normal; this trend is even more apparent at the younger and older ages. Thus, a non-parametric approach is more appropriate. Accordingly, we compute the MADM statistic, the non-parametric equivalent of the CV. In MADM, the mean $\mu$ is replaced by the median ($m(x)$, and the standard deviation $\sigma$ is replaced by the mean absolute deviation (which captures how far away values are from the median):
+
+$$MADM(x) = \frac{\frac{1}{n} \sum_{i = 1..n}{|x_i - m(x)|}}{m(x)}$$
+
 
 ```{r 3_madm1}
-mmad <- function(x) {median(x) / mad(x) }
-madm <- function(x) {mad(x) / median(x) }
+MADM <- function(x) { mad(x) / median(x) }
 
-m_sd <- vocab_data %>%
-  filter(language == "English") %>%
-  group_by(form, age) %>%
-  summarise(median = median(production), 
-            mad = mad(production), 
-            ratio = median / mad)
-
-ggplot(m_sd, aes(x = age, y = ratio, col = form)) + 
-  geom_line() + 
-  ylim(0,2) + 
-  xlim(8,30) + 
-  ylab("MADM (median / MAD)") + 
-  xlab("Age (months)")
-```
-
-In English production, this ratio is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! The decline begins before variability is substantially truncated by the ceiling of the form, suggesting that variability between kids is really highest before the second birthday. The same pattern is generally found across the languages in our database, with very high variance between the first and second birthdays. What does this MADM measure mean, exactly? It's a non-parametric version of Cohen's $d$. In fact, they are very highly correlated. 
-
-```{r 3_madm_normal}
-madm_ratio <- vocab_data %>%
+madm_data <- vocab_data %>%
+  filter(form %in% c("WS","WG")) %>%
   group_by(language, form, age) %>%
-  filter(n() > 20) %>%
-  summarise(median = median(production), 
-            mad = mad(production), 
-            ratio = median / mad, 
-            cov_madm = mad / median,
-            normal_ratio = mean(production) / sd(production) )
+  summarise(madm = MADM(production), 
+            n = n()) %>%
+  filter(n > 20) 
 
-qplot(ratio, normal_ratio, 
-      data = madm_ratio, geom = c("point","smooth")) + 
-  ylim(0,3) + xlim(0,3) + 
-  geom_abline(lty = 2) + 
-  ylab("Cohen's d") + 
-  xlab("MADM")
+ggplot(filter(madm_data, language == "English (American)"), 
+       aes(x = age, y = madm, col = form)) + 
+  geom_point() + 
+  geom_smooth(aes(group = 1)) + 
+  ylim(0,2) +
+  xlim(8,30) + 
+  ylab("MADM (MAD / median)") + 
+  xlab("Age (months)") + 
+  scale_color_solarized(name = "Form")
 ```
+
+In American English production, this ratio is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! The decline begins before variability is substantially truncated by the ceiling of the form, suggesting that variability between kids is really highest before the second birthday. 
+
+
 
 Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
 
-```{r 3_madm2}
 
-ggplot(madm_ratio, aes(x = age, y = ratio, col = language)) + 
-  geom_jitter(size = 1, alpha = 1) + 
+The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable.
+
+```{r 3_madm2}
+ggplot(madm_data, aes(x = age, y = madm, col = language)) + 
+  geom_jitter(aes(size = n), alpha = 1) + 
   geom_smooth(aes(group  = 1)) + 
   ylim(0,2) + 
   ylab("median / MAD") + 
   xlab("Age (months)") + 
-  scale_color_discrete(guide = FALSE)
+  scale_color_solarized(name = "") + 
+  theme(legend.position = "bottom")
 ```
 
-```{r 3_madm3}
+Yet this variability is quite *consistent*!
 
-ggplot(madm_ratio, aes(x = age, y = cov_madm, col = language)) + 
-  geom_jitter(size = 1, alpha = 1) + 
-  geom_smooth(aes(group  = 1)) + 
-  ylim(0,1.6) + 
-  ylab("MAD / median") + 
-  xlab("Age (months)") + 
-  scale_color_discrete(guide = FALSE)
+```{r v_madm_summary}
+madm_summary <- madm_data %>%
+  filter(language != "Kigiriama") %>%
+  group_by(language) %>%
+  filter(age >= 12, age <= 24) %>%
+  summarise(madm_mean = mean(madm), 
+            madm_ci_lower = mean(madm) - ci.t(madm),
+            madm_ci_upper = mean(madm) + ci.t(madm)) 
+
+ggplot(madm_summary, aes(x = language, y = madm_mean)) + 
+  geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper)) + 
+  ylim(0,1.5) + 
+  coord_flip() + 
+  ylab("Language") + 
+  xlab("MADM") +
+  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
+  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
-
-The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable. Below, we will use this variability as a way to measure the size of demographic effects. For example, how much variability is due to gender, compared with simple population variability?
-
 
 
 ## Norms

@@ -6,8 +6,7 @@
 if(local_data) {
   wg_data <- read_feather("data/wg_data.feather")
   ws_sub_data <- read_feather("data/ws_sub_data.feather")
-}
-else {
+} else {
   wg_langs <- instruments %>%
     filter(form == "WG") %>%
     distinct(language) %>%
@@ -515,7 +514,6 @@ ggplot(running_avg_corr, aes(x = words, y = mean)) +
 <!-- ``` -->
 
 
-
 Look at age distributions.
 
 ```{r,fig.width=3,fig.height=8}
@@ -541,7 +539,6 @@ Look at age distributions.
 #   theme(panel.grid=element_blank()) 
 ```
 
-## Demographic Effects on Individual Words
 
 Demographic effects. In this part, we focus on demographic differences in the learning of individual words. Braginsky et al. (2016b) reported on gender differences in the particular words in early vocabulary; we generalize this analysis to birth order and socio-economic status
 

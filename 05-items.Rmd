@@ -2,6 +2,10 @@
 
 ## Baby's First Words are Consistent Across Languages
 
+Which words do children learn first? In spite of tremendous individual variation in rate of development (1), the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (“mom”, “dad”), social routines (“hi”, “uh oh”), animals (“dog”, “duck”), and foods (“milk”, “banana”). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (“go”) and other predicates (“hot”) to their production repertoires. In the latter part of this chapter, we ask *why* some words are learned before others. But first, we ask the prior question: How similar are the acquisition trajectories of children learning different languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. 
+
+Because the CDIs are adaptations and not translations, the individual item inventories  vary significantly across languages. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
+
 ```{r load_consistency_data}
 if(!local_data) {
   wg_langs <- instruments %>%
@@ -60,7 +64,7 @@ stitched_data <- ws_sub_data %>%
 }
 ```
 
-Some words about AOA estimation
+Some words about AOA estimation--OR MAYBE NOT?
 
 ```{r compute_aoa}
 # Fit robust regressions to comprehension or production data
@@ -166,6 +170,8 @@ lemma_completeness %>%
   select(-measure) %>%
   datatable
 ```
+
+To begin, we ask about the earliest words. Following @tardiff2008, we present the first 10 words acquired by children across langauges
 
 Top 10 words across languages
 

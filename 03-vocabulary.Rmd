@@ -1,5 +1,7 @@
 # Vocabulary Development {#vocab}
 
+> Far from simply reflecting noise in our measuring instruments or variability in low-level aspects of physiological maturation, the variations that we will document (in vocabulary development) are *substantial,* *stable,* and have their own *developmental course.* Because this variation is substantial, it is critical for defining the boundary between normal and abnormal development; because it is stable, it provides a window onto the correlates and (by inference) the causes of developmental change; and because it has its own developmental course, it can be used to pinpoint critical developmental transitions that form the basis for theories of learning and change. (Bates et al., 1995)
+
 This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
 
 
@@ -306,7 +308,7 @@ ggplot(filter(madm_data, form == "WG"),
   theme(legend.position = "bottom")
 ```
 
-```{r 3_madm_summary}
+```{r 3_madm_summary_comprehension}
 madm_summary <- madm_data %>%
   filter(form == "WG", language != "Kigiriama") %>%
   group_by(language, form) %>%

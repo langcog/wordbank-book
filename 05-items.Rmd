@@ -4,6 +4,10 @@ How consistent are childen's first words?
 
 ## Baby's First Words are Consistent Across Languages
 
+Which words do children learn first? In spite of tremendous individual variation in rate of development (1), the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (“mom”, “dad”), social routines (“hi”, “uh oh”), animals (“dog”, “duck”), and foods (“milk”, “banana”). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (“go”) and other predicates (“hot”) to their production repertoires. In the latter part of this chapter, we ask *why* some words are learned before others. But first, we ask the prior question: How similar are the acquisition trajectories of children learning different languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. 
+
+Because the CDIs are adaptations and not translations, the individual item inventories  vary significantly across languages. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
+
 ```{r load_consistency_data}
 if(!local_data) {
   wg_langs <- instruments %>%
@@ -62,7 +66,7 @@ stitched_data <- ws_sub_data %>%
 }
 ```
 
-Some words about AOA estimation
+Some words about AOA estimation--OR MAYBE NOT?
 
 ```{r compute_aoa}
 # Fit robust regressions to comprehension or production data
@@ -168,6 +172,8 @@ lemma_completeness %>%
   select(-measure) %>%
   datatable
 ```
+
+To begin, we ask about the earliest words. Following @tardiff2008, we present the first 10 words acquired by children across langauges
 
 Top 10 words across languages
 
@@ -284,7 +290,7 @@ production_corrs_full <- production_corrs %>%
   bind_rows(data_frame(lang1 = unique(all_aoas$language), 
                        lang2 = unique(all_aoas$language), cor = 1))
 
-ggplot(production_corrs, aes(x = lang1, y = lang2, fill = cor)) +
+ggplot(production_corrs_full, aes(x = lang1, y = lang2, fill = cor)) +
   geom_tile() + 
   geom_text(aes(label = round(cor, 2))) +
   theme_bw()
@@ -298,7 +304,7 @@ understanding_corrs_full <- understanding_corrs %>%
   bind_rows(data_frame(lang1 = unique(all_aoas$language), 
                        lang2 = unique(all_aoas$language), cor = 1))
 
-ggplot(understanding_corrs, aes(x = lang1, y = lang2, fill = cor)) +
+ggplot(understanding_corrs_full, aes(x = lang1, y = lang2, fill = cor)) +
   geom_tile() + 
   geom_text(aes(label = round(cor, 2))) +
   theme_bw()
@@ -319,6 +325,7 @@ ggdendrogram(production_hc) +
 ```
 
 Understanding dendrogram
+
 ```{r}
 understanding_wide <- understanding_corrs_full %>%
   spread(lang2, cor) %>%
@@ -331,75 +338,66 @@ ggdendrogram(understanding_hc) +
 ```
 
 Consistency across acquisition order
-```{r step_corrs, eval = FALSE}
-median_sub_aoas <- median_aoas %>%
-  filter(measure == "produces", 
-         n >= 6) %>%
+```{r step_corrs}
+median_common_aoas <- median_aoas %>%
+  filter(n >= 6) %>%
   mutate(language = "Median") %>%
   select(-n) %>%
+  group_by(measure) %>%
   arrange(rglm_aoa) %>%
-  mutate(order = 1:nrow(.))
+  mutate(order = 1:n()) 
+
+step_corr <- function (max_order, meas) {
   
-cl_acq_order <- all_aoas %>%
-  filter(measure == "produces") %>%
-  filter(uni_lemma %in% median_sub_aoas$uni_lemma) %>%
-  group_by(language) %>%
-  arrange(rglm_aoa) %>%
-  mutate(lang_order = 1:n()) %>%
-  left_join(select(median_sub_aoas, order, uni_lemma)) %>%
-  mutate(diff = lang_order-order)
+  median_sub_aoas <- median_common_aoas %>%
+    filter(order <= max_order, measure == meas) %>%
+    select(-order)
+  
+  empirical_sub_aoas <- all_aoas %>%
+    ungroup() %>%
+    filter(measure == meas) %>%
+    filter(uni_lemma %in% median_sub_aoas$uni_lemma) %>%
+    split(.$language) 
+  
+  corr <- map(empirical_sub_aoas, function(df) {
+    aoa_corr(bind_rows(df, median_sub_aoas), "Median", df$language[1])
+    }) 
+  
+  data_frame(language = names(empirical_sub_aoas), n = max_order, corr = unlist(corr),
+             measure = meas)
+}
 
-# ggplot(cl_acq_order, aes(x = order, y = lang_order, 
-#                          color = language, label = language)) + 
-#   geom_smooth(se=FALSE) + 
-#   theme_bw() +
-#   geom_dl(method = list(dl.trans(x=x + .2), "last.points", cex=1)) + 
-#   geom_line(data = mutate(median_sub_aoas, lang_order = order),
-#             color = "black", size = 2)
-# 
+if(!local_data) {
+  
+  understands_step_corrs <- map(5:max(filter(median_common_aoas, 
+                                             measure == "understands")$order), 
+                                function(x) step_corr(x,"understands")) %>%
+    bind_rows()
+  
+  produces_step_corrs <- map(5:max(filter(median_common_aoas, 
+                                             measure == "produces")$order), 
+                                function(x) step_corr(x,"produces")) %>%
+    bind_rows()
+  
+  write_feather(understands_step_corrs, "data/understands_step_corrs.feather")
+  write_feather(produces_step_corrs, "data/produces_step_corrs.feather")
 
+} else{
+  understands_step_corrs <- read_feather("data/understands_step_corrs.feather")
+  produces_step_corrs <- read_feather("data/produces_step_corrs.feather")
+}
 
-
-ggplot(cl_order_stats, aes(x = median, y = diff)) +
-  geom_smooth() +
-  geom_point() + 
-  theme_bw()
-
-
-ggplot(filter(median_aoa, measure == "produces", n >=6 ), aes(x = )) 
-
-production_step_cors <- map(5:nrow(filter(median_aoas, measure == "produces")), 
-                 function(x) mutate(compute_corrs(filter(all_aoas, measure == "produces"),
-                                                  x), words = x)) %>%
-  bind_rows
-
-production_avg_corr <- production_step_cors %>%
-  group_by(words, lang1) %>%
-  summarise(cor = mean(cor, na.rm = T)) %>%
-  summarise(mean = mean(cor), sd = sd(cor))
-
-
-ggplot(production_avg_corr, aes(x = words, y = mean)) + 
-  geom_ribbon(aes(ymin = mean-sd, ymax = mean+sd), alpha = .5, fill = "red") + 
-  geom_line() +
-  theme_bw()
-
-understanding_step_cors <- map(5:nrow(filter(median_aoas, measure == "understands")), 
-                 function(x) mutate(compute_corrs(filter(all_aoas, measure == "understands"),
-                                                  x), words = x)) %>%
-  bind_rows
-
-understanding_avg_corr <- understanding_step_cors %>%
-  group_by(words, lang1) %>%
-  summarise(cor = mean(cor, na.rm = T)) %>%
-  summarise(mean = mean(cor), sd = sd(cor))
-
-
-ggplot(understanding_avg_corr, aes(x = words, y = mean)) + 
-  geom_ribbon(aes(ymin = mean-sd, ymax = mean+sd), alpha = .5, fill = "red") + 
-  geom_line() +
-  theme_bw()
+ggplot(bind_rows(understands_step_corrs, produces_step_corrs), 
+       aes(x = n, y = corr, color = language, fill = language,
+           label = language)) + 
+  facet_wrap(~ measure) + 
+  geom_smooth() + 
+  theme_bw() + 
+  geom_dl(method = list(dl.trans(x=x + .2), "last.points", cex=1)) + 
+  scale_x_continuous(name = "Median Acquisition Order Number", limits = c(0, 450)) +
+  theme(legend.position = "none")
 ```
+
 
 Demographic effects. In this part, we focus on demographic differences in the learning of individual words. Braginsky et al. (2016b) reported on gender differences in the particular words in early vocabulary; we generalize this analysis to birth order and socio-economic status
 

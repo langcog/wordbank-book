@@ -1,15 +1,39 @@
 # Categorical Composition: Syntax {#categories}
 
+# Abstract
+
 This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words.^[An earlier version of this work was reported to BUCLD 2015 by Braginsky, Marchman, Yurovsky, & Frank.]
 
+# Introduction
 
+Over the first few years, young children are exposed to a "sea of words" across many different contexts and from many different people (@goodman2008, p. 516). And despite the fact that children vary tremendously in the rate at which they learn, the first words that children utter are strikingly consistent [@tardif2008,@schneider2015]: they tend to talk about important people in their life ("mom", "dad"), social routines ("hi", "uh oh"), animals ("dog", "duck"), and foods ("milk", "banana") (@goodman2008, @bates1995, @nelson1973).  Soon thereafter, they begin to add verbs ("go") and adjectives ("pretty") in greater proportions than earlier in development and may even begin to use closed-class forms, such as determiners ("the").  These patterns of development seem to suggest a developmental course that follows distinct "waves" of learning for words from different syntactic classes. That is, along with early social routines, nouns tend to predominate early vocabularies, while other types of words, such as predicates and closed class forms, are learned later.
 
+The composition of children's early vocabularies, including the presence of a "noun bias" has been an important subject of study because
 
-Early vocabulary development is typically characterized by learning of names for caregivers and common objects, while later in development, children tend to diversify their vocabulary by increasing the proportion of predicates (verbs and adjectives) and closed class words. This over-representation of nouns has been found across a number of analyses and in a variety of languages [@bates1994;@caselli1995;@bornstein2004], though not all [@tardif1996;@choi1995].
-
-Differences in early vocabulary composition have been argued to emerge from typological differences (e.g., word order, subject drop), and from cultural practices (e.g., focus on picture book reading) [@tardif1999;@gopnik1996;@choi1995]---we are agnostic as to the source of this variability.
+Bates et al. (1994) characterizes vocabulary composition in the following way. Figure 4.1 shows average vocabluary composition as a function of children's vocabulary size for English-speaking children from the original norming study of CDI Words & Sentences form (Fenson et al., 1993).  Note that when children only know a few words (e.g., fewer than 50 words), the majority of the words are nouns, with very few predicates or closed class forms (< 10%). As the children learn the next hundred words or so, the prevalence of nouns increases even more dramatically with a gradual increase in the proportion of children's vocabularies that are predicates. Closed class forms remain a much smaller proportion.  After about 300 words, vocabulary composition children are not adding nouns  dominant children's first words are primarily nouns, 
 
 [Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary.](images/bates1994.png)
+
+Why do children learn nouns before verbs and other types of words?  One reason for this "noun bias" in children's early vocabulary composition is could be that nouns are simply more frequent in the talk to young children.  It is well-established that children learn the words that they hear more often (e.g., @hartrisley1995).  Many observational studies of English-speaking caregivers have demonstrated that caregivers use more nouns than verbs (types or tokens) with their children (e.g., @fernald1993; @goldfield1993; Gopnik, Choi, & Baumberger, 1996; Kim et al., 2000; Poulin-Dubois et al., 1995; Tardif et al., 1997).  
+
+
+Nouns are also more frequent than verbs.  Some researchers have framed this "noun bias" in terms of universals about what and how different words "partition" things in the world.  For example, Gentner (@gentner1978) has argued that children learn nouns before verbs because the meanings of nouns are easier to encode since they identify things that can be differentiated in the world (e.g., common everyday objects).  Verbs and other predicates, in contrast, express *relations* among things in the world.  Hence, the meanings of verbs are less accessible to children through common, everyday experiences and hence, are more difficult to map onto word forms without additional linguistic or social support. 
+
+
+Other reasons that nouns might be easier than verbs for young children is that nouns tend to be less morphologically complex than verbs (e.g., @tardif1997). For example, in many languages, nouns are typically marked only for number, whereas, verbs carry both person and tense information.  In English, at least, verbs might also be harder to learn because they tend to occur in sentence-medial position (rather than sentence final), which make verbs less salient in the input that children hear (@slobin1985, @caselli?).
+
+Finally, differences in children's preferences for nouns vs. verbs might result from differences in how frequently or in what context children hear nouns vs. verbs in the speech from caregivers (e.g., @choi1995, @tardif1999).  Caregivers in different cultures tend to emphasize the names for objects rather than the actions in which those objects engage.
+
+What is the evidence that a noun bias is a universal feature of children's vocabularies? (Does this come before or after the possible explanations?)  Evidence varies across languages, as well as across methodologies (naturalistic observation vs. parent report).  Here, we follow the approach of Bornstein and others (e.g., Schults - Estonian) to use a common method for collecting the data. HOwever, we go beyond these studies by having access to many more languages with many more observations.
+
+Notes: Finally, yet other studies have found evidence for a noun bias across languages but only in later stages of vocabulary learning (i.e., after the first 50 words; Bornstein et al., 2004).
+
+Babies first ten words - the probability that certain words from certain lexical classes appear in the first productions of children's words.  Our strategy follows from that and tries to quantify the degree to which words from different lexical classess appear in the early vocabulary. 
+
+
+
+
+
 
 ## Methods
 

@@ -2,4 +2,178 @@
 
 This chapter contains analysis of the “early gesture” items from the CDI. Analyses will focus on the cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo.
 
-Overall stuff about gestures and sentences, `grammar-lex`.
+
+Let's try out some basic descriptives. What do these things look like? Let's arrange them in order of difficulty(on the bases of highest proportion of non-producers).
+
+```{r load_gesture_data, fig.width = 10, fig.height = 6}
+library(stringr)
+if(!local_data) {
+eng_data <- get_instrument_data(instrument_language = "English (American)", 
+                                instrument_form = "WG",
+                                administrations = TRUE,
+                                iteminfo = TRUE)
+write_feather(eng_data, "data/eng_wg_data.feather")
+} else{ eng_data <- read_feather("data/eng_wg_data.feather")}
+
+gesture_data <- eng_data %>%
+  filter(str_detect(type, "gesture"))
+
+# Get the First Gestures
+first_gestures <- gesture_data %>% 
+  filter(type == "gestures_first") %>%
+  filter(!is.na(value)) %>%
+  mutate(value = parse_factor(value, c("not yet", "sometimes", "often"))) %>%
+  group_by(age, definition, value) %>%
+  summarise(n = n()) %>%
+  mutate(n = n/sum(n)) %>%
+  complete(age, definition, value, fill = list(n = 0)) 
+
+# Order by approxiamate acquistion order to make plotting nicer
+acq_order <- first_gestures %>%
+  filter(value == "not yet") %>%
+  group_by(definition) %>%
+  summarise(n = mean(n)) %>%
+  arrange(n)
+
+first_gestures_ordered <- first_gestures %>%
+  ungroup() %>%
+  mutate(definition = parse_factor(definition, acq_order$definition))
+
+ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)) + 
+  facet_wrap(~ definition) + 
+  geom_point() + 
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_dl(method = list(dl.trans(x=x +.2), "last.qp", cex=1)) +
+  scale_color_brewer(palette = "Set1") + 
+  scale_x_continuous(name = "age (months)", limits = c(7.5, 21),
+                    breaks = seq(8, 18)) + 
+  theme_bw()
+
+```
+
+I can't tell if sometimes/often really carries very much signal. It looks like it's all over the place for the earliest gestures and almost overlapping for the latest ones. Let's try compressing to a binary
+
+```{r bin_gestures, fig.with = 6, fig.height = 4}
+first_gestures_binary <- first_gestures_ordered %>%
+  filter(value == "not yet") %>%
+  mutate(known = 1- n)
+
+ggplot(first_gestures_binary, aes(x = age, y = known, color = definition, 
+                                  label = definition)) + 
+  geom_point() + 
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_dl(method = list(dl.trans(x=x -.2), "first.qp", cex=1)) +
+  scale_color_brewer(palette = "Set1") + 
+  scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
+                    breaks = seq(8, 18)) + 
+  theme_bw()
+
+```
+
+These look pretty reasonable to me, and a lot more stable. Also smacklip doesn't seem to have much of any kind of trajectory, which makes me think that parents don't know what do with it. For comparison, let's try the other gesture categories.
+
+```{r other_gestures, fig.width = 10, fig.height = 5}
+# Get the First Gestures
+other <- gesture_data %>% 
+  filter(type != "gestures_first") %>%
+  filter(!is.na(value)) %>%
+  mutate(value = parse_factor(value, c("no", "yes"))) %>%
+  group_by(age, type, definition, value) %>%
+  summarise(n = n()) %>%
+  mutate(n = n/sum(n)) %>%
+  complete(age, nesting(type, definition), value, fill = list(n = 0)) %>%
+  filter(value == "yes")
+
+# Order by approxiamate acquistion order to make plotting nicer
+other_type_order <- other %>%
+  group_by(type, definition) %>%
+  summarise(n = mean(n)) %>%
+  summarise(n = mean(n)) %>%
+  arrange(desc(n))
+
+other_indiv_order <- other %>%
+  ungroup() %>%
+  mutate(type = parse_factor(type, other_type_order$type)) %>%
+  group_by(type, definition) %>%
+  summarise(n = mean(n)) %>%
+  arrange(desc(n)) 
+
+other_gestures_ordered <- other %>%
+  ungroup() %>%
+  mutate(type = parse_factor(type, other_type_order$type)) %>%
+  mutate(definition = parse_factor(definition, other_indiv_order$definition))
+
+ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition, 
+                                  label = definition)) +
+  facet_wrap(~ type) + 
+  geom_point() + 
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_dl(method = list(dl.trans(x=x -.2), "first.qp", cex=1)) +
+  #scale_color_brewer(palette = "Set1") + 
+  scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
+                    breaks = seq(8, 18)) + 
+  theme_bw() + 
+  theme(legend.position = "none")
+```
+
+Interesting, ok most of these look like they have some signal (with the exception maybe of sobig). Also some of them don't look terribly different from the First Gestures.
+
+Let's try looking at correlations with vocabulary size
+
+```{r cor_vocab, fig.width = 4, fig.height = 4}
+cor_data <- gesture_data %>%
+  filter(!is.na(value), !value %in% c("no", "not yet")) %>%
+  group_by(age, comprehension, production, data_id) %>%
+  summarise(produced_gestures = n())
+
+cols <- c("comprehension", "production", "produced_gestures")
+
+cor_data %>% select_(.dots = cols) %>%
+  ggcorplot()
+```
+
+Wow, age is really predictive of gesture, even more so than comprehension/production. Let's looking at the effect when we fit age simultaneously.
+
+```{r partial_cor}
+library(lme4)
+num_gestures <- length(unique(gesture_data$definition))
+
+age_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
+                 ~ scale(age) + (1|data_id), 
+                 family = "binomial", data = cor_data)
+
+
+age_production_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
+                 ~ scale(age) + scale(production) + (1|data_id), 
+                 family = "binomial", data = cor_data)
+
+summary(age_production_cor)
+
+age_comprehension_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
+                 ~ scale(age) + scale(comprehension) + (1|data_id), 
+                 family = "binomial", data = cor_data)
+
+summary(age_comprehension_cor)
+
+age_both_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
+                 ~ scale(age) + scale(comprehension) + scale(production) +  (1|data_id), 
+                 family = "binomial", data = cor_data)
+
+summary(age_both_cor)
+
+anova(age_production_cor, age_cor)
+anova(age_comprehension_cor, age_cor)
+anova(age_comprehension_cor, age_both_cor)
+
+age_interaction_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
+                             ~ scale(age) * scale(comprehension) + scale(age) * 
+                               scale(production) + (1|data_id), 
+                             control = glmerControl(optimizer = "bobyqa"), 
+                 family = "binomial", data = cor_data)
+
+anova(age_comprehension_cor, age_interaction_cor)
+
+summary(age_interaction_cor)
+```
+
+Ok so all of the things that are positively correlated contain some signal in predicting each-other over and above age. It also looks like there is some non-linearity in the correlation, because the age * comprehension/production correlations are negative. Presumably this is some kind of ceiling effect where the gestures in general are producted before the words? Let's check that next.

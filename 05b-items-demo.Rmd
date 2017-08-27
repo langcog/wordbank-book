@@ -3,70 +3,7 @@
 In Chapter \@ref(demographics), we documented demographic differences in total vocabulary. In this chapter, we consider the possibility that individual words carry this demographic signal. Which words are learned differentially earlier or later by girls vs. boys or by first-born vs. later-born children? 
 
 
-<!-- THIS IS ALL JUST STRAIGHT FROM https://github.com/mikabr/gender-input -->
-
-<!-- ## Get word counts -->
-
-<!-- Load files with CHILDES word count data, as outputted by `get_childes_counts.py`. -->
-
-<!-- ```{r childes} -->
-<!-- files <- list.files("data", full.names = TRUE, recursive = TRUE) -->
-<!-- nltk_counts <- map_df(files, function(file) { -->
-<!--   cat(file, "\n") -->
-<!--   file_parts <- file %>% gsub(".csv", "", .) %>% strsplit("/") %>% unlist() -->
-<!--   doc <- read.csv(file, stringsAsFactors = FALSE) %>% -->
-<!--     mutate(language = file_parts[2], -->
-<!--            filename = paste(file_parts[2:length(file_parts)], collapse = "/"), -->
-<!--            count = as.numeric(count)) -->
-<!--   return(doc) -->
-<!-- }) %>% -->
-<!--   rename(gloss = word, nltk_count = count) -->
-<!-- ``` -->
-
-<!-- Load CHILDES metadata and manually coded gender data for files that are missing gender information, join them to word count data, and sum word counts per word and gender. -->
-
-<!-- ```{r metadata} -->
-<!-- metadata <- read_csv("metadata.csv") -->
-<!-- # missing_sex <- metadata %>% -->
-<!-- #   filter(sex == "None") -->
-<!-- # write_csv(missing_sex, "data/missing_sex.csv") -->
-<!-- coded_sex <- read_csv("missing_sex.csv") %>% -->
-<!--   rename(coded_sex = sex) -->
-
-<!-- coded_counts <- nltk_counts %>% -->
-<!--   left_join(metadata) %>% -->
-<!--   left_join(coded_sex) %>% -->
-<!--   mutate(gender = ifelse(sex != "None", sex, coded_sex)) %>% -->
-<!--   filter(!is.na(gender)) -->
-
-<!-- gender_counts <- coded_counts %>% -->
-<!--   group_by(language, gender, gloss) %>% -->
-<!--   summarise(count = sum(nltk_count)) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- # freq_threshold <- 10 -->
-<!-- # diff_cutoff <- 2 -->
-<!-- # spread_counts <- gender_counts %>% -->
-<!-- #   spread(gender, count) %>% -->
-<!-- #   mutate(log_prob_female = log(female / sum(female, na.rm = TRUE)), -->
-<!-- #          log_prob_male = log(male / sum(male, na.rm = TRUE)), -->
-<!-- #          diff = log_prob_female - log_prob_male) %>% -->
-<!-- #   filter(!is.na(female), !is.na(male), female > freq_threshold, -->
-<!-- #          male > freq_threshold, !grepl("^[[:upper:]].*$", gloss)) -->
-<!-- #  -->
-<!-- # ggplot(spread_counts, aes(x = log_prob_female, y = log_prob_male)) + -->
-<!-- #   #facet_wrap(~language) + -->
-<!-- #   coord_fixed() + -->
-<!-- #   geom_point(size = 0.5) + -->
-<!-- #   geom_text_repel(aes(label = gloss), -->
-<!-- #                   data = filter(spread_counts, diff > diff_cutoff)) -->
-<!-- ``` -->
-
-## Gender
-
-
-```{r gender_raw_data, eval=FALSE}
+```{r demo_raw_data, eval=FALSE}
 get_inst_data <- function(inst_items) {
   
   inst_language <- unique(inst_items$language)
@@ -98,121 +35,134 @@ get_lang_data <- function(lang_items) {
     filter(measure == "produces" | form == "WG")
 }
 
+demo_insts <- admins %>%
+  filter(!is.na(birth_order) | !is.na(mom_ed) | !is.na(sex)) %>%
+  distinct(language, form)
+
 raw_data <- items %>%
-  filter(form == "WS", language %in% c("Croatian","Czech")) %>%
+  right_join(demo_insts) %>%
+  filter(type == "word") %>%
   split(.$language) %>%
   map(get_lang_data)
 
-write_feather(bind_rows(raw_data), "data/gender_items.feather")
+write_feather(bind_rows(raw_data), "data/demo_data.feather")
 ```
 
 
-```{r gender_read}
-raw_data <- read_feather("data/gender_items.feather") %>%
+```{r demo_read, eval=FALSE}
+raw_data <- read_feather("data/demo_data.feather") %>%
   split(.$language)
 ```
 
 For each dataset, compute proportion of children of each age and gender who produce/understand each word, fit a logistic regression to those proportions, and then estimate the area between the curves for girls and boys.
 
-```{r gender_diffs}
-fit_gender_diffs <- function(lang_data) {
+```{r demo_madm_funs}
+fit_demo_madm <- function(lang_data, demo) {
   
   print(unique(lang_data$language))
+  print(demo)
   
-  gender_props <- lang_data %>%
-    filter(!is.na(sex)) %>%
-    group_by(language, form, sex, age, lexical_class, category,
+  if (lang_data %>% pull(!!demo) %>% is.na() %>% all()) return(NULL)
+  
+  demo_lang_data <- lang_data %>%
+    filter(!is.na(!!demo)) %>%
+    mutate(birth_order = birth_order %>%
+             fct_recode("Third+" = "Third",
+                        "Third+" = "Fourth",
+                        "Third+" = "Fifth",
+                        "Third+" = "Sixth",
+                        "Third+" = "Seventh",
+                        "Third+" = "Eighth"),
+           mom_ed = mom_ed %>%
+             fct_recode("None / Primary" = "None",
+                        "None / Primary" = "Primary",
+                        "Some Secondary / Secondary" = "Some Secondary",
+                        "Some Secondary / Secondary" = "Secondary",
+                        "Some College / College" = "Some College",
+                        "Some College / College" = "College",
+                        "Some Graduate / Graduate" = "Some Graduate",
+                        "Some Graduate / Graduate" = "Graduate"))
+  
+  demo_samples <- demo_lang_data %>%
+    distinct(!!demo, age, data_id) %>%
+    count(!!demo, age)
+
+  if (any(demo_samples$n < 10)) return(NULL)
+  
+  demo_props <- demo_lang_data %>%
+    group_by(language, form, !!demo, age, lexical_class, category,
              uni_lemma, definition) %>%
     summarise(num_true = sum(value, na.rm = TRUE),
               num_false = n() - num_true,
-              prop = num_true / n())
-  
-  width <- 0.01
+              prop = num_true / n()) %>%
+    ungroup() %>%
+    mutate(unscaled_age = age,
+           age = scale(age))
+
   fit_group <- function(group_data) {
-    model <- glm(cbind(num_true, num_false) ~ age, family = "binomial",
-                 data = group_data)
-    ages <- seq(min(group_data$age), max(group_data$age),
-                by = (max(group_data$age) - min(group_data$age)) * width)
-    scaled_ages <- seq(0, 1, by = width)
-    fits <- model %>%
-      predict(newdata = data.frame(age = ages)) %>%
-      boot::inv.logit()
-    data_frame(age = ages, scaled_age = scaled_ages, fit = fits)
+    glm(cbind(num_true, num_false) ~ age * demo)
+    model <- lme4::glmer(
+      cbind(num_true, num_false) ~ (age | definition) + age,
+      family = binomial, data = group_data
+      #control = lme4::glmerControl(optCtrl = list(maxfun = 1e7))
+    )
+    group_data %>%
+      mutate(fitted = fitted(model)) %>%
+      select(unscaled_age, age, uni_lemma, definition, fitted) %>%
+      distinct()
   }
   
-  compute_area <- function(group_fits) {
-    data_frame(area = sum(group_fits$fit * width))
-  }
-  
-  gender_fits <- gender_props %>%
-    group_by(language, form, sex, lexical_class, category,
-             uni_lemma, definition) %>%
+  demo_fits <- demo_props %>%
+    group_by(language, form, !!demo) %>%
     nest() %>%
-    mutate(fits = map(data, fit_group))
+    mutate(fits = map(data, fit_group)) %>%
+    select(-data)
   
-  gender_areas <- gender_fits %>%
-    mutate(area = map(fits, compute_area)) %>%
-    select(-data, -fits) %>%
-    unnest()
-  
-  gender_areas %>%
-    spread(sex, area) %>%
-    rename(female_area = Female, male_area = Male) %>%
-    mutate(area_diff = female_area - male_area)
-  
+demo_areas <- demo_fits %>%
+    unnest() %>%
+    group_by(language, form, !!demo, uni_lemma, definition) %>%
+    summarise(area = sum(fitted))
+
+  demo_areas %>%
+    group_by(language, form, uni_lemma, definition) %>%
+    summarise(madm = madm(area)) %>%
+    mutate(demo = as.character(demo)[2])
+
 }
-
-gender_diffs <- raw_data %>% 
-  map_df(fit_gender_diffs)
 ```
 
-To estimate the reliability of area differences, split datasets into groups and find the correlation between the groups' area difference estimates.
+```{r, eval=FALSE}
+demos <- c(quo(birth_order), quo(mom_ed), quo(sex))
 
-```{r gender_reliability}
-# random_group <- function(n, probs) {
-#   g <- findInterval(seq(0, 1, length = n), c(0, cumsum(probs)),
-#                     rightmost.closed = TRUE)
-#   names(probs)[sample(g)]
-# }
-# 
-# fit_gender_diffs_groups <- function(dataset, form_name, n_groups = 2) {
-#   
-#   group_probs <- setNames(rep(1 / n_groups, n_groups),
-#                           paste0("group", 1:n_groups))
-#   
-#   groups <- dataset %>%
-#     select(data_id) %>%
-#     unique() %>%
-#     mutate(group = random_group(n(), group_probs))
-#   
-#   dataset_grouped <- dataset %>%
-#     left_join(groups)
-#   
-#   group_fits <- dataset_grouped %>%
-#     split(.$group) %>%
-#     map(~fit_gender_diffs(.x, form_name))
-#   
-#   joined_groups <- group_fits %>%
-#     reduce(~left_join(.x, .y,
-#                       by = c("measure", "lexical_class", "definition")))
-#   
-#   joined_groups %>%
-#     group_by(measure) %>%
-#     nest() %>%
-#     mutate(cor = map_dbl(data, ~cor(.x$area_diff.y, .x$area_diff.x)),
-#            reliability = n_groups * cor / (1 + (n_groups - 1) * cor)) %>%
-#     select(-data)
-#   
-# }
-# 
-# gender_diffs_wg_groups <- fit_gender_diffs_groups(eng_wg, "WG")
-# gender_diffs_ws_groups <- fit_gender_diffs_groups(eng_ws, "WS")
-# 
-# gender_diffs_groups <- bind_rows(gender_diffs_wg_groups,
-#                                  gender_diffs_ws_groups)
-# 
-# knitr::kable(gender_diffs_groups)
+demo_madm <- raw_data %>% 
+  map_df(function(lang_data) {
+    demos %>% map_df(~fit_demo_madm(lang_data, .x))
+  })
+
+write_feather(demo_madm, "data/demo_madm.feather")
 ```
+
+```{r}
+demo_summary <- demo_madm %>%
+  group_by(language, form, demo) %>%
+  summarise(mean_madm = mean(madm)) %>%
+  mutate(inst = paste(language, form, sep = "_"))
+  #ungroup() %>%
+  #arrange(desc(mean_madm)) %>%
+  #mutate(language = factor(language, levels = language))
+
+ggplot(demo_summary, aes(x = inst, y = mean_madm)) +
+  coord_flip() +
+  facet_wrap(~demo) +
+  geom_point() +
+  labs(x = "Mean MADM of items", y = "")
+```
+
+
+```{r}
+ggplot(demo_madm, aes(x = madm)) + geom_density() + facet_wrap(~demo)
+```
+
 
 ```{r gender_plot_area_diffs, fig.width=10, fig.height=6}
 lexical_classes <- list("Nouns" = "nouns",

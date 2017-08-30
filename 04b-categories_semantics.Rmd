@@ -30,7 +30,7 @@ ggplot(category_freqs,
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
-Seems reasonable to take high-freuqency and 
+Seems reasonable to take high-frequency categories. 
 
 
 ```{r cat_comp_fun}
@@ -312,6 +312,91 @@ ggplot(pc_df, aes(x = c1, y = c2, col = language, label = language)) +
   xlab("Sounds, Vehicles, Games, Animals, Clothing (PC1)") + 
   ylab("Sounds, not Vehicles (PC2)") + 
   scale_color_solarized(guide = FALSE)
+```
+
+# Specific semantic categories
+
+```{r}
+sem_data <- read_feather("data/semantic_data.feather")
+```
+
+
+Body parts as an example.
+
+```{r}
+bp <- filter(sem_data, category == "body_parts")
+```
+
+Get unilemma set. 
+
+```{r}
+bp_unis_df <- bp %>%
+  filter(!is.na(uni_lemma)) %>%
+  group_by(language, uni_lemma) %>%
+  count %>%
+  group_by(uni_lemma) %>%
+  count 
+
+bp_unis <- filter(bp_unis_df, nn > 4) %>% pull(uni_lemma)
+
+bp_unis_df %>%
+  arrange(desc(nn)) %>%
+  datatable
+```
+
+Get those high-coverage uni-lemmas. 
+
+```{r}
+bp_means <- bp %>%
+  filter(uni_lemma %in% bp_unis) %>%
+  group_by(language, form, uni_lemma, age, measure) %>%
+  summarise(mean = mean(value), 
+            n = n())
+```
+
+Plot. 
+
+```{r}
+body_unis <- c("arm", "leg", "hand","foot", "finger", "toe") # "face", "hand", "head", 
+face_unis <- c("cheek","eaer","eye","hair","mouth","nose","tongue","tooth")
+
+upper_lower <- filter(bp_means, measure == "understands", n > 10, language != "Korean",  
+              form == "WG", uni_lemma %in% body_unis) %>%
+  mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"), 
+         size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg", 
+                          uni_lemma %in% c("hand","foot") ~ "hand/foot",
+                          uni_lemma %in% c("finger","toe") ~ "finger/toe"))
+
+ggplot(upper_lower, 
+       aes(x = age, y = mean, col = size)) + 
+  # geom_point(aes(size = n)) + 
+  geom_smooth(se= FALSE, aes(lty = body_position), span = 1) + 
+  facet_wrap(~language) + 
+  scale_color_solarized() + 
+  theme(legend.position = "bottom") + 
+  ylab("Proportion Comprehension") + 
+  xlab("Age (months)")
+```
+
+
+```{r}
+face <- filter(bp_means, measure == "understands", n > 10, language != "Korean",  
+              form == "WG", uni_lemma %in% face_unis) 
+# %>%
+  # mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"), 
+  #        size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg", 
+  #                         uni_lemma %in% c("hand","foot") ~ "hand/foot",
+  #                         uni_lemma %in% c("finger","toe") ~ "finger/toe"))
+
+ggplot(face, 
+       aes(x = age, y = mean, col = uni_lemma)) + 
+  # geom_point(aes(size = n)) + 
+  geom_smooth(se= FALSE, span = 1) + # aes(lty = body_position), 
+  facet_wrap(~language) + 
+  scale_color_solarized() + 
+  theme(legend.position = "bottom") + 
+  ylab("Proportion Comprehension") + 
+  xlab("Age (months)")
 ```
 
 

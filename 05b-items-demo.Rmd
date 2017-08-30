@@ -58,7 +58,7 @@ write_feather(bind_rows(raw_data), "data/demo_data.feather")
 ```
 
 
-```{r demo_read, eval=FALSE}
+```{r demo_read, eval=TRUE}
 raw_data <- read_feather("data/demo_data.feather") %>%
   split(.$language)
 ```
@@ -140,7 +140,7 @@ demo_areas <- demo_fits %>%
 }
 ```
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 demos <- c(quo(birth_order), quo(mom_ed), quo(sex))
 
 demo_madm <- raw_data %>% 

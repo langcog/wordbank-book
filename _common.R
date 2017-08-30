@@ -9,6 +9,9 @@ library(stringr)
 library(feather)
 library(ggrepel)
 library(ggdendro) # ch5
+library(robustbase) # appendix-aoa
+library(arm) # appendix-aoa
+library(rstan) # appendix-aoa
 
 
 knitr::opts_chunk$set(
@@ -18,6 +21,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   cache = TRUE,
   echo = FALSE,
+  cache.lazy = FALSE,
   fig.align = "center",
   fig.show = "hold"
 )

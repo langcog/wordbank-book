@@ -1,4 +1,4 @@
-# Estimating words' age of acquisition {#appendix-aoa}
+# Estimating Age of Acquisition {#appendix-aoa}
 
 In this Appendix, we systematically compare methods for estimating age of acquisition, using the English Words and Sentences data as a case study.
 
@@ -91,7 +91,7 @@ aoas %>%
 
 ```{r}
 fit_rglm <- function(data) {
-  model <- glmrob(cbind(num_true, num_false) ~ age, family = "binomial", 
+  model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, family = "binomial", 
                data = data)
   fit <- predict(model, newdata = data.frame(age = 0:36), se.fit = TRUE)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
@@ -121,7 +121,7 @@ rglm_aoas$definition[rglm_aoas$rglm_aoa < 0]
 
 ## Bayes GLM
 
-Can we do a BayesGLM to regularize things a bit? Let's explore a single curve. Basically, BayesGLM does *exactly* the same thing as GLM because of the huge amount of data, no matter what prior. Let's try also robust GLM.   
+Can we do a arm::bayesglm to regularize things a bit? Let's explore a single curve. Basically, arm::bayesglm does *exactly* the same thing as GLM because of the huge amount of data, no matter what prior. Let's try also robust GLM.   
 
 ```{r}
 target_words <- 
@@ -134,7 +134,7 @@ do.fits <- function(data) {
   glm_model <- glm(cbind(num_true, num_false) ~ age, 
                    family = "binomial", 
                    data = data)
-  bayes_model <- bayesglm(cbind(num_true, num_false) ~ age, 
+  bayes_model <- arm::bayesglm(cbind(num_true, num_false) ~ age, 
                           family = binomial(link="logit"),
                           prior.mean = .25, 
                           prior.scale = c(.01), 
@@ -142,7 +142,7 @@ do.fits <- function(data) {
                           prior.scale.for.intercept = 2.5,
                           prior.df=Inf, 
                           data = data)
-  rob_model <- glmrob(cbind(num_true, num_false) ~ age, 
+  rob_model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, 
                       family = binomial(link="logit"), data = data)
   
   
@@ -184,7 +184,7 @@ Now apply this more broadly. Note that the 50% point for logistic regression = $
 
 ```{r}
 fit_bglm <- function(data) {
-  model <- bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
+  model <- arm::bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
                     prior.mean = .25, 
                           prior.scale = c(.01), 
                           prior.mean.for.intercept = 0, 
@@ -204,7 +204,7 @@ bglm_aoas <- ms %>%
   bind_rows
 ```
 
-BayesGLM is working very well here, basically moving Mommy and Daddy a bit more conservative but otherwise preserving most of the curve. 
+arm::bayesglm is working very well here, basically moving Mommy and Daddy a bit more conservative but otherwise preserving most of the curve. 
 
 ```{r}
 aoas <- left_join(bglm_aoas, glm_aoas)
@@ -223,14 +223,14 @@ ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) +
 
 
 
-BayesGLM with these made-up parameters fixes some of the issues, produces a better-looking distribution with fewer crazy outliers. 
+arm::bayesglm with these made-up parameters fixes some of the issues, produces a better-looking distribution with fewer crazy outliers. 
 
 ## Hierarchical GLM model
 
 Set some stan settings. 
 
 ```{r}
-rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
+rstan::rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
 # ms <- read_csv("engdata.csv")
 ```
 
@@ -309,7 +309,7 @@ dat <- list(age = ages,
             W = n.words, 
             A = length(ages))
 
-samps <- stan(model_code = hierarchical_logit, 
+samps <- rstan::stan(model_code = hierarchical_logit, 
               cores = 4, 
               data = dat, iter = 200, warmup=100, chains = 4, 
               pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
@@ -318,7 +318,7 @@ samps <- stan(model_code = hierarchical_logit,
 Diagnostics.
 
 ```{r}
-traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
+rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
                  inc_warmup = TRUE)
 ```
 
@@ -465,7 +465,7 @@ ms_sparse <- eng_ws %>%
   group_by(definition, age, category) %>%
   summarise(prop = mean(value=="produces", na.rm=TRUE), 
             num_true = sum(value=="produces", na.rm=TRUE), 
-            num_false = sum(value!="produces", na.rm=TRUE), 
+          num_false = sum(value!="produces", na.rm=TRUE), 
             n = sum(c(num_true,num_false))) %>%
   filter(!is.na(category))
 
@@ -490,7 +490,7 @@ ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) +
 ```
 ## Conclusion
 
-BayesGLM with hand-tuned priors seems to perform pretty well. 
+arm::bayesglm with hand-tuned priors seems to perform pretty well. 
 
 To Do:
 * Test with WG comprehension

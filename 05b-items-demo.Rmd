@@ -140,7 +140,7 @@ demo_areas <- demo_fits %>%
 }
 ```
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 demos <- c(quo(birth_order), quo(mom_ed), quo(sex))
 
 demo_madm <- raw_data %>% 

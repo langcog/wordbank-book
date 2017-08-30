@@ -55,7 +55,7 @@ num_words <- items %>%
   summarise(n = n())
 
 vocab_data <- admins %>%
-  select(data_id, language, form, age, sex, 
+  dplyr::select(data_id, language, form, age, sex, 
          mom_ed, birth_order, production, comprehension) %>% 
   left_join(num_words) %>%
   mutate(no_production = n - production)
@@ -81,3 +81,5 @@ ggplot(eng_prod_data,
 ```
 
 You can also stitch item by item, this is trickier but better. 
+
+## Item-Level Form Stitching

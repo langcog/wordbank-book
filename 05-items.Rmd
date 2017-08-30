@@ -1,8 +1,8 @@
 # Individual Words: Consistencies {#items}
 
-How consistent are childen's first words?
+<!-- How consistent are childen's first words? -->
 
-## Baby's First Words are Consistent Across Languages
+<!-- ## Baby's First Words are Consistent Across Languages -->
 
 Which words do children learn first? In spite of tremendous individual variation in rate of development (1), the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (“mom”, “dad”), social routines (“hi”, “uh oh”), animals (“dog”, “duck”), and foods (“milk”, “banana”). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (“go”) and other predicates (“hot”) to their production repertoires. In the latter part of this chapter, we ask *why* some words are learned before others. But first, we ask the prior question: How similar are the acquisition trajectories of children learning different languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. 
 
@@ -40,7 +40,7 @@ kid_wg_data <- wg_data %>%
   left_join(items) %>%
   left_join(admins) %>%
   filter(form == "WG", type == "word", !is.na(uni_lemma), !is.na(age)) %>%
-  select(data_id, value, age, language, uni_lemma, category, lexical_category, lexical_class)
+  dplyr::select(data_id, value, age, language, uni_lemma, category, lexical_category, lexical_class)
 
 # Get the items from Words and Sentences also on Words and Gestures for each language
 stitch_items <- items %>%
@@ -48,7 +48,7 @@ stitch_items <- items %>%
   group_by(language, lexical_category, uni_lemma) %>%
   summarise(n = n()) %>%
   filter(n > 1) %>%
-  select(-n) %>%
+  dplyr::select(-n) %>%
   mutate(form = "WS") %>%
   left_join(items)
 
@@ -57,7 +57,7 @@ stitched_data <- ws_sub_data %>%
   left_join(stitch_items) %>%
   left_join(admins) %>%
   filter(!is.na(age)) %>%
-  select(data_id, value, age, language, uni_lemma, category, 
+  dplyr::select(data_id, value, age, language, uni_lemma, category, 
          lexical_category, form) %>%
   bind_rows(kid_wg_data %>%
               filter(language %in% unique(ws_sub_data$language)) %>%
@@ -106,7 +106,7 @@ both_form_data <- production_data %>%
   group_by(language, uni_lemma) %>%
   summarise(num_forms = length(unique(form))) %>%
   filter(num_forms > 1) %>%
-  select(-num_forms) %>%
+  dplyr::select(-num_forms) %>%
   left_join(production_data)
 
 # Comprehension on WG
@@ -159,7 +159,7 @@ Production
 lemma_completeness %>%
   ungroup() %>%
   filter(measure == "produces") %>%
-  select(-measure) %>%
+  dplyr::select(-measure) %>%
   datatable
 ```
 
@@ -169,7 +169,7 @@ Comprehension
 lemma_completeness %>%
   ungroup() %>%
   filter(measure == "understands") %>%
-  select(-measure) %>%
+  dplyr::select(-measure) %>%
   datatable
 ```
 
@@ -182,7 +182,7 @@ top10 <- all_aoas %>%
   group_by(measure,language) %>%
   arrange(rglm_aoa) %>%
   slice(1:10) %>%
-  select(-rglm_aoa, -lexical_category) %>%
+  dplyr::select(-rglm_aoa, -lexical_category) %>%
   mutate(order = 1:n()) %>%
   spread(language, uni_lemma) 
 ```
@@ -193,7 +193,7 @@ Comprehension
 top10 %>% 
   ungroup() %>%
   filter(measure == "produces") %>%
-  select(-measure, -order) %>%
+  dplyr::select(-measure, -order) %>%
   datatable
 ```
 
@@ -203,7 +203,7 @@ Production
 top10 %>% 
   ungroup() %>%
   filter(measure == "understands") %>%
-  select(-measure, -order) %>%
+  dplyr::select(-measure, -order) %>%
   datatable
 ```
 
@@ -232,10 +232,10 @@ Consistency across languages
 aoa_corr <- function(df, lang1, lang2) {
 
  corrs <- df %>%
-    select(-lexical_category, -measure) %>%
+    dplyr::select(-lexical_category, -measure) %>%
     filter(language == lang1 | language == lang2) %>%
     spread(language, rglm_aoa) %>%
-    select(-uni_lemma) %>%
+    dplyr::select(-uni_lemma) %>%
     cor(., use = "complete") 
  
  return(corrs[2,1])
@@ -319,7 +319,7 @@ production_wide <- production_corrs_full %>%
   as.data.frame 
 rownames(production_wide) <- production_wide$lang1
 
-production_hc <- hclust(dist(select(production_wide, -lang1)))
+production_hc <- hclust(dist(dplyr::select(production_wide, -lang1)))
 ggdendrogram(production_hc) +
   theme_bw()
 ```
@@ -332,7 +332,7 @@ understanding_wide <- understanding_corrs_full %>%
   as.data.frame 
 rownames(understanding_wide) <- understanding_wide$lang1
 
-understanding_hc <- hclust(dist(select(understanding_wide, -lang1)))
+understanding_hc <- hclust(dist(dplyr::select(understanding_wide, -lang1)))
 ggdendrogram(understanding_hc) +
   theme_bw()
 ```
@@ -342,7 +342,7 @@ Consistency across acquisition order
 median_common_aoas <- median_aoas %>%
   filter(n >= 6) %>%
   mutate(language = "Median") %>%
-  select(-n) %>%
+  dplyr::select(-n) %>%
   group_by(measure) %>%
   arrange(rglm_aoa) %>%
   mutate(order = 1:n()) 
@@ -351,7 +351,7 @@ step_corr <- function (max_order, meas) {
   
   median_sub_aoas <- median_common_aoas %>%
     filter(order <= max_order, measure == meas) %>%
-    select(-order)
+    dplyr::select(-order)
   
   empirical_sub_aoas <- all_aoas %>%
     ungroup() %>%

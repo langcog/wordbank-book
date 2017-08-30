@@ -9,9 +9,10 @@ library(stringr)
 library(feather)
 library(ggrepel)
 library(ggdendro) # ch5
-library(robustbase) # appendix-aoa
-library(arm) # appendix-aoa
-library(rstan) # appendix-aoa
+# MASS dependency messes up lots of other dplyr code
+# library(robustbase) # appendix-aoa
+# library(arm) # appendix-aoa
+# library(rstan) # appendix-aoa
 
 
 knitr::opts_chunk$set(

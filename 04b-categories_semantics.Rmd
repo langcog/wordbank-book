@@ -50,7 +50,7 @@ get_cat_comp <- function(input_language, input_form) {
     mutate(value = ifelse(is.na(value), "", value),
            produces = value == "produces",
            understands = value == "produces" | value == "understands") %>%
-    select(-value) %>%
+    dplyr::select(-value) %>%
     gather(measure, value, produces, understands)
   
   num_words <- nrow(lang_vocab_items)
@@ -67,7 +67,7 @@ get_cat_comp <- function(input_language, input_form) {
   lang_vocab_summary %>%
     left_join(lang_vocab_sizes) %>%
     mutate(prop_vocab = num_true / vocab_num) %>%
-    select(-num_true) %>%
+    dplyr::select(-num_true) %>%
     mutate(language = input_language, form = input_form)
 }
 ```
@@ -75,7 +75,7 @@ get_cat_comp <- function(input_language, input_form) {
 ```{r ccs_vocab_comp, eval=FALSE}
 included_instruments <- instruments %>%
   filter(form %in% c("WS", "WG")) %>%
-  select(language, form) %>%
+  dplyr::select(language, form) %>%
   distinct()
 
 cat_comp_data <- map2(included_instruments$language,
@@ -96,7 +96,7 @@ sample_sizes <- cat_comp_data %>%
   group_by(language, form, measure, category) %>%
   summarise(n = n()) %>%
   ungroup() %>%
-  select(language, form, n) %>%
+  dplyr::select(language, form, n) %>%
   distinct() 
 
 sample_sizes %>%
@@ -196,12 +196,12 @@ Resample data and find the mean and CI of the area estimate.
 
 ```{r ccs_areas, eval=FALSE}
 areas <- sample_areas(cat_comp_data, nboot=100)
-write_feather(areas,"data/vocab_comp_areas.feather")
+write_feather(areas,"data/sem_vocab_comp_areas.feather")
 ```
 
 
 ```{r ccs_areas2}
-areas <- read_feather("data/vocab_comp_areas.feather")
+areas <- read_feather("data/sem_vocab_comp_areas.feather")
 
 area_summary <- areas %>%
   group_by(language, form, measure, category) %>%
@@ -277,11 +277,11 @@ areas <- filter(area_summary_ordered,
               category %in% included_cats)
 
 areas %<>%
-  select(language, category, mean) %>%
+  dplyr::select(language, category, mean) %>%
   spread(category, mean) 
 
 
-areas_matrix <- as.matrix(select(areas, -language))
+areas_matrix <- as.matrix(dplyr::select(areas, -language))
 row.names(areas_matrix) <- areas$language
 
 # remove NAs 
@@ -314,7 +314,7 @@ ggplot(pc_df, aes(x = c1, y = c2, col = language, label = language)) +
   scale_color_solarized(guide = FALSE)
 ```
 
-# Specific semantic categories
+## Specific semantic categories
 
 ```{r}
 sem_data <- read_feather("data/semantic_data.feather")

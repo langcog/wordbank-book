@@ -1,9 +1,11 @@
-# Categorical Composition: Individual Variability
+# Individual Children
 
 ## Variation in Production/Comprehension Tradeoffs
 
+Example for English.
+
 ```{r}
-eng_wg <- filter(admins, language == "English", form == "WG")
+eng_wg <- filter(admins, language == "English (American)", form == "WG")
 
 ggplot(eng_wg, 
        aes(x = comprehension, y = production)) + 
@@ -12,6 +14,7 @@ ggplot(eng_wg,
   geom_smooth()
 ```
 
+All languages.
 
 
 ```{r}

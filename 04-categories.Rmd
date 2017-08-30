@@ -1,10 +1,9 @@
 # Categorical Composition: Syntax {#categories}
 
-# Abstract
 
 This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words.^[An earlier version of this work was reported to BUCLD 2015 by Braginsky, Marchman, Yurovsky, & Frank.]
 
-# Introduction
+## Introduction
 
 Over the first few years, young children are exposed to a "sea of words" across many different contexts and from many different people (@goodman2008, p. 516). And despite the fact that children vary tremendously in the rate at which they learn, the first words that children utter are strikingly consistent [@tardif2008,@schneider2015]: they tend to talk about important people in their life ("mom", "dad"), social routines ("hi", "uh oh"), animals ("dog", "duck"), and foods ("milk", "banana") (@goodman2008, @bates1995, @nelson1973).  Soon thereafter, they begin to add verbs ("go") and adjectives ("pretty") in greater proportions than earlier in development and may even begin to use closed-class forms, such as determiners ("the").  These patterns of development seem to suggest a developmental course that follows distinct "waves" of learning for words from different syntactic classes. That is, along with early social routines, nouns tend to predominate early vocabularies, while other types of words, such as predicates and closed class forms, are learned later.
 
@@ -63,7 +62,7 @@ get_vocab_comp <- function(input_language, input_form) {
     mutate(value = ifelse(is.na(value), "", value),
            produces = value == "produces",
            understands = value == "produces" | value == "understands") %>%
-    select(-value) %>%
+    dplyr::select(-value) %>%
     gather(measure, value, produces, understands)
   
   num_words <- nrow(lang_vocab_items)
@@ -80,7 +79,7 @@ get_vocab_comp <- function(input_language, input_form) {
   lang_vocab_summary %>%
     left_join(lang_vocab_sizes) %>%
     mutate(prop_vocab = num_true / vocab_num) %>%
-    select(-num_true) %>%
+    dplyr::select(-num_true) %>%
     mutate(language = input_language, form = input_form)
 }
 ```
@@ -88,7 +87,7 @@ get_vocab_comp <- function(input_language, input_form) {
 ```{r 4_vocab_comp, eval=FALSE}
 instruments <- instruments %>%
   filter(form %in% c("WS","WG")) %>%
-  select(language, form) %>%
+  dplyr::select(language, form) %>%
   distinct()
 
 vocab_comp_data <- map2(instruments$language,
@@ -107,7 +106,7 @@ sample_sizes <- vocab_comp_data %>%
   group_by(language, form, measure, lexical_category) %>%
   summarise(n = n()) %>%
   ungroup() %>%
-  select(language, form, n) %>%
+  dplyr::select(language, form, n) %>%
   distinct() 
 
 sample_sizes %>%
@@ -340,7 +339,7 @@ area_scatter_data <- area_summary %>%
          measure == "produces") %>%
   gather(variable, value, mean, ci_lower, ci_upper) %>%
   mutate(lex_var = str_c(lexical_category, variable, sep = "_")) %>%
-  select(-lexical_category, -variable) %>%
+  dplyr::select(-lexical_category, -variable) %>%
   spread(lex_var, value)
 
 ggplot(area_scatter_data, 

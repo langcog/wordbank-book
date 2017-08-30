@@ -12,7 +12,7 @@ num_words <- items %>%
   summarise(n = n())
 
 vocab_data <- admins %>%
-  select(data_id, language, form, age, sex, 
+  dplyr::select(data_id, language, form, age, sex, 
          mom_ed, birth_order, production, comprehension) %>% 
   left_join(num_words) %>%
   mutate(no_production = n - production)

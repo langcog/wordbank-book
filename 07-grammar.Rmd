@@ -15,7 +15,7 @@ morphosyntax_fields <- c("combine", "complexity", "word_forms", "word_endings",
 #   group_by(language) %>%
 #   filter(any(morphosyntax_fields %in% type)) %>%
 #   spread(type, n) %>%
-#   select_(.dots = c("language", "word", morphosyntax_fields)) #%>%
+#   dplyr::select_(.dots = c("language", "word", morphosyntax_fields)) #%>%
 # 
 # num_langs <- n_distinct(complexity_forms$language)
 
@@ -136,7 +136,7 @@ get_grammar_data <- function(lang) {
   
   lang_admins <- admins %>%
     filter(language == lang) %>%
-    select(language, form, age, data_id, production) %>%
+    dplyr::select(language, form, age, data_id, production) %>%
     mutate(vocab_mean = production / lang_num_words)
 
   lang_grammar_data <- get_instrument_data(instrument_language = lang,
@@ -152,7 +152,7 @@ get_grammar_data <- function(lang) {
     mutate(raw_value = value,
            value = ifelse(is.na(raw_value), "", raw_value),
            value = get_value(unique(type), value)) %>%
-    select(language, age, data_id, vocab_mean, item_id, definition, type,
+    dplyr::select(language, age, data_id, vocab_mean, item_id, definition, type,
            coded_type, raw_value, value)
   
 }
@@ -182,14 +182,14 @@ grammar_summary <- grammar_data %>%
 ```{r 7_items}
 grammar_items %>%
   filter(coded_type == "Word Form") %>%
-  select(language, type, definition) %>%
+  dplyr::select(language, type, definition) %>%
   arrange(language, type) %>%
   datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
             options = list(pageLenth = 20))
   
 grammar_items %>%
-  filter(coded_type == "Complexity") %>%
-  select(language, type, definition) %>%
+  filter(coded_type == "Complexity (Syntactic)") %>%
+  dplyr::select(language, type, definition) %>%
   arrange(language, type) %>%
   datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
             options = list(pageLenth = 20))
@@ -487,7 +487,7 @@ grammar.model.metrics <- grammar.summary %>%
 
 Show AICs of grammar models.
 ```{r grammar_aic, eval=FALSE}
-kable(select(grammar.model.metrics,
+kable(dplyr::select(grammar.model.metrics,
              language, measure, AIC.vocab, AIC.vocab.age, deltaAIC))
 ```
 

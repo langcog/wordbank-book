@@ -43,7 +43,7 @@ What does it mean when a parent reports that their child knows a word? In an ide
 ![The statistical structure of parent report \label{fig:parent_model}](tex/parent_model.png){width=20%}
 
 ```{r}
-knitr::include_graphics("images/parent_report.jpg")
+knitr::include_graphics("images/parent_report_sketch.png")
 ```
 
 The nodes in this model reflect variables of interest--shaded gray if they are observed, and hollow if they are latent variables that the parent does not have direct access. The edges in this graph represent statistical dependencies among these variables. For each word on the CDI, the parent is asked to report $O_{c}$: have they observed their child producing the word? This observed variable depends on a latent variable $K_{c}$: whether their child knows the meaning of this word. This knowledge in turn depends in three other variables: $O_{p}$ the parent's productions of this word in the past, $d$ the difficulty of learning this word, and $\mu_{c}$ the child's general linguistic ability. This general ability in turn depends on the parent's linguistic ability $\mu_{p}$ and age-related factors $\alpha_{c}$. In addition, the CDI does not ask about every word in the child's vocabulary, only items on the form $i$. Because all of these other variables are statistically related to the child's observed productions, parents could be be bringing any or all of them to bear in their responses. 

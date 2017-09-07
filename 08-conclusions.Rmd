@@ -101,6 +101,79 @@ SES / NOUN BIAS         GRAMMAR/LEX  COV  GENDER
 
 CULTURE/LANGUAGE            COGNITION
 
+```{r}
+files <- dir("data/cvs/", pattern = "*.feather")
+
+cvs <- data_frame(name = files) %>%
+  split(.$name) %>%
+  map_df(function (x) { 
+    read_feather(paste0("data/cvs/", x$name))
+  }) %>%
+  mutate(y = 0, 
+         measure = fct_reorder(measure, cv))
+```
+
+```{r}
+ggplot(cvs, aes(x = measure, y = cv)) + 
+  geom_point() + 
+  # ylim(c(0,1)) + 
+  ylab("Coefficient of variation across languages") + 
+  geom_hline(yintercept = 0, lty =2) + 
+  coord_flip() 
+```
+
+```{r 8_covs}
+cvs_plot <- cvs %>%
+  filter(measure %in% c("Nouns WS produces", 
+                        "Predicates WS produces", 
+                        "Function Words WS produces", 
+                        "Female advantage", 
+                        "First-born advantage", 
+                        "College advantage", 
+                        "MADM 12-24mo WS production", 
+                        "Word Form_and Vocab (r2)", 
+                        "Complexity (Syntactic)_and Vocab (r2)")) %>%
+  mutate(measure_name = fct_recode(measure,
+                                   "Noun bias" = "Nouns WS produces", 
+                                   "Predicate bias" = "Predicates WS produces", 
+                        "Function word bias" = "Function Words WS produces", 
+                        "Toddler variability" = "MADM 12-24mo WS production", 
+                        "Morphology/vocab relation" = "Word Form_and Vocab (r2)", 
+                        "Grammar/vocab relation" = "Complexity (Syntactic)_and Vocab (r2)"))
+                                   
+
+ggplot(cvs_plot, aes(x = measure_name, y = cv)) + 
+  geom_point() + 
+  # ylim(c(0,1)) + 
+  xlab("") + 
+  ylab("Coefficient of variation across languages") + 
+  geom_hline(yintercept = 0, lty =2) + 
+  coord_flip() 
+```
+
+```{r}
+ggplot(cvs, aes(x = cv, y = y, label = measure)) + 
+  geom_point() + 
+  geom_label_repel() + 
+  ylim(c(-.5,.5)) + 
+  # xlim(c(0, 1)) + 
+  scale_y_continuous(labels =  NULL) + 
+  ylab("") + 
+  xlab("Coefficient of variation across languages") 
+```
+
+
+```{r 8_cvs_continuum}
+ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
+  geom_point() + 
+  geom_label_repel(segment.alpha = .5, force = 5) + 
+  ylim(c(-.2, .5)) + 
+  # scale_y_continuous(labels =  NULL) + 
+  ylab("") + 
+  xlab("Coefficient of variation across languages") 
+```
+
+
 Assuming that we can rule out reporting biases, the consistencies we observe across languages point to putative universals: generalizations that hold across very disparate populations of human children learning typologically distinct languages. Surely such universals should be an important basis for theorizing about language acquisition. A theory that accounted for such universals "for free" -- as a result of basic assumptions about the nature of the learning mechansisms -- would be able to claim more and broader evidence, for example. 
 
 What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.

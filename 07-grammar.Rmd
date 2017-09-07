@@ -211,6 +211,20 @@ ggplot(filter(grammar_summary, coded_type != "Combine"),
        y = "Grammar score (proportion of items)")
 ```
 
+Just complexity.
+
+```{r 7_grammar_data_plot_complexity}
+ggplot(filter(grammar_summary, coded_type == "Complexity (Syntactic)", language != "Slovak"),
+       aes(x = vocab_mean, y = mean)) + 
+  geom_jitter(alpha = 0.2, size = 0.75) +
+  facet_wrap(~ language) + 
+  geom_smooth(span = 1) +
+  # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
+  #             size = 1, se = FALSE)
+  labs(x = "Vocabulary size (proportion of items)",
+       y = "Grammar score (proportion of items)")
+```
+
 ```{r 7_combine_age_plot}
 combine_age <- grammar_data %>%
   filter(coded_type == "Combine") %>%
@@ -244,6 +258,32 @@ ggplot(filter(combine_vocab, n > 21), aes(x = vocab_bin, y = prop)) +
        y = "Proportion of children combining")
 ```
 
+
+
+Define our signature here as $r^2$.
+
+```{r}
+r2 <- function(x) {
+    r2 <- summary(lm(mean ~ vocab_mean, data = x))$r.squared
+    d <- data_frame(language = x$language[1], 
+                      coded_type = x$coded_type[1], 
+                      r2 = r2)
+    return(d)
+    }
+
+r2s <- filter(grammar_summary, coded_type != "Combine") %>%
+  group_by(language, coded_type) %>%
+  do(r2(.))
+
+cvs <- r2s %>%
+  filter(is.finite(r2)) %>%
+  group_by(coded_type) %>%
+  summarise(cv = sd(r2) / mean(r2)) %>%
+  mutate(foo = "and Vocab (r2)") %>%
+  unite(measure, coded_type, foo)
+
+write_feather(cvs, "data/cvs/grammar_lex.feather")
+```
 
 
 

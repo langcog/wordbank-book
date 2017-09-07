@@ -277,7 +277,7 @@ ggplot(madm_data, aes(x = age, y = madm_p, col = language)) +
 Yet this variability is quite *consistent*!
 
 ```{r 3_madm_summary}
-madm_summary <- madm_data %>%
+madm_summary_prod <- madm_data %>%
   filter(language != "Kigiriama") %>%
   group_by(language, form) %>%
   filter(age >= 12, age <= 24) %>%
@@ -285,7 +285,7 @@ madm_summary <- madm_data %>%
             madm_ci_lower = mean(madm_p) - ci.t(madm_p),
             madm_ci_upper = mean(madm_p) + ci.t(madm_p)) 
 
-ggplot(madm_summary, aes(x = language, y = madm_mean, col = form)) + 
+ggplot(madm_summary_prod, aes(x = language, y = madm_mean, col = form)) + 
   geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper), 
                   position = position_dodge(width = .1)) + 
   ylim(0,1.5) + 
@@ -293,7 +293,8 @@ ggplot(madm_summary, aes(x = language, y = madm_mean, col = form)) +
   ylab("Language") + 
   xlab("MADM (Production 12-24 mo)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
-  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
+  geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
+  scale_colour_solarized()
 ```
 
 ```{r 3_madm_comprehension}
@@ -309,14 +310,14 @@ ggplot(filter(madm_data, form == "WG"),
 ```
 
 ```{r 3_madm_summary_comprehension}
-madm_summary <- madm_data %>%
-  filter(form == "WG", language != "Kigiriama") %>%
+madm_summary_comp <- madm_data %>%
+  filter(form == "WG", language != "Kigiriama", age < 19, age > 11) %>%
   group_by(language, form) %>%
   summarise(madm_mean = mean(madm_c), 
             madm_ci_lower = mean(madm_c) - ci.t(madm_c),
             madm_ci_upper = mean(madm_c) + ci.t(madm_c)) 
 
-ggplot(madm_summary, aes(x = language, y = madm_mean)) + 
+ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) + 
   geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper)) + 
   ylim(0,1.5) + 
   coord_flip() + 
@@ -326,5 +327,23 @@ ggplot(madm_summary, aes(x = language, y = madm_mean)) +
   geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
 
+Get coefficients of variation. 
 
+```{r}
+
+prod <- madm_summary_prod %>%
+  group_by(form) %>%
+  summarise(prod_madm =  sd(madm_mean) / mean(madm_mean))
+
+comp <- madm_summary_comp %>%
+  ungroup %>%
+  summarise(comp_madm =  sd(madm_mean) / mean(madm_mean))
+
+cvs <- data_frame(measure = c("MADM 12-24mo WG production", 
+                       "MADM 12-24mo WS production", 
+                       "MADM 8-18mo WG comprehension"), 
+           cv = c(prod$prod_madm, comp$comp_madm))
+
+write_feather(cvs, "data/cvs/madm_cvs.feather")
+```
 

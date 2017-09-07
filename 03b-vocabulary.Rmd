@@ -29,7 +29,7 @@ min_age <- min(vocab_data$age)
 max_age <- max(vocab_data$age)
 ```
 
-### Gender
+## Gender
 
 This analysis examines how vocabulary development differs by children's reported gender, replicating and extending the results of:
 
@@ -84,28 +84,57 @@ ggplot(sex_means,
   theme(legend.position = "bottom")
 ```
 
-Get gender in terms of MMAD
+We quantify the gap between boys and girls in effect size. Normally we'd use something like Cohen's $d$ here, where
 
-```{r 3_gender_madm}
+$$d = \frac{\mu_2 - \mu_1}{SD_{pooled}}$$
+
+But as in the previous chapter, we have the problem of non-normal distributions. To circumvent this, we use a non-parametric measure derived from the same components. It's going to be the difference between medians, divided by the MAD. (We call this the MMAD).
+
+The MMAD for gender is quite constant across age.
+```{r 3b_gender_mmad}
 gender_mmad_ratio <- vocab_data %>%
   group_by(language, form, age, sex) %>%
-  filter(n() > 20) %>%
+  filter(n() > 10) %>%
   summarise(median_prod = median(production),
             mad_prod = mad(production),
             n = n()) %>%
   group_by(language, form, age) %>%
-  filter(n() == 2) %>%
-  summarise(ratio = (median_prod[sex == "Female"] - median_prod[sex == "Male"]) / mean(mad_prod))
+  filter(n() == 2) %>% # more than 2 in each gender group
+  summarise(mmad = (median_prod[sex == "Female"] - median_prod[sex == "Male"]) / mean(mad_prod)) %>%
+  filter(is.finite(mmad)) 
 
 ggplot(gender_mmad_ratio,
-       aes(x = age, y = ratio, col = language)) +
+       aes(x = age, y = mmad, col = language)) +
   geom_jitter() +
-  geom_smooth(aes(group = 1)) +
-  scale_color_discrete(guide = FALSE)
+  geom_smooth(span = 1, aes(group = 1)) +
+  scale_color_solarized()
+```
+
+Visualize variability. 
+
+```{r}
+gender_mmad_summary <- gender_mmad_ratio %>%
+  group_by(language) %>%
+  summarise(mmad_mean = mean(mmad), 
+            mmad_ci_lower = mean(mmad) - ci.t(mmad),
+            mmad_ci_upper = mean(mmad) + ci.t(mmad), 
+            n = n()) %>%
+  filter(n > 8) # more than four age points - FIXME, arbitrary
+
+ggplot(gender_mmad_summary, aes(x = language, y = mmad_mean)) + 
+  geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
+  # ylim(0,1.5) + 
+  coord_flip() + 
+  ylab("Language") + 
+  xlab("MADM (Comprehension)") +
+  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
+  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
+
+
 ```
 
 
-### Maternal education
+## Maternal education
 
 We use maternal education as a proxy for socio-economic status.
 
@@ -162,14 +191,56 @@ ggplot(ses_means,
   theme(legend.position = "bottom")
 ```
 
+```{r 3b_ses_mmad}
+ses_mmad_ratio <- ses_data %>%
+  group_by(language, form, age, mom_ed) %>%
+  filter(n() > 5) %>% # FIXME - arbirtary
+  summarise(median_prod = median(production),
+            mad_prod = mad(production),
+            n = n()) %>%
+  group_by(language, form, age) %>%
+  filter(sum(mom_ed == "College and Above") > 0, 
+         sum(mom_ed == "Secondary") > 0) %>% # more than 2 in each gender group
+  summarise(mmad = (median_prod[mom_ed == "College and Above"] - 
+                      median_prod[mom_ed == "Secondary"]) / mean(mad_prod)) %>%
+  filter(is.finite(mmad)) 
 
-### Birth order
+ggplot(ses_mmad_ratio,
+       aes(x = age, y = mmad, col = language)) +
+  geom_jitter() +
+  geom_smooth(span = 1, aes(group = 1)) +
+  scale_color_solarized()
+```
+
+Visualize variability. 
+
+```{r}
+ses_mmad_summary <- ses_mmad_ratio %>%
+  group_by(language) %>%
+  summarise(mmad_mean = mean(mmad), 
+            mmad_ci_lower = mean(mmad) - ci.t(mmad),
+            mmad_ci_upper = mean(mmad) + ci.t(mmad), 
+            n = n()) %>%
+  filter(n > 4) # more than four age points - FIXME, arbitrary
+
+ggplot(ses_mmad_summary, aes(x = language, y = mmad_mean)) + 
+  geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
+  # ylim(0,1.5) + 
+  coord_flip() + 
+  ylab("Language") + 
+  xlab("MMAD") +
+  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
+  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
+```
+
+## Birth order
 
 Only `r length(unique(filter(vocab_data,!is.na(birth_order))$language))` languages have birth order data, and only `r length(unique(filter(vocab_data,!is.na(birth_order), form == "WS")$language))` languages have it for WS.
 
 ```{r 3_birth_order}
 ord_data <- vocab_data %>%
   filter(!is.na(birth_order), form == "WS") %>%
+  filter(language != "Spanish") %>% # FIXME - birth order data wacky
   mutate(birth_order = fct_collapse(birth_order,
                                     "Third+" = c("Third","Fourth",
                                                  "Fifth","Sixth",
@@ -219,55 +290,72 @@ ggplot(ord_means,
   theme(legend.position = "bottom")
 ```
 
-### Demographic effect sizes
-
-
-## MMAD method
-
-
-Demographics in terms of MMAD
-
-```{r 3_ses_mmad}
-ses_mmad_ratio <- ses_data %>%
-  group_by(language, form, age, mom_ed) %>%
-  filter(n() > 10) %>%
+```{r 3b_ord_mmad}
+bo_mmad_ratio <- ord_data %>%
+  group_by(language, form, age, birth_order) %>%
+  filter(n() > 5) %>% # FIXME - arbirtary
   summarise(median_prod = median(production),
             mad_prod = mad(production),
             n = n()) %>%
   group_by(language, form, age) %>%
-  filter(sum(mom_ed == "Secondary") == 1 & sum(mom_ed == "Below Secondary") == 1) %>%
-  summarise(bs_ratio = (median_prod[mom_ed == "Secondary"] - median_prod[mom_ed == "Below Secondary"]) / mean(mad_prod[mom_ed %in% c("Below Secondary","Secondary")]))
+  filter(sum(birth_order == "First") > 0, 
+         sum(birth_order == "Second") > 0) %>% # more than 2 in each gender group
+  summarise(mmad = (median_prod[birth_order == "First"] - 
+                      median_prod[birth_order == "Second"]) / mean(mad_prod)) %>%
+  filter(is.finite(mmad)) 
 
-ggplot(ses_mmad_ratio,
-       aes(x = age, y = bs_ratio, col = language)) +
+ggplot(bo_mmad_ratio,
+       aes(x = age, y = mmad, col = language)) +
   geom_jitter() +
-  geom_smooth(se=FALSE, span = 1) +
-  scale_color_discrete()+
-  ylim(c(-1,1))
+  geom_smooth(span = 1, aes(group = 1)) +
+  scale_color_solarized()
 ```
 
+Visualize variability. 
 
-```{r 3_ses_mmad_sps}
-ses_mmad_ratio <- ses_data %>%
-  group_by(language, form, age, mom_ed) %>%
-  filter(n() > 10) %>%
-  summarise(median_prod = median(production),
-            mad_prod = mad(production),
+```{r}
+bo_mmad_summary <- bo_mmad_ratio %>%
+  group_by(language) %>%
+  summarise(mmad_mean = mean(mmad), 
+            mmad_ci_lower = mean(mmad) - ci.t(mmad),
+            mmad_ci_upper = mean(mmad) + ci.t(mmad), 
             n = n()) %>%
-  group_by(language, form, age) %>%
-  filter(sum(mom_ed == "College and Above") == 1 & sum(mom_ed == "Secondary") == 1) %>%
-  summarise(ps_ratio = (median_prod[mom_ed == "College and Above"] - median_prod[mom_ed == "Secondary"]) / mean(mad_prod[mom_ed %in% c("College and Above","Secondary")]))
+  filter(n > 4) # more than four age points - FIXME, arbitrary
 
-ggplot(ses_mmad_ratio,
-       aes(x = age, y = ps_ratio, col = language)) +
-  geom_jitter() +
-  geom_smooth(se=FALSE, span = 1) +
-  scale_color_discrete()+
-  ylim(c(-1,1))
+ggplot(bo_mmad_summary, aes(x = language, y = mmad_mean)) + 
+  geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
+  # ylim(0,1.5) + 
+  coord_flip() + 
+  ylab("Language") + 
+  xlab("MMAD") +
+  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
+  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
+```
+
+Synthesize
+
+
+```{r}
+gender <- gender_mmad_summary %>%
+  summarise(cv =  sd(mmad_mean) / mean(mmad_mean))
+
+ses <- ses_mmad_summary %>%
+  summarise(cv =  sd(mmad_mean) / mean(mmad_mean))
+
+bo <- bo_mmad_summary %>%
+  summarise(cv =  sd(mmad_mean) / mean(mmad_mean))
+
+cvs <- data_frame(measure = c("Female advantage", 
+                       "College advantage", 
+                       "First-born advantage"), 
+           cv = c(gender$cv, ses$cv, bo$cv))
+
+write_feather(cvs, "data/cvs/demographic_cvs.feather")
 ```
 
 ## ABC method
-How can we compare the size of these different demographic effects? One simple way to do so is to integrate the area between curves.
+
+Another  way to get effect sizes is to integrate the area between curves.
 
 The units for this analysis are arbitrary and (right now) can't be compared across languages, since the curves have different lengths. To overcome this limitation, we'd need to look at
 
@@ -321,15 +409,19 @@ From this perspective it is quite clear that the Italian effect is anomalous. FI
 Visualizing demographic advantages against one another.
 
 ```{r 3_demographic_advantages}
-n_missing <- abcs %>%
-  group_by(language) %>%
-  summarise(n_missing = sum(is.na(area_diff)))
+# n_missing <- abcs %>%
+#   group_by(language) %>%
+#   summarise(n_missing = sum(is.na(area_diff)))
 
-ggplot(left_join(abcs, n_missing) %>% filter(n_missing < 3),
-       aes(x = fct_reorder(language, area_diff),
+# plot_data <- left_join(abcs, n_missing) %>% 
+  
+ggplot(abcs,
+       aes(x = language,
            group = demographic, col = demographic,
            y = area_diff)) +
-  geom_line() +
+  geom_point() +
+  facet_grid(~demographic) + 
+  coord_flip() + 
   ylab("Advantage for demographic characteristic") +
   xlab("") +
   ylim(c(0, 4)) +

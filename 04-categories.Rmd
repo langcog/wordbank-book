@@ -330,6 +330,37 @@ ggplot(area_summary_ordered,
   xlab("\nRelative representation in early vocabulary")
 ```
 
+WS only. 
+
+```{r 4_plot_areas_WS}
+ggplot(filter(area_summary_ordered, form == "WS"), 
+       aes(y = language, x = mean, colour = lexical_category)) +
+  facet_wrap(~lexical_category) +
+  geom_point() +
+  geom_segment(aes(x = ci_lower, xend = ci_upper,
+                   y = language, yend = language)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray") + 
+  scale_colour_solarized(name = "", guide = FALSE) +
+  ylab("") + 
+  # scale_y_discrete(name = "", limits = levels(area_summary_ordered$language)) +
+  xlab("Relative representation in early vocabulary")
+```
+
+Extract CVs. 
+
+```{r}
+cvs <- area_summary_ordered %>%
+  filter(!is.na(language)) %>%
+  group_by(form, measure, lexical_category) %>%
+  summarise(cv = abs(sd(mean) / mean(mean))) %>%
+  ungroup %>%
+  unite(measure, lexical_category, form, measure, sep = " ")
+  
+write_feather(cvs,"data/cvs/vocab_comp.feather")
+```
+
+
+
 Plot WS production vocab composition proportions. 
 
 ```{r 4_prod_vs_comp_vocab_comp}

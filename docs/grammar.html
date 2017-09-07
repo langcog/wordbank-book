@@ -150,8 +150,11 @@
 <p>Plot score as a function of vocabulary size for each language and measure with model prediction curves.</p>
 <p>Note that cubic clms don’t work that well here.</p>
 <p><img src="wordbank-book_files/figure-html/7_grammar_data_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Just complexity.</p>
+<p><img src="wordbank-book_files/figure-html/7_grammar_data_plot_complexity-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><img src="wordbank-book_files/figure-html/7_combine_age_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><img src="wordbank-book_files/figure-html/7_combine_vocab_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Define our signature here as <span class="math inline">\(r^2\)</span>.</p>
 <!-- \begin{figure*}[t!] -->
 <!-- \centering -->
 <!-- \includegraphics[width=.72\textwidth]{plots/grammar_data_plot-1.png} -->
@@ -284,6 +287,17 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

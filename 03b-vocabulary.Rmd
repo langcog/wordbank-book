@@ -136,6 +136,11 @@ ggplot(gender_mmad_summary, aes(x = language, y = mmad_mean)) +
 
 ## Maternal education
 
+From health to education, children from lower socioeconomic status (SES) backgrounds tend to be at higher risk for a variety of negative developmental outcomes, compared to their higher-SES peers (Bradley & Corwin, 2002). A large literature documents specific relations between SES and children’s early language abilities, especially oral vocabulary, which is in turn related to outcomes when children begin formal education (e.g., Durham et al., 2007; Hart & Risley, 2006; Hoff, 2002; Marchman & Fernald, 2008). Environmental explanations of these SES effects are often given in terms of indirect factors that affect life opportunities or experiences, such as nutrition and access to health care, as well as more direct factors that impact daily life, such as smoking during pregnancy, access to quality child care, or amount of time caregivers spend in interactions with their young children. Alternatively, even early language shows a significant genetic component, raising the possibility that SES-vocabulary links may instead be genetically mediated (Hayiou-Thomas et al., 2012). 
+
+Cross-national comparisons may shed light on the factors that lead to relations between SES and children’s vocabulary outcomes. On the one hand, relatively constant relations across language communities that vary widely in indirect and direct factors that shape learning would provide prima facie support for genetic explanations. In contrast, a greater degree of cross-national variability would point to the origins of SES effects in aspects of children’s early environments that vary with SES to differing degrees across countries (e.g., Siddiqi et al., 2007; L. C. H. Fernald et al., 2012). Our current study addresses this issue in very young children using data from the MacArthur-Bates Communicative Development Inventories (MB-CDI), a family of reliable and valid parent-report instruments for measuring early vocabulary development in children under 3 years (Fenson et al., 2007). We take advantage of Wordbank, a new database of more than 10,000 MB-CDI instruments from six countries (Frank et al., 2016).  We use maternal education as a proxy for SES, following previous work suggesting that maternal education is strongly related to SES variation (Bornstein et al., 2003; Hoff, 2002). 
+
+
 We use maternal education as a proxy for socio-economic status.
 
 ```{r 3_mom_ed}
@@ -232,6 +237,11 @@ ggplot(ses_mmad_summary, aes(x = language, y = mmad_mean)) +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
+
+
+Our findings show that the relations between maternal education and children’s vocabulary outcomes is highly variable across countries. The observational nature of our data precludes strong inferences about the precise factors that lead to these differences, though speculation is certainly possible. The large magnitude of the differences across countries suggests a powerful role for environmental factors in shaping variation in child outcomes even before the age of 3 years. Findings from the present study support the proposal that inequalities in factors that are linked to child well being should be addressed early in life. Since features of the quantity and quality of caregiver linguistic input has been strongly implicated in early language development, future research should focus on policy interventions that facilitate children’s access to  high quality talk by caregivers, including care availability and parental leave. 
+
+
 
 ## Birth order
 
@@ -427,3 +437,7 @@ ggplot(abcs,
   ylim(c(0, 4)) +
   theme(legend.position = "bottom")
 ```
+
+## Are languages truly different, controlling for demographics
+
+We observed that the mena

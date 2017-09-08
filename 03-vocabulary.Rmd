@@ -2,8 +2,7 @@
 
 > Far from simply reflecting noise in our measuring instruments or variability in low-level aspects of physiological maturation, the variations that we will document (in vocabulary development) are *substantial,* *stable,* and have their own *developmental course.* Because this variation is substantial, it is critical for defining the boundary between normal and abnormal development; because it is stable, it provides a window onto the correlates and (by inference) the causes of developmental change; and because it has its own developmental course, it can be used to pinpoint critical developmental transitions that form the basis for theories of learning and change. (Bates et al., 1995)
 
-This chapter focuses on a particular view of the data, namely that each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
-
+This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
 
 ```{r 3_vocab_admins}
 num_words <- items %>%
@@ -19,47 +18,226 @@ vocab_data <- admins %>%
 
 min_age <- min(vocab_data$age)
 max_age <- max(vocab_data$age)
-```
 
-```{r 3_models}
 taus <-  c(0.1, 0.25, 0.5, 0.75, 0.9)
 ages <- 8:18
-
-fit_gcrq <- function(x) {
-  mod <- try(gcrq(formula = mean ~ ps(age, monotone = 1, 
-                                      lambda = 1000), 
-                  tau = taus, data = x))
-  
-  if(inherits(mod, "try-error"))
-  {
-    return(NA)
-  }
-  
-  return(mod)
-}
-
-pred_gcrq <- function(x, mods) {
-  mod <- mods[[x$language[1]]]
-  
-  if (is.na(mod[1])) {
-    return(expand.grid(age = x$age, 
-                       language = x$language[1], 
-                       percentile = as.character(taus*100), 
-                       pred = NA))
-  } else {
-    preds <- predictQR_fixed(mod, 
-                             newdata = x) %>%
-      data.frame %>%
-      mutate(age = x$age, 
-             language = x$language) %>%
-      gather(percentile, pred, starts_with("X")) %>%
-      mutate(percentile = as.character(as.numeric(str_replace(percentile, 
-                                                              "X", "")) 
-                                       * 100))
-    return(preds)
-  }
-}
 ```
+## Central Tendencies 
+
+One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. 
+
+```{r 3_medians_production_wg, fig.cap="Median production using the Words and Sentences form. Included are only lanugages where there are more than 200 administrations total."}
+lang_ns <- admins %>% 
+  group_by(language, form) %>% 
+  summarise(n_admins = n())
+
+medians <- vocab_data %>%
+  group_by(form, language, age) %>%
+  summarise(production = median(production), 
+            comprehension = median(comprehension), 
+            production_prop = median(production/n), 
+            comprehension_prop = median(comprehension/n), 
+            n = n()) %>%
+  left_join(lang_ns) 
+
+ggplot(filter(medians, form == "WG", n_admins > 200), 
+       aes(x = age, y = production, col = language)) + 
+  geom_point(aes(size = n)) + 
+  geom_smooth(se=FALSE, span = 1) +  
+  theme(legend.position = "bottom") + 
+  xlab("Age (months)") + 
+  ylab("Median Production") 
+```
+
+Plotted above are the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted. In general, the median child before the first birthday is reported to produce only a small number of words. These data raise a number of questions about the reliability of early parent reports, which we take up below. 
+<!-- This pattern quickly accelerates, however, and (especially for forms that are used beyond 18 months) we observe a clear upward trajectory.  -->
+Overall, however, these data accord relativley well with our intuitive sense of early vocabulary development: they reveal that children before their first birthday tend to speak at most only a few words, but that production accelerates across the second year.
+
+```{r 3_medians_production_ws}
+ggplot(filter(medians, form == "WS", n_admins > 200), 
+       aes(x = age, y = production, col = language)) + 
+  geom_point(aes(size = n)) + 
+  geom_smooth(se=FALSE, span = 1) +  
+  theme(legend.position = "bottom") + 
+  xlab("Age (months)") + 
+  ylab("Median Production") +
+  geom_hline(yintercept = 50, lty = 2)
+```
+
+This acceleration is even clearer when looking at production reports from older children using Words and Sentences. In every language, we see the median child is reported to produce 50 words between 16 and 20 months. As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. Nevertheless, there are still substantial consistencies between languages. 
+
+During the period 24-30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which many authors assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form. See Appendix \@ref{appendix-vocab-estimation) for estimates of how many words children actually might know. 
+
+```{r 3_medians_comprehension_wg}
+ggplot(filter(medians, form == "WG", n_admins > 200), 
+       aes(x = age, y = comprehension, col = language)) + 
+  geom_point(aes(size = n)) + 
+  geom_smooth(se=FALSE, span = 1) +  
+  theme(legend.position = "bottom") + 
+  xlab("Age (months)") + 
+  ylab("Median Comprehension") 
+
+mins <- medians %>% 
+  filter(n_admins > 200) %>%
+  filter(form == "WG", age == 8) 
+```
+
+We next turn to comprehension. 
+
+From 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. 
+
+See Chapter \@ref(style) for more on differences in the balance between comprehension and production. 
+
+
+### Cross-language differences
+
+What causes the differences between languages observed above? In this discussion, we examine production on the Words and Sentences form, as the data are the densest and most reliable for this instrument. 
+
+For example, the median pattern of acquisition is slowest in Danish and fastest in Slovak. We consider a range of explanations for this pattern. 
+
+1. Differences could be due to differences in form construction. For example, the Slovak form could have more words, leading to more possibilities for parents to find a word their child produces. Or the Danish form could contain harder words, leading to fewer words being checked. The plot below shows that, while more words on a form clearly is related to a greater number of  *absolute* words checked, the trend is almost entirely absent when examining proportions. 
+
+```{r}
+form_size <- left_join(medians, num_words %>% rename(n_words = n)) %>%
+  filter(form == "WS", n_admins > 200, age %in% c(24,30)) %>%
+  select(-comprehension, -comprehension_prop) %>%
+  gather(measure, value, production, production_prop)
+
+ggplot(form_size, 
+       aes(x = n_words, y = value, col = language))+ 
+  geom_point() + 
+  facet_grid(measure~age, scales= "free_y") + 
+  # geom_text_repel(aes(label = language)) + 
+  geom_smooth(method = "lm", aes(group = 1) ) + 
+  # scale_color_discrete(guide = FALSE) + 
+  xlab("Number of Words on Form") + 
+  ylab("Median Production") +
+  theme(legend.position = "bottom")
+```
+
+In light of this analysis, we can replot the data in terms of proportions. On this view of the data, however, we still see stratification between languages, with Slovak still at the top and Danish at the bottom. What are other possible explanations for this difference?
+
+```{r 3_medians_production_ws_prop}
+highlight_langs <- c("Latvian", "English (American)", "Danish")
+
+highlight_data <- filter(medians, form == "WS", n_admins > 200) %>%
+         mutate(highlight = ifelse(language %in% highlight_langs, 1, .2))
+
+ggplot(highlight_data, 
+       aes(x = age, y = production_prop, col = language)) + 
+  geom_point(aes(size = n, alpha = highlight)) + 
+  geom_smooth(se=FALSE, span = 1, data = filter(highlight_data, language %in% highlight_langs)) +
+  theme(legend.position = "bottom") + 
+  scale_alpha_continuous(guide=FALSE) + 
+  xlab("Age (months)") + 
+  ylab("Median Production Proportion")
+  # geom_hline(yintercept = 50, lty = 2)
+```
+
+2. Differences could be due to demographic differences across samples. We can examine sample composition in Chapter \@ref(methods) and see that -- to the extent we have access to demographic data -- sample composition does vary in features that affect vocabulary (e.g., maternal education, birth order; see Chapter \@ref(demographics)). 
+
+We are not yet in a position to conduct a full analysis of these differences, controlling for demographics, as demographic differences *also* vary across cultures. But we can examine the difference between Danish, Latvian, and English (American) for example, and note that these differences look quite similar (though noisier) in the female, first-born children of college-educated mothers. Thus, we do not believe that demographic differences fully explain the cross-linguistic differences observed. 
+
+There is some possibility also for cohort effects, in which older sets of data show differences from newer datasets. Most of our data date to the period 2005-2015, but some of the English and Spanish data are older. 
+
+Other differences may relate not to demographics of the sample but to the administration, and these we cannot control for statistically. For example, instructions at administration -- whether written on the form or given by experimenters -- might have been more liberal in the case of Slovak or English (American) samples. Such instructions could have emphasized completeness in reporting vocabulary. Or the circumstances of administration could have been different -- for example, Danish data were collected online while most English data were collected using paper and pencil forms. English (American) data are contributed by many different labs, so there are likely many different administration styles represented.
+
+It's not clear that there is an obvious trend here, as the Danish data for example are relatively recent (as are the Slovak data) and both were collected online using standardized instructions. 
+
+```{r}
+select_medians <- vocab_data %>%
+  filter(form %in% "WS", language %in% highlight_langs, 
+         mom_ed == "College", sex == "Female", birth_order == "First") %>%
+  group_by(language, age) %>%
+  summarise(production_prop = median(production/n), 
+            comprehension_prop = median(comprehension/n), 
+            n = n()) 
+
+ggplot(select_medians, 
+       aes(x = age, y = production_prop, col = language)) + 
+  geom_point(aes(size = n)) + 
+  geom_smooth(se=FALSE, span = 1) +
+  theme(legend.position = "bottom") + 
+  scale_alpha_continuous(guide=FALSE) + 
+  xlab("Age (months)") + 
+  ylab("Median Production Proportion")
+```
+
+2. Differences could be due to cultural or experimental differences in reporting bias. Slovak parents might have a lower criterion for reporting knowledge of a word. Recalling our discussion of these issues in Chapter \@ref(introduction), their model of children's overall competence might be shifted up. This explanation is as an extension of the discussion above of administration and instructions -- perhaps cultural expectations for what it means to be producing a word or cultural expectations for how verbal children are expected to be. 
+
+From this perspective, the disconnect between Mandarin and Cantonese is especially puzzling. These two samples were collected by an overlapping set of coauthors, in similar cultures. 
+
+```{r}
+highlight_langs <- c("Mandarin", "Cantonese")
+
+highlight_data <- filter(medians, form == "WS", n_admins > 200) %>%
+         mutate(highlight = ifelse(language %in% highlight_langs, 1, .2))
+
+ggplot(highlight_data, 
+       aes(x = age, y = production_prop, col = language)) + 
+  geom_point(aes(size = n, alpha = highlight)) + 
+  geom_smooth(se=FALSE, span = 1, data = filter(highlight_data, language %in% highlight_langs)) +
+  theme(legend.position = "bottom") + 
+  scale_alpha_continuous(guide=FALSE) + 
+  xlab("Age (months)") + 
+  ylab("Median Production Proportion")
+  # geom_hline(yintercept = 50, lty = 2)
+```
+
+4. Finally, differences could be due to true differences in language acquisition. Many researchers working on Danish believe that, due to its phonological properties (MORE HERE), it is truly a difficult language to learn (@bleses).  
+
+Our 
+
+In summary, differences between 
+
+
+Do we see a vocabulary explosion in these data? @brent2001
+
+
+### The shape of development
+
+What is the shape of this developmental process? Naively, it appears to be a logistic function, with the characteristic "S" shape describing a rise from floor, a steep acceleration, and a leveling off at ceiling. 
+
+Individual words
+
+
+@hidaka
+
+@mollica2017
+
+
+
+### The reliability of early parent reports
+
+First, are these first reported productions reliable? @schneider2016
+
+```{r 3_production_wg_early}
+ggplot(filter(medians, form == "WG", n_admins > 200), 
+       aes(x = age, y = production, col = language)) + 
+  geom_jitter(aes(size = n), width = .2) + 
+  # geom_smooth(se=FALSE, span = 1) +  
+  theme(legend.position = "bottom") + 
+  xlab("Age (months)") + 
+  ylab("Median Production") + 
+  ylim(0,30) +
+  xlim(7,14)
+```
+
+
+```{r}
+ggplot(filter(admins, form == "WG", age == 8) %>%
+         left_join(lang_ns) %>%
+         filter(n_admins > 200), 
+       aes(x = production)) + 
+  # geom_point(aes(size = n)) + 
+  geom_histogram(binwidth = 2) + 
+  facet_wrap(~language) +
+  xlab("Production at 8 months") + 
+  xlim(0,50) + 
+  ylim(0,20)
+```
+
+
 
 ## Norms
 

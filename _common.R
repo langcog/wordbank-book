@@ -59,3 +59,41 @@ mmad <- function(x) {median(x) / mad(x) }
 madm <- function(x) {mad(x) / median(x) }
 d <- function(x) {mean(x) / sd(x) }
 cv <- function(x) {sd(x) / mean(x) }
+
+
+## GCRQ-related functions for 3 and 3b
+
+fit_gcrq <- function(x) {
+  mod <- try(gcrq(formula = mean ~ ps(age, monotone = 1,
+                                      lambda = 1000),
+                  tau = taus, data = x))
+
+  if(inherits(mod, "try-error"))
+  {
+    return(NA)
+  }
+
+  return(mod)
+}
+
+pred_gcrq <- function(x, mods) {
+  mod <- mods[[x$language[1]]]
+
+  if (is.na(mod[1])) {
+    return(expand.grid(age = x$age,
+                       language = x$language[1],
+                       percentile = as.character(taus*100),
+                       pred = NA))
+  } else {
+    preds <- predictQR_fixed(mod,
+                             newdata = x) %>%
+      data.frame %>%
+      mutate(age = x$age,
+             language = x$language) %>%
+      gather(percentile, pred, starts_with("X")) %>%
+      mutate(percentile = as.character(as.numeric(str_replace(percentile,
+                                                              "X", ""))
+                                       * 100))
+    return(preds)
+  }
+}

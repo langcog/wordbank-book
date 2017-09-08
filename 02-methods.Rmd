@@ -72,7 +72,7 @@ Unilemmas were created using a two-step procedure. The first step consists of cr
 
 ## Data
 
-This section gives a broad overview of the data we have available.
+This section gives a broad overview of the data we have available. Specifics of each sample are given in Appendix \@ref(appendix-data)
 
 ### Data Provenance
 
@@ -111,7 +111,7 @@ items %>%
   datatable
 ```
 
-The number of administrations is variable across instruments and languages, however.
+The number of administrations is highly variable across instruments and languages, however.
 
 ```{r 2_admins}
 admins %>%
@@ -124,6 +124,72 @@ admins %>%
 ```
 
 
+### Demographics of the data.
+
+How different are our samples demographically. 
+
+```{r}
+gender_counts <- admins %>%
+  filter(form %in% c("WS","WG"), 
+         !is.na(sex)) %>%
+  group_by(language, form, sex) %>%
+  count %>%
+  group_by(language, form) %>%
+  mutate(prop = n / sum(n))
+           
+
+ggplot(gender_counts, 
+       aes(x = language, y = prop, fill = sex)) + 
+  geom_bar(stat = "identity") +
+  facet_grid(~form) + 
+  scale_color_solarized() + 
+  coord_flip() + 
+  geom_hline(yintercept = .5, lty = 2) + 
+  ylab("Gender Proportions") + 
+  xlab("")
+```
+
+
+```{r}
+momed_counts <- admins %>%
+  filter(form %in% c("WS","WG"), 
+         !is.na(mom_ed)) %>%
+  group_by(language, form, mom_ed) %>%
+  count %>%
+  group_by(language, form) %>%
+  mutate(prop = n / sum(n), 
+         mom_ed = fct_rev(mom_ed))
+
+ggplot(momed_counts, 
+       aes(x = language, y = prop, fill = mom_ed)) + 
+  geom_bar(stat = "identity") +
+  coord_flip() + 
+  facet_grid(~form) + 
+  ylab("Maternal Education Proportions") + 
+  xlab("") +
+  scale_color_solarized(name = "Maternal Education") 
+```
+
+
+```{r}
+ord_counts <- admins %>%
+  filter(form %in% c("WS","WG"), 
+         !is.na(birth_order)) %>%
+  group_by(language, form, birth_order) %>%
+  count %>%
+  group_by(language, form) %>%
+  mutate(prop = n / sum(n), 
+         birth_order = fct_rev(birth_order))
+
+ggplot(ord_counts, 
+       aes(x = language, y = prop, fill = birth_order)) + 
+  geom_bar(stat = "identity") +
+  coord_flip() + 
+  facet_grid(~form) + 
+  ylab("Birth Order Proportions") + 
+  xlab("") +
+  scale_color_solarized(name = "Birth Order") 
+```
 ## Statistical Methods
 
 We use medians instead of means.

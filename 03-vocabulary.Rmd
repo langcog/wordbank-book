@@ -2,7 +2,7 @@
 
 > Far from simply reflecting noise in our measuring instruments or variability in low-level aspects of physiological maturation, the variations that we will document (in vocabulary development) are *substantial,* *stable,* and have their own *developmental course.* Because this variation is substantial, it is critical for defining the boundary between normal and abnormal development; because it is stable, it provides a window onto the correlates and (by inference) the causes of developmental change; and because it has its own developmental course, it can be used to pinpoint critical developmental transitions that form the basis for theories of learning and change. (Bates et al., 1995)
 
-This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the nature of variability across individuals, ages, and languages. 
+This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data.  
 
 ```{r 3_vocab_admins}
 num_words <- items %>%
@@ -25,6 +25,8 @@ ages <- 8:18
 ## Central Tendencies 
 
 One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. 
+
+### Commonalities across languages
 
 ```{r 3_medians_production_wg, fig.cap="Median production using the Words and Sentences form. Included are only lanugages where there are more than 200 administrations total."}
 lang_ns <- admins %>% 
@@ -82,12 +84,9 @@ mins <- medians %>%
   filter(form == "WG", age == 8) 
 ```
 
-We next turn to comprehension. 
+We next turn to comprehension. Comprehension is only queried on the Words and Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months. See Chapter \@ref(style) for discussion of the differences in the balance between comprehension and production between children. As with the production data, we see substantial differences across languages in reported vocabulary (see below). 
 
-From 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. 
-
-See Chapter \@ref(style) for more on differences in the balance between comprehension and production. 
-
+One striking aspect of comprehension data is how early comprehension is reported.  For example, from 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. Intuitively, to many reseachers (and parents) these high numbers feel unlikely. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available [e.g., @tincoff, @bergelson2012, @bergelson2017]. The representations revealed in these tasks are quite weak -- often amounting to a 2-5% difference in looking to a target on hearing a word uttered -- but, depending on the criterion used by parents, may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially suppose.^[An alternative possibility is that *both* accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overstimating their vocabulary based on observed behaviors -- in essence, parents could be right, but for the wrong reasons.]
 
 ### Cross-language differences
 
@@ -100,7 +99,7 @@ For example, the median pattern of acquisition is slowest in Danish and fastest 
 ```{r}
 form_size <- left_join(medians, num_words %>% rename(n_words = n)) %>%
   filter(form == "WS", n_admins > 200, age %in% c(24,30)) %>%
-  select(-comprehension, -comprehension_prop) %>%
+  dplyr::select(-comprehension, -comprehension_prop) %>%
   gather(measure, value, production, production_prop)
 
 ggplot(form_size, 
@@ -186,136 +185,89 @@ ggplot(highlight_data,
 
 4. Finally, differences could be due to true differences in language acquisition. Many researchers working on Danish believe that, due to its phonological properties (MORE HERE), it is truly a difficult language to learn (@bleses).  
 
-Our 
-
-In summary, differences between 
+In summary, differences between languages in the sheer number of words reported are unlikely to be accounted for by differences in form size or demographic differences between samples. In our view they likely result from a combination of cultural attitudes towards children's language, differences in administration instructions, and real differences in learning across languages. Partialling out these differences would likely require controlled experiments. For this reason, we attempt to avoid interpreting overall differences in vocabulary size wherever possible and limit ourselves to quantities that can be effetively normalized. 
 
 
-Do we see a vocabulary explosion in these data? @brent2001
+<!-- Do we see a vocabulary explosion in these data? @brent2001 -->
 
 
-### The shape of development
+<!-- ### The shape of development -->
 
-What is the shape of this developmental process? Naively, it appears to be a logistic function, with the characteristic "S" shape describing a rise from floor, a steep acceleration, and a leveling off at ceiling. 
+<!-- What is the shape of this developmental process? Naively, it appears to be a logistic function, with the characteristic "S" shape describing a rise from floor, a steep acceleration, and a leveling off at ceiling.  -->
 
-Individual words
+<!-- Individual words -->
 
 
-@hidaka
+<!-- @hidaka -->
 
-@mollica2017
+<!-- @mollica2017 -->
 
 
 
-### The reliability of early parent reports
+<!-- ### The reliability of early parent reports -->
 
-First, are these first reported productions reliable? @schneider2016
+<!-- Are these first reported instances of production and comprehension reliable? @schneider2016 -->
 
-```{r 3_production_wg_early}
-ggplot(filter(medians, form == "WG", n_admins > 200), 
-       aes(x = age, y = production, col = language)) + 
-  geom_jitter(aes(size = n), width = .2) + 
-  # geom_smooth(se=FALSE, span = 1) +  
-  theme(legend.position = "bottom") + 
-  xlab("Age (months)") + 
-  ylab("Median Production") + 
-  ylim(0,30) +
-  xlim(7,14)
-```
-
-
-```{r}
-ggplot(filter(admins, form == "WG", age == 8) %>%
-         left_join(lang_ns) %>%
-         filter(n_admins > 200), 
-       aes(x = production)) + 
-  # geom_point(aes(size = n)) + 
-  geom_histogram(binwidth = 2) + 
-  facet_wrap(~language) +
-  xlab("Production at 8 months") + 
-  xlim(0,50) + 
-  ylim(0,20)
-```
+<!-- ```{r 3_production_wg_early} -->
+<!-- ggplot(filter(medians, form == "WG", n_admins > 200),  -->
+<!--        aes(x = age, y = production, col = language)) +  -->
+<!--   geom_jitter(aes(size = n), width = .2) +  -->
+<!--   # geom_smooth(se=FALSE, span = 1) +   -->
+<!--   theme(legend.position = "bottom") +  -->
+<!--   xlab("Age (months)") +  -->
+<!--   ylab("Median Production") +  -->
+<!--   ylim(0,30) + -->
+<!--   xlim(7,14) -->
+<!-- ``` -->
 
 
+<!-- ```{r} -->
+<!-- ggplot(filter(admins, form == "WG", age == 8) %>% -->
+<!--          left_join(lang_ns) %>% -->
+<!--          filter(n_admins > 200),  -->
+<!--        aes(x = production)) +  -->
+<!--   # geom_point(aes(size = n)) +  -->
+<!--   geom_histogram(binwidth = 2) +  -->
+<!--   facet_wrap(~language) + -->
+<!--   xlab("Production at 8 months") +  -->
+<!--   xlim(0,50) +  -->
+<!--   ylim(0,20) -->
+<!-- ``` -->
 
-## Norms
+## Variability between individuals
 
-We begin with the general pattern of data across the instruments. 
+One of the most important features of early vocabulary development is its variability [@fenson1994]. In this section, we examine variability . To do so, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability?
 
-### Comprehension
+<!-- ```{r 3_production_wg} -->
+<!-- wg_prod_data <- vocab_data %>% -->
+<!--   filter(form == "WG") %>% -->
+<!--   mutate(mean = production / n) -->
 
-Comprehension is typically meausured only for younger children, using Words and Gestures instruments.^[With the exception of populations like signers, e.g. in the case of British Sign Language, which is truncated here.] 
+<!-- wg_prod_models <- wg_prod_data %>% -->
+<!--   split(.$language) %>% -->
+<!--   map(fit_gcrq)  -->
 
-```{r 3_comprehension}
-comp_data <- vocab_data %>%
-  filter(form == "WG") %>%
-  mutate(mean = comprehension / n)
+<!-- wg_prod_preds <- wg_prod_data %>% -->
+<!--   group_by(language, age) %>% -->
+<!--   summarise(n = n()) %>% -->
+<!--   data.frame() %>% -->
+<!--   split(.$language) %>% -->
+<!--   map_df(function(x) pred_gcrq(x, wg_prod_models))  -->
 
-comp_models <- comp_data %>%
-  split(.$language) %>%
-  map(fit_gcrq) 
-
-comp_preds <- comp_data %>%
-  group_by(language, age) %>%
-  summarise(n = n()) %>%
-  data.frame() %>%
-  split(.$language) %>%
-  map_df(function(x) pred_gcrq(x, comp_models)) 
-
-# breaks = seq(8, 18, 4),
-#                      limits = c(8, 18),
-ggplot(comp_data, 
-       aes(x = age, y = mean)) +
-  facet_wrap(~language) +
-  geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_line(data = comp_preds, 
-            aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
-  scale_x_continuous(name = "Age (months)", 
-                     seq(8, 18, 4),
-                     limits = c(8, 18)) +
-  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
-                     name = "Comprehension Vocabulary") +
-  theme(legend.position = "bottom")
-```
-
-### Production
-
-Production is measured both on Words and Gestures (WG) forms and Words and Sentences (WS) forms, though it is often at floor for younger children and so is not a reliable individual difference measure. 
-
-```{r 3_production_wg}
-wg_prod_data <- vocab_data %>%
-  filter(form == "WG") %>%
-  mutate(mean = production / n)
-
-wg_prod_models <- wg_prod_data %>%
-  split(.$language) %>%
-  map(fit_gcrq) 
-
-wg_prod_preds <- wg_prod_data %>%
-  group_by(language, age) %>%
-  summarise(n = n()) %>%
-  data.frame() %>%
-  split(.$language) %>%
-  map_df(function(x) pred_gcrq(x, wg_prod_models)) 
-
-ggplot(wg_prod_data,
-       aes(x = age, y = mean)) +
-  facet_wrap(~language) +
-  geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_line(data = wg_prod_preds, 
-            aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
-  scale_x_continuous(name = "Age (months)", 
-                     breaks = seq(8, 20, 4),
-                     limits = c(8, 20)) +
-  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
-                     name = "Production Vocabulary") +
-  theme(legend.position = "bottom")
-```
-
-Words and Sentences
+<!-- ggplot(wg_prod_data, -->
+<!--        aes(x = age, y = mean)) + -->
+<!--   facet_wrap(~language) + -->
+<!--   geom_jitter(width = .4, size = 1, alpha = .1) + -->
+<!--   geom_line(data = wg_prod_preds,  -->
+<!--             aes(y = pred, col = percentile, group = percentile)) +  -->
+<!--   scale_colour_solarized(name="Percentile") + -->
+<!--   scale_x_continuous(name = "Age (months)",  -->
+<!--                      breaks = seq(8, 20, 4), -->
+<!--                      limits = c(8, 20)) + -->
+<!--   scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1),  -->
+<!--                      name = "Production Vocabulary") + -->
+<!--   theme(legend.position = "bottom") -->
+<!-- ``` -->
 
 ```{r 3_production_ws}
 ws_prod_data <- vocab_data %>%
@@ -348,18 +300,53 @@ ggplot(ws_prod_data,
   theme(legend.position = "bottom")
 ```
 
-Stiched across forms. See \@ref(appendix-stitching).
+<!-- ```{r 3_comprehension} -->
+<!-- comp_data <- vocab_data %>% -->
+<!--   filter(form == "WG") %>% -->
+<!--   mutate(mean = comprehension / n) -->
 
-```{r 3_production_stitched}
+<!-- comp_models <- comp_data %>% -->
+<!--   split(.$language) %>% -->
+<!--   map(fit_gcrq)  -->
 
-```
+<!-- comp_preds <- comp_data %>% -->
+<!--   group_by(language, age) %>% -->
+<!--   summarise(n = n()) %>% -->
+<!--   data.frame() %>% -->
+<!--   split(.$language) %>% -->
+<!--   map_df(function(x) pred_gcrq(x, comp_models))  -->
+
+<!-- # breaks = seq(8, 18, 4), -->
+<!-- #                      limits = c(8, 18), -->
+<!-- ggplot(comp_data,  -->
+<!--        aes(x = age, y = mean)) + -->
+<!--   facet_wrap(~language) + -->
+<!--   geom_jitter(width = .4, size = 1, alpha = .1) + -->
+<!--   geom_line(data = comp_preds,  -->
+<!--             aes(y = pred, col = percentile, group = percentile)) +  -->
+<!--   scale_colour_solarized(name="Percentile") + -->
+<!--   scale_x_continuous(name = "Age (months)",  -->
+<!--                      seq(8, 18, 4), -->
+<!--                      limits = c(8, 18)) + -->
+<!--   scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1),  -->
+<!--                      name = "Comprehension Vocabulary") + -->
+<!--   theme(legend.position = "bottom") -->
+<!-- ``` -->
 
 
 
 
-## Quantifying Variability
+<!-- Stiched across forms. See \@ref(appendix-stitching). -->
 
-One of the most important features of early vocabulary development is its variability [@fenson1994]. Consider the English production data from the Words and Sentences form.
+<!-- ```{r 3_production_stitched} -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ## Quantifying Variability -->
+
 
 ```{r 3_eng_prod}
 eng_prod_data <- vocab_data %>%
@@ -390,7 +377,8 @@ ggplot(eng_prod_data,
   theme(legend.position = "bottom")
 ```
 
-It's immediately clear that there is tremendous variability in vocabulary. Consider just a single age group, 24-month-olds. The distribution of vocabularies across children is far from normally distributed, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing more than 600 listed on the form, with the total number higher than that even.^[It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every sentence, so we will acknowledge them up front and then mention them only when relevant throughout.] 
+As an example, we zoom in on the English (American) production data from Words and Sentences form. Consider just a single age group, 24-month-olds. The distribution of vocabularies across children is far from normally distributed, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing more than 600 listed on the form, with the total number higher than that even.
+<!-- ^[It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every sentence, so we will acknowledge them up front and then mention them only when relevant throughout.]  -->
 
 ```{r v_histogram}
 ggplot(filter(eng_prod_data, age == 24), 
@@ -434,12 +422,7 @@ ggplot(filter(madm_data, language == "English (American)"),
 
 In American English production, this ratio is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! The decline begins before variability is substantially truncated by the ceiling of the form, suggesting that variability between kids is really highest before the second birthday. 
 
-
-
 Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
-
-
-The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable.
 
 ```{r 3_madm2}
 ggplot(madm_data, aes(x = age, y = madm_p, col = language)) + 
@@ -452,7 +435,10 @@ ggplot(madm_data, aes(x = age, y = madm_p, col = language)) +
   theme(legend.position = "bottom")
 ```
 
-Yet this variability is quite *consistent*!
+The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable. Yet this variability is quite *consistent*! We summarise the MADM in the second year of life by taking its mean. This mean is close to 1 for almsot every language and form for which we have data. 
+
+One question that could be raised regarding the analysis above is the extent to which variability is caused by *variability across children* vs. *variability in reporting*. The extreme values seen in the English data, for example, could easily be the result of a mixture of lazy parents who stopped answering the form with overly dilligent parents who misunderstood and checked every box for a word they thought the child had been exposed to. Several arguments speak against this account, however. First, to the extent these biases are the source of variability, they are extremely *consistent* across languages -- which, recall, is the exact opposite argument from the one we considered above (where parent dilligence was supposed to be variable enough across samples to lead to differences between languages). In addition, note that the 
+In sum, although there are certainly some reporting biases represented in the data, these results do not appear likely to be an artifact of reporting bias.
 
 ```{r 3_madm_summary}
 madm_summary_prod <- madm_data %>%
@@ -471,9 +457,10 @@ ggplot(madm_summary_prod, aes(x = language, y = madm_mean, col = form)) +
   ylab("Language") + 
   xlab("MADM (Production 12-24 mo)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
-  geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
+  # geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
   scale_colour_solarized()
 ```
+
 
 ```{r 3_madm_comprehension}
 ggplot(filter(madm_data, form == "WG"), 
@@ -486,6 +473,10 @@ ggplot(filter(madm_data, form == "WG"),
   scale_color_solarized(name = "") + 
   theme(legend.position = "bottom")
 ```
+
+Ae can complete the same analysis using comprehension data. Here we see a gradual decrease in variability throughout development. The intercept for the 12-18 month period appears to be lower than that observed in production, despite (or because of?) the higher scores. One speculative explanation for this difference would be the tremendous differences in speech-motor development (as well as general differences in loquacity) between toddlers. This variability is then reflected in production.
+
+This observation matches one made by @mayor2012, namely that production vocabulary appears more idiosyncratic in distribution of words than comprehension vocabulary. 
 
 ```{r 3_madm_summary_comprehension}
 madm_summary_comp <- madm_data %>%
@@ -501,14 +492,14 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   coord_flip() + 
   ylab("Language") + 
   xlab("MADM (Comprehension)") +
-  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
-  geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
+  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
+  # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
 
-Get coefficients of variation. 
 
-```{r}
+In sum, we observed a striking consistency in the individual variability of children's vocabulary during their second year. Across languages and forms, it appears to be the norm that toddlers vary. 
 
+```{r 3_save_covs}
 prod <- madm_summary_prod %>%
   group_by(form) %>%
   summarise(prod_madm =  sd(madm_mean) / mean(madm_mean))

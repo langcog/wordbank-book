@@ -4,9 +4,6 @@
 
 We examine the patterns of vocabulary growth for individual demographic variables. We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). We develop a framework for comparing the magnitude of these effects.
 
-
-
-
 <!-- To make these analyses work, we assume that all demographics interact with age in a simple way in the models, such that there is only one coefficient associated with the effect: -->
 
 <!--   age * demographic - demographic -->

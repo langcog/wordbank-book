@@ -4,6 +4,8 @@
 
 This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows out of the total in the form. We begin by quantifying the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data.  
 
+Variability is only meaningful in the case that it is stable; that is, that it reflects signal rather than noise. @bornstein2012 conducted a study in which they collected multiple language measures at 20 and 48 months in a sample of nearly 200 children and used a structural equation model to estimate the stability of a single latent construct, language ability. Overall, essentially all measures related strongly to this latent variable and the coefficient on stability was $r = .84$, suggesting that early language is relatively stable, at least when measured appropriately. Notably, the ELI, a precursor to the CDI, was included in the measures at 20 months and was found to correlate with the 20-month latent construct at $r = .87$.
+
 ```{r 3_vocab_admins}
 num_words <- items %>%
   filter(type == "word") %>%
@@ -51,7 +53,7 @@ ggplot(filter(medians, form == "WG", n_admins > 200),
   ylab("Median Production") 
 ```
 
-Plotted above are the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted. In general, the median child before the first birthday is reported to produce only a small number of words. These data raise a number of questions about the reliability of early parent reports, which we take up below. 
+Plotted above are the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted.^[As @eriksson2012 write, "Using raw data assumes that each form is exhaustive, while using percentages assumes that each form is equally exhaustive. Neither is correct and the truth lies somewhere in between."] In general, the median child before the first birthday is reported to produce only a small number of words. These data raise a number of questions about the reliability of early parent reports, which we take up below. 
 <!-- This pattern quickly accelerates, however, and (especially for forms that are used beyond 18 months) we observe a clear upward trajectory.  -->
 Overall, however, these data accord relativley well with our intuitive sense of early vocabulary development: they reveal that children before their first birthday tend to speak at most only a few words, but that production accelerates across the second year.
 
@@ -236,7 +238,7 @@ In summary, differences between languages in the sheer number of words reported 
 
 ## Variability between individuals
 
-One of the most important features of early vocabulary development is its variability [@fenson1994]. In this section, we examine variability . To do so, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability?
+One of the most important features of early vocabulary development is its variability [@fenson1994]. In this section, we examine this variability. To do so, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability?
 
 <!-- ```{r 3_production_wg} -->
 <!-- wg_prod_data <- vocab_data %>% -->
@@ -496,8 +498,15 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
 
+## Discussion
 
 In sum, we observed a striking consistency in the individual variability of children's vocabulary during their second year. Across languages and forms, it appears to be the norm that toddlers vary. 
+
+This variability is found with striking consistency across our data. Nevertheless, it is still possible that 
+
+@feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual. 
+
+
 
 ```{r 3_save_covs}
 prod <- madm_summary_prod %>%

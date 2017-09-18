@@ -1,14 +1,8 @@
 # Demographic Variables {#demographics}
 
-<!-- We also note differences in form ceilings across languages. Then, the bulk of this chapter is devoted to different demographic predictors of vocabulary growth across languages (following the EFAI approach).   -->
+Chapter \@ref{vocab} examined differences across languages in the distribution of children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref{methods} to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order, and develop a framework for comparing the magnitude of these effects.
 
-We examine the patterns of vocabulary growth for individual demographic variables. We compare the effects of gender (female advantage), birth order (first-born advantage), and maternal education (socioeconomic status – SES – advantage). We develop a framework for comparing the magnitude of these effects.
-
-<!-- To make these analyses work, we assume that all demographics interact with age in a simple way in the models, such that there is only one coefficient associated with the effect: -->
-
-<!--   age * demographic - demographic -->
-
-<!-- All of these analyses are carried out on production data. -->
+One important tension in this chapter reflects many earlier discussions of variability in CDI scores [from @fenson1994, @feldman200, and @erikkson2012, among others]. While some demographic differences in vocabulary are quite consistent -- substantially so, as it turns out -- the overall proportion of variance in vocabulary that they capture is still relatively limited. This point is a generalization of 
 
 ```{r 3b_vocab_admins}
 num_words <- items %>%
@@ -18,7 +12,7 @@ num_words <- items %>%
 
 vocab_data <- admins %>%
   dplyr::select(data_id, language, form, age, sex, 
-         mom_ed, birth_order, production, comprehension) %>% 
+                mom_ed, birth_order, production, comprehension) %>% 
   left_join(num_words) %>%
   mutate(no_production = n - production)
 
@@ -28,15 +22,100 @@ max_age <- max(vocab_data$age)
 
 ## Gender
 
-This analysis examines how vocabulary development differs by children's reported gender, replicating and extending the results of:
+<!-- s (Bauer, Goldfield, & Reznick, 2002; Feldman et al., 2000; Fenson et al., 1994; Huttenlocher, Haight, Bryk, Seltzer, Lyons, 1991; Van Hulle, Goldsmith, & Lemery, 2004):  -->
 
-Eriksson, M., Marschik, P. B., Tulviste, T., Almgren, M., Pérez Pereira, M., Wehberg, S., ... Gallego, C. (2012). Differences between girls and boys in emerging language skills: Evidence from 10 language communities. British Journal of Developmental Psychology 30, 326–343.
+Our first analysis examines how vocabulary development differs by children's reported gender, replicating and extending the results of @eriksson2012.^[An earlier version of this analysis was reported in @frank2016.]
 
-An earlier version of this analysis was reported in @frank2016.
+WG production
+```{r 3_gender_plot_WG_prod}
+wg_sex_data <- vocab_data %>%
+  filter(!is.na(sex), form == "WG") %>%
+  mutate(no_comprehension = n - comprehension)
 
-Plot vocabulary size over age by gender.
+wg_sex_means <- wg_sex_data %>%
+  group_by(language, sex, age) %>%
+  summarise(median = median(production/n))
 
-```{r 3_gender_plot, fig.width=13, fig.height=8}
+wg_sex_models <- wg_sex_data %>%
+  split(.$language) %>%
+  map(function(x) {
+    robustbase::glmrob(cbind(production, no_production) ~ age * sex - sex,
+                       family = "binomial",
+                       data = x)
+  })
+
+wg_sex_preds <- expand.grid(language = unique(wg_sex_means$language),
+                            age = min_age:max_age,
+                            sex = unique(sex_means$sex)) %>%
+  split(.$language) %>%
+  map_df(function(x) {
+    x$pred <- predict(wg_sex_models[[x$language[1]]],
+                      newdata = x, type = "response")
+    return(x)
+  })
+
+ggplot(wg_sex_means,
+       aes(x = age, y = median, colour = sex, label = sex)) +
+  facet_wrap(~language) +
+  geom_point(alpha=.2) +
+  geom_line(data = wg_sex_preds, aes(y = pred)) +
+  scale_colour_solarized(name="Sex") +
+  scale_x_continuous(breaks = seq(8,
+                                  max(wg_sex_means$age), 4),
+                     limits = c(min(wg_sex_means$age), 20),
+                     name = "Age (months)") +
+  ylab("Median Comprehension Vocabulary (proportion of total words)") +
+  ylim(c(0, 1)) +
+  theme(legend.position = "bottom")
+```
+
+WG Comprehension. Note that many authors do not find comprehension gender differences (e.g., @erikkson2012 using overlapping data, @feldman2000 using a large, different dataset of CDI for low-income).
+
+```{r 3_gender_plot_WG}
+wg_sex_data <- vocab_data %>%
+  filter(!is.na(sex), form == "WG") %>%
+  mutate(no_comprehension = n - comprehension)
+
+wg_sex_means <- wg_sex_data %>%
+  group_by(language, sex, age) %>%
+  summarise(median = median(comprehension/n))
+
+wg_sex_models <- wg_sex_data %>%
+  split(.$language) %>%
+  map(function(x) {
+    robustbase::glmrob(cbind(comprehension, no_comprehension) ~ age * sex - sex,
+                       family = "binomial",
+                       data = x)
+  })
+
+wg_sex_preds <- expand.grid(language = unique(sex_means$language),
+                            age = min_age:max_age,
+                            sex = unique(sex_means$sex)) %>%
+  split(.$language) %>%
+  map_df(function(x) {
+    x$pred <- predict(wg_sex_models[[x$language[1]]],
+                      newdata = x, type = "response")
+    return(x)
+  })
+
+ggplot(wg_sex_means,
+       aes(x = age, y = median, colour = sex, label = sex)) +
+  facet_wrap(~language) +
+  geom_point(alpha=.2) +
+  geom_line(data = wg_sex_preds, aes(y = pred)) +
+  scale_colour_solarized(name="Sex") +
+  scale_x_continuous(breaks = seq(min(wg_sex_means$age),
+                                  max(wg_sex_means$age), 4),
+                     limits = c(min(wg_sex_means$age), max(wg_sex_means$age)),
+                     name = "Age (months)") +
+  ylab("Median Comprehension Vocabulary (proportion of total words)") +
+  ylim(c(0, 1)) +
+  theme(legend.position = "bottom")
+```
+
+Plot vocabulary size over age by gender for WS production.
+
+```{r 3_gender_plot}
 sex_data <- vocab_data %>%
   filter(!is.na(sex), form == "WS")
 
@@ -88,6 +167,7 @@ $$d = \frac{\mu_2 - \mu_1}{SD_{pooled}}$$
 But as in the previous chapter, we have the problem of non-normal distributions. To circumvent this, we use a non-parametric measure derived from the same components. It's going to be the difference between medians, divided by the MAD. (We call this the MMAD).
 
 The MMAD for gender is quite constant across age.
+
 ```{r 3b_gender_mmad}
 gender_mmad_ratio <- vocab_data %>%
   group_by(language, form, age, sex) %>%
@@ -113,10 +193,11 @@ Visualize variability.
 gender_mmad_summary <- gender_mmad_ratio %>%
   group_by(language) %>%
   summarise(mmad_mean = mean(mmad), 
+            mmad_var = var(mmad),
             mmad_ci_lower = mean(mmad) - ci.t(mmad),
             mmad_ci_upper = mean(mmad) + ci.t(mmad), 
             n = n()) %>%
-  filter(n > 8) # more than four age points - FIXME, arbitrary
+  filter(n > 4) # more than four age points - FIXME, arbitrary
 
 ggplot(gender_mmad_summary, aes(x = language, y = mmad_mean)) + 
   geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
@@ -130,6 +211,43 @@ ggplot(gender_mmad_summary, aes(x = language, y = mmad_mean)) +
 
 ```
 
+We use a fixed-effects meta-analysis to pool these estimates. Fixed-effects could be warranted because the instruments are relatively close to one another, but given the general issues of sampling and administration variability, we choose random effects. We also compute variances across age samples, which is at best conservative and potentially not correct (as it substitutes age variability for measurement variability). 
+
+```{r}
+gender_ma <- rma(yi = mmad_mean, vi = mmad_var, slab = language, data = gender_mmad_summary, method = "REML")
+summary(gender_ma)
+```
+
+
+These measurements suggest a meta-analytic gender difference of `r round(gender_ma$beta[1], 2)`.
+
+Do these differences reflect differences in measurement that are unique to the CDI? One way of addressing this question is to examine other studies of gender differences that have been found in other studies. Unfortunately, many of the studies reporting differences themselves rely on the CDI, likely for the reasons reviewed in Chapter \@ref(intro), e.g. [@bauer2002,@fenson1994,@feldman2000]
+
+@feldman2000 finds no effect in comprehension but uses CDIs with a distinct dataset of low-income American English speakers arounsd 24 months and finds a production difference ($N= 2156$, $d = .35$).
+
+A seminal study by @huttenlocher1991 measured gender effects in vocabulary size as estimated from a naturalistic sample of production and found substantial differences in vocabulary growth favoring girls. Although the measurements from this study are not comparable, the effects are quite large (and are relatively unaffected by controlling for maternal language exposure). 
+
+
+```{r}
+b2012 <- read_csv("data/bornstein2012/bornstein2012_combined.csv")
+nrow(b2012)
+
+qplot(z_20, z_48, col = gender, pch = gender, data = b2012) +
+  scale_color_solarized() + 
+  xlab("Standardized Language at 20 Months") + 
+  ylab("Standardized Language at 48 Months") + 
+  geom_smooth(method = "lm")
+
+b2012_summary <- b2012 %>%
+  group_by(gender) %>%
+  do(data.frame(rbind(smean.cl.boot(.$z_20))))
+```
+
+@bornstein2012 use a particularly powerful study design to examine stability in early language estimates across many different measures (including a precursor to the CDI as well as several standardized and naturalistic sampling measures). We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered (NOTE these data are not perfect, I have double-digitized one point). As these scores are standardized, we can examine the difference in means and recover the standardized effect size for gender in the data, which is `r round(-diff(b2012_summary$Mean), 2)` standard deviations. Since this measurement is *greater* than that found in the CDI measurements for our study (the comparable American English measurement was `r round(filter(gender_mmad_summary, language == "English (American)") %>% pull(mmad_mean), 2)`), we doubt that this effect is due soley to reporting bias. 
+
+### Explanations
+
+Fetal testosterone. @lutchmaya2001 used CDI meausures and recovered a similar effect ($d = .64$ at 18 months with $N=87), and $d = .60$ at 24 months for a subsample). They found some relationship with fetal testosterone across sexes, but it did not hold up within sex (perhaps due to small samples). 
 
 ## Maternal education
 
@@ -138,9 +256,63 @@ From health to education, children from lower socioeconomic status (SES) backgro
 Cross-national comparisons may shed light on the factors that lead to relations between SES and children’s vocabulary outcomes. On the one hand, relatively constant relations across language communities that vary widely in indirect and direct factors that shape learning would provide prima facie support for genetic explanations. In contrast, a greater degree of cross-national variability would point to the origins of SES effects in aspects of children’s early environments that vary with SES to differing degrees across countries (e.g., Siddiqi et al., 2007; L. C. H. Fernald et al., 2012). Our current study addresses this issue in very young children using data from the MacArthur-Bates Communicative Development Inventories (MB-CDI), a family of reliable and valid parent-report instruments for measuring early vocabulary development in children under 3 years (Fenson et al., 2007). We take advantage of Wordbank, a new database of more than 10,000 MB-CDI instruments from six countries (Frank et al., 2016).  We use maternal education as a proxy for SES, following previous work suggesting that maternal education is strongly related to SES variation (Bornstein et al., 2003; Hoff, 2002). 
 
 
+@arriaga2000
+
 We use maternal education as a proxy for socio-economic status.
 
-```{r 3_mom_ed}
+```{r 3_mom_ed_wg}
+wg_ses_data <- vocab_data %>%
+  filter(!is.na(mom_ed), form == "WG") %>%
+  mutate(mom_ed = fct_collapse(mom_ed,
+                               `Below Secondary` = c("None","Primary",
+                                                     "Some Secondary"),
+                               `Secondary` = c("Secondary", "Some College"),
+                               `College and Above` = c("College",
+                                                       "Some Graduate",
+                                                       "Graduate")), 
+         no_comprehension = n - comprehension)
+
+wg_ses_means <- wg_ses_data %>%
+  group_by(language, mom_ed, age) %>%
+  summarise(median = median(comprehension/n))
+
+wg_ses_models <- wg_ses_data %>%
+  split(.$language) %>%
+  map( function(x) {
+    robustbase::glmrob(cbind(comprehension, no_comprehension) ~
+                         age * mom_ed  - mom_ed,
+                       family = "binomial",
+                       data = x)
+  })
+
+wg_ses_preds <- expand.grid(language = unique(wg_ses_means$language),
+                            age = min_age:max_age,
+                            mom_ed = unique(wg_ses_means$mom_ed)) %>%
+  split(.$language) %>%
+  map_df(function(x) {
+    x$pred <- predict(wg_ses_models[[x$language[1]]],
+                      newdata = x, type = "response")
+    return(x)
+  })
+
+ggplot(wg_ses_means,
+       aes(x = age, y = median, colour = mom_ed, label = mom_ed)) +
+  facet_wrap(~language) +
+  geom_point(alpha=.2) +
+  geom_line(data = wg_ses_preds, aes(y = pred)) +
+  scale_colour_solarized(name="Maternal Education") +
+  scale_x_continuous(breaks = seq(min(wg_ses_means$age),
+                                  max(wg_ses_means$age), 4),
+                     limits = c(min(wg_ses_means$age), max(wg_ses_means$age)),
+                     name = "Age (months)") +
+  ylab("Median Productive Vocabulary (proportion of total words)") +
+  ylim(c(0, 1)) +
+  theme(legend.position = "bottom")
+```
+
+WS Production
+
+```{r 3_mom_ed_ws}
 ses_data <- vocab_data %>%
   filter(!is.na(mom_ed), form == "WS") %>%
   mutate(mom_ed = fct_collapse(mom_ed,
@@ -235,9 +407,36 @@ ggplot(ses_mmad_summary, aes(x = language, y = mmad_mean)) +
   geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
 
+### Explanations
 
 Our findings show that the relations between maternal education and children’s vocabulary outcomes is highly variable across countries. The observational nature of our data precludes strong inferences about the precise factors that lead to these differences, though speculation is certainly possible. The large magnitude of the differences across countries suggests a powerful role for environmental factors in shaping variation in child outcomes even before the age of 3 years. Findings from the present study support the proposal that inequalities in factors that are linked to child well being should be addressed early in life. Since features of the quantity and quality of caregiver linguistic input has been strongly implicated in early language development, future research should focus on policy interventions that facilitate children’s access to  high quality talk by caregivers, including care availability and parental leave. 
 
+### Reporting biases
+
+> The data suggest that different scales of the CDI may be susceptible to differential reporting biases in different subgroups of the population. On CDI sec- tions that require considerable subjective interpreta- tion of observations, parents with low educational and income levels, who were underrepresented in the CDI norming sample, seem to overestimate their child’s abilities in comparison with parents with more education and income. For example, the Phrase and Vocabulary Comprehension sections of the CDI-WG require parents to make potentially difficult judg-
+ments about their children’s levels of understanding. Negative correlations were found between scores on both of these sections and maternal education and health insurance status. Parents in general may have difficulty in distinguishing between comprehension that is based solely on verbal input and comprehen- sion that is based on a variety of nonlinguistic cues and contextual supports to meaning (Chapman, 1978). Some parents may recall times when the words were used in the child’s presence and may confuse ex- posure with understanding. Some may credit the child with comprehension if the child seems to under- stand the word in a highly constrained situation. These difficulties may explain why parental reports of verbal comprehension in this age range are higher than results of direct testing (Tomasello & Mervis 1994). They also may explain why correlations be- tween parental reports and comprehension scores from other methods are extremely low (Reznick, 1990). 
+
+One discussion in @feldman2000 and @fenson1993 is that there may be reporting biases, particularly in comprehension, for children in the youngest age groups. 
+
+@reznick1990 also found a negative correlation between SES and vocabulary in a subgroup analysis.
+
+We examine reported comprehension vocabulary 
+
+```{r}
+early_comprehension <- wg_ses_data %>%
+  filter(age < 13) %>%
+  group_by(language, mom_ed, age) %>%
+  summarise(median = median(comprehension / n), 
+            n = n())
+
+ggplot(early_comprehension, 
+       aes(x = age, y = median, col = mom_ed)) + 
+  geom_point(aes(size = n), position = "dodge") + 
+  facet_wrap(~language) + 
+  scale_color_solarized() +
+  geom_smooth(se=FALSE, span = 2)
+  # geom_smooth(method = "lm", se = FALSE, formula = y ~ x)
+```
 
 
 ## Birth order
@@ -353,9 +552,9 @@ bo <- bo_mmad_summary %>%
   summarise(cv =  sd(mmad_mean) / mean(mmad_mean))
 
 cvs <- data_frame(measure = c("Female advantage", 
-                       "College advantage", 
-                       "First-born advantage"), 
-           cv = c(gender$cv, ses$cv, bo$cv))
+                              "College advantage", 
+                              "First-born advantage"), 
+                  cv = c(gender$cv, ses$cv, bo$cv))
 
 write_feather(cvs, "data/cvs/demographic_cvs.feather")
 ```
@@ -421,7 +620,7 @@ Visualizing demographic advantages against one another.
 #   summarise(n_missing = sum(is.na(area_diff)))
 
 # plot_data <- left_join(abcs, n_missing) %>% 
-  
+
 ggplot(abcs,
        aes(x = language,
            group = demographic, col = demographic,

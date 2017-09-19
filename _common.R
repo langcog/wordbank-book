@@ -11,6 +11,9 @@ library(ggrepel)
 library(ggdendro) # ch5
 library(rms)
 library(metafor)
+library(broom)
+library(gridExtra)
+select <- dplyr::select
 # MASS dependency messes up lots of other dplyr code
 # library(robustbase) # appendix-aoa
 # library(arm) # appendix-aoa

@@ -1,5 +1,9 @@
 # Individual Children {#style}
 
+@nelson1973 structure and strategy, referential vs. expressive distinction
+
+@bates1994
+
 ## Variation in Production/Comprehension Tradeoffs
 
 Example for English.

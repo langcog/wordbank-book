@@ -27,6 +27,10 @@ ages <- 8:18
 ## Central Tendencies 
 
 One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. 
+Linearity:
+- left hand side of curves is question of "spurtiness"  - see 7b
+- right hand side is question of linearity / exponential growht (number correction vs. ceiling) see appendix E
+
 
 ### Commonalities across languages
 

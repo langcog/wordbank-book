@@ -59,7 +59,7 @@ get_demo_preds <- function (models, data, demo = ~sex) {
   min_age <- min(data$age)
   max_age <- max(data$age)
   
-  demo_name <- as.character(demo)[2] # fixme - how do I coerce this more nicely?
+  demo_name <- quo_text(demo) # fixme - how do I coerce this more nicely?
   
   expand.grid(language = names(models),
               age = min_age:max_age,
@@ -138,7 +138,7 @@ analysis_combos <- left_join(tibble(form = c("WG","WG","WS"),
          high_level =  case_when(demo == quo(sex) ~ "Female", 
                                  demo == quo(birth_order) ~ "First",
                                  demo == quo(mom_ed) ~ "College and Above"), 
-         demo_name = str_replace(as.character(demo), "~", ""))
+         demo_name = quo_text(demo))
 
 # run all the analyses above on all those combos
 analyses <- analysis_combos %>%

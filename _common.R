@@ -14,6 +14,7 @@ library(metafor)
 library(broom)
 library(gridExtra)
 library(rlang)
+library(modelr) # ch 7b
 select <- dplyr::select
 # MASS dependency messes up lots of other dplyr code
 # library(robustbase) # appendix-aoa

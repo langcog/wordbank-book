@@ -59,3 +59,15 @@ Many of the analyses reported here were first described in earlier publications 
 The dataset in Wordbank is constantly growing and changing as we add new features, new data, and new languages. In addition, as users of the data occasionally identify issues and errors, we make will make corrections to the database. In writing this manuscript, we have attempted to find a middle ground between a completely dynamic document that responds to any change in the database on the one hand and a traditional, static book on the other. A static manuscript would be a shame given the potential for dynamic extension and updating with new data. On the other hand, if the data were completely dynamic, any claim we made in prose would risk being out of date almost as soon as we wrote it. 
 
 For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. This build of the book is based on FIXME DATE.
+
+## Acknowledgements {-}
+
+Our sincere thanks go to all of the generous researchers -- too many to name here, but listed on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors) -- who contributed their data to the database. 
+
+Major thanks are also due to the MacArthur-Bates CDI Board, especially Philip Dale and Larry Fenson, for their continued intellectual and financial support of the Wordbank project. 
+
+Thanks to Rune Nørdgard Jørgensen for his generosity in the transition of the CLEX-CDI website. 
+
+Thanks to Danielle Kellier for substantial work importing data and mantaining the website. Initial programming work was done by Ranjay Krishna, and some database imports were performed by Elise Sugarman.  
+
+Thanks to NSF Award #1528526, "Wordbank: An Open Repository for Developmental Vocabulary Data" for financial support of the project as well as to the Stanford Psychology Department for a small seed funding award that supported the initial development of the site. 

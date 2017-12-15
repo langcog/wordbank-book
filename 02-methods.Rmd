@@ -212,7 +212,7 @@ The strongest developmental inferences can be made by the examination of longitu
 longitudinal <- admins %>%
   filter(form %in% c("WS","WG"), 
          !is.na(birth_order)) %>%
-  group_by(language, form, data_id) %>%
+  group_by(language, form, original_id) %>%
   count %>%
   transmute(n_admins = n) %>%
   group_by(language, form, n_admins) %>%
@@ -226,6 +226,7 @@ ggplot(longitudinal,
   ylab("Number of Children") + 
   xlab("Number of Administrations")
 ```
+
 ### Conclusions
 
 The strength of the Wordbank framework is that it allow access to CDI data in a consistent format, such that analyses can be applied uniformly. Yet we must not allow this ease to blind us to the difficulties of comparing across measurements that are gathered using different forms, under different administration conditions, and from convenience samples in different countries and cultures using different sampling schemes. Each of these differences has the potential to complicate cross-linguistic comparisons. We will return to each again and again throughout the book.

@@ -27,9 +27,10 @@ ages <- 8:18
 ## Central Tendencies 
 
 One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. 
-Linearity:
-- left hand side of curves is question of "spurtiness"  - see 7b
-- right hand side is question of linearity / exponential growht (number correction vs. ceiling) see appendix E
+
+<!-- Linearity: -->
+<!-- - left hand side of curves is question of "spurtiness"  - see 7b -->
+<!-- - right hand side is question of linearity / exponential growht (number correction vs. ceiling) see appendix E -->
 
 
 ### Commonalities across languages
@@ -59,7 +60,7 @@ ggplot(filter(medians, form == "WG", n_admins > 200),
 
 Plotted above are the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted.^[As @eriksson2012 write, "Using raw data assumes that each form is exhaustive, while using percentages assumes that each form is equally exhaustive. Neither is correct and the truth lies somewhere in between."] In general, the median child before the first birthday is reported to produce only a small number of words. These data raise a number of questions about the reliability of early parent reports, which we take up below. 
 <!-- This pattern quickly accelerates, however, and (especially for forms that are used beyond 18 months) we observe a clear upward trajectory.  -->
-Overall, however, these data accord relativley well with our intuitive sense of early vocabulary development: they reveal that children before their first birthday tend to speak at most only a few words, but that production accelerates across the second year.
+Overall, however, these data accord relatively well with our intuitive sense of early vocabulary development: they reveal that children before their first birthday tend to speak at most only a few words, but that production accelerates across the second year.
 
 ```{r 3_medians_production_ws}
 ggplot(filter(medians, form == "WS", n_admins > 200), 
@@ -506,7 +507,8 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
 
 In sum, we observed a striking consistency in the individual variability of children's vocabulary during their second year. Across languages and forms, it appears to be the norm that toddlers vary. 
 
-This variability is found with striking consistency across our data. Nevertheless, it is still possible that 
+This variability is found with striking consistency across our data. 
+<!-- Nevertheless, it is still possible that  -->
 
 @feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual. 
 

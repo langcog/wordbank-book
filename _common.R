@@ -15,6 +15,7 @@ library(broom)
 library(gridExtra)
 library(rlang)
 library(modelr) # ch 7b
+library(binom) # ch2
 select <- dplyr::select
 # MASS dependency messes up lots of other dplyr code
 # library(robustbase) # appendix-aoa
@@ -47,11 +48,10 @@ if (local_data) {
 } else {
   instruments <- get_instruments()
   write_feather(instruments, "data/instruments.feather")
-  admins <- get_administration_data()
+  admins <- get_administration_data(original_ids = TRUE)
   write_feather(admins, "data/admins.feather")
   items <- get_item_data()
   write_feather(items, "data/items.feather")
-
 }
 
 

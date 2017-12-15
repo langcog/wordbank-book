@@ -1,6 +1,6 @@
-# Methods {#methods}
+# The Data {#methods}
 
-We begin by introducing our dataset and the database that contains it. We then discuss the subsidiary variables and analytic techniques used throughout the book. Where appropriate, we defer details of particular statistical techniques to specific chapters. Our starting place is the basic structure of CDI data. Some material in this chapter is adapted from @frank2016.
+We begin by introducing our dataset and the database that contains it. Our starting place is the basic structure of CDI data. Some material in this chapter is adapted from @frank2016.
 
 ## Database
 
@@ -61,33 +61,28 @@ Developmental psychologists are very fond of using temporal units like months an
 
 Despite these issues, months are the currency of language development research, and we often receive contributed datasets with months alone reported. In Wordbank, we define a *standardized month* as 365.2524 / 12 = `r 365.2524 / 12` days. When possible, we compute the number of days from birth to testing and then compute the number of standardized months that the child has lived. If this is not possible, we use months as reported in the dataset. We define an eight-month-old (`age == 8`) as a child who has lived between 8 and 9 standard months: their age is in the range [8 - 9) standard months. (The alternative definition, from 7;16 -- 8;15, is sometimes used in infancy research but is in our opinion less intuitive.)
 
-## Data
+## Datasets
 
 This section gives a broad overview of the data we have available. Unlike projects in which data are collected by the organizers, in our work here, we rely on the kindness of others in contributing data that are often years or decades old. Some datasets come via an email containing well-curated tabular data; others were contributed in more idiosyncratic formats or even on paper. One dataset was even retrieved by one of us in the form of a paper bag full of old paper forms from a doorstep several hours drive away. Thus, the amount and type of meta-data available for some datasets is limited. For example, we have limited demographic information for some datasets and only vocabulary -- not complexity or gesture -- items for others. In many cases we do not have full details of instructions and administration for a particular dataset. This section gives an overview of data availability and some demographic comparisons of the samples. Specifics of each dataset -- to the extent that they are available -- are given in Appendix \@ref(appendix-data). 
 
 ### Data Provenance
 
-As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html). Several of these datasets were transferred second-hand from a pre-existing database (CLEX-CDI; @jorgensen2010), while many of the others were contributed directly via electronic or paper forms. 
+As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html). Several of these datasets were transferred second-hand from a pre-existing database (CLEX-CDI; @jorgensen2010), while many of the others were contributed directly via electronic or paper forms. In the case of paper forms, we rekeyed the forms using double-entry methods (either ourselves or via a commercial contractor).^[In a check for errors in the rekeying of Korean data, we found that there were 4 incorrect fields in 10 full records for an error rate of ~`r round(100 * 4/6790, digits = 2)`%.]
 
-In the case of paper forms, we rekeyed the forms using double-entry methods (either ourselves or via a commercial contractor).^[In one check for errors in the rekeying of Korean data, we found that there were 4 incorrect fields in 10 records
-
-
-Importing is a process of standardizing idiosyncratic datasets into a common format.
+Each of these datasets is then imported to the database by creating a custom import key that matches individual columns of the dataset to particular database fields (e.g., item types like words or gestures, or standardized demographic fields). These mappings are preserved along with the raw data so that they can be re-checked later.  
 
 ### Overview of the data
 
-Wordbank curently has data from `r length(unique(items$language))` language communities.
-
-Many of these are in the original Words & Gestures (infant/toddler) / Words & Sentences (child) format, with around 400 items in WG and 700 in the WS.
+Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments in the original Words & Gestures (infant) / Words & Sentences (toddler) format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable). The table below gives an overview of the available instruments in t
 
 
 ```{r 2_overview}
 items %>%
   group_by(language, form) %>%
-  summarise(items = n(),
-            words = sum(type=="word"),
+  summarise(words = sum(type=="word"),
             categories = length(unique(category))) %>%
   filter(form %in% c("WS","WG")) %>%
+  left_join(instruments) %>%
   datatable
 ```
 
@@ -103,28 +98,39 @@ items %>%
   datatable
 ```
 
-The number of administrations is highly variable across instruments and languages, however.
+The number of administrations available is highly variable across instruments and languages, however.
 
 ```{r 2_admins}
-admins %>%
+admin_summary <- admins %>%
   group_by(language, form) %>%
   summarise(n = n(),
-            n_unique = length(unique(data_id)),
             min_age = min(age),
             max_age = max(age)) %>%
-  datatable
+  ungroup %>%
+  mutate(language = fct_reorder(language, n), 
+         Form = ifelse(form %in% c("WS","WG"), form, "other"))
+
+ggplot(admin_summary, aes(x = language, y = n, col = Form)) + 
+  coord_flip() + 
+  geom_point() + 
+  scale_color_solarized() + 
+  xlab("Number of Administrations") + 
+  ylab("Language")
 ```
 
 ### Administration details
 
-Paper
+Data in the dataset were gathered between the beginning of the first CDI norming study in 1990 (FIXME; @virginia?) and the present, with the majority of datasets gather within the 10--15 years prior to the writing of this book. The details of administration vary widely from dataset to dataset. Though we have different levels of knowledge regarding the exact details of administration, we know that the three most common circumstances of administration (in no particular order) are:
 
-Electronic in a few cases
+1. On paper in a lab or other space, with instructions given in person by a researcher (e.g., FIXME);
+2. On paper, with the form sent by mail with written or telephone instructions from a researcher (e.g., the British English Twins Early Development data, which were sent home as part of a packet); or 
+3. Electronically, with instructions given either electronically or by phone (e.g., Norwegian, Danish, and Slovak data). 
 
+We have limited direct evidence about the effects of particular administration details on the overall results, but the CDI community has amassed a substantial set of anecdotal experiences. For example, improper administration or limited instructions can result in over- or under-reporting, especially with respect to comprehension [see e.g., @feldman2000]. For example, in one trial we conducted using electronic administration, we found that basic written instructions were misinterpreted by some proportion of parents (as evinced by an atypical number of floor and ceiling responses). This proportion appeared to decrease when we made an attempt to simplify and illustrate the instructions that we gave. Such experiences suggest -- congruent with the general warnings above -- that caution is warranted in interpreting absolute comparisons between different populations where there are also differences in administration style. 
 
 ### Demographics
 
-How different are our samples demographically. 
+In addition to differences in administration and form, samples from different studies also differ in myriad other ways. The most important of these, especially cultural differences between language communities, are extremely hard to quantify. But we can make a first stab at investigating some similarities and differences between the convenience samples from different studies by comparing demographics where they are available. 
 
 ```{r}
 gender_counts <- admins %>%
@@ -133,19 +139,24 @@ gender_counts <- admins %>%
   group_by(language, form, sex) %>%
   count %>%
   group_by(language, form) %>%
-  mutate(prop = n / sum(n))
+  mutate(prop = n / sum(n), 
+         ci_low = binom.confint(x = n, n = sum(n), methods = "bayes")$lower, 
+         ci_high = binom.confint(x = n, n = sum(n), methods = "bayes")$upper, 
+         n = sum(n))
            
-
-ggplot(gender_counts, 
-       aes(x = language, y = prop, fill = sex)) + 
-  geom_bar(stat = "identity") +
-  facet_grid(~form) + 
+ggplot(filter(gender_counts, sex == "Female"), 
+       aes(x = language, y = prop)) + 
+  geom_point(aes(size = n)) +
+  geom_linerange(aes(ymin = ci_low, ymax = ci_high)) + 
+  facet_grid(~form, scale = "free_x") + 
   scale_color_solarized() + 
-  coord_flip() + 
   geom_hline(yintercept = .5, lty = 2) + 
-  ylab("Gender Proportions") + 
-  xlab("")
+  ylab("Proportion Female") + 
+  xlab("") + 
+  ylim(.2, .8) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = .5, hjust = 1))
 ```
+Sex proportions tend to be quite close to .5, with a few exceptions for small datasets. Several WG datasets (e.g., British Sign Language, Russian, Italian, Quebec French) have more males than would be expected by chance. This pattern is important because (as we will investigate in Chapter \@ref(demographics)), there are systematic differences in vocabulary size between boys and girls, and so sample differences in gender will lead to absolute differences in mean vocabulary size. 
 
 
 ```{r}
@@ -165,9 +176,9 @@ ggplot(momed_counts,
   facet_grid(~form) + 
   ylab("Maternal Education Proportions") + 
   xlab("") +
-  scale_color_solarized(name = "Maternal Education") 
+  scale_fill_solarized(name = "Maternal Education") 
 ```
-
+Although we have maternal education data for far fewer datasets, there are also substantial differences between datasets on this variable (we will also return to this issue again in Chapter \@ref(demographics)). Analyses of this variable are complicated by different reporting formats, so for example the German and Mexican Spanish datasets have no separate categorization for graduate education. That said, even for datasets with the most fine-grained maternal education breakdown, we see substantial differences.
 
 ```{r}
 ord_counts <- admins %>%
@@ -186,21 +197,35 @@ ggplot(ord_counts,
   facet_grid(~form) + 
   ylab("Birth Order Proportions") + 
   xlab("") +
-  scale_color_solarized(name = "Birth Order") 
+  scale_fill_solarized(name = "Birth Order") 
 ```
 
-### Longitudinal and cross-sectional data
+Finally, when we examine birth order, we also see differences in the proportion of children who are first- vs. later-born. The majority of the German sample is first-born, while the Czech sample has many more second children, for example. 
 
+In summary, our samples differ substantially in their demographic makeup. Presumably these differences are due both to the composition of the societies being sampled as well as the sampling procedure the researchers used. 
 
+### Longitudinal vs. cross-sectional data
 
-## Statistical Methods
+The strongest developmental inferences can be made by the examination of longitudinal data, in which children's individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration and so we must typically settle for using the large amount of available cross-sectional data to average out individual variability. 
 
-We use medians instead of means.
+```{r}
+longitudinal <- admins %>%
+  filter(form %in% c("WS","WG"), 
+         !is.na(birth_order)) %>%
+  group_by(language, form, data_id) %>%
+  count %>%
+  transmute(n_admins = n) %>%
+  group_by(language, form, n_admins) %>%
+  count
 
-We use robust GLMs
+ggplot(longitudinal, 
+       aes(x = n_admins, y = n, col = language)) + 
+  geom_point() + 
+  geom_line() + 
+  facet_grid(~form) + 
+  ylab("Number of Children") + 
+  xlab("Number of Administrations")
+```
+### Conclusions
 
-
-
-
-
-
+The strength of the Wordbank framework is that it allow access to CDI data in a consistent format, such that analyses can be applied uniformly. Yet we must not allow this ease to blind us to the difficulties of comparing across measurements that are gathered using different forms, under different administration conditions, and from convenience samples in different countries and cultures using different sampling schemes. Each of these differences has the potential to complicate cross-linguistic comparisons. We will return to each again and again throughout the book.

@@ -9,8 +9,6 @@ In an early report on individual differences in vocabulary acquisition, @nelson1
 
 structure and strategy, referential vs. expressive distinction
 
-
-
 @bates1994
 
 @mayor2014
@@ -275,12 +273,145 @@ left_join(real_ed, perm_ed) %>%
 
 
 
+## Are there spurts in language growth?
+
+Brent & Siskind 
+
+To address this question, we examine the Norwegian dataset. 
+
+```{r}
+longitudinal_admins <- admins %>% 
+  group_by(original_id) %>% 
+  count() %>% 
+  filter(n > 1)
+
+n_long_ws <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language == "Norwegian", 
+         form == "WS") %>%
+  group_by(original_id) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+ms_ws <- n_long_ws %>%
+  group_by(age) %>%
+  summarise(production = median(production))
+
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language == "Norwegian", 
+         form == "WG") %>%
+  group_by(original_id) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+ms_wg <- n_long_wg %>%
+  group_by(age) %>%
+  summarise(production = median(production))
+```
+
+```{r}
+admin_data <- bind_rows(n_long_ws %>%
+                          group_by(original_id, form) %>%
+                          summarise(n_admins = mean(n_admins)), 
+                        n_long_wg %>%
+                          group_by(original_id, form) %>%
+                          summarise(n_admins = mean(n_admins)))
+                     
+ggplot(admin_data, aes(x = n_admins)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~form) + 
+  xlim(0,16)
+```
+
+
+
+
+```{r}
+ggplot(n_long_ws, aes(x = age, y = production)) + 
+  geom_line(aes(group = original_id), alpha = .1) + 
+  geom_line(data = ms_ws, col = "blue", size = 1.5)
+```
+
+```{r}
+ggplot(filter(n_long_ws, n_admins > 10), 
+       aes(x = age, y = production, col = fct_reorder(original_id, production))) + 
+  geom_line() + 
+  scale_colour_discrete(guide = FALSE)
+```
+
+
+and WG
+
+```{r}
+ggplot(n_long_wg, aes(x = age, y = production)) + 
+  geom_line(aes(group = original_id), alpha = .1) + 
+  geom_line(data = ms_wg, col = "blue", size = 1.5)
+```
+
+
+Does a GLM fit the Norwegian longitudinal growth? 
+
+```{r}
+ADMIN_CUTOFF <- 6
+
+glm_preds <- n_long_ws %>%
+  ungroup %>%
+  filter(n_admins > ADMIN_CUTOFF) %>%
+  split(.$original_id) %>%
+  map_df(function(x) {
+    mod <- glm(cbind(production, 731 - production) ~ age, 
+               family = "binomial", data = x)
+    newdata <- data_frame(age = 16:36, 
+                          original_id = x$original_id[1]) 
+    newdata$production <- round(predict(mod, type = "response", newdata = newdata) * 731)
+    return(newdata)
+  })
+
+
+ggplot(filter(n_long_ws, n_admins > ADMIN_CUTOFF), 
+       aes(x = age, y = production)) + 
+  geom_line() +
+  geom_point() + 
+  geom_line(data = glm_preds, col = "blue") + 
+  facet_wrap(~fct_reorder(original_id, production)) +
+  scale_colour_discrete(guide = FALSE) + 
+  scale_x_continuous(breaks = c(24, 36)) + 
+  scale_y_continuous(breaks = c(400, 800)) + 
+  theme(strip.text = element_blank())
+```
+
+
+```{r}
+ADMIN_CUTOFF <- 6
+
+glm_preds <- n_long_wg %>%
+  ungroup %>%
+  filter(n_admins > ADMIN_CUTOFF) %>%
+  split(.$original_id) %>%
+  map_df(function(x) {
+    mod <- glm(cbind(production, 393 - production) ~ age, 
+               family = "binomial", data = x)
+    newdata <- data_frame(age = 8:20, 
+                          original_id = x$original_id[1]) 
+    newdata$production <- round(predict(mod, type = "response", newdata = newdata) * 393)
+    return(newdata)
+  })
+
+
+ggplot(filter(n_long_wg, n_admins > ADMIN_CUTOFF), 
+       aes(x = age, y = production)) + 
+  geom_line() + 
+  geom_point() + 
+  geom_line(data = glm_preds, col = "blue") + 
+  facet_wrap(~fct_reorder(original_id, production)) +
+  scale_colour_discrete(guide = FALSE) + 
+  scale_x_continuous(breaks = c(8, 16)) + 
+  scale_y_continuous(breaks = c(200, 400)) + 
+  theme(strip.text = element_blank())
+```
+
 
 
 ## Vocabulary Composition and Syntactic Growth
-
-
-## Are there spurts in language growth
-
-Brent & Siskind
 

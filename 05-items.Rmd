@@ -173,7 +173,7 @@ lemma_completeness %>%
   datatable(options = list(scrollX='400px'))
 ```
 
-To begin, we ask about the earliest words. Following @tardiff2008, we present the first 10 words acquired by children across langauges
+To begin, we ask about the earliest words. Following @tardif2008, we present the first 10 words acquired by children across langauges
 
 Top 10 words across languages
 

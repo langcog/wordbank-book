@@ -109,15 +109,15 @@ get_mmad_ratio <- function(data, measure = quo(production), demo = quo(sex),
               n = sum(n)) %>%
     filter(is.finite(mmad))
 }                           
-               
+
 # summarise MMAD across development, again for given demoraphic
 get_mmad_summary <- function(data) {
- data %>%
-  group_by(language) %>%
-  summarise(mmad_mean = weighted.mean(mmad, w = n),
-            n = n()) %>%
-  filter(n > 4) %>% # more than four age points - FIXME, arbitrary
-  mutate(language = fct_reorder(language, mmad_mean)) 
+  data %>%
+    group_by(language) %>%
+    summarise(mmad_mean = weighted.mean(mmad, w = n),
+              n = n()) %>%
+    filter(n > 4) %>% # more than four age points - FIXME, arbitrary
+    mutate(language = fct_reorder(language, mmad_mean)) 
 }
 ```
 
@@ -138,37 +138,38 @@ analysis_combos <- left_join(tibble(form = c("WG","WG","WS"),
          high_level =  case_when(demo == quo(sex) ~ "Female", 
                                  demo == quo(birth_order) ~ "First",
                                  demo == quo(mom_ed) ~ "College and Above"), 
-         demo_name = quo_text(demo))
+         demo_name = map_chr(demo, quo_text))
 
 # run all the analyses above on all those combos
 analyses <- analysis_combos %>%
   split(list(.$form, .$measure_name)) %>%
-  map(function (z) {
-    z %>%
+  map(function (form_measure_data) {
+    form_measure_data %>%
       split(.$demo_name) %>%
-      map(function(x) {
+      map(possibly(function(demo_data) {
         
-        demo <- x$demo[1][[1]]
-        measure <- x$measure[1][[1]]
-        
-        print(demo)
-        print(measure)
+        demo <- demo_data$demo[1][[1]]
+        measure <- demo_data$measure[1][[1]]
         
         data <- vocab_data %>%
-          filter(!is.na(!!demo), form == x$form[1])
+          filter(!is.na(!!demo), form == demo_data$form[1])
         
         results <- list()
         results$means <- get_demo_means(data, demo = demo, measure = measure)
         results$models <- get_demo_models(data, demo = demo, measure = measure)
         results$preds <- get_demo_preds(results$models, data, demo = demo)
-        results$model_summary <- get_demo_model_summary(results$models, level = x$reference_level[1])
+        results$model_summary <- get_demo_model_summary(results$models, 
+                                                        level = demo_data$reference_level[1])
         results$mmad_ratio <- get_mmad_ratio(data, measure = measure, demo = demo, 
-                                         high_level = x$high_level[1], low_level = x$reference_level[1])
+                                             high_level = demo_data$high_level[1], 
+                                             low_level = demo_data$reference_level[1])
         results$mmad_summary <- get_mmad_summary(results$mmad_ratio)
         
         return(results)
-      })
+      }, 
+      otherwise = tibble())) # otherwise for possibly call
   })
+
 save(file = "data/3b-demo-analyses.Rds", analyses)
 ```
 
@@ -187,7 +188,6 @@ Our analyses below replicate and extend the results of @eriksson2012, who used a
 ### Comprehension
 
 We begin by examining Words and Gestures data on comprehension. 
-
 
 ```{r 3_gender_plot_wg_comp}
 ggplot(analyses$WG.comprehension$sex$means,

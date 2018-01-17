@@ -160,7 +160,7 @@ lemma_completeness %>%
   ungroup() %>%
   filter(measure == "produces") %>%
   dplyr::select(-measure) %>%
-  datatable
+  datatable(options = list(scrollX='400px'))
 ```
 
 Comprehension
@@ -170,10 +170,10 @@ lemma_completeness %>%
   ungroup() %>%
   filter(measure == "understands") %>%
   dplyr::select(-measure) %>%
-  datatable
+  datatable(options = list(scrollX='400px'))
 ```
 
-To begin, we ask about the earliest words. Following @tardiff2008, we present the first 10 words acquired by children across langauges
+To begin, we ask about the earliest words. Following @tardif2008, we present the first 10 words acquired by children across langauges
 
 Top 10 words across languages
 
@@ -194,7 +194,7 @@ top10 %>%
   ungroup() %>%
   filter(measure == "produces") %>%
   dplyr::select(-measure, -order) %>%
-  datatable
+  datatable(options = list(scrollX='400px'))
 ```
 
 Production
@@ -204,7 +204,7 @@ top10 %>%
   ungroup() %>%
   filter(measure == "understands") %>%
   dplyr::select(-measure, -order) %>%
-  datatable
+  datatable(options = list(scrollX='400px'))
 ```
 
 Acquisition order in production vs comprehension across languages

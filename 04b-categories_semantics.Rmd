@@ -329,7 +329,7 @@ bp <- read_feather("data/body_parts_data.feather")
 
 Get unilemma set. 
 
-```{r}
+```{r ccs_bp_unilemma}
 bp_unis_df <- bp %>%
   filter(!is.na(uni_lemma)) %>%
   group_by(language, uni_lemma) %>%
@@ -346,7 +346,7 @@ bp_unis_df %>%
 
 Get those high-coverage uni-lemmas. 
 
-```{r}
+```{r ccs_bp_unilemma_means}
 bp_means <- bp %>%
   filter(uni_lemma %in% bp_unis) %>%
   group_by(language, uni_lemma, age) %>%
@@ -356,7 +356,7 @@ bp_means <- bp %>%
 
 Plot. 
 
-```{r}
+```{r ccs_bp_plots}
 body_unis <- c("arm", "leg", "hand","foot", "finger", "toe") # "face", "hand", "head", 
 face_unis <- c("cheek","eaer","eye","hair","mouth","nose","tongue","tooth")
 
@@ -379,7 +379,7 @@ ggplot(upper_lower,
 ```
 
 
-```{r}
+```{r ccs_bp_face_plots}
 face <- filter(bp_means, n > 10, language != "Korean",  
               uni_lemma %in% face_unis) 
 # %>%

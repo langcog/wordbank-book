@@ -370,7 +370,7 @@ ggplot(filter(preds, word %in% target_words), aes(x = age, y = prop)) +
 
 Check the histogram.
 
-```{r}
+```{r eval=FALSE}
 hglm.aoas <- words %>%
   mutate(aoa = -intercept / slope)
 

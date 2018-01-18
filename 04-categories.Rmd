@@ -209,7 +209,7 @@ area_summary <- areas %>%
 
 area_order <- filter(area_summary, form == "WS", measure == "produces",
                      lexical_category == "nouns")
-h respect
+
 language_levels <- area_order$language[order(area_order$mean,
                                              area_order$language,
                                              decreasing = FALSE)]

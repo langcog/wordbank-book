@@ -10,10 +10,9 @@ items <- items %>%
   mutate(num_item_id = as.numeric(substr(item_id, 6, nchar(item_id))))
 ```
 
-
 What are the most common categories?
 
-```{r}
+```{r ccs_common_cats}
 category_freqs <- items %>%
   filter(!is.na(category), form == "WS") %>%
   group_by(category, lexical_category, language) %>%
@@ -33,7 +32,7 @@ ggplot(category_freqs,
 Seems reasonable to take high-frequency categories. 
 
 
-```{r cat_comp_fun}
+```{r ccs_cat_comp_fun}
 
 get_cat_comp <- function(input_language, input_form) {
   print(paste(input_language,input_form))
@@ -102,6 +101,7 @@ sample_sizes <- cat_comp_data %>%
 sample_sizes %>%
   datatable
 ```
+
 ```{r ccs_funs}
 get_lang_cat_predictions <- function(lang, cat) {
   model <- filter(models, language == lang, category == cat)$model[[1]]
@@ -270,7 +270,7 @@ ggplot(filter(area_summary_ordered,
 
 ### WS Production Nouns
 
-```{r}
+```{r ccs_princomp}
 areas <- filter(area_summary_ordered, 
               form == "WS", 
               measure == "produces", 
@@ -292,15 +292,15 @@ pcs <- princomp(areas_matrix)
 
 Scree plot, indicating that PC1 dominates (for nouns, at least). 
 
-```{r}
+```{r ccs_scree}
 plot(pcs)
 ```
 
-```{r}
+```{r ccs_loadings}
 knitr::kable(as.data.frame(pcs$loadings[,]), digits = 2)
 ```
 
-```{r}
+```{r ccs_loadings_plot}
 pc_df <- data_frame(c1 = pcs$scores[,"Comp.1"], 
                      c2 = pcs$scores[,"Comp.2"], 
                     language = row.names(pcs$scores))
@@ -316,15 +316,15 @@ ggplot(pc_df, aes(x = c1, y = c2, col = language, label = language)) +
 
 ## Specific semantic categories
 
-```{r}
+```{r ccs_load_sem_data, eval=FALSE}
 sem_data <- read_feather("data/semantic_data.feather")
 ```
 
-
 Body parts as an example.
 
-```{r}
-bp <- filter(sem_data, category == "body_parts")
+```{r ccs_load_bp}
+# bp <- filter(sem_data, category == "body_parts")
+bp <- read_feather("data/body_parts_data.feather")
 ```
 
 Get unilemma set. 
@@ -349,8 +349,8 @@ Get those high-coverage uni-lemmas.
 ```{r}
 bp_means <- bp %>%
   filter(uni_lemma %in% bp_unis) %>%
-  group_by(language, form, uni_lemma, age, measure) %>%
-  summarise(mean = mean(value), 
+  group_by(language, uni_lemma, age) %>%
+  summarise(mean = mean(produces), 
             n = n())
 ```
 
@@ -360,8 +360,8 @@ Plot.
 body_unis <- c("arm", "leg", "hand","foot", "finger", "toe") # "face", "hand", "head", 
 face_unis <- c("cheek","eaer","eye","hair","mouth","nose","tongue","tooth")
 
-upper_lower <- filter(bp_means, measure == "understands", n > 10, language != "Korean",  
-              form == "WG", uni_lemma %in% body_unis) %>%
+upper_lower <- filter(bp_means, n > 10, language != "Korean",  
+              uni_lemma %in% body_unis) %>%
   mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"), 
          size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg", 
                           uni_lemma %in% c("hand","foot") ~ "hand/foot",
@@ -369,19 +369,19 @@ upper_lower <- filter(bp_means, measure == "understands", n > 10, language != "K
 
 ggplot(upper_lower, 
        aes(x = age, y = mean, col = size)) + 
-  # geom_point(aes(size = n)) + 
+  # geom_point(aes(size = n)) +
   geom_smooth(se= FALSE, aes(lty = body_position), span = 1) + 
   facet_wrap(~language) + 
   scale_color_solarized() + 
   theme(legend.position = "bottom") + 
-  ylab("Proportion Comprehension") + 
+  ylab("Proportion Production") + 
   xlab("Age (months)")
 ```
 
 
 ```{r}
-face <- filter(bp_means, measure == "understands", n > 10, language != "Korean",  
-              form == "WG", uni_lemma %in% face_unis) 
+face <- filter(bp_means, n > 10, language != "Korean",  
+              uni_lemma %in% face_unis) 
 # %>%
   # mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"), 
   #        size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg", 

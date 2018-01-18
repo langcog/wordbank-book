@@ -10,8 +10,8 @@ For arbitrary items, stitching across English WS and WG tends to look pretty goo
 ```{r}
 target_items <- c("dog","table","run")
 
-eng_wg <- get_instrument_data(instrument_language = "English (American)",
-                              instrument_form = "WG", 
+eng_wg <- get_instrument_data(language = "English (American)",
+                              form = "WG", 
                               iteminfo = TRUE, 
                               items = items %>%
                                 filter(language == "English (American)", 
@@ -20,8 +20,8 @@ eng_wg <- get_instrument_data(instrument_language = "English (American)",
                                 pull(item_id)) %>%
   filter(uni_lemma %in% target_items)
 
-eng_ws <- get_instrument_data(instrument_language = "English (American)",
-                              instrument_form = "WS", 
+eng_ws <- get_instrument_data(language = "English (American)",
+                              form = "WS", 
                               iteminfo = TRUE, 
                               items = items %>%
                                 filter(language == "English (American)", 

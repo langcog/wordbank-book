@@ -308,23 +308,27 @@ dat <- list(age = ages,
                               nrow=n.words, ncol=length(ages), byrow = TRUE),
             W = n.words, 
             A = length(ages))
+```
 
+```{r eval=FALSE}
 samps <- rstan::stan(model_code = hierarchical_logit, 
               cores = 4, 
               data = dat, iter = 200, warmup=100, chains = 4, 
               pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
+save(samps, "data/aoa-samps.Rds")
 ```
 
 Diagnostics.
 
-```{r}
+```{r eval=FALSE}
+load("data/aoa-samps.Rds")
 rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
                  inc_warmup = TRUE)
 ```
 
 Explore parameters. 
 
-```{r}
+```{r eval=FALSE}
 coefs <- data.frame(summary(samps)$summary)
 coefs$name <- rownames(coefs)
 
@@ -349,7 +353,7 @@ words <- coefs %>%
 
 and plot again:
 
-```{r}
+```{r eval=FALSE}
 age_range <- 0:36
 preds <- words %>%
   group_by(word, category) %>%
@@ -377,7 +381,7 @@ qplot(aoa, geom = "blank", data = hglm.aoas) +
 
 What are the crazy ones? 
 
-```{r}
+```{r eval=FALSE}
 hglm.aoas$word[hglm.aoas$aoa <10]
 ```
 
@@ -387,7 +391,7 @@ Don't know what's going on with these but everything else looks good.
 
 Merge with previous data frame. 
 
-```{r}
+```{r eval=FALSE}
 all.preds <- left_join(mms, 
                        preds %>% 
                          ungroup %>%
@@ -415,7 +419,7 @@ ggplot(all.preds, aes(x = age)) +
 
 AOA distribution
 
-```{r}
+```{r eval=FALSE}
 
 aoas <- full_join(full_join(glm_aoas, full_join(bglm_aoas, rglm_aoas)), empirical_aoas) %>%
   full_join(hglm.aoas %>% rename(definition = word, 
@@ -426,7 +430,7 @@ aoas <- full_join(full_join(glm_aoas, full_join(bglm_aoas, rglm_aoas)), empirica
 
 Plot.
 
-```{r}
+```{r eval=FALSE}
 qplot(aoa,facets = ~ measure, 
       data = aoas %>% gather(measure, aoa, ends_with("aoa")))
 ```
@@ -434,7 +438,7 @@ qplot(aoa,facets = ~ measure,
 
 And pairs plots. 
 
-```{r}
+```{r eval=FALSE}
 pair_data <- aoas %>% 
   dplyr::select(ends_with("aoa")) %>%
           mutate(empirical_aoa = ifelse(is.infinite(empirical_aoa), 

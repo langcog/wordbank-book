@@ -1,3 +1,416 @@
-# Vocabulary Networks {#networks}
+# Individual Children {#style}
 
-To be filled in with CogSci paper.
+> Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development, If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994]
+
+In an early report on individual differences in vocabulary acquisition, @nelson1973 noticed that there was substantial variation in how many nouns 
+
+"referential" (more than 50% nouns) - more object-focused, found to be less syntactically complex - faster vocabulary growth
+"expressive" (less than 50% nouns) - more self-focused, more syntactically complex
+
+structure and strategy, referential vs. expressive distinction
+
+@bates1994
+
+@mayor2014
+
+
+## Variation in Production/Comprehension Tradeoffs
+
+Example for English.
+
+```{r}
+eng_wg <- filter(admins, language == "English (American)", form == "WG")
+
+ggplot(eng_wg, 
+       aes(x = comprehension, y = production)) + 
+  geom_point() + 
+  geom_abline(lty = 2, col = "red") + 
+  geom_smooth()
+```
+
+All languages.
+
+
+```{r}
+wg <- filter(admins, form == "WG")
+
+ggplot(wg, 
+       aes(x = comprehension, y = production)) + 
+  geom_point() + 
+  geom_abline(lty = 2, col = "red") + 
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) + 
+  facet_wrap(~language)
+```
+
+
+Now consolidated across languages. 
+
+```{r}
+wg <- filter(admins, form == "WG")
+
+wg_summary <- wg %>%
+  group_by(language, age) %>%
+  summarise(comprehension = mean(comprehension),
+            production = mean(production), 
+            n = n())
+  
+ggplot(wg_summary, 
+       aes(x = comprehension, y = production, col = language)) + 
+  geom_abline(lty = 2, col = "black") + 
+  geom_point(aes(size = n)) + 
+  scale_color_solarized(guide = FALSE) + 
+  geom_smooth(se=FALSE, method = "lm", formula = y ~ I(x^2), aes(weight  = 1/n)) +
+  geom_label_repel(data = wg_summary %>%
+                     group_by(language) %>%
+                     filter(age == max(age)), 
+                   aes(label = language))
+```
+
+
+## Variation in Vocabulary Composition
+
+See @bates1994.
+
+### Nouns
+
+```{r}
+vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
+```
+
+Start with WS.
+
+```{r}
+ws_vc <- vocab_comp_data %>%
+  filter(form == "WS") 
+```
+
+Here is proportion nouns as a function of total vocab size. 
+
+```{r}
+ws_vc_all <- ws_vc %>%
+  filter(measure == "produces", lexical_category == "nouns")
+
+
+ggplot(ws_vc_all, 
+       aes(x = vocab, y = prop_vocab)) + 
+  geom_point(alpha = .1) + 
+  geom_smooth() + 
+  facet_wrap(~language) + 
+  xlab("Total Vocabulary Size (proportion)") + 
+  ylab("Proportion Nouns") 
+```
+
+Test @nelson1973's suggestion that more referential is related to faster vocab growth. How do we do this? Well, one way of cashing out the relationship says that prop nouns should be a predictor of vocab size within language, over and above age?
+
+```{r}
+n_items <- items %>%
+  group_by(language, form) %>%
+  summarise(n = n())
+
+vc_pred <- left_join(ws_vc_all, admins) %>%
+  left_join(n_items) %>%
+  mutate(produces = vocab_num, 
+         doesnt_produce = n - vocab_num) %>%
+  rename(noun_prop = prop_vocab)
+```
+
+Not sure about the model to use here. First, try linear model of proportions (wrong). 
+
+```{r}
+coefs <- vc_pred %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  group_by(language) %>%
+  do(tidy(lm(prop ~ age * noun_prop, data = .))) 
+
+ggplot(filter(coefs, term %in% c("age", "noun_prop","age:noun_prop")), 
+       aes(x = fct_reorder(language, estimate), y = estimate, col = term)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+  facet_wrap(~term, scales = "free_x") + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  coord_flip() 
+```
+
+Now try glm over total outcomes. 
+
+```{r}
+coefs <- vc_pred %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  group_by(language) %>%
+  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * noun_prop, data = ., family = "binomial"))) 
+
+ggplot(filter(coefs, term %in% c("age", "noun_prop","age:noun_prop")), 
+       aes(x = fct_reorder(language, estimate), y = estimate, col = term)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+  facet_wrap(~term, scales = "free_x") + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  coord_flip() 
+```
+
+Model is largely the same, more overconfident but harder to interpret. 
+
+In both cases, there's clear support for @nelson1973's R/E distinction in that kids with larger noun biases early tend also to have bigger vocabularies for their age. 
+
+This is true fro all languages except for Mandarin, which doesn't show a noun bias at all. Interestingly, it's true in Cantonese too. Odd. 
+
+On the other hand, that might just be a consequence of reverse causality: the bigger your vocabulary is, the bigger your noun bias on average, so you might just be picking up on the fact that kids with bigger vocabularies are showing the noun bias that would emerge later for every kid anyway. 
+
+This is the critique leveled by @pine1990.
+
+One way to deal with this is to find out if a kid has a greater than vocabulary-size adjusted noun bias.
+
+What that looks like:
+
+```{r}
+x <- filter(vc_pred, language == "English")
+qplot(prop, noun_prop, data=x) + 
+  geom_smooth(method = "lm", 
+              formula = y ~ x + I(x^2) + I(x^3))
+```
+
+```{r}
+vc_pred <- vc_pred %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  split(.$language) %>%
+  map_df(function(x) {
+    mod <- lm(noun_prop ~ prop + I(prop^2) + I(prop^3), data = x)
+    x$resid_noun_prop <- resid(mod)
+    return(x)
+  })
+  
+
+coefs <- vc_pred %>%
+  group_by(language) %>%
+  do(tidy(lm(prop ~ age * resid_noun_prop, data = .))) 
+
+ggplot(filter(coefs, term %in% c("age", "resid_noun_prop","age:resid_noun_prop")), 
+       aes(x = fct_reorder(language, estimate), y = estimate, col = term)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+  facet_wrap(~term, scales = "free_x") + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  coord_flip() 
+```
+
+OK, it's a lot less obviously true that Rs have bigger vocabs than Es, at least by this analysis. 
+
+### Closed class words
+
+> In analysing the correlates of closed-class style, we found some limited evidence in support of a link between rate of development (i,e. precocity) and closed-class proportion scores...
+
+
+```{r}
+ws_vc_all <- ws_vc %>%
+  filter(measure == "produces", lexical_category == "function_words")
+
+
+ggplot(ws_vc_all, 
+       aes(x = vocab, y = prop_vocab)) + 
+  geom_point(alpha = .02) + 
+  geom_smooth() + 
+  facet_wrap(~language) + 
+  xlab("Total Vocabulary Size (proportion)") + 
+  ylab("Proportion Function Words") 
+```
+
+## Overlap in vocabulary
+
+@mayor2014 create several procedures for examining idiosyncrasy of vocabulary. We are able to use the most direct one because of the accessibility of full item-wise data. 
+
+> This direct measure is computed by calculating the mean Euclidean distance between individual vocabularies and the mean vocabulary, where each word is either understood/produced (coded as 1 in a vector containing all words on the CDI) or not understood/not produced (coded as 0). As this metric is heavily dependent on the total number of words known on the CDI, these mean Euclidean distances are then normalized by the underlying binomial distribution, produced by measuring the Euclidean distance when vector values are drawn at random. The Normalized Euclidean Distance (NED hereafter) is computed according to the following equation:
+
+$$NED = \frac{\sum_{i \in N} \sum_{j \in W} (x_{ij} - p_i)^2}{\sum_{i \in N} \sum_{j \in W} (y_{ij} - q_i)^2}$$
+
+> where $W$ refers to the number of words on the CDI, $N$ the number of infants, $x_{ij}$ is equal to 1 if the word $i$ is understood/produced by infant $j$ and 0 otherwise. $p_i$ corresponds to the fraction of infants that understand/ produce word $i$. $y_{ij}$ corresponds to the random assignment to word $i$ in run $j$, where 1 and 0 are assigned randomly so that mean vocabularies match and $q_i$ corresponds to the fraction of runs for which word $i$ is understood/produced. 
+
+I take $y_{ij}$ to be a permutation of words within vocabularies. 
+
+```{r}
+eng_wg <- read_feather("data/eng_wg_data.feather") %>%
+  filter(type == "word") %>%
+  filter(!is.na(value)) %>%
+  select(data_id, value, age, language, form, item_id, definition) %>%
+  mutate(understands = value == "produces" | value == "understands", 
+         produces = value == "produces") %>%
+  select(-value)
+```
+
+```{r}
+get_ED <- function (x) {
+  mean_vocab <- as.data.frame(x) %>% 
+    group_by(item_id, definition) %>%
+    summarise(mean_understands = mean(understands), 
+              mean_produces = mean(produces))
+  
+  y <- left_join(as.data.frame(x), mean_vocab)
+  
+  y %>%
+    group_by(age, item_id) %>%
+    summarise(understands_ed = sum((understands - mean_understands)^2), 
+              produces_ed = sum((produces - mean_produces)^2)) %>%
+    summarise(understands_ed = sum(understands_ed), 
+              produces_ed = sum(produces_ed)) 
+}
+```
+
+```{r eval=FALSE}
+real_ed <- get_ED(eng_wg)
+
+perms <- eng_wg %>% 
+  split(.$age) %>%
+  map(function(x) {modelr::permute(x, col="understands",2)})
+
+perm_ed <- map_df(perms, 
+               function (x) {
+                 map_df(x$perm, get_ED, .id = "id") %>%
+                   summarise(understands_red = mean(understands_ed),
+                             produces_red = mean(produces_ed))
+                 })
+
+left_join(real_ed, perm_ed) %>%
+  mutate(understands_ned = understands_ed / understands_red, 
+         produces_ned = produces_ed / produces_red)
+```
+
+
+
+
+## Are there spurts in language growth?
+
+Brent & Siskind 
+
+To address this question, we examine the Norwegian dataset. 
+
+```{r}
+longitudinal_admins <- admins %>% 
+  group_by(original_id) %>% 
+  count() %>% 
+  filter(n > 1)
+
+n_long_ws <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language == "Norwegian", 
+         form == "WS") %>%
+  group_by(original_id) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+ms_ws <- n_long_ws %>%
+  group_by(age) %>%
+  summarise(production = median(production))
+
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language == "Norwegian", 
+         form == "WG") %>%
+  group_by(original_id) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+ms_wg <- n_long_wg %>%
+  group_by(age) %>%
+  summarise(production = median(production))
+```
+
+```{r}
+admin_data <- bind_rows(n_long_ws %>%
+                          group_by(original_id, form) %>%
+                          summarise(n_admins = mean(n_admins)), 
+                        n_long_wg %>%
+                          group_by(original_id, form) %>%
+                          summarise(n_admins = mean(n_admins)))
+                     
+ggplot(admin_data, aes(x = n_admins)) + 
+  geom_histogram(binwidth = 1) + 
+  facet_wrap(~form) + 
+  xlim(0,16)
+```
+
+
+
+
+```{r}
+ggplot(n_long_ws, aes(x = age, y = production)) + 
+  geom_line(aes(group = original_id), alpha = .1) + 
+  geom_line(data = ms_ws, col = "blue", size = 1.5)
+```
+
+```{r}
+ggplot(filter(n_long_ws, n_admins > 10), 
+       aes(x = age, y = production, col = fct_reorder(original_id, production))) + 
+  geom_line() + 
+  scale_colour_discrete(guide = FALSE)
+```
+
+
+and WG
+
+```{r}
+ggplot(n_long_wg, aes(x = age, y = production)) + 
+  geom_line(aes(group = original_id), alpha = .1) + 
+  geom_line(data = ms_wg, col = "blue", size = 1.5)
+```
+
+
+Does a GLM fit the Norwegian longitudinal growth? 
+
+```{r}
+ADMIN_CUTOFF <- 6
+
+glm_preds <- n_long_ws %>%
+  ungroup %>%
+  filter(n_admins > ADMIN_CUTOFF) %>%
+  split(.$original_id) %>%
+  map_df(function(x) {
+    mod <- glm(cbind(production, 731 - production) ~ age, 
+               family = "binomial", data = x)
+    newdata <- data_frame(age = 16:36, 
+                          original_id = x$original_id[1]) 
+    newdata$production <- round(predict(mod, type = "response", newdata = newdata) * 731)
+    return(newdata)
+  })
+
+
+ggplot(filter(n_long_ws, n_admins > ADMIN_CUTOFF), 
+       aes(x = age, y = production)) + 
+  geom_line() +
+  geom_point() + 
+  geom_line(data = glm_preds, col = "blue") + 
+  facet_wrap(~fct_reorder(original_id, production)) +
+  scale_colour_discrete(guide = FALSE) + 
+  scale_x_continuous(breaks = c(24, 36)) + 
+  scale_y_continuous(breaks = c(400, 800)) + 
+  theme(strip.text = element_blank())
+```
+
+
+```{r}
+ADMIN_CUTOFF <- 6
+
+glm_preds <- n_long_wg %>%
+  ungroup %>%
+  filter(n_admins > ADMIN_CUTOFF) %>%
+  split(.$original_id) %>%
+  map_df(function(x) {
+    mod <- glm(cbind(production, 393 - production) ~ age, 
+               family = "binomial", data = x)
+    newdata <- data_frame(age = 8:20, 
+                          original_id = x$original_id[1]) 
+    newdata$production <- round(predict(mod, type = "response", newdata = newdata) * 393)
+    return(newdata)
+  })
+
+
+ggplot(filter(n_long_wg, n_admins > ADMIN_CUTOFF), 
+       aes(x = age, y = production)) + 
+  geom_line() + 
+  geom_point() + 
+  geom_line(data = glm_preds, col = "blue") + 
+  facet_wrap(~fct_reorder(original_id, production)) +
+  scale_colour_discrete(guide = FALSE) + 
+  scale_x_continuous(breaks = c(8, 16)) + 
+  scale_y_continuous(breaks = c(200, 400)) + 
+  theme(strip.text = element_blank())
+```
+
+
+
+## Vocabulary Composition and Syntactic Growth

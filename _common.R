@@ -52,6 +52,9 @@ if (local_data) {
   write_feather(admins, "data/admins.feather")
   items <- get_item_data()
   write_feather(items, "data/items.feather")
+
+  # cleanup of non-WS/WG instruments
+
 }
 
 
@@ -104,3 +107,5 @@ pred_gcrq <- function(x, mods) {
     return(preds)
   }
 }
+
+

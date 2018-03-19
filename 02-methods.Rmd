@@ -1,11 +1,10 @@
-# The Data {#methods}
+# The Data^[Some material in this chapter is adapted from @frank2016.] {#methods}
 
-We begin by introducing our dataset and the database that contains it. Our starting place is the basic structure of CDI data. Some material in this chapter is adapted from @frank2016.
+We begin by introducing the structure of our dataset and the database that contains it. In the second section, we give some descriptive information on the datasets included in the database. 
 
 ## Database
 
 Why use a database to store vocabulary data? Consider the standard format of raw CDI data. Here is a small slice of the original CDI norming data [@fenson1994;@fenson2007]. 
-
 ![Example data from the CDI norming sample (Fenson et al., 2007). Each row has a unique child identifier, demographics, and word-by-word checklist data.](images/itembychild.png)
 
 Each row is a child, each column gives a variable -- either a demographic variable or the result of a particular word being administered to a particular child. Although this format is useful for homogeneous administrations of a single instrument, it cannot accommodate multiple instruments, multiple languages, or datasets with different sources or kinds of demographic information. Consolidating data across different instruments is very difficult in this format, and tracking data on children with multiple longitudinal administrations of a single instrument must also be done in an ad-hoc manner. The move to a database format allows far more flexible and programmatic handling of heterogeneous data structures from different sources.

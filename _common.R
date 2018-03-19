@@ -16,6 +16,7 @@ library(gridExtra)
 library(rlang)
 library(modelr) # ch 7b
 library(binom) # ch2
+library(gridExtra)
 select <- dplyr::select
 # MASS dependency messes up lots of other dplyr code
 # library(robustbase) # appendix-aoa

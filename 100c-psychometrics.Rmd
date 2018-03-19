@@ -1,0 +1,356 @@
+# Psychometric Properties of the CDI {#appendix-psychometrics}
+
+In this Appendix, we examine the psychometric properties of the CDI through the lens of Item Response Theory (IRT). In brief, IRT provides a set of models for estimating the measurement properties of tests consisting of multiple items. These models assume that individuals vary on some latent trait, and that each item in a test measures this latent trait [see @baker2001 for detailed introduction]. 
+
+IRT models vary in their parameterization. In the simplest (Rasch) IRT model, each item has a difficulty parameter that controls likely a test-taker with a particular ability will be to get a correct answer. In the more sophisticated two-parameter model, each item also has a discrimination parameter that controls how much response probabilities vary with varying abilities. Good items will tend to have high discrimination parameters across a range of difficulties so as to identify test-takers at a range of abilities. 
+
+IRT models are a useful tool for constructing and evaluating CDI instruments, as they can help to identify items that perform poorly in estimating underlying ability. For example,  @weber2018 used IRT to identify poorly-performing items in a CDI instrument for Wolof (a language spoken in Senegal). IRT can also be used in the construction in computer-adaptive testing [@makransky2016]. 
+
+This appendix examines IRT models as a window into the psychometric properties of the CDI. In the first section, we explore latent factor scores using the English WS data. In the second section, we examine individual items and find generally positive measurement properties, although with some items at ceiling (included via carry-over from the Words and Gestures form). In the third section, we look at differences between comprehension and production in the WG form. In the fourth section, we look at the properties of the instrument by word category in both WS and WG. 
+
+Overall, the conclusions of our analysis are that: 
+
+* Latent factor scores may have some advantages relative to raw scores in capturing individuals' abilities, but for the purposes of the analyses we perform in the main body of the manuscript, they may carry some risks as well; hence we do not adopt them more generally. 
+* In general, CDI WS items tend to perform well, but from a pure psychometric perspective there are a number of items that could be removed from the English WS form.
+* Comprehension items in general tend to have less discrimination than production, suggesting that they are not as clear indicators of children's underlying abilities. 
+* Function words tend to have lower discrimination than other items but the lexical class differences are not huge and do not interact with whether they are measured using production vs. comprehension. 
+
+## Preliminary Estimation 
+
+```{r irt_prelims_ws}
+library(mirtCAT)
+
+eng_ws <- read_feather("data/eng_ws_raw_data.feather")
+
+d <- eng_ws %>%
+  mutate(produces = value == "produces") %>%
+  filter(!is.na(category)) %>%
+  select(data_id, produces, age, production, sex, definition) 
+
+d_wide <- d %>%
+  mutate(produces = as.numeric(produces)) %>%
+  dplyr::select(definition, produces, data_id) %>%
+  spread(definition, produces)
+  
+d_mat <- d_wide %>%
+  dplyr::select(-data_id) %>% 
+  data.frame %>%
+  data.matrix
+
+colnames(d_mat) <- sort(unique(d$definition))
+rownames(d_mat) <- d_wide$data_id
+
+# Requires no empty rows - `personfit` doesn't work with `removeEmptyRows=TRUE` even though the model fit will work that way. 
+
+d_mat <- d_mat[complete.cases(d_mat),]
+```
+
+Practically, we use the `mirt` package [@chalmer2012,@chalmers2016] to estimate the parameters of a four-parameter IRT model. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds. Our goal in this first analysis is simply to examine parameter estimates across individuals and items. 
+
+```{r fit_irt_ws, eval = FALSE}
+mod_4pl <- mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
+
+coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl, simplify = TRUE)$items))
+fscores_4pl <- data_frame(data_id = rownames(d_mat), 
+                             ability = fscores(mod_4pl, method = "MAP")[,1])
+
+save(file = "data/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
+```
+
+```{r load_irt_data_ws}
+load("data/eng_ws_mod_4pl.Rds")
+```
+
+```{r irt_summary}
+d_summary <- d %>%
+  group_by(data_id, sex, age) %>%
+  summarise(production = production[1]) %>%
+  right_join(fscores_4pl %>%
+               mutate(data_id = as.numeric(data_id))) %>%
+  filter(!is.na(sex))
+```
+
+```{r}
+d_summary %>%
+  gather(measure, value, production, ability, age) %>%
+  mutate(measure = fct_recode(measure, 
+                              Production = "production", 
+                              `Latent Ability` = "ability", 
+                              `Age (months)` = "age") %>%
+           fct_relevel("Age (months)", "Production")) %>%
+  ggplot(aes(x = value)) + 
+  geom_histogram(bins = 15) + 
+  facet_wrap(~measure, scales="free_x")
+```
+
+We begin by estimating this model with data from `r nrow(d_mat)` from the English (American) WG dataset. We first examine the histograms of latent ability scores and compare them with chronological age (because sampling is non-uniform) and raw production scores. As can be seen above, latent ability shows a peak in the middle of the range and generally fewer cases distributed at floor and ceiling. This shift indicates first, that floor and ceiling effects in the form are partially rectified by the model, and second, that many children in the middle of the form's range are not well-distinguished from one another. 
+
+One question regarding these scores is whether they should be used in place of proportion scores for some of the estimation problems we encounter throughout the rest of the book. These latent ability scores might be overall better reflections of children's vocabulary than raw proportions in the best case. Nevertheless, we do not adopt them, for two reasons.
+
+```{r}
+d_gender <- d_summary %>%
+  gather(measure, value, production, ability) %>%
+  mutate(measure = fct_recode(measure, 
+                              `Raw Production` = "production", 
+                              `Latent Ability` = "ability") %>%
+           fct_relevel("Raw Production")) 
+
+ggplot(d_gender, aes(x = age, y = value, col = sex)) + 
+  geom_jitter(alpha = .1) + 
+  geom_smooth() + 
+  facet_wrap(~measure, scales="free_y") + 
+  ylab("Parameter Value") + xlab("Age (Months)")
+```
+
+```{r}
+d_gender_summary <- d_gender %>%
+  group_by(measure, age) %>%
+  summarise(female_advantage = mean(value[sex == "Female"]) - 
+              mean(value[sex == "Male"])) %>%
+  group_by(measure) %>%
+  summarise(cv = sd(female_advantage) / mean(female_advantage))
+  
+```
+
+First, they do not perform better empirically. The analysis above shows gender differences (cf. Chapter \@ref(#demographics)) by both measures. Surprisingly, there appear to be limited differences in the curves recovered by the analyses. For example, for raw production, the coefficient of variation across age in the gender differences is `r signif(d_gender_summary$cv[d_gender_summary$measure == "Raw Production"], 2)`. For the latent ability estimates, the CV is `r signif(d_gender_summary$cv[d_gender_summary$measure == "Latent Ability"], 2)`. Thus, based on the assumption that gender differences are constant across age, there is no evidence for better measurement. Of course, this assumption may be wrong, but this analysis does not yield evidence in favor of adoption. (Perhaps a smaller sample might yield different results; it could be that raw scores are stable due to the large amount of data in this analysis). 
+
+Second, there are other negatives associated with swapping an imperfect but straightforward measure (raw scores) to a model-derived measure (latent ability). Interpretation clearly suffers if we use the model-derived measure, since readers will not be able to map scores back to actual behavior in terms of the checklist. In addition, model estimation issues across instruments introduce further difficulties in interpretation. Most obviously model estimates with smaller datasets may vary in unpredictable ways; similarly, the presence of poorly-performing items (see below) in certain datasets may lead to systematic issues in the latent estimates for those datasets. 
+
+## Item effects in WS
+
+```{r}
+ggplot(coefs_4pl,  
+       aes(x = a1, y = d)) + 
+  geom_point(alpha = .3) + 
+  geom_text_repel(data = filter(coefs_4pl, 
+                                abs(a1) > 3.3 | abs(d) > 4), 
+                  aes(label = definition), size = 3) + 
+  xlab("Discrimination") + 
+  ylab("Difficulty")
+```
+
+
+Our next analysis examines items in the same WS dataset. The plot above shows item discrimination and difficulty, with outlying items labeled. Visual inspection shows a long tail of items with limited discrimination and low difficulty (e.g., *mommy*, *ball*, *bye*, etc.). These are clearly those items that are produced by nearly all of the children in the sample -- they do not discriminate because they are passed by all children in the sample. If the only goal of the instrument were discrimination of different ability levels, they could likely be removed. On the lower right hand side of the plot, the remainder of items are clumped, with discrimination above zero and somewhat higher difficulty. The right-hand tip of this triangle shows the most diagnostic words (e.g., *run*, *kitchen*, and *table*), all of which effectively distinguish between the upper and lower groups of children in the sample. Finally, at the bottom of this triangle is a large cluster of words that are quite difficult. Some of these do not show good discrimination (e.g., *country*), since it is likely too difficult for nearly all children in the sample. 
+
+
+```{r}
+ggplot(coefs_4pl,  
+       aes(x = a1)) + 
+  geom_histogram(binwidth = .2) + 
+  xlab("Discrimination")
+```
+
+We can follow up on the question of word inclusion by examining the distribution of discrimination parameters alone. Overall, this plot suggests that there are some items that could be dropped without major penalty. In particular, along with the very easy words in the left tail, there is a large cluster of words that are perhaps too difficult to be useful for most children. 
+
+
+```{r}
+ggplot(coefs_4pl,  
+       aes(x = g, y = u)) + 
+  geom_point() + 
+  geom_text_repel(data = filter(coefs_4pl, 
+                                abs(g) > .4 | u < .75), 
+                  aes(label = definition), size = 3) + 
+  xlab("Lower bound (high base rate)") + 
+  ylab("Upper bound (not known by many)")
+```
+
+As a separate check on this analysis, we can examine the upper and lower bounds estimated for particular words. These bounds show words that are known by only a small number of children at ceiling or have a very high floor (respectively). Examining those with a very low ceiling, we see items that are likely to be quite idiosyncratic, for a variety of reasons. For example, *babysitter*, *camping*, and *basement* likely vary by children's home experiences (further mediated by access to resources, parenting practices, and circumstances). In contrast, genital items (e.g. *vagina\**) vary by gender (see Chapter \@ref(words-demographics)). Examining those items with a very high base rate shows a similar set to those with very low discrimination patterns, suggesting that the four-parameter model may have fit these words as having a high chance level with essentially no discrimination ability. 
+
+```{r}
+weird_words <- c("grrr", "woof woof", "moo","yum yum")
+
+d %>%
+  filter(definition %in% weird_words) %>%
+  group_by(definition, age) %>%
+  summarise(produces = mean(produces, na.rm=TRUE)) %>%
+  ggplot(aes(x = age, y = produces, col = definition))+ 
+  geom_line() +
+  ylim(0,1) +
+  ylab("Proportion Producing") + 
+  xlab("Age (months)")
+  
+```
+
+Finally, we see items like *grrr*, *woof woof*, *moo*, and *yum yum*. These items show limited development across the age range of the instrument. Although most parents report children saying *yum yum* early, it is likely that some families either do not say  *yum yum* or do not report it on the form as a signal of gustatory pleasure (perhaps because their 30-month-old already says *delicious*). 
+
+
+
+## Production and comprehension
+
+
+```{r}
+eng_wg <- read_feather("data/eng_wg_data.feather")
+
+d_wg <- eng_wg %>%
+  mutate(produces = value == "produces", 
+         understands = value == "understands") %>%
+  filter(!is.na(category)) %>%
+  select(data_id, produces, understands, age, production, sex, definition) 
+
+d_wide_wg_produces <- d_wg %>%
+  mutate(produces = as.numeric(produces)) %>%
+  dplyr::select(definition, produces, data_id) %>%
+  spread(definition, produces)
+
+d_wide_wg_understands <- d_wg %>%
+  mutate(understands = as.numeric(understands)) %>%
+  dplyr::select(definition, understands, data_id) %>%
+  spread(definition, understands)
+
+d_mat_wg_produces <- d_wide_wg_produces %>%
+  dplyr::select(-data_id) %>% 
+  data.frame %>%
+  data.matrix
+
+d_mat_wg_understands <- d_wide_wg_understands %>%
+  dplyr::select(-data_id) %>% 
+  data.frame %>%
+  data.matrix
+
+colnames(d_mat_wg_produces) <- sort(unique(d_wg$definition))
+rownames(d_mat_wg_produces) <- d_wide_wg_produces$data_id
+colnames(d_mat_wg_understands) <- sort(unique(d_wg$definition))
+rownames(d_mat_wg_understands) <- d_wide_wg_understands$data_id
+
+# Requires no empty rows - `personfit` doesn't work with `removeEmptyRows=TRUE` even though the model fit will work that way. 
+
+d_mat_wg_produces <- d_mat_wg_produces[complete.cases(d_mat_wg_produces) & rowSums(d_mat_wg_produces) > 0,]
+d_mat_wg_understands <- d_mat_wg_understands[complete.cases(d_mat_wg_understands) & rowSums(d_mat_wg_understands) > 0,]
+```
+
+```{r fit_irt_wg, eval = FALSE}
+mod_4pl_wg_produces <- mirt(d_mat_wg_produces, 1, itemtype='4PL', verbose=TRUE)
+mod_4pl_wg_understands <- mirt(d_mat_wg_understands, 1, itemtype='4PL', verbose=TRUE)
+
+coefs_4pl_wg_produces <- as_data_frame(coef(mod_4pl_wg_produces, 
+                                            simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl_wg_produces, simplify = TRUE)$items))
+
+coefs_4pl_wg_understands <- as_data_frame(coef(mod_4pl_wg_understands, 
+                                            simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl_wg_understands, simplify = TRUE)$items))
+
+save(file = "data/eng_wg_mods_4pl.Rds", 
+     "mod_4pl_wg_produces",
+     "mod_4pl_wg_understands",
+     "coefs_4pl_wg_produces",
+     "coefs_4pl_wg_understands")
+```
+
+```{r load_irt_data_wg}
+load("data/eng_wg_mods_4pl.Rds")
+
+coefs_4pl_wg <- bind_rows(coefs_4pl_wg_produces %>%
+                            mutate(measure = "produces"),
+                          coefs_4pl_wg_understands %>%
+                            mutate(measure = "understands"))
+
+wg_comp_prod <- coefs_4pl_wg %>%
+  select(a1, d, measure) %>%
+  gather(parameter, value, a1, d) %>%
+  mutate(parameter = fct_recode(parameter, 
+                                Discrimination = "a1", 
+                                Difficulty = "d") %>%
+           relevel("Difficulty")) 
+
+ggplot(wg_comp_prod, 
+       aes(x = value)) +
+  geom_histogram(binwidth = .5) + 
+  facet_grid(measure ~ parameter) + 
+  xlim(-5,5)
+
+wg_comp_prod_summary <- wg_comp_prod %>%
+  group_by(measure, parameter) %>%
+  summarise(value = mean(value))
+```
+
+We next use IRT to estimate whether there are differences between production and comprehension, using WG data. The plot above shows IRT parameter values for discrimination and difficulty for production and comprehension (a few extreme parameter values are truncated in the plot for ease of seeing general trends). There are clear distribution differences on both measures. Difficulty is much higher (negative values) for production relative to comprehension, reflecting the expected asymmetry. 
+
+We also see clear evidence that in general comprehension items show less discrimination, consistent with the hypothesis that production behavior is a clearer signal of children's underlying knowledge than assumed comprehension. This pattern is visible in two ways. First, discrimination values are negative for more items in comprehension, indicating items that are not measuring ability. Second, and more importantly, mean discrimination is substantially lower for comprehension relative to production (`r signif(wg_comp_prod_summary$value[wg_comp_prod_summary$parameter == "Discrimination" & wg_comp_prod_summary$measure == "understands"],2)` vs. `r signif(wg_comp_prod_summary$value[wg_comp_prod_summary$parameter == "Discrimination" & wg_comp_prod_summary$measure == "produces"],2)`). Very few comprehension items have discrimination is greater than 2. 
+
+This pattern of findings -- lower discrimination values for comprehension -- could be due to at least two possibilities. One is that parents are better reporters of production than comprehension, and hence these items are more discriminative of true behavior. The source of error in this case would be parents' mistaken belief that their child understands a word. The second is that comprehension is a fundamentally more variable construct and that, hence, individual word knowledge consistent with understanding could be due to partial knowledge. Here the source of error is variance in how well children know the meanings of words. We cannot distinguish between these two models, but they have very different underlying implications for the CDI. On the first model, comprehension is simply hard to measure with parent report. On the second, comprehension is perhaps a richer and more nuanced behavior than production. 
+
+## Properties by lexical category
+
+One hypothesis that we have often speculated about is the question of whether there are special psychometric issues with particular word classes. For example, do parents struggle especially to identify whether children produce or understand function words? 
+
+
+```{r}
+coefs_4pl <- coefs_4pl %>%
+  left_join(items %>% 
+               filter(language == "English (American)", 
+                      form == "WS")) 
+
+class_summary <- coefs_4pl %>%
+  group_by(lexical_class) %>%
+  summarise(sd_a1 = sd(a1, na.rm=TRUE), 
+            a1 = mean(a1))
+
+a <- ggplot(coefs_4pl, 
+       aes(x = a1, y = d, col = lexical_class)) + 
+  geom_point(alpha = .3) + 
+  geom_text_repel(data = filter(coefs_4pl, 
+                                abs(a1) > 3.3 | abs(d) > 4), 
+                  aes(label = definition), size = 2) + 
+  xlab("Discrimination") + 
+  ylab("Difficulty")
+
+b <- ggplot(coefs_4pl, 
+       aes(x = a1, fill = lexical_class)) + 
+  geom_histogram() + 
+  xlab("Discrimination") +
+  xlim(0,4)
+
+grid.arrange(a, b)
+```
+
+
+The plot above reproduces the WG by-item analyses above but with color given by lexical class. Many of the easy, non-discriminating items are found in the "other" section. In contrast, the hardest items tend to be function words. These items tend to have lower discrimination on average (`r signif(class_summary$a1[class_summary$lexical_class == "function_words"],2)`) compared with nouns (`r signif(class_summary$a1[class_summary$lexical_class == "nouns"],2)`), adjectives (`r signif(class_summary$a1[class_summary$lexical_class == "adjectives"],2)`), and especially verbs (`r signif(class_summary$a1[class_summary$lexical_class == "verbs"],2)`). Nevertheless, the situation is not dire: most have a discrimination parameter above one. Thus, although function words are not the most discriminative items on the CDI WS, these items still appear to encode valid signal about children's abilities.
+
+
+```{r}
+coefs_4pl_wg <- coefs_4pl_wg %>%
+  left_join(items %>% 
+               filter(language == "English (American)", 
+                      form == "WG")) 
+
+wg_comp_prod <- coefs_4pl_wg %>%
+  select(a1, d, measure, lexical_class) %>%
+  gather(parameter, value, a1, d) %>%
+  mutate(parameter = fct_recode(parameter, 
+                                Discrimination = "a1", 
+                                Difficulty = "d") %>%
+           relevel("Difficulty")) 
+
+class_summary <- wg_comp_prod %>%
+  group_by(lexical_class, measure, parameter) %>%
+  summarise(mean = mean(value), 
+            sd = sd(value))
+
+# 
+# ggplot(wg_comp_prod, 
+#        aes(x = value, fill = lexical_class)) +
+#   geom_histogram(binwidth = .5) + 
+#   facet_grid(measure ~ parameter) + 
+#   xlim(-5,5)
+
+# wg_comp_prod_summary <- wg_comp_prod %>%
+#   group_by(measure, parameter) %>%
+#   summarise(value = mean(value))
+
+ggplot(filter(class_summary, parameter=="Discrimination"), 
+       aes(x = lexical_class, y = mean, col = lexical_class)) + 
+  geom_pointrange(aes(ymin = mean - sd, ymax = mean + sd)) + 
+  coord_flip() + 
+  facet_grid(measure ~ .) + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  ylab("Discrimination")
+
+```
+
+In our last analysis, we turn to the WG data. The plot above shows the mean and standard deviation for discrimination parameter values. In production, the higher discrimination shown on the whole (above) is likely due to the strong performance of nouns. In contrast, mean discrimination for other words is low. This pattern may be due to the overall sparsity of early production data for non-noun items. In comprehension, in contrast, there is a moderate level of discrimination for all classes except "other" (which includes items like *mommy* and *daddy* and a variety of animal sounds and social routines). One hypothesis about this finding is that, especially early on, parents are very generous in their interpretation of whether their child understands these words. 
+
+In sum, we do not find evidence that function words are particularly bad. Rather, there are some low-performing items spread across all categories of the CDI form, and many of these likely perform poorly for the reasons described above -- especially difficulty in interpretation of very early behavior and variability in home experience.
+
+<!-- ## Special cases by language -- RUSSIAN ANIMAL SOUNDS!! -->

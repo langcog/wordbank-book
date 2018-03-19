@@ -60,7 +60,7 @@ mp.glm <- glm(produces ~ index * age, family = "binomial", data = ordered)
 summary(mp.glm)
 ```
 
-### Further thoughts on Mayor & Plunkett model
+## Further thoughts on Mayor & Plunkett model
 
 The Mayor & Plunkett (2011) model has two corrections. The first uses the parametric form of the logistic to fill in low-frequency words that are not on the CDI, the second uses the difference between diary study counts and CDI counts to find a multiplier for higher-frequency words that are omitted. 
 

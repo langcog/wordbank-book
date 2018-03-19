@@ -363,13 +363,13 @@ ggplot(area_scatter_data,
 ```
 
 
-## Age effects on vocabulary composition
+<!-- ## Age effects on vocabulary composition -->
 
-We predict that the proportion of predicates and function words in children's vocabulary should be relatively more affected by age than nouns. Concrete nouns are hypothesized to be learned initially from both co-occurrences between words [@yu2007b] and by social cues to reference to particular objects [@bloom2002]. On neither account should syntactic information be a primary information source (though of course syntax might be more informative for abstract nouns). In contrast, for other types of words, syntax should be more important for learning their meaning.
+<!-- We predict that the proportion of predicates and function words in children's vocabulary should be relatively more affected by age than nouns. Concrete nouns are hypothesized to be learned initially from both co-occurrences between words [@yu2007b] and by social cues to reference to particular objects [@bloom2002]. On neither account should syntactic information be a primary information source (though of course syntax might be more informative for abstract nouns). In contrast, for other types of words, syntax should be more important for learning their meaning. -->
 
-On the syntactic bootstrapping hypothesis [@gleitman1990;@fisher2010], verbs especially are learned by mapping the syntactic structure of utterances to the thematic structure of observed events, for example by noticing that the subject of a sentence matches the agent in one particular ongoing event but not another (``the cat is fleeing the dog'' matches *flees*(cat, dog) but not *chases*(dog,cat)). A similar argument can be made for adjectives, since identification of the modified noun is similarly critical for inferring the meaning of the modifier. And by the same logic, function words should be even harder to learn without some understanding of their syntactic role. Thus, if syntactic development is related in some way to age, we should see larger age effects on predicate and function word vocabulary than on noun vocabulary. 
+<!-- On the syntactic bootstrapping hypothesis [@gleitman1990;@fisher2010], verbs especially are learned by mapping the syntactic structure of utterances to the thematic structure of observed events, for example by noticing that the subject of a sentence matches the agent in one particular ongoing event but not another (``the cat is fleeing the dog'' matches *flees*(cat, dog) but not *chases*(dog,cat)). A similar argument can be made for adjectives, since identification of the modified noun is similarly critical for inferring the meaning of the modifier. And by the same logic, function words should be even harder to learn without some understanding of their syntactic role. Thus, if syntactic development is related in some way to age, we should see larger age effects on predicate and function word vocabulary than on noun vocabulary.  -->
 
-In all four languages, the age coefficient is substantially larger for function words than for nouns. This asymmetry can be interpreted as evidence that, for two vocabulary-matched children, the older child would tend to produce relatively more function words than the younger. 
+<!-- In all four languages, the age coefficient is substantially larger for function words than for nouns. This asymmetry can be interpreted as evidence that, for two vocabulary-matched children, the older child would tend to produce relatively more function words than the younger.  -->
 
 
 

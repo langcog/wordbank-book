@@ -13,6 +13,13 @@ structure and strategy, referential vs. expressive distinction
 
 @mayor2014
 
+**notes on new intro**
+in general, analyses from before can be individual differences?
+
+- rate diffeences
+- syntactic category composition differences
+- vocabulary in particular (idiosyncrasy)
+
 
 ## Variation in Production/Comprehension Tradeoffs
 

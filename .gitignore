@@ -10,6 +10,9 @@ wordbank-book.Rmd
 _cache/
 _files/
 
+data/eng_ws_data.feather
+data/eng_wg_data.feather
+
 .DS_Store
 
 ## Core latex/pdflatex auxiliary files:

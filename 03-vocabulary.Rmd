@@ -32,14 +32,23 @@ ages <- 8:18
 
 One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown below.
 
-![Schematic true vocabulary growth and vocbaulary growth as measured by the CDI.](images/vocab_growth_schematic.png)
+```{r fig.cap="Schematic true vocabulary growth and vocbaulary growth as measured by the CDI."}
+knitr::include_graphics("images/vocab_growth_schematic.png")
+```
+
+
+<!-- ```{r fig.cap="Schematic true vocabulary growth and vocbaulary growth as measured by the CDI."} -->
+<!-- p <- png::readPNG("images/vocab_growth_schematic.png") -->
+<!-- plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE, mai=c(0,0,0,0)) -->
+<!-- rasterImage(p, xleft=0, xright=1, ybottom=0, ytop=1) -->
+<!-- ``` -->
 
 This image reveals a number of patterns that are explored in this and subsequent chapters. The CDI necessarily captures a small fraction of any individual's true vocabulary, but even within this range there are specific questions that are usefully addressed. The question of the exact slope of children's growth, especially in the period immediately after the emergence of language, is treated in Chapter \@ref(styles) -- this question is sometimes posed as whether children undergo a vocabulary "spurt" [@ganger2004]. On the other side of the CDI curve, the question of the divergence between CDI-measured vocabulary and true vocabulary (and whether true vocabulary can be recovered via a statistical correction) is treated in Appendix \@ref(appendix-vocab-estimation). In the current chapter, we focus on the middle section of the CDI curve, in which children's vocabulary is neither at the floor or the ceiling of the instrument. 
 
 
 ### Commonalities across languages
 
-```{r 3_medians_production_wg, fig.cap="Median production using the Words and Sentences form. Included are only lanugages where there are more than 200 administrations total."}
+```{r fig.cap="Median production using the Words and Sentences form. Included are only lanugages where there are more than 200 administrations total."}
 lang_ns <- admins %>% 
   group_by(language, form) %>% 
   summarise(n_admins = n())
@@ -53,7 +62,7 @@ medians <- vocab_data %>%
             n = n()) %>%
   left_join(lang_ns) 
 
-ggplot(filter(medians, form %in% form %in% WGs, n_admins > 200), 
+ggplot(filter(medians, form %in% WGs, n_admins > 200), 
        aes(x = age, y = production, col = interaction(language, form))) + 
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  

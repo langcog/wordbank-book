@@ -36,10 +36,8 @@ This set of contributions reflects an important guiding principle of our work he
 
 Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data. Considering the data in this way (shown in Figure \@ref(1_outline_diagram)), leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. 
 
-```{r 1_outline_diagram, fig.cap="A graphical outline of the book."}
-p <- png::readPNG("images/outline.png")
-plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE, mai=c(0,0,0,0))
-rasterImage(p, xleft=0, xright=1, ybottom=0, ytop=1)
+```{r fig.cap="A graphical outline of the book."}
+knitr::include_graphics("images/outline.png")
 ```
 
 For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocab) considers this view of the data, examining predictors of individual children's vocabulary. Of course, chief among these is age, and developmental growth patterns as well as variability in development is considered in the first part of this chapter. But beyond age, even the limited demographic data available in Wordbank can be used to explore the data. In Chapter \@ref{demographics}, we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-cultually valid proxy for socio-economic status). These demographic predictors reveal both consistent and variable patterns across languages: while gender and birth-order effects more relatively constant, socio-economic effects vary widely in magnitude. 
@@ -56,7 +54,7 @@ You can read this book as a narrative monograph. If you intend to do so, we reco
 
 You can also read this book as a reference. If you take this approach, just dive into any chapter that is of interest, knowing that you may need to use some of the terminology defined in Chapter \@ref{methods} to interpret the constructs and analyses that are used. 
 
-Many of the analyses reported here were first described in earlier publications [e.g., @frank2016,@braginsky2015,@braginsky2016]. Rather than reprinting these verbatim, this manuscript updates them using the unified analytic approach and larger dataset described in Chapter \@ref(methods). The version of these analyses represented in the manuscript should be considered more definitive than any previously published or presented version. 
+Many of the analyses reported here were first described in earlier publications [e.g., @frank2016;@braginsky2015p;@braginsky2016]. Rather than reprinting these verbatim, this manuscript updates them using the unified analytic approach and larger dataset described in Chapter \@ref(methods). The version of these analyses represented in the manuscript should be considered more definitive than any previously published or presented version. 
 
 ## Static Book, Dynamic Data {-}
 
@@ -66,7 +64,7 @@ For this reason, we work using snapshots of the underlying database. Every so of
 
 ## Acknowledgements {-}
 
-Our sincere thanks go to all of the generous researchers -- too many to name here, but listed on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors) -- who contributed their data to the database. 
+Our sincere thanks go to all of the generous researchers -- too many to name here, but listed on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors) and in Appendix \@ref(appendix-data) -- who contributed their data to the database. 
 
 Major thanks are also due to the MacArthur-Bates CDI Board, especially Philip Dale and Larry Fenson, for their continued intellectual and financial support of the Wordbank project. 
 

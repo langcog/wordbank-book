@@ -109,4 +109,7 @@ pred_gcrq <- function(x, mods) {
   }
 }
 
+### FORM VARIANTS
+WGs <- c("WG", "IC", "Oxford CDI")
+WSs <- c("WS", "TC")
 

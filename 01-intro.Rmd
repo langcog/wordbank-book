@@ -43,11 +43,13 @@ In their English and Spanish instantiations, the vocabulary checklists come in t
 
 Although the standardization of parent reports using the CDI contributes to the availability of large amounts of data in a comparable format, there are significant limitations to the parent report methodology as well [@tomasello1994, @feldman2000]. Clearly there are legitimate concerns about the ability of parents to provide detailed and specific knowledge about their children's language. 
 
-What does it mean when a parent reports that their child knows a word? In an ideal world, parental report would be an unbiased reflection of their observation of their child's language development: When asked if their child produces the word *dog*, a parent would try to recall situations in which their child has used the word *dog* correctly, and report the success or failure of this process of recollection. There are, however, a number of other sources of information that the parent might bring to bear. Figure \ref{fig:parent_model} uses graphical model notation to depict information that could be reflected in parent report [@jordan2004]. 
+What does it mean when a parent reports that their child knows a word? In an ideal world, parental report would be an unbiased reflection of their observation of their child's language development: When asked if their child produces the word *dog*, a parent would try to recall situations in which their child has used the word *dog* correctly, and report the success or failure of this process of recollection. There are, however, a number of other sources of information that the parent might bring to bear. The figure below uses graphical model notation to depict information that could be reflected in parent report [@jordan2004]. 
 
-![The statistical structure of parent report \label{fig:parent_model}](tex/parent_model.png){width=20%}
+```{r fig.cap="The statistical structure of parent report."}
+knitr::include_graphics("docs/tex/parent_model.png")
+```
 
-```{r}
+```{r fig.cap="The intuitive structure of parent report."}
 knitr::include_graphics("images/parent_report_sketch.png")
 ```
 

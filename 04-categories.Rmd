@@ -1,28 +1,36 @@
-# Categorical Composition: Syntax {#categories}
+# Categorical Composition: Syntax^[An earlier version of this work was reported to the Boston University Conference on Language Development in 2015 by Braginsky, Marchman, Yurovsky, & Frank.] {#categories}
 
-This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words.^[An earlier version of this work was reported to BUCLD 2015 by Braginsky, Marchman, Yurovsky, & Frank.]
+This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words. In Chapter \@ref(style), we consider variation of this sort within individuals. 
 
 ## Introduction
 
-Over the first few years, young children are exposed to a "sea of words" across many different contexts and from many different people (@goodman2008, p. 516). And despite the fact that children vary tremendously in the rate at which they learn, the first words that children utter are strikingly consistent [@tardif2008,@schneider2015]: they tend to talk about important people in their life ("mom", "dad"), social routines ("hi", "uh oh"), animals ("dog", "duck"), and foods ("milk", "banana") (@goodman2008, @bates1995, @nelson1973, @clark1979).  Soon thereafter, they begin to add verbs ("go") and adjectives ("pretty") in greater proportions than earlier in development and may even begin to use closed-class forms, such as determiners ("the").  These patterns seem to suggest a developmental course that follows distinct "waves" of learning for words from different syntactic classes. That is, along with early social routines, nouns tend to predominate early vocabularies, while other types of words, such as predicates and closed class forms, are learned later.
+Over the first few years, young children are exposed to a "sea of words" across many different contexts and from many different people [p. 516, @goodman2008]. And despite the fact that children vary tremendously in the rate at which they learn, the first words that children utter are strikingly consistent [@tardif2008,@schneider2015]: They tend to talk about important people in their life (*mom*, *dad*), social routines (*hi*, *uh oh*), animals (*dog*, *duck*), and foods (*milk*, *banana*) [@goodman2008, @bates1995; @nelson1973; @clark1979b]. Soon thereafter, they begin to add verbs (*go*) and adjectives (*pretty*) in greater proportions than earlier in development and may even begin to use closed-class forms, such as determiners (*the*). These patterns seem to suggest a developmental course that follows distinct "waves" of learning for words from different classes. That is, along with early social routines, nouns tend to predominate early vocabularies, while other types of words, such as predicates and closed class forms, are learned later.
 
-@bates1994 characterized these patterns of vocabulary composition in the following way. Figure 4.1 shows average vocabluary composition of nominals, predicates and closed class forms as a function of children's vocabulary size for English-speaking children from the original norming study of CDI: Words & Sentences form (@fenson1993).  Note that when children only know a few words (e.g., fewer than 50 words), the nominals comprise the greatest proportion of the words that children are reported to produce, with very few predicates or closed class forms (< 10%). As the children learn the next hundred words or so, the proportion of nominals increases even more dramatically with a gradual increase in the proportion of children's vocabularies that are predicates. Closed class forms remain a much smaller proportion over the period. Yet after about 300 words or so, children tend not add nouns to their vocabularies at the same pace that they did earlier in development, reflected in the proportion of nominals tending to decrease.^[This effect may also reflect aspects of CDI form design, e.g. "running out of nouns" to learn: children may increasingly learning nouns that are not on the forms.] It is during this developmental period that proportion of predicates tend to increase, followed by a growing proportion of closed class forms. 
+The composition of early vocabulary is complicated by the fact that we categorize words by their adult syntactic category. We do so in the discussion below without presupposing that children themselves do this categorization, however [@tomasello2000]. Children may be sensitive to these categories very early in development [@valian1986,@yang2013] or they may discover them either gradually [@pine1997] or more quickly [@meylan2017]. Importantly, though, we treat adult syntactic categories as an analytic convenience that describes certain regularities in how groups of words are distributed in language samples and how they function in different contexts, rather than as an ontological fact about children's knowledge. Chapter \@ref(aoapred) breaks down these categories further, asking what sorts of information predicts the order of acquisition for individual words, both within and across categories. 
 
-[Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary.](images/bates1994.png)
+```{r, fig.cap="Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary"}
+knitr::include_graphics("images/bates1994.png")
+```
 
-Why do children learn nouns before verbs and other types of words?  This question has received a great deal of attention in the literature, and we can briefly summarize some of the major issues here.  One reason for this "noun bias" could be that nouns are simply more frequent in the talk to young children.  It is well-established that children learn the words that they hear more often [e.g., @hartrisley1995].  Many observational studies of English-speaking caregivers have demonstrated that caregivers use more nouns than verbs (types or tokens) with their children [e.g., @fernald1993; @goldfield1993; @gopnik1996; @kim2000; @poulindubois1995; @tardif1997].
 
-Other researchers have framed the "noun bias" in terms of universals about what and how different words "partition" things in the world.For example, Gentner [@gentner1978] has argued that children learn nouns before verbs because the meanings of nouns are easier to encode since they identify things that can be differentiated in the world (e.g., common everyday objects).  Verbs and other predicates, in contrast, express *relations* among things in the world.  Hence, the meanings of verbs are less accessible to children through common, everyday experiences and hence, are more difficult to map onto word forms without additional linguistic or social support. 
+@bates1994 characterized these patterns of vocabulary composition in the following way. The figure above (reprinted from that paper) shows average vocabulary composition of nominals, predicates and closed class forms as a function of children's vocabulary size for English-speaking children from the original norming study of CDI: Words & Sentences form [@fenson1994]. Note that when children only know a few words (e.g., fewer than 50 words), the nominals comprise the greatest proportion of the words that children are reported to produce, with very few predicates or closed class forms (< 10%). As the children learn the next hundred words or so, the proportion of nominals increases even more dramatically with a gradual increase in the proportion of children's vocabularies that are predicates. Closed class forms remain a much smaller proportion over the period. Yet after about 300 words or so, children tend not add nouns to their vocabularies at the same pace that they did earlier in development, reflected in the proportion of nominals tending to decrease.^[This effect may also reflect aspects of CDI form design, e.g. "running out of nouns" to learn: children may increasingly learning nouns that are not on the forms.] It is during this developmental period that proportion of predicates tend to increase, followed by a growing proportion of closed class forms. 
 
-Other reasons that nouns might be easier than verbs for young children is that nouns tend to be less morphologically complex than verbs [e.g., @tardif1997]. For example, in many languages, nouns are typically marked only for number, whereas, verbs carry both person and tense information.  In English, at least, verbs might also be harder to learn because they tend to occur in sentence-medial position (rather than sentence final), which make verbs less salient in the input that children hear [@slobin1985, @caselli1995].
+Why do children learn nouns before verbs and other types of words? This question has received a great deal of attention in the literature, and we can briefly summarize some of the major issues here. One reason for this "noun bias" could be that nouns are simply more frequent in the talk to young children. It is well-established that children learn the words that they hear more often [e.g., @hart1995]. Many observational studies of English-speaking caregivers have demonstrated that caregivers use more nouns than verbs (types or tokens) with their children [e.g., @fernald1993; @goldfield1993; @gopnik1996; @kim2000; @poulindubois1995; @tardif1997].
 
-Finally, differences in children's preferences for nouns vs. verbs might result from differences in what contexts children hear nouns vs. verbs in the speech from caregivers [e.g., @choi1995, @tardif1999].  Several researchers have examined what caregivers talk about using naturalistic data of caregiver-child interactions.  For example, caregivers in some cultures tend to emphasize the names for objects, spending a great deal of time labeling objects for their children.  In other cultures, caregivers do so much less frequently, instead focusing on the actions in which those objects engage [e.g., @fernald1993; @gopnik1995]. These differences in input to children can influence the words that are salient for children, and hence, the words that they are most likely to learn.
+Other researchers have framed the "noun bias" in terms of universals about what and how different words "partition" things in the world.For example, @gentner1978 has argued that children learn nouns before verbs because the meanings of nouns are easier to encode since they identify things that can be differentiated in the world (e.g., common everyday objects). Verbs and other predicates, in contrast, express *relations* among things in the world. Hence, the meanings of verbs are less accessible to children through common, everyday experiences and hence, are more difficult to map onto word forms without additional linguistic or social support. 
 
-What is the evidence that a noun bias is a universal feature of children's vocabularies? Documenting the extent to which the noun bias is universal is relevant to understanding mechanisms of language learning, in particular, the presence of conceptual biases in early acquisition and the role of cross-cultural variability in the input that children receive from caregivers. The evidence varies across languages, as well as across methodologies (for example, naturalistic observation vs. parent report). Some studies find consistent evidence for a noun bias in English, as well as in Korean and Italian [@bates1994; @au1994; @caselli1995; @kim2000]. Other studies do not find evidence of a noun bias in languages as varied as French, German, Chinese, Estonian, and Korean [@bassano2000; @bloom1993; @choi1995; @kauschke2002; @tardif1996; @tardif1999, @schults2016].  Crosslinguistic variation suggests that the words that young children learn is less a function of universal conceptual biases and more likely due to structural features of the language and characteristics of the input that children receive when engaging with caregivers. Identifying the extent of crosslinguistic variation vs. universals has been difficult since variation across studies may be due to the different methodologies that are used. For example, even within a single language, for example, Korean, parent reports of children's first words find a noun bias [e.g., @au1994], whereas, studies using direct observational methods find less evidence for this pattern [e.g., @gopnik1995].
+Other reasons that nouns might be easier than verbs for young children is that nouns tend to be less morphologically complex than verbs [e.g., @tardif1997]. For example, in many languages, nouns are typically marked only for number, whereas, verbs carry both person and tense information. In English, at least, verbs might also be harder to learn because they tend to occur in sentence-medial position (rather than sentence final), which make verbs less salient in the input that children hear [@slobin1985; @caselli1995].
 
-Few studies have had the scope to directly compare the extent of the noun bias across multiple languages using a common methodology.  One notable exception is @bornstein2004, in which the researchers compared vocabulary composition in seven different languages.  We follow this approach [see also @tardif2008] using the CDI data from Wordbank. Since Wordbank has access to many more observations, our approach offers a more comprehensive approach than these earlier studies.  Moreover, we attempt to quantify the estimates of the extent to which languages show a noun bias: we develp a statistical method for quantifying the extent of the noun bias across the entire developmental range in which a particular form is used. 
+Finally, differences in children's preferences for nouns vs. verbs might result from differences in what contexts children hear nouns vs. verbs in the speech from caregivers [e.g., @choi1995; @tardif1999]. Several researchers have examined what caregivers talk about using naturalistic data of caregiver-child interactions. For example, caregivers in some cultures tend to emphasize the names for objects, spending a great deal of time labeling objects for their children. In other cultures, caregivers do so much less frequently, instead focusing on the actions in which those objects engage [e.g., @fernald1993; @gopnik1996]. These differences in input to children can influence the words that are salient for children, and hence, the words that they are most likely to learn.
 
-## Methods
+What is the evidence that a noun bias is a universal feature of children's vocabularies? Documenting the extent to which the noun bias is universal is relevant to understanding mechanisms of language learning, in particular, the presence of conceptual biases in early acquisition and the role of cross-cultural variability in the input that children receive from caregivers. The evidence varies across languages, as well as across methodologies (for example, naturalistic observation vs. parent report). Some studies find consistent evidence for a noun bias in English, as well as in Korean and Italian [@bates1994; @au1994; @caselli1995; @kim2000]. Other studies do not find evidence of a noun bias in languages as varied as French, German, Chinese, Estonian, and Korean [@bassano2000; @bloom1993; @choi1995; @kauschke2002; @tardif1996; @tardif1999; @schults2016]. 
+
+<!-- Crosslinguistic variation suggests that the words that young children learn is less a function of universal conceptual biases and more likely due to structural features of the language and characteristics of the input that children receive when engaging with caregivers.  -->
+In sum, identifying the extent of cross-linguistic variation vs. universals has been difficult since variation across studies may be due to the different methodologies that are used. For example, even within a single language, for example, Korean, parent reports of children's first words find a noun bias [e.g., @au1994], whereas, studies using direct observational methods find less evidence for this pattern [e.g., @gopnik1996]. Further, few studies have had the scope to directly compare the extent of the noun bias across multiple languages using a common methodology. 
+
+One notable exception in a literature where samples have been small -- in terms of both languages and children -- is @bornstein2004, in which the researchers compared vocabulary composition in seven different languages. In this chapter, we follow this comparative approach [see also @tardif2008]. Since we have access to many more observations, our approach offers a more comprehensive approach than these earlier studies. Moreover, we attempt to quantify the estimates of the extent to which languages show a noun bias: we develop a statistical method for quantifying the extent of the noun bias across the entire developmental range in which a particular form is used. 
+
+## Methods and Data
 
 Each CDI form contains a mixture of words in different classes. We adopt the categorization of @bates1994, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as "closed class" words), and other words. For each child's vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by @bates1994, for each of the languages in our sample, we plot these proportions against total vocabulary. Each dot represents a child's knowledge of a particular class, while curves show the relationship between a class and the whole vocabulary. If categories grow independently of one another, these curves should approximate the diagonal. 
 
@@ -34,15 +42,15 @@ items <- items %>%
 
 ```{r 4_vocab_comp_fun}
 get_vocab_comp <- function(input_language, input_form) {
-  print(paste(input_language,input_form))
+  # print(paste(input_language,input_form))
   
   lang_vocab_items <- filter(items, 
                              language == input_language, 
                              form == input_form) %>%
     filter(lexical_category %in% c("nouns", "predicates", "function_words"))
   
-  lang_vocab_data <- get_instrument_data(instrument_language = input_language,
-                                         instrument_form = input_form,
+  lang_vocab_data <- get_instrument_data(language = input_language,
+                                         form = input_form,
                                          items = lang_vocab_items$item_id, 
                                          iteminfo = lang_vocab_items) %>%
     mutate(value = ifelse(is.na(value), "", value),
@@ -72,24 +80,21 @@ get_vocab_comp <- function(input_language, input_form) {
 
 ```{r 4_vocab_comp, eval=FALSE}
 instruments <- instruments %>%
-  filter(form %in% c("WS","WG")) %>%
+  filter(form %in% c(WSs,WGs)) %>%
   dplyr::select(language, form) %>%
   distinct()
 
 vocab_comp_data <- map2(instruments$language,
                         instruments$form, get_vocab_comp) %>%
   bind_rows()
+
+write_feather(vocab_comp_data, "data/vocab_comp_data.feather")
 ```
 
-```{r 4_cached_data}
-vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
-```
-
-### Data 
-
-We limit our analysis to traditional WS and WG forms for because short forms like the British English TEDS don't have category information. The sample sizes included in this analysis are given below. 
 
 ```{r 4_sample_sizes}
+vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
+
 sample_sizes <- vocab_comp_data %>%
   group_by(language, form, measure, lexical_category) %>%
   summarise(n = n()) %>%
@@ -101,8 +106,14 @@ sample_sizes %>%
   datatable
 ```
 
-### Estimation Method
 
+We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms like the British English TEDS don't typically include category information. The sample sizes included in this analysis are given above. 
+
+```{r fig.cap="Schematic of our vocabulary composition analysis."}
+knitr::include_graphics("images/vocab_comp_schematic.png")
+```
+
+Building on the method of @bates1994, our analyses relies on plotting the proportion of words known in a particular category (e.g., nouns) in a child's vocabulary by the proportion of all words in the child's vocabulary. This approach is shown schematically above. If every time a child learns a word, that word is sampled randomly from the different words available on the form, then the proportion of nouns in vocabulary should track perfectly with the proportion of total vocabulary (the diagonal). In contrast, if nouns are over-represented, the child will be represented by a point above the diagonal; if nouns are under-represented, they will be under the diagonal.
 
 ```{r 4_area_funs}
 get_lang_lexcat_predictions <- function(lang, lexcat) {
@@ -121,8 +132,9 @@ get_lang_predictions <- function(lang) {
 ```
 
 ```{r 4_plot_area_demo}
-demo_langs <- c("English", "Mandarin")
-demo_data <- filter(vocab_comp_data, form == "WS", language %in% demo_langs) %>%
+demo_lang <- "English (American)"
+demo_data <- filter(vocab_comp_data, form == "WS", 
+                    language == demo_lang) %>%
   mutate(panel = paste(language, "(data)"),
          lexical_category = factor(lexical_category,
                                    levels = c("nouns", "predicates", "function_words"),
@@ -133,23 +145,25 @@ models <- demo_data %>%
   group_by(language, lexical_category) %>%
   do(model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = .))
 
-predictions <- bind_rows(sapply(demo_langs, get_lang_predictions, simplify = FALSE))
+predictions <- bind_rows(sapply(demo_lang, get_lang_predictions, simplify = FALSE))
 
 diagonal <- expand.grid(vocab = rep(rev(pts)),
-                        language = demo_langs,
+                        language = demo_lang,
                         lexical_category = unique(demo_data$lexical_category))
 diagonal$prop <- diagonal$vocab
 
 area_poly <- bind_rows(predictions, diagonal) %>%
   mutate(panel = paste(language, "(models)"))
 
-ggplot(filter(predictions, language == "English"), 
+ggplot(predictions, 
        aes(x = vocab, y = prop)) +
+  geom_point(data = demo_data, aes(x = vocab, prop, col = lexical_category), 
+             alpha = .03) +
   facet_grid(. ~ lexical_category) +
   geom_line(aes(colour = lexical_category), size = 1) +
   geom_polygon(data = filter(area_poly, language == "English"),
                aes(fill = lexical_category), alpha = 0.2) +
-  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") + 
   scale_y_continuous(limits = c(0, 1), breaks = c(),
                      name = "") +
   scale_x_continuous(limits = c(0, 1), breaks = c(),
@@ -158,7 +172,8 @@ ggplot(filter(predictions, language == "English"),
   scale_fill_solarized(guide = FALSE) 
 ```
 
-
+The figure above shows this analysis, carried out with English (American) WS data. Each point shows an individual child's vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). We capture the overall trend in this plot by estimating a linear model over the data, predicting category proportion as a function of total production. This model is fit with third-order polynomials (so as to allow both concave/convex functions and also changes in convexity). We fit these 
+models with the constraint that they must predict the point [1,1] so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked. These model fits are shown by the lines. 
 
 ```{r 4_resample}
 sample_areas <- function(d, nboot = 1000) {
@@ -180,6 +195,7 @@ sample_areas <- function(d, nboot = 1000) {
       rename_(.dots = setNames("area", counter))
     
     counter <<- counter + 1 # increment counter outside scope
+    print(counter)
     return(d_frame)
   }
   
@@ -191,187 +207,258 @@ sample_areas <- function(d, nboot = 1000) {
 ```
 
 ```{r 4_areas, eval=FALSE}
-areas <- sample_areas(vocab_comp_data, 100)
+areas <- sample_areas(vocab_comp_data, 1000)
 write_feather(areas,"data/vocab_comp_areas.feather")
 ```
 
 
 ```{r 4_areas2}
 areas <- read_feather("data/vocab_comp_areas.feather")
+```
+
+```{r 4_areas3}
 area_summary <- areas %>%
   group_by(language, form, measure, lexical_category) %>%
-  summarise(mean =  mean(area),
+  summarise(mean = mean(area),
             ci_lower = ci_lower(area),
             ci_upper = ci_upper(area)) %>%
   ungroup() %>%
   mutate(language = factor(language),
-         instrument = paste(language, form))
-
-area_order <- filter(area_summary, form == "WS", measure == "produces",
-                     lexical_category == "nouns")
-
-language_levels <- area_order$language[order(area_order$mean,
-                                             area_order$language,
-                                             decreasing = FALSE)]
-
-area_summary_ordered <- area_summary %>%
-  filter(form %in% c("WS", "WG"),
-         !(form == "WS" & measure == "understands")) %>%
-  ungroup() %>%
-  mutate(language = factor(language, levels = language_levels),
+         instrument = paste(language, form), 
          lexical_category = factor(lexical_category,
-                                   levels = c("nouns", "predicates", "function_words"),
-                                   labels = c("Nouns", "Predicates", "Function Words")))
+                                   levels = c("nouns", "predicates", 
+                                              "function_words"),
+                                   labels = c("Nouns", "Predicates", 
+                                              "Function Words")))
+      
 ```
 
-How do we estimate over-representation or under-representation of a particular vocabulary item? The figure above gives the key intuition. For a particular population, we plot the average proportion of items produced or comprehended from each category, relative to the total. This category average is plotted with. 
+The final step in our method is to capture the overall bias in a particular sample by estimating the difference in area between the curve and the diagonal. If the curve is substantially above the diagonal, this difference will be positive (indicating e.g., a positive noun bias). In contrast, if the curve is below the diagonal, the difference will be negative. To capture uncertainty in this area estimate, we conduct a resampling analysis where we randomly resample the population 1000 times with replacement, then recompute the area measurement. Confidence intervals below are based on this resampling procedure. 
 
+Critically, this analysis controls for a number of confounds in previous analyses. First, because our interest is in the shape of the overall curve, under-representation of children in some age-band should add uncertainty but not bias. Of course, if data are too sparse, estimates will be unconstrained, but particulars of age sampling should not bias our estimates. Second, in principle, the analysis should not be biased by the number of items in a particular category, as the analysis is relative to the numerical representation of a particular class on the form. Thus, in principle we should be able to compare across forms with larger or smaller numbers of items in particular sections.
 
-Resample data and find the mean and CI of the area estimate.
+## Results
 
-
-## Syntactic Vocabulary Composition
-
-Base plot for looking at vocabulary composition.
+We present results of this analysis across languages, beginning with comprehension on WG-type forms and moving to production in WS-type forms. We do not analyze WG production data here. For the most part, production estimates on WG forms are quite low, and hence curves are relatively unconstrained (or determined by a small number of children who are reported to have very large early vocabulary). 
 
 ```{r 4_base_plot}
-base_plot <- function(input_form, input_measure) {
+base_plot <- function(input_forms, input_measure) {
   vocab_comp_data %>%
-    filter(form == input_form, measure == input_measure) %>%
+    filter(form %in% input_forms, 
+           measure == input_measure) %>%
     mutate(lexical_category = factor(lexical_category,
-                                     levels = c("nouns", "predicates", "function_words"),
-                                     labels = c("Nouns  ", "Predicates  ", "Function Words"))) %>%
+                                     levels = c("nouns", "predicates",
+                                                "function_words"),
+                                     labels = c("Nouns ", "Predicates ", 
+                                                "Function Words")), 
+           langform = interaction(language, form)) %>%
     ggplot(aes(x = vocab, y = prop, colour = lexical_category)) +
-    facet_wrap(~language) +
-    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
+    facet_wrap(~langform) +
+    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "Proportion of Category\n") +
-    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
+    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "\nVocabulary Size") +
     scale_colour_solarized(name = "") +
     theme(legend.position = "top",
           legend.key = element_blank(),
-          legend.background = element_rect(fill = "transparent"))
+          legend.background = element_rect(fill = "transparent"), 
+          strip.text.x = element_text(size = 7))
 }
 ```
 
-### Production: Words and Sentences
-
-Plot WS productive vocabulary composition as a function of vocabulary size for each language.
-
-```{r 4_plot_points_ws, fig.width=8, fig.height=8}
-base_plot("WS", "produces") + 
-  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
-  geom_jitter(size = 0.7, alpha = .3)  +
-  geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-              size = 1, se = FALSE)
-```
-
-### Production: Words and Gestures
-
-Plot WG productive vocabulary composition as a function of vocabulary size for each language.
-
-These data are *much* sparser and don't really license strong inferences in many cases. (Most children produce a relatively small number of the words on WG forms).
-
-```{r 4_plot_points_wg, fig.width=8, fig.height=8}
-base_plot("WG", "produces") + 
-  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
-  geom_jitter(size = 0.7, alpha = .3)  +
-  geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-              size = 1, se = FALSE)
-```
 ### Comprehension: Words and Gestures
 
-Plot WG receptive vocabulary composition as a function of vocabulary size for each language.
 
-```{r 4_plot_points_wg_comp, fig.width=8, fig.height=8}
-base_plot("WG", "understands") + 
-  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
-  geom_jitter(size = 0.7, alpha = .3)  +
+```{r 4_plot_points_wg_comp}
+base_plot(WGs, "understands") + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") + 
+  geom_jitter(size = 0.7, alpha = .3) +
   geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-              size = 1, se = FALSE)
+              size = 1, se = FALSE) 
 ```
 
+Comprehension results are shown above. Overall, the largest trend that is visible in these plots is the under-representation of function words, with nouns and predicates appearing quite close to one another. For further comparison, we show summaries of curve areas for each language below. 
 
-### Summary across and measures
 
-Plot each lexical category's area estimate by language, form, and measure.
-
-```{r 4_plot_areas, fig.width=6, fig.height=6}
-ggplot(area_summary_ordered,
-       aes(y = language, x = mean, colour = lexical_category)) +
-  facet_grid(lexical_category ~ form + measure) +
-  geom_point() +
-  geom_segment(aes(x = ci_lower, xend = ci_upper,
-                   y = language, yend = language)) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray") + 
-  scale_colour_solarized(name = "", guide = FALSE) +
-  scale_y_discrete(name = "", limits = levels(area_summary_ordered$language)) +
-  xlab("\nRelative representation in early vocabulary")
-```
-
-WS only. 
-
-```{r 4_plot_areas_WS}
-ggplot(filter(area_summary_ordered, form == "WS"), 
-       aes(y = language, x = mean, colour = lexical_category)) +
+```{r 4_plot_areas_WG}
+plot_areas_wg <- filter(area_summary, form %in% WGs, measure == "understands") %>%
+         unite(langform, language, form, sep = " ") %>%
+         mutate(langform = fct_reorder2(langform, mean, lexical_category, 
+                                        fun = function(x, y) {
+                                          x[y=="Nouns"]}, .desc=FALSE))
+                
+ggplot(filter(plot_areas_wg, lexical_category != "Function Words"), 
+       aes(x = langform, y = mean, colour = lexical_category)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   facet_wrap(~lexical_category) +
-  geom_point() +
-  geom_segment(aes(x = ci_lower, xend = ci_upper,
-                   y = language, yend = language)) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray") + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
   scale_colour_solarized(name = "", guide = FALSE) +
-  ylab("") + 
-  # scale_y_discrete(name = "", limits = levels(area_summary_ordered$language)) +
-  xlab("Relative representation in early vocabulary")
+  coord_flip() + 
+  ylab("Relative representation (Comprehension)") +
+  xlab("") + 
+  ylim(-.15, .15)
+
+npcor_wg <- cor.test(plot_areas_wg$mean[plot_areas_wg$lexical_category == "Nouns"],
+                          plot_areas_wg$mean[plot_areas_wg$lexical_category == "Predicates"])
 ```
 
-Extract CVs. 
+Nouns are over-represented in many -- but not all -- languages. Portuguese, Turkish, Korean, and Slovak, a set of typologically- and culturally-distinct languages,  show slight under representation, with BSL and British English showing the largest over-representation of nouns. Predicates are under-represented in some languages and over-represented in others.
 
-```{r}
-cvs <- area_summary_ordered %>%
-  filter(!is.na(language)) %>%
-  group_by(form, measure, lexical_category) %>%
-  summarise(cv = abs(sd(mean) / mean(mean))) %>%
-  ungroup %>%
-  unite(measure, lexical_category, form, measure, sep = " ")
-  
-write_feather(cvs,"data/cvs/vocab_comp.feather")
-```
-
-
-
-Plot WS production vocab composition proportions. 
-
-```{r 4_prod_vs_comp_vocab_comp}
+```{r 4_prod_vs_comp_vocab_comp_wg}
 area_scatter_data <- area_summary %>%
-  filter(form=="WS", 
-         lexical_category %in% c("nouns","predicates"), 
+  filter(form %in% WGs, 
+         lexical_category %in% c("Nouns","Predicates"), 
          measure == "produces") %>%
+  unite(langform, language, form, sep = " ") %>%
   gather(variable, value, mean, ci_lower, ci_upper) %>%
   mutate(lex_var = str_c(lexical_category, variable, sep = "_")) %>%
-  dplyr::select(-lexical_category, -variable) %>%
+  select(-lexical_category, -variable) %>%
   spread(lex_var, value)
 
 ggplot(area_scatter_data, 
-       aes(x = nouns_mean, y = predicates_mean)) + 
-  geom_pointrange(aes(ymin = predicates_ci_lower, ymax = predicates_ci_upper)) + 
-  geom_errorbarh(aes(xmin = nouns_ci_lower, xmax = nouns_ci_upper)) +
-  geom_smooth() + 
-  geom_label_repel(aes(label=language), force = 4, alpha = .8) +
+       aes(x = Nouns_mean, y = Predicates_mean)) + 
+  geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
+  geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
+  geom_smooth(method = "lm") + 
+  geom_label_repel(aes(label=langform), force = 4, alpha = .8, size = 3) +
+  xlab("Noun bias") +
+  ylab("Predicate bias") + 
+  xlim(-.05,.15) + 
+  ylim(-.2,.1)
+```
+
+As seen above, there is a strong anti-correlation between noun and predicate bias  measures ($r$(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure). 
+
+
+```{r}
+ggplot(filter(plot_areas_wg, lexical_category == "Function Words"), 
+       aes(x = langform, y = mean, colour = lexical_category)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  facet_wrap(~lexical_category) +
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  scale_colour_solarized(name = "", guide = FALSE) +
+  coord_flip() + 
+  ylab("Relative representation (Comprehension)") +
+  xlab("") + 
+  ylim(-.5, .2)
+```
+
+Function words are substantially under-represented across nearly every language in our sample (except Slovak). Note the scale difference -- the function-word values are far more extreme than the noun and predicate values. These results likely reflect some combination of true under-representation of function-words as well as the difficulty of reporting on function-word comprehension in very early language (see Appendix \@ref(appendix-psychometrics) for more details on this issue). Such issues may also vary across cultures, languages, and administration methods. Function-word representation might plausibility differ due to linguistic factors such as morphological complexity, pronoun dropping, agreement, etc. However, it is also notable that the two lowest function-word scores come from Kiswahili and Kigiriama [@alcock2015], a study in which the parents may have had substantially less meta-linguistic awareness as a result of many being illiterate. 
+
+### Production: Words and Sentences
+
+
+```{r 4_plot_points_ws}
+base_plot(WSs, "produces") + 
+  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
+  geom_jitter(size = 0.7, alpha = .3) +
+  geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
+              size = 1, se = FALSE)
+```
+
+We next turn to production data from WS-type forms. We can immediately see the same function-word trend as was visible in comprehension. In addition, in many but not all languages, a noun bias is evident.
+
+```{r 4_plot_areas_ws}
+plot_areas_ws <- filter(area_summary, form %in% WSs, measure == "produces") %>%
+         unite(langform, language, form, sep = " ") %>%
+         mutate(langform = fct_reorder2(langform, mean, lexical_category, 
+                                        fun = function(x, y) {
+                                          x[y=="Nouns"]}, .desc=FALSE))
+                
+ggplot(filter(plot_areas_ws, lexical_category != "Function Words"),
+       aes(x = langform, y = mean, colour = lexical_category)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  facet_wrap(~lexical_category ) +
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  scale_colour_solarized(name = "", guide = FALSE) +
+  coord_flip() + 
+  ylab("Relative representation (Production)") +
+  xlab("") + 
+  ylim(-.15, .15)
+
+npcor <- cor.test(plot_areas_ws$mean[plot_areas_ws$lexical_category == "Nouns"],
+                          plot_areas_ws$mean[plot_areas_ws$lexical_category == "Predicates"])
+```
+Turning to the language summaries, we see a larger pattern of variation in nouns and predicate representation. Every language has a relative over-representation of nouns, though the degree of this over-representation varies, with German and Korean especially high, and Mandarin and Cantonese especially low (we return to this trend below). Overall this trend is more extreme and more consistent in production data than comprehension. Predicate representation is both more variable and more negative than we observed for comprehension. Here we see Mandarin and Cantonese as the only two languages with substantial over-representation for predicates.
+
+```{r 4_prod_vs_comp_vocab_comp}
+area_scatter_data <- area_summary %>%
+  filter(form %in% WSs, 
+         lexical_category %in% c("Nouns","Predicates"), 
+         measure == "produces") %>%
+  unite(langform, language, form, sep = " ") %>%
+  gather(variable, value, mean, ci_lower, ci_upper) %>%
+  mutate(lex_var = str_c(lexical_category, variable, sep = "_")) %>%
+  select(-lexical_category, -variable) %>%
+  spread(lex_var, value)
+
+ggplot(area_scatter_data, 
+       aes(x = Nouns_mean, y = Predicates_mean)) + 
+  geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
+  geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
+  geom_smooth(method = "lm") + 
+  geom_label_repel(aes(label=langform), force = 4, alpha = .8, size = 3) +
   xlab("Noun bias") +
   ylab("Predicate bias")
 ```
 
+Noun and predicate representation is again anti-correlated, at $r$(`r npcor$parameter`) = `r signif(npcor$estimate,2)`, though this correlation is somewhat weaker than for comprehension. 
 
-<!-- ## Age effects on vocabulary composition -->
+```{r}
+ggplot(filter(plot_areas_ws, lexical_category == "Function Words"),
+       aes(x = langform, y = mean, colour = lexical_category)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  facet_wrap(~lexical_category ) +
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  scale_colour_solarized(name = "", guide = FALSE) +
+  coord_flip() + 
+  ylab("Relative representation (Production)") +
+  xlab("") + 
+  ylim(-.5, .2)
+```
 
-<!-- We predict that the proportion of predicates and function words in children's vocabulary should be relatively more affected by age than nouns. Concrete nouns are hypothesized to be learned initially from both co-occurrences between words [@yu2007b] and by social cues to reference to particular objects [@bloom2002]. On neither account should syntactic information be a primary information source (though of course syntax might be more informative for abstract nouns). In contrast, for other types of words, syntax should be more important for learning their meaning. -->
+The negative representation of function words is relatively consistent in overall magnitude with that seen in comprehension. Across all languages, children are reported to produce fewer function words than would be expected by chance sampling. 
 
-<!-- On the syntactic bootstrapping hypothesis [@gleitman1990;@fisher2010], verbs especially are learned by mapping the syntactic structure of utterances to the thematic structure of observed events, for example by noticing that the subject of a sentence matches the agent in one particular ongoing event but not another (``the cat is fleeing the dog'' matches *flees*(cat, dog) but not *chases*(dog,cat)). A similar argument can be made for adjectives, since identification of the modified noun is similarly critical for inferring the meaning of the modifier. And by the same logic, function words should be even harder to learn without some understanding of their syntactic role. Thus, if syntactic development is related in some way to age, we should see larger age effects on predicate and function word vocabulary than on noun vocabulary.  -->
+### Reliability of bias estimates
 
-<!-- In all four languages, the age coefficient is substantially larger for function words than for nouns. This asymmetry can be interpreted as evidence that, for two vocabulary-matched children, the older child would tend to produce relatively more function words than the younger.  -->
+```{r}
+consistency <- area_summary %>%
+  filter((form %in% WGs & measure == "understands") |
+           (form %in% WSs & measure == "produces"),
+         !(language == "Mandarin" & form == "WS")) %>% 
+  # TC and IC are matched in Mandarin
+  select(language, measure, lexical_category, mean) %>%
+  spread(measure, mean) %>%
+  filter(!is.na(produces), !is.na(understands)) 
+  
+ ggplot(consistency,
+        aes(x = produces, y = understands, col = lexical_category)) + 
+  geom_point() + 
+  # facet_wrap(~lexical_category) + 
+  geom_smooth(method = "lm") + 
+  xlab("Relative Production") + 
+  ylab("Relative Comprehension") + 
+  scale_color_solarized(name = "Lexical Category") +
+  theme(legend.position = "bottom")
 
+cors <- consistency %>% 
+  group_by(lexical_category) %>% 
+  do(broom::tidy(cor.test(.$produces, .$understands)))
+```
 
+One natural question is how consistent estimates of bias are across comprehension and production. The plot above shows -- for the sample of languages in which we have data from matched WG- and WS-type instruments -- the relative bias we recovered in the analysis above. Somewhat surprisingly, correlations between these different instruments are quite low. Function word bias is negatively correlated between production and comprehension ($r$(`r cors$parameter[3]`) = `r signif(cors$estimate[3],2)`, $p$ = `r signif(cors$p.value[3],2)`). This result is likely due to Kiswahili and Kigiriama, discussed above, the lowest points for function word comprehension. But predicate bias estimates are close to uncorrelated with one another ($r$(`r cors$parameter[2]`) = `r signif(cors$estimate[2],2)`, $p$ = `r signif(cors$p.value[2],2)`), and the correlation between noun bias estimates is modest though positive ($r$(`r cors$parameter[1]`) = `r signif(cors$estimate[1],2)`, $p$ = `r signif(cors$p.value[1],2)`). 
 
+This analysis is relatively low power; it only conducted with `r cors$parameter[1]` languages and hence is relatively low power (despite the many thousands of children necessary to carry it out). Despite this, it casts some doubt on the reliability of individual bias estimates.
 
+```{r export_vocab_comp}
+cvs <- area_summary %>%
+  filter((form %in% WGs & measure == "understands") |
+           (form %in% WSs & measure == "produces")) %>%
+  group_by(measure, lexical_category) %>%
+  summarise(cv = abs(sd(mean) / mean(mean))) %>%
+  ungroup %>%
+  unite(measure, lexical_category, measure, sep = " bias, ")
+
+write_feather(cvs,"data/cvs/vocab_comp.feather")
+```
 

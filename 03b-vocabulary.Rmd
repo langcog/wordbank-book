@@ -718,7 +718,6 @@ ggplot(early_comprehension,
 ```
 
 
-## Discussion
 
 <!-- ```{r} -->
 <!-- gender <- gender_mmad_summary %>% -->

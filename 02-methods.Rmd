@@ -77,7 +77,7 @@ items %>%
   datatable
 ```
 
-Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall.
+Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
 
 ```{r 2_otherforms}
 items %>%

@@ -40,7 +40,7 @@ included_cats <- category_freqs %>%
   pull(category)
 ```
 
-In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., "animals" or "body parts"). As the figure above shows, while some semantic categories are shared across many instruments, thers are others that are quite rare (many corresponding to specific syntactic categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, "action words" and "descriptive words" tend to be broad predicate classes without as much clear semantic differentiation). This filtering step leaves `r length(included_cats)` categories: `r Reduce(paste0, sprintf("%s, ", included_cats[1:length(included_cats)-1))` and `r included_cats[length(included_cats)]`. Samples included in this analysis are shown below 
+In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., "animals" or "body parts"). As the figure above shows, while some semantic categories are shared across many instruments, thers are others that are quite rare (many corresponding to specific syntactic categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, "action words" and "descriptive words" tend to be broad predicate classes without as much clear semantic differentiation). This filtering step leaves `r length(included_cats)` categories: `r Reduce(paste0, sprintf("%s, ", included_cats[1:length(included_cats)-1]))` and `r included_cats[length(included_cats)]`. Samples included in this analysis are shown below 
 
 
 ```{r, eval=FALSE}
@@ -178,14 +178,32 @@ Because there are so many different languages represented in this analysis, the 
 
 ```{r ccs_plot_areas}
 cat_order <- area_summary %>%
+  filter(category %in% included_cats) %>%
   group_by(category) %>%
-  summarise(mean = sum(x - y)) %>%
-  mutate(category = fct_reorder(category, mean, .desc=FALSE)) %>%
+  summarise(mean = mean(mean)) %>%
+  arrange(desc(mean)) %>%
   pull(category)
 
 ggplot(filter(area_summary, 
               form %in% WSs, 
-              category %in% cat_order[1:3]) %>%
+              category %in% cat_order[1:4]) %>%
+         unite(langform, language, form),
+       aes(x = langform, y = mean, colour = langform)) +
+  facet_grid(.~category) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  scale_colour_solarized(name = "", guide = FALSE) + 
+  ylab("Relative representation in early vocabulary") + 
+  xlab("")
+```
+
+We can zoom in on the most highly over-represeented categories. The highest mean comes from body parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of body parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest 
+
+```{r}
+ggplot(filter(area_summary, 
+              form %in% WSs, 
+              category %in% cat_order[5:8]) %>%
          unite(langform, language, form),
        aes(x = langform, y = mean, colour = langform)) +
   facet_grid(.~category) +

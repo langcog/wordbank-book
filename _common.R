@@ -15,6 +15,7 @@ library(rlang)
 library(modelr) # ch 7b
 library(binom) # ch2
 library(tidyverse) # keep tidyverse last to prevent conflicts
+select <- dplyr::select
 # library(robustbase) # appendix-aoa
 # library(arm) # appendix-aoa
 # library(rstan) # appendix-aoa

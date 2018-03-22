@@ -15,8 +15,6 @@ library(rlang)
 library(modelr) # ch 7b
 library(binom) # ch2
 library(tidyverse) # keep tidyverse last to prevent conflicts
-
-# MASS dependency messes up lots of other dplyr code
 # library(robustbase) # appendix-aoa
 # library(arm) # appendix-aoa
 # library(rstan) # appendix-aoa
@@ -51,6 +49,9 @@ if (local_data) {
   write_feather(admins, "data/admins.feather")
   items <- get_item_data()
   write_feather(items, "data/items.feather")
+
+  # cleanup of non-WS/WG instruments
+
 }
 
 
@@ -103,3 +104,8 @@ pred_gcrq <- function(x, mods) {
     return(preds)
   }
 }
+
+### FORM VARIANTS
+WGs <- c("WG", "IC", "Oxford CDI")
+WSs <- c("WS", "TC")
+

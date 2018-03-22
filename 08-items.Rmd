@@ -399,5 +399,3 @@ ggplot(bind_rows(understands_step_corrs, produces_step_corrs),
 ```
 
 
-Demographic effects. In this part, we focus on demographic differences in the learning of individual words. Braginsky et al. (2016b) reported on gender differences in the particular words in early vocabulary; we generalize this analysis to birth order and socio-economic status
-

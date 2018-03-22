@@ -1,6 +1,6 @@
 # Demographic Variables {#demographics}
 
-Chapter \@ref(vocab) examined differences across languages in the distribution of children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order, and develop a framework for comparing the magnitude of these effects.
+Chapter \@ref(vocab) examined cross-linguistic consistency and variability in children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. Our goal is to develop a framework for comparing the magnitude of these effects.
 
 One important tension in this chapter reflects many earlier discussions of variability in CDI scores [from @fenson1994, @feldman2000, and @eriksson2012, among others]. While some demographic differences in vocabulary are quite consistent -- substantially so, as it turns out -- the overall proportion of variance in vocabulary that they capture is still relatively limited. We will examine a number of different perspectives on how to quantify this relationship, moving back and forth between emphasizizing consistency in differences in the central tendency and emphasizing the limited size of these effects relative to the variability documented in Chapter \@ref(vocab).
 
@@ -35,9 +35,10 @@ vocab_data <- admins %>%
 # get means split by demographic features
 get_demo_means <- function (data, demo = ~sex, measure = ~production) {
   data %>%
-    group_by(language, !!demo, age) %>%
+    group_by(language, form, !!demo, age) %>%
     mutate(measure = !!measure) %>%
-    summarise(median = median(.data$measure / n))
+    summarise(median = median(.data$measure / n), 
+              n = n())
 }
 
 # get glmrob models on demographic feature
@@ -46,47 +47,55 @@ get_demo_models <- function (data, demo = ~sex, measure = ~production) {
     mutate(measure = !!measure, 
            no_measure = n - .data$measure, 
            demo = !!demo) %>%
-    split(.$language) %>%
-    map(function(x) {
+    unite(langform, language, form, sep = ".") %>%
+    split(.$langform) %>%
+    map(possibly(function(x) {
+      # print(x$langform[1])
       robustbase::glmrob(cbind(measure, no_measure) ~ age * demo - demo,
                          family = "binomial",
                          data = x)
-    })
+    }, otherwise = NULL))
 }
 
 # predict from models in the given age range so that you can plot
 get_demo_preds <- function (models, data, demo = ~sex) {
-  min_age <- min(data$age)
-  max_age <- max(data$age)
   
   demo_name <- quo_text(demo) # fixme - how do I coerce this more nicely?
   
-  expand.grid(language = names(models),
-              age = min_age:max_age,
-              demo = unique(pull(data, !!demo))) %>%
-    split(.$language) %>%
-    map_df(function(x) {
-      x$pred <- predict(models[[x$language[1]]],
-                        newdata = x, type = "response")
-      return(x)
-    }) %>%
-    as.tibble %>%
-    rename(!!demo_name := demo)
+  data %>%
+    unite(langform, language, form, sep = ".") %>%
+    split(.$langform) %>%
+    map_df(possibly(function(x) {
+      print(x$langform[1])
+      
+      new_data <- list(age = min(x$age):max(x$age),
+                       demo = unique(pull(x, !!demo)), 
+                       langform = x$langform[1]) %>%  
+        cross_df()    
+      
+      new_data$pred <- predict(models[[x$langform[1]]],
+                               newdata = new_data, type = "response")
+      return(new_data)
+    }, otherwise = tibble())) %>%
+    rename(!!demo_name := demo) %>%
+    separate(langform, into = c("language","form"), sep = "\\.") 
 }
 
 # get the appropriate coefficient from the model and corresponding p value
 get_demo_model_summary <- function (models, level = "Male") {
-  coef_name <- paste0("age:demo", quo_name(level))
+  coef_name <- quo(paste0("age:demo", level))
   
   models %>%
-    map_df(function(x) {
-      p <- summary(x)$coefficients[UQE(coef_name),'Pr(>|z|)']
-      beta <- summary(x)$coefficients[UQE(coef_name),'Estimate']
+    map_df(possibly(function(x) {
+      # print(x$language[1])
+      p <- summary(x)$coefficients[eval_tidy(coef_name), 'Pr(>|z|)']
+      beta <- summary(x)$coefficients[eval_tidy(coef_name), 'Estimate']
       return(data_frame(beta = round(beta, 4), 
                         p = round(p, 4)))
-    }) %>%
-    mutate(language = names(models)) %>% # ugly 
-    select(language, beta, p) %>%
+    }, otherwise = tibble(p = NA, beta = NA))) %>%
+    mutate(langforms = names(models)) %>% # ugly 
+    separate(langforms, into = c("language","form"), sep = "\\.") %>%
+    select(language, form, beta, p) %>%
     arrange(beta)
 }
 
@@ -95,17 +104,17 @@ get_mmad_ratio <- function(data, measure = quo(production), demo = quo(sex),
                            high_level = "Female", low_level = "Male") {
   
   data %>%
-    group_by(language, age, !!demo) %>%
-    filter(n() > 10) %>%
+    group_by(language, form, age, !!demo) %>%
+    filter(n() > 5) %>%
     mutate(measure = !!measure) %>%
     summarise(median = median(measure),
               mad = mad(measure),
               n = n()) %>%
-    group_by(language, age) %>%
-    filter(any(UQE(demo) == high_level), 
-           any(UQE(demo) == low_level)) %>% # one of each necessary level
-    summarise(mmad = (median[UQ(demo) == high_level] - median[UQ(demo) == low_level]) / 
-                mean(mad[UQ(demo) %in% c(high_level, low_level)]),
+    group_by(language, form, age) %>%
+    filter(any(!! get_expr(demo) == high_level), 
+           any(!! get_expr(demo) == low_level)) %>% # one of each necessary level
+    summarise(mmad = (median[!!(demo) == high_level] - median[!!(demo) == low_level]) / 
+                mean(mad[!!(demo) %in% c(high_level, low_level)]),
               n = sum(n)) %>%
     filter(is.finite(mmad))
 }                           
@@ -113,10 +122,11 @@ get_mmad_ratio <- function(data, measure = quo(production), demo = quo(sex),
 # summarise MMAD across development, again for given demoraphic
 get_mmad_summary <- function(data) {
   data %>%
-    group_by(language) %>%
+    group_by(language, form) %>%
     summarise(mmad_mean = weighted.mean(mmad, w = n),
               n = n()) %>%
     filter(n > 4) %>% # more than four age points - FIXME, arbitrary
+    ungroup %>%
     mutate(language = fct_reorder(language, mmad_mean)) 
 }
 ```
@@ -127,7 +137,8 @@ get_mmad_summary <- function(data) {
 
 # build all the combos to analyze
 analysis_combos <- left_join(tibble(form = c("WG","WG","WS"), 
-                                    measure = c(quo(comprehension),quo(production),quo(production)), 
+                                    measure = c(quo(comprehension),
+                                                quo(production),quo(production)), 
                                     measure_name = c("comprehension","production","production"),
                                     index = 1:3), 
                              expand.grid(index = 1:3, 
@@ -151,15 +162,24 @@ analyses <- analysis_combos %>%
         demo <- demo_data$demo[1][[1]]
         measure <- demo_data$measure[1][[1]]
         
+        form_class <- demo_data$form[1]
+        
+        # deal with form classes to include TC/IC etc.
+        if (form_class == "WS") { 
+          forms <- WSs 
+        } else if (form_class == "WG") { 
+          forms <- WGs 
+        }
+        
         data <- vocab_data %>%
-          filter(!is.na(!!demo), form == demo_data$form[1])
+          filter(!is.na(!!demo), form %in% forms) 
         
         results <- list()
         results$means <- get_demo_means(data, demo = demo, measure = measure)
         results$models <- get_demo_models(data, demo = demo, measure = measure)
         results$preds <- get_demo_preds(results$models, data, demo = demo)
         results$model_summary <- get_demo_model_summary(results$models, 
-                                                        level = demo_data$reference_level[1])
+                                                        level = demo_data$high_level[1])
         results$mmad_ratio <- get_mmad_ratio(data, measure = measure, demo = demo, 
                                              high_level = demo_data$high_level[1], 
                                              low_level = demo_data$reference_level[1])
@@ -192,8 +212,8 @@ We begin by examining Words and Gestures data on comprehension.
 ```{r 3_gender_plot_wg_comp}
 ggplot(analyses$WG.comprehension$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~language) +
-  geom_point(alpha = .2) +
+  facet_wrap(~interaction(language, form)) +
+  geom_point(aes(size = n),  alpha = .2) +
   geom_line(data = analyses$WG.comprehension$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
   scale_x_continuous(breaks = seq(8,
@@ -201,8 +221,10 @@ ggplot(analyses$WG.comprehension$sex$means,
                      limits = c(8, 20),
                      name = "Age (months)") +
   scale_y_continuous(breaks = c(0,.5,1), limits = c(0,1), 
-                     name = "Median Comprehension Vocabulary (proportion)") +
-  theme(legend.position = "bottom")
+                     name = "Median Comprehension") +
+  theme(legend.position = "bottom",
+        strip.text.x = element_text(size = 7)) + 
+  scale_size(guide = FALSE)
 ```
 
 Our first plot shows comprehension on Words and Gestures. Visual inspection of the data suggest limited differences, but a female advantage in some languages (most pronounced in Korean, Latvian, and Hebrew). Note that many authors do not find gender  differences in early comprehension [e.g., @eriksson2012]. @feldman2000 also did not using a large, relatively representative American dataset, though they had data only from younger children (10-13 months). 
@@ -221,18 +243,20 @@ But as in the previous chapter, we have the problem of non-normal distributions.
 
 ```{r 3b_gender_mmad_wg_comp}
 ggplot(analyses$WG.comprehension$sex$mmad_ratio,
-       aes(x = age, y = mmad, col = language)) +
+       aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)")
+  ylab("MMAD (Female Advantage)") +
+  scale_color_discrete(name="") + 
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 7)) 
 ```
 
 ```{r}
 ggplot(analyses$WG.comprehension$sex$mmad_summary, 
-       aes(x = language, y = mmad_mean)) + 
+       aes(x = interaction(language, form), y = mmad_mean)) + 
   geom_point() + 
   coord_flip() + 
   ylab("Language") + 
@@ -248,8 +272,8 @@ Applying this measure to the data on comprehension, we see a quite small average
 ```{r 3_gender_plot_wg_prod}
 ggplot(analyses$WG.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~language) +
-  geom_point(alpha=.2) +
+  facet_wrap(~interaction(language, form)) +
+  geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.production$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
   scale_x_continuous(breaks = seq(8,
@@ -257,8 +281,10 @@ ggplot(analyses$WG.production$sex$means,
                      limits = c(8, 20),
                      name = "Age (months)") +
   scale_y_continuous(breaks = c(0,.5,1), limits = c(0,1), 
-                     name = "Median Production Vocabulary (proportion)") +
-  theme(legend.position = "bottom")
+                     name = "Median Production") +
+  theme(legend.position = "bottom",
+        strip.text.x = element_text(size = 7)) + 
+  scale_size(guide = FALSE)
 ```
 
 
@@ -270,7 +296,7 @@ We next turn to production data. As in many of our subsequent analyses, data on 
 
 ```{r 3b_gender_mmad_wg_prod}
 a <- ggplot(analyses$WG.production$sex$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
+            aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
@@ -279,7 +305,7 @@ a <- ggplot(analyses$WG.production$sex$mmad_ratio,
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = language, y = mmad_mean)) + 
+b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(language, form), y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -298,8 +324,8 @@ Examining the MMAD effect size measures, it is clear that there is limited signa
 ```{r 3_gender_plot_ws_prod}
 ggplot(analyses$WS.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~language) +
-  geom_point(alpha=.2) +
+  facet_wrap(~interaction(language, form)) +
+  geom_point(alpha=.2, aes(size=n)) +
   geom_line(data = analyses$WS.production$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
   scale_x_continuous(breaks = seq(16,
@@ -307,8 +333,10 @@ ggplot(analyses$WS.production$sex$means,
                      limits = c(16, 36),
                      name = "Age (months)") +
   scale_y_continuous(breaks = c(0,.5,1), limits = c(0,1), 
-                     name = "Median Production Vocabulary (proportion)") +
-  theme(legend.position = "bottom")
+                     name = "Median Production") +
+  theme(legend.position = "bottom",
+        strip.text.x = element_text(size = 7)) + 
+  scale_size(guide = FALSE)
 ```
 
 ```{r}
@@ -320,7 +348,7 @@ We next turn to production data on the Words and Sentences instrument, which we 
 
 ```{r 3b_gender_mmad_ws_prod}
 a <- ggplot(analyses$WS.production$sex$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
+            aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
@@ -329,7 +357,9 @@ a <- ggplot(analyses$WS.production$sex$mmad_ratio,
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WS.production$sex$mmad_summary, aes(x = language, y = mmad_mean)) + 
+b <- ggplot(analyses$WS.production$sex$mmad_summary, 
+            aes(x = interaction(language, form),
+                y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -383,16 +413,18 @@ Only `r length(unique(filter(vocab_data,!is.na(birth_order))$language))` languag
 ggplot(analyses$WG.comprehension$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~language) +
-  geom_point(alpha=.2) +
+  facet_wrap( ~interaction(language, form)) +
+  geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.comprehension$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
-  ylab("Median Comprehension Vocabulary (proportion)") +
+  ylab("Median Comprehension") +
   ylim(c(0, 1)) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        strip.text.x = element_text(size = 7)) + 
+  scale_size(guide = FALSE)
 ```
 
 
@@ -402,7 +434,7 @@ analyses$WG.comprehension$birth_order$model_summary %>%
   datatable
 
 a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
+            aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
@@ -411,7 +443,8 @@ a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WG.comprehension$birth_order$mmad_summary, aes(x = language, y = mmad_mean)) + 
+b <- ggplot(analyses$WG.comprehension$birth_order$mmad_summary, 
+            aes(x = interaction(language, form), y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -431,14 +464,14 @@ grid.arrange(a, b, ncol=2)
 ggplot(analyses$WG.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~language) +
+  facet_wrap( ~interaction(language, form)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.production$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
-  ylab("Median Productive Vocabulary (proportion)") +
+  ylab("Median Productive Vocabulary") +
   ylim(c(0, 1)) +
   theme(legend.position = "bottom")
 
@@ -446,7 +479,7 @@ analyses$WG.production$birth_order$model_summary %>%
   datatable
 
 a <- ggplot(analyses$WG.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
+            aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
@@ -473,14 +506,14 @@ grid.arrange(a, b, ncol=2)
 ggplot(analyses$WS.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~language) +
+  facet_wrap( ~interaction(language, form)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WS.production$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
   scale_x_continuous(breaks = seq(16, 36, 8),
                      limits = c(16, 36),
                      name = "Age (months)") +
-  ylab("Median Productive Vocabulary (proportion)") +
+  ylab("Median Productive Vocabulary") +
   ylim(c(0, 1)) +
   theme(legend.position = "bottom")
 
@@ -488,7 +521,7 @@ analyses$WS.production$birth_order$model_summary %>%
   datatable
 
 a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
+            aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
@@ -497,7 +530,8 @@ a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WS.production$birth_order$mmad_summary, aes(x = language, y = mmad_mean)) + 
+b <- ggplot(analyses$WS.production$birth_order$mmad_summary, 
+            aes(x = interaction(language, form), y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -517,24 +551,26 @@ From health to education, children from lower socioeconomic status (SES) backgro
 Cross-national comparisons may shed light on the factors that lead to relations between SES and children’s vocabulary outcomes. On the one hand, relatively constant relations across language communities that vary widely in indirect and direct factors that shape learning would provide prima facie support for genetic explanations. In contrast, a greater degree of cross-national variability would point to the origins of SES effects in aspects of children’s early environments that vary with SES to differing degrees across countries (e.g., Siddiqi et al., 2007; L. C. H. Fernald et al., 2012). Our current study addresses this issue in very young children using data from the MacArthur-Bates Communicative Development Inventories (MB-CDI), a family of reliable and valid parent-report instruments for measuring early vocabulary development in children under 3 years (Fenson et al., 2007). We take advantage of Wordbank, a new database of more than 10,000 MB-CDI instruments from six countries (Frank et al., 2016).  We use maternal education as a proxy for SES, following previous work suggesting that maternal education is strongly related to SES variation (Bornstein et al., 2003; Hoff, 2002). 
 
 
-@arriaga2000
+<!-- @arriaga2000 -->
 
-We use maternal education as a proxy for socio-economic status.
+<!-- We use maternal education as a proxy for socio-economic status. -->
 
 ```{r 3b_momed_wg_comp}
 ggplot(analyses$WG.comprehension$mom_ed$means,
        aes(x = age, y = median, colour = mom_ed,
            label = mom_ed)) +
-  facet_wrap( ~language) +
+  facet_wrap( ~interaction(language, form)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.comprehension$mom_ed$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
-  ylab("Median Comprehension Vocabulary (proportion)") +
+  ylab("Median Comprehension") +
   ylim(c(0, 1)) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        strip.text.x = element_text(size = 7)) + 
+  scale_size(guide = FALSE)
 ```
 
 
@@ -576,11 +612,11 @@ ggplot(analyses$WG.production$mom_ed$means,
   facet_wrap( ~language) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.production$mom_ed$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Birth Order") +
+  scale_colour_solarized(name="Maternal Education") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
-  ylab("Median Productive Vocabulary (proportion)") +
+  ylab("Median Productive Vocabulary") +
   ylim(c(0, 1)) +
   theme(legend.position = "bottom")
 
@@ -594,10 +630,10 @@ a <- ggplot(analyses$WG.production$mom_ed$mmad_ratio,
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
+  ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WG.production$birth_order$mmad_summary, aes(x = language, y = mmad_mean)) + 
+b <- ggplot(analyses$WG.production$mom_ed$mmad_summary, aes(x = language, y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -617,11 +653,11 @@ ggplot(analyses$WS.production$mom_ed$means,
   facet_wrap( ~language) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WS.production$mom_ed$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Birth Order") +
+  scale_colour_solarized(name="Maternal Education") +
   scale_x_continuous(breaks = seq(16, 36, 8),
                      limits = c(16, 36),
                      name = "Age (months)") +
-  ylab("Median Productive Vocabulary (proportion)") +
+  ylab("Median Productive Vocabulary") +
   ylim(c(0, 1)) +
   theme(legend.position = "bottom")
 
@@ -682,7 +718,6 @@ ggplot(early_comprehension,
 ```
 
 
-## Discussion
 
 <!-- ```{r} -->
 <!-- gender <- gender_mmad_summary %>% -->

@@ -1,0 +1,84 @@
+# Theoretical Foundations {#theory-intro}
+
+THEORY CHAPTER VERY FRAGMENTARY
+
+
+
+
+As we noted in the introduction, observing what "hangs together" in development can provide clues to the underlying system [@bates1988]. We think of these correlations as loose targets for theorists: a successful theory can gain support by providing an account for these observations. But what kinds of theories can these observations differentiate?
+
+```{r theoryspace, fig.cap="A caricature of the traditional theoretical space in langauge acquisition research."}
+knitr::include_graphics("images/axis.jpeg")
+```
+
+
+BORNSTEIN QUOTE
+
+Weaker claim - the same variability is there across cultures/languages.
+
+DEMOGRAPHIC EXAMPLE - SES is variable, gender is consistent
+
+Relationship between size and variability should be informative
+
+A call to action to care about size and variability
+
+Measurement
+
+
+
+## Process Universals
+
+NEW AXIS FIGURE
+
+VARIABLE                       CONSISTENT
+<--------------------------------------->
+SES / NOUN BIAS         GRAMMAR/LEX  COV  GENDER
+
+
+CULTURE/LANGUAGE            COGNITION
+
+What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
+
+
+To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
+
+The first is the vast semantic and syntactic variation across the world's languages. For example, as illustrated by @slobin1996 and others, languages vary dramatically in the ways that they assign semantic content to verbs. If the semantic partition of verbs led to large-scale differences in the timeline or mechanism of acquisition, we might see systematic differences in the predictors of age of acquisition for verbs in these languages, yet we do not. Further, languages are more and less morphologically complex; while the most morphologically-complex, polysynthetic languages are not represented in Wordbank, we do have data from both Mandarin (less complex) and Russian (more complex). If morphosyntax were relatively more or less important in the acquisition of particular languages, we might expect radical differences in the noun bias, the grammar-lexicon correlation, or the predictors of age of acquisition across languages, yet we do not observe these. Of course, there is always room for finer-grained predictions -- with more detailed predictive models and better typological coverage, perhaps we will discover such signatures. Our point here is merely that neither morphosyntactic nor semantic variability across languages dominates the process of vocabulary acquisition. 
+
+The second set of language-specific particulars that might lead to variance across languages is the vast cultural variability across the communities represented in the Wordbank data. With N continents represented, we see both "individualist" and "collectivist" cultures [@markus1991,@nisbett] as well as both "loose fit" and "tight fit" cultures [@gelfand2011]. To the extent that parenting differs across these -- and there is good evidence that it does [CITES] -- we should see variance in the trajectory of language learning. For example, as mentioned previously, it would be quite reasonable to predict that the female advantage in vocabulary acquisition might vary as a function of cross-national gender biases [@nosek2009]. Yet it is strikingly consistent overall, again arguing that -- at the broadest level, at least -- cultural factors do not dominate other child-internal processes in the acquisition of vocabulary. 
+
+QUANTITATIVE PREDICTIONS: 
+
+if language moves your signature mean then you are a particular, not a universal
+- SES
+- noun bias
+
+
+
+Claims of universals should always be taken with a grain of salt. In our case, a variety of caveats apply, from the relatively limited sample size N = `r length(unique(instruments$language))` [see @piantadosi2014 for guidance on claims about strict universals] to the strong Indo-European bias amongst the languages in the database. At best our claim is of a statistical universal rather than an absolute universal. In addition, nearly all of our data come from populations in relatively industrialized nations [cf. @henrich2010]. FURTHER CAVEATS
+
+### What is a Process?
+
+
+- IT'S ABOUT LEARNING - UPTAKE OF INPUT
+
+- COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING
+
+- UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES
+
+- IN THE CONTEXT OF CHIlD AND ENVIRONMENT
+
+- BRONFENBRENNER-ESQ
+
+
+
+### Local vs. Global Processes
+
+Back to the slobin/competition model argument. 
+
+Are some languages harder to learn than others. At some level yes, Danish is really hard [@bleses]
+
+We're not trying to argue against the data on spanish clitics or agglutinatives in russian. 
+
+On the other hand, the general developmental course is consistent. And degree of variation.
+
+The universal is in the general aspects, not the details. 

@@ -1,4 +1,5 @@
-# Individual Words: Demographics {#words-demographics}
+# Individual Words: Demographics^[An earlier version of the gender analyses below was presented to the Boston University Conference on Language Development in 2016] {#words-demographics}
+
 
 <!-- <!-- ## Predicting Which Words are Harder or Easier --> -->
 

@@ -15,8 +15,10 @@ library(rlang)
 library(modelr) # ch 7b
 library(binom) # ch2
 library(lme4)
+library(ggfortify)
 library(tidyverse) # keep tidyverse last to prevent conflicts
 select <- dplyr::select
+summarise <- dplyr::summarise
 # library(robustbase) # appendix-aoa
 # library(arm) # appendix-aoa
 # library(rstan) # appendix-aoa

@@ -218,137 +218,132 @@ We end by considering people, places, and time words. People is a highly-variabl
 
 In contrast to the heteroeneity in people words, words for places and, especially, time words were almost uniformly under-represented in children's vocabulary. As noted above, time is known to be conceptually difficult for children. Interestingly, though, less has been written about children's understanding of geographical vocabulary. Time words offer a number of conceptual challenges in terms of mapping an ordered set of durations (second < minute < hour < day, etc.) to a set of concepts that do not map cleanly onto perceptual experience. In some sense, many of the same conceptual difficulties hold true for larger locational/geographical hierarchies (neighborhood < city < state < country). Or alternatively, the under-representation of places in children's early vocabualry may simply reflect the relative lack of diversity of their experiences with some of the items that traditionally populate this section (e.g., *beach*, *camping*, *church*, *circus* to name the first four). See Appendix \@ref(appendix-psychometrics) for some evidence that *camping* especially may be variable in children's experience.
 
-## Dimensionality Reduction Approach
+## Dimensionality reduction
 
-### WS Production Nouns
 
 ```{r ccs_princomp}
 areas <- filter(area_summary_ordered, 
-              form == "WS", 
+              form %in% WSs, 
               measure == "produces", 
-              category %in% included_cats)
+              category %in% included_cats) %>%
+  unite(langform, language, form) %>%
+  filter(category != "sounds")
 
-areas %<>%
-  dplyr::select(language, category, mean) %>%
+areas <- areas %>%
+  dplyr::select(langform, category, mean) %>%
   spread(category, mean) 
 
-
-areas_matrix <- as.matrix(dplyr::select(areas, -language))
-row.names(areas_matrix) <- areas$language
+areas_matrix <- as.matrix(dplyr::select(areas, -langform))
+row.names(areas_matrix) <- areas$langform
 
 # remove NAs 
-areas_matrix <- areas_matrix[!rowSums(!is.finite(areas_matrix)),]
+areas_matrix_clean <- areas_matrix[!rowSums(!is.finite(areas_matrix)),]
 
-pcs <- princomp(areas_matrix)
+pcs <- princomp(areas_matrix_clean)
 ```
 
-Scree plot, indicating that PC1 dominates (for nouns, at least). 
+Our next analysis of these data takes an exploratory dimensionality-reduction approach. Rather than examining each semantic category individually, we consider the space defined by variation in semantic preferences by running principal components analysis (PCA) on these data. PCA is a dimensionality reduction technique that projects high-dimensional data (e.g., bias by semantic category for each language) into a set of orthogonal dimensions where lower dimensions capture as much of the variance as possible. 
 
-```{r ccs_scree}
-plot(pcs)
+Standard PCA requires no missing data, thus we removed languages with missing categories. This analysis thus includes `r nrow(areas_matrix_clean)` language/form combinations and `r ncol(areas_matrix_clean)` categories (we exclude sounds because of the issue with Russian sounds and other missing data). 
+
+```{r}
+
+autoplot(pcs,  label.repel = TRUE, loadings.label.repel = TRUE)
+autoplot(pcs,  loadings = TRUE, loadings.label=TRUE, 
+         shape=FALSE, label=FALSE, loadings.label.repel=TRUE)
 ```
 
-```{r ccs_loadings}
-knitr::kable(as.data.frame(pcs$loadings[,]), digits = 2)
-```
+The figures above show the data projected into the space of the first two principal components and the loadings of semantic categories on these two components, respectively. 
 
-```{r ccs_loadings_plot}
-pc_df <- data_frame(c1 = pcs$scores[,"Comp.1"], 
-                     c2 = pcs$scores[,"Comp.2"], 
-                    language = row.names(pcs$scores))
-                    
-                    
-ggplot(pc_df, aes(x = c1, y = c2, col = language, label = language)) + 
-  geom_point() +
-  ggrepel::geom_label_repel() + 
-  xlab("Sounds, Vehicles, Games, Animals, Clothing (PC1)") + 
-  ylab("Sounds, not Vehicles (PC2)") + 
-  scale_color_solarized(guide = FALSE)
-```
+Several observations emerge: Mandarin and Cantonese WS data are very far towards the direction of people (indicating that these datasets are unusual in this respect). Second, Kiswahili and Kigiriama are especially far in the direction of  outside and place words, perhaps consistent with the datasets being collected in rural and semi-rural areas. Many Northern European datasests (as well as Korean) are clustered at the far left, with high scores on vehicles, clothing, animals. Overall, this analysis reveals some interesting structure, but care should be taken not to over-interpret. In particular, within culture differences (e.g., Mandarin TC vs. Mandarin WS) are as large in size as between-culture differences.
 
-## Specific semantic categories
+## Discussion
 
-```{r ccs_load_sem_data, eval=FALSE}
-sem_data <- read_feather("data/semantic_data.feather")
-```
+In these exploratory analyses, we considered representation of different semantic categories across the different languages in our dataset. We found some surprising consistencies. Place words and time words were under-represented, while sounds, games and routines, and body parts were over-represented. These consistencies were also contrasted with some areas of greater variability: for example, the preference for vehicles, clothing, and animals appeared to be a somewhat coherent dimension in our data, with many (northern) European languages higher on this dimension than non-European languages. Still, substantial caution is necessary in interpreting these results as the sample of non-European languages is small. 
 
-Body parts as an example.
+<!-- ## Specific semantic categories -->
 
-```{r ccs_load_bp}
-# bp <- filter(sem_data, category == "body_parts")
-bp <- read_feather("data/body_parts_data.feather")
-```
+<!-- ```{r ccs_load_sem_data, eval=FALSE} -->
+<!-- sem_data <- read_feather("data/semantic_data.feather") -->
+<!-- ``` -->
 
-Get unilemma set. 
+<!-- Body parts as an example. -->
 
-```{r ccs_bp_unilemma}
-bp_unis_df <- bp %>%
-  filter(!is.na(uni_lemma)) %>%
-  group_by(language, uni_lemma) %>%
-  count %>%
-  group_by(uni_lemma) %>%
-  count 
+<!-- ```{r ccs_load_bp} -->
+<!-- # bp <- filter(sem_data, category == "body_parts") -->
+<!-- bp <- read_feather("data/body_parts_data.feather") -->
+<!-- ``` -->
 
-bp_unis <- filter(bp_unis_df, nn > 4) %>% pull(uni_lemma)
+<!-- Get unilemma set.  -->
 
-bp_unis_df %>%
-  arrange(desc(nn)) %>%
-  datatable
-```
+<!-- ```{r ccs_bp_unilemma} -->
+<!-- bp_unis_df <- bp %>% -->
+<!--   filter(!is.na(uni_lemma)) %>% -->
+<!--   group_by(language, uni_lemma) %>% -->
+<!--   count %>% -->
+<!--   group_by(uni_lemma) %>% -->
+<!--   count  -->
 
-Get those high-coverage uni-lemmas. 
+<!-- bp_unis <- filter(bp_unis_df, nn > 4) %>% pull(uni_lemma) -->
 
-```{r ccs_bp_unilemma_means}
-bp_means <- bp %>%
-  filter(uni_lemma %in% bp_unis) %>%
-  group_by(language, uni_lemma, age) %>%
-  summarise(mean = mean(produces), 
-            n = n())
-```
+<!-- bp_unis_df %>% -->
+<!--   arrange(desc(nn)) %>% -->
+<!--   datatable -->
+<!-- ``` -->
 
-Plot. 
+<!-- Get those high-coverage uni-lemmas.  -->
 
-```{r ccs_bp_plots}
-body_unis <- c("arm", "leg", "hand","foot", "finger", "toe") # "face", "hand", "head", 
-face_unis <- c("cheek","eaer","eye","hair","mouth","nose","tongue","tooth")
+<!-- ```{r ccs_bp_unilemma_means} -->
+<!-- bp_means <- bp %>% -->
+<!--   filter(uni_lemma %in% bp_unis) %>% -->
+<!--   group_by(language, uni_lemma, age) %>% -->
+<!--   summarise(mean = mean(produces),  -->
+<!--             n = n()) -->
+<!-- ``` -->
 
-upper_lower <- filter(bp_means, n > 10, language != "Korean",  
-              uni_lemma %in% body_unis) %>%
-  mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"), 
-         size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg", 
-                          uni_lemma %in% c("hand","foot") ~ "hand/foot",
-                          uni_lemma %in% c("finger","toe") ~ "finger/toe"))
+<!-- Plot.  -->
 
-ggplot(upper_lower, 
-       aes(x = age, y = mean, col = size)) + 
-  # geom_point(aes(size = n)) +
-  geom_smooth(se= FALSE, aes(lty = body_position), span = 1) + 
-  facet_wrap(~language) + 
-  scale_color_solarized() + 
-  theme(legend.position = "bottom") + 
-  ylab("Proportion Production") + 
-  xlab("Age (months)")
-```
+<!-- ```{r ccs_bp_plots} -->
+<!-- body_unis <- c("arm", "leg", "hand","foot", "finger", "toe") # "face", "hand", "head",  -->
+<!-- face_unis <- c("cheek","eaer","eye","hair","mouth","nose","tongue","tooth") -->
+
+<!-- upper_lower <- filter(bp_means, n > 10, language != "Korean",   -->
+<!--               uni_lemma %in% body_unis) %>% -->
+<!--   mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"),  -->
+<!--          size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg",  -->
+<!--                           uni_lemma %in% c("hand","foot") ~ "hand/foot", -->
+<!--                           uni_lemma %in% c("finger","toe") ~ "finger/toe")) -->
+
+<!-- ggplot(upper_lower,  -->
+<!--        aes(x = age, y = mean, col = size)) +  -->
+<!--   # geom_point(aes(size = n)) + -->
+<!--   geom_smooth(se= FALSE, aes(lty = body_position), span = 1) +  -->
+<!--   facet_wrap(~language) +  -->
+<!--   scale_color_solarized() +  -->
+<!--   theme(legend.position = "bottom") +  -->
+<!--   ylab("Proportion Production") +  -->
+<!--   xlab("Age (months)") -->
+<!-- ``` -->
 
 
-```{r ccs_bp_face_plots}
-face <- filter(bp_means, n > 10, language != "Korean",  
-              uni_lemma %in% face_unis) 
-# %>%
-  # mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"), 
-  #        size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg", 
-  #                         uni_lemma %in% c("hand","foot") ~ "hand/foot",
-  #                         uni_lemma %in% c("finger","toe") ~ "finger/toe"))
+<!-- ```{r ccs_bp_face_plots} -->
+<!-- face <- filter(bp_means, n > 10, language != "Korean",   -->
+<!--               uni_lemma %in% face_unis)  -->
+<!-- # %>% -->
+<!--   # mutate(body_position = ifelse(uni_lemma %in% c("arm","hand","finger"), "upper", "lower"),  -->
+<!--   #        size = case_when(uni_lemma %in% c("arm","leg") ~ "arm/leg",  -->
+<!--   #                         uni_lemma %in% c("hand","foot") ~ "hand/foot", -->
+<!--   #                         uni_lemma %in% c("finger","toe") ~ "finger/toe")) -->
 
-ggplot(face, 
-       aes(x = age, y = mean, col = uni_lemma)) + 
-  # geom_point(aes(size = n)) + 
-  geom_smooth(se= FALSE, span = 1) + # aes(lty = body_position), 
-  facet_wrap(~language) + 
-  scale_color_solarized() + 
-  theme(legend.position = "bottom") + 
-  ylab("Proportion Comprehension") + 
-  xlab("Age (months)")
-```
+<!-- ggplot(face,  -->
+<!--        aes(x = age, y = mean, col = uni_lemma)) +  -->
+<!--   # geom_point(aes(size = n)) +  -->
+<!--   geom_smooth(se= FALSE, span = 1) + # aes(lty = body_position),  -->
+<!--   facet_wrap(~language) +  -->
+<!--   scale_color_solarized() +  -->
+<!--   theme(legend.position = "bottom") +  -->
+<!--   ylab("Proportion Comprehension") +  -->
+<!--   xlab("Age (months)") -->
+<!-- ``` -->
 
 

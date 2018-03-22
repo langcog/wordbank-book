@@ -14,6 +14,7 @@ library(gridExtra)
 library(rlang)
 library(modelr) # ch 7b
 library(binom) # ch2
+library(lme4)
 library(tidyverse) # keep tidyverse last to prevent conflicts
 select <- dplyr::select
 # library(robustbase) # appendix-aoa

@@ -1,6 +1,6 @@
 # Individual Datasets {#appendix-data}
 
-This appendix gi the specifics of the data represented in each of the languages of the book.  
+This appendix give the specifics of the data represented in each of the languages of the book.  
 
 ```{r}
 datasets <- jsonlite::fromJSON("../wordbank/static/json/datasets.json")

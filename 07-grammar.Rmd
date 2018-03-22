@@ -2,24 +2,25 @@
 
 How does abstract structure emerge during language learning? On some accounts, children's early syntax emerges from direct generalizations from particular lexical items, while on others, syntactic structure is acquired independently and follows its own timetable. We summarize the state of grammatical development across languages, noting the challenges posed by radically different representations of grammar across forms. We also replicate and generalize analyses linking grammatical generalization to children’s vocabulary size. We end by investigating the idea that that age modulates the relationship between grammar and the lexicon.^[Material in this chapter first reported in @braginsky2015b.]
 
-```{r 7_complexity_forms}
-morphosyntax_fields <- c("combine", "complexity", "word_forms", "word_endings",
-                         "word_forms_nouns", "word_forms_verbs", 
-                         "word_endings_nouns", "word_endings_verbs", 
-                         "small_parts_of_words", "word_complexity")
+```{r 7_prep_data, child="_grammar_lex.Rmd", eval=FALSE}
+```
 
-# complexity_forms <- items %>%
-#   filter(form == "WS") %>%
-#   group_by(language, type) %>%
-#   summarise(n = n()) %>%
-#   group_by(language) %>%
-#   filter(any(morphosyntax_fields %in% type)) %>%
-#   spread(type, n) %>%
-#   dplyr::select_(.dots = c("language", "word", morphosyntax_fields)) #%>%
-# 
-# num_langs <- n_distinct(complexity_forms$language)
+```{r 7_load_data}
+grammar_summary <- read_feather("data/grammar_summary.feather")
+grammar_data_coded <- read_feather("data/grammar_data_coded.feather")
 
-num_langs <- 4   # TODO!
+grammar_combine <- grammar_summary %>%
+  filter(coded_type == "combine")
+
+grammar_morphosyntax <- grammar_summary %>%
+  ungroup() %>%
+  filter(coded_type %in% c("complexity", "word_forms")) %>%
+  mutate(coded_type = factor(coded_type,
+                             levels = c("word_forms", "complexity"),
+                             labels = c("Word forms", "Complexity"))) %>%
+  filter(language != "French (France)")  # TODO!!!
+
+num_langs <- n_distinct(grammar_summary$language)
 ```
 
 
@@ -43,14 +44,12 @@ In this chapter, we explore relations between estimates of children's vocabulary
 
 In addition, we explore a hypothesis that was not explicitly tested in these earlier studies: that there remains age-related variance in grammatical development unexplained by vocabulary development. While the overall relationship between grammar and the lexicon provides support for lexicalist theories, the identification of age-related variance would suggest the presence of developmental processes that regulate grammar learning, above and beyond those captured by measures of vocabulary size. Such age-related processes could be either maturational or experiential, and either domain-general (like working memory) or language-specific (like grammatical competency). Importantly, since both nativist and constructivist theories could in principle predict age-linked variance in grammatical development, our goal is not to differentiate these theories, but instead to test this novel prediction and explore its implications for future work on understanding the processes of grammatical development. 
 
-An additional contribution of work is that, due to the size of our dataset, we are able to make more fine-grained distinctions than the initial cut between grammar and the lexicon. In particular, we distinguish morphology from multi-word syntax, since morphological generalizations might be more specifically dependent on vocabulary size than those requiring more global, sentence-level syntactic regularities. Similarly, we distinguish age-related contributions to different parts of the vocabulary. Lexical items like verbs and even more so function words require some syntactic information to learn [@gleitman1990] and hence might be more linked to age-related factors that extend beyond vocabulary size.
+An additional contribution of work is that, due to the size of our dataset, we are able to make more fine-grained distinctions than the initial cut between grammar and the lexicon. In particular, we distinguish morphology from multi-word syntax, since morphological generalizations might be more specifically dependent on vocabulary size than those requiring more global, sentence-level syntactic regularities. <!--Similarly, we distinguish age-related contributions to different parts of the vocabulary. Lexical items like verbs and even more so function words require some syntactic information to learn [@gleitman1990] and hence might be more linked to age-related factors that extend beyond vocabulary size.-->
 
 
 ## Methods
 
-<!-- We used Wordbank, a structured database of CDI data, to aggregate and archive CDI data across languages and labs. Wordbank is a repository that stores CDI data in a relational database for easy querying and analysis. By collecting language development data at an unprecedented scale, Wordbank enables the exploration of novel hypotheses about the course of lexical and grammatical development. At the time of writing, Wordbank includes data in four languages: English \cite{fenson2007}, Spanish \cite{jackson1993}, Norwegian \cite{simonsen2014}, and Danish \cite{bleses2008}, with both cross-sectional and longitudinal data. This dataset encompasses norming data from each language as well as a number of smaller-scale studies, some of which did not provide data from the grammar sections. %Table \ref{table:num} presents the total number of administrations and the number of administrations for which grammar (Word Form and Complexity) data were also available. -->
-
-In all `r num_langs` languages, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from the Words & Sentences form, administered to children ages 16--32 months. Each of these instruments includes a Vocabulary section, which asks whether the child produces each of around 700 words from a variety of semantic and syntactic categories (e.g., _foot_, _run_, _so_); a Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). Each language's instrument is not just a translation of the English form, but rather was constructed and normed to reflect the lexicon and grammar of that language. 
+In all `r num_langs` languages included in these analyses, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from the Words & Sentences form, administered to children ages 16--32 months. Each of these instruments includes a Vocabulary section, which asks whether the child produces each of around 700 words from a variety of semantic and syntactic categories (e.g., _foot_, _run_, _so_); a Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). Each language's instrument is not just a translation of the English form, but rather was constructed and normed to reflect the lexicon and grammar of that language. 
 
 
 To analyze lexical and grammatical development, we derive several measures. Each child's Vocabulary Size is computed as the proportion of words on the corresponding CDI form that the child is reported to produce. Similarly, each child's Word Form score is the proportion of word forms they are reported to produce, and their Complexity score the proportion of complexity items for which they are reported to use the more complex form. We compute all of these quantities as proportions to make the scales comparable across languages.
@@ -62,388 +61,264 @@ To analyze lexical and grammatical development, we derive several measures. Each
 <!-- In the current study, we present data from XYZ children XYZ months old, using adaptations of the CDI Words \& Sentences form in four languages: English, Spanish, Norwegian, and Danish. We replicate classic findings of strong lexicon-grammar relations and patterns of vocabulary composition across four languages. We also extend these findings through novel analyses afforded by the Wordbank database.  -->
 
 
-Show number of items in each relevant section.
-```{r 7_n_items, fig.cap="Number of items in the words, word forms, and complexity sections for all those instruments with complexity items."}
-# n_admin <- admins %>%
-#   filter(language %in% complexity_forms$language) %>%
-#   group_by(language) %>%
-#   summarise(n = n())
+### Items
 
-# complexity_forms %>%
-#   gather(type, num_items, -language) %>%
-#   mutate()
-#left_join(complexity_forms, n_admin) %>% datatable(rownames = FALSE)
-```
-
-
-Some utility functions for transforming data values. Note the hack of thinking of everything that's not complexity as being word form. Also - some complexity categories are not coded. 
-
-```{r 7_util_funs}
-get_coded_type <- function(type, definition) {
-  if (type == "combine") return("combine")
-  if (type != "complexity") return("word_form")
-  parts <- definition %>% str_split(" / ") %>% unlist()
-  if (length(parts) != 2) {
-    write_lines(sprintf("definition '%s' doesn't parse", definition),
-                "bad_defs.txt", append = TRUE)
-    return(NA)
-  }
-  lengths <- parts %>% str_split("[ ']") %>% map(length) %>% unlist()
-  if (lengths[1] == lengths[2]) return("morphology") else return("syntax")
-}
-
-get_value <- function(type, value) {
-  # type_values <- list(
-  #   "complexity" = "complex",
-  #   "small_parts_of_words" = c("sometimes", "often"),
-  #   "word_complexity" = "complex",
-  #   "word_forms" = "produces",
-  #   "word_endings" = c("sometimes", "often"),
-  #   "word_endings_nouns" = "produces",
-  #   "word_endings_verbs" = "produces",
-  #   "word_forms_nouns" = "produces",
-  #   "word_forms_verbs" = "produces"
-  # )
-  # value == type_values[[type]]
-  value %in% c("produces", "yes", "complex", "sometimes", "often")
-}
-```
-
-## Grammar and the lexicon
-
-
-Get kid by item data for wordform and complexity items all languages and aggregate them.
-```{r 7_grammar_data_fun}
-grammar_items <- items %>%
-  filter(form == "WS", type %in% morphosyntax_fields) %>%
-  mutate(coded_type = map2_chr(type, definition, get_coded_type) %>%
-           factor(levels = c("combine", "word_form", "morphology", "syntax"),
-                  labels = c("Combine",
-                             "Word Form",
-                             "Complexity (Morphological)",
-                             "Complexity (Syntactic)")))
-
-num_words <- items %>%
-  filter(form == "WS", type == "word") %>%
-  group_by(language) %>%
-  summarise(n = n())
-
-get_grammar_data <- function(lang) {
-  print(lang)
+```{r 7_item_tables}
+grammar_items <- grammar_data_coded %>%
+  ungroup() %>%
+  distinct(language, form, coded_type, definition)
   
-  lang_grammar_items <- grammar_items %>% filter(language == lang)
-  lang_num_words <- num_words[num_words$language == lang,]$n
-  
-  lang_admins <- admins %>%
-    filter(language == lang) %>%
-    dplyr::select(language, form, age, data_id, production) %>%
-    mutate(vocab_mean = production / lang_num_words)
-
-  lang_grammar_data <- get_instrument_data(instrument_language = lang,
-                                           instrument_form = "WS", 
-                                           items = lang_grammar_items$item_id,
-                                           iteminfo = lang_grammar_items,
-                                           administrations = lang_admins)
-  
-  lang_grammar_data %>%
-    group_by(data_id, type) %>%
-    mutate(no_section = all(is.na(value))) %>%
-    filter(!no_section) %>%
-    mutate(raw_value = value,
-           value = ifelse(is.na(raw_value), "", raw_value),
-           value = get_value(unique(type), value)) %>%
-    dplyr::select(language, age, data_id, vocab_mean, item_id, definition, type,
-           coded_type, raw_value, value)
-  
-}
-```
-
-```{r 7_get_grammar_data, eval=FALSE}
-grammar_data <- grammar_items$language %>%
-  unique() %>%
-  sort() %>%
-  map_df(get_grammar_data)
-write_feather(grammar_data, "data/grammar_data.feather")
-```
-
-Get by kid summary data for all languages.
-```{r 7_grammar_summary}
-grammar_data <- read_feather("data/grammar_data.feather")
-
-grammar_summary <- grammar_data %>%
-  filter(!is.na(coded_type)) %>%
-  group_by(language, coded_type, data_id, age, vocab_mean) %>%
-  summarise(sum = sum(value),
-            diff = length(value) - sum,
-            mean = sum / length(value))
-```
-
-
-```{r 7_items}
 grammar_items %>%
-  filter(coded_type == "Word Form") %>%
-  dplyr::select(language, type, definition) %>%
-  arrange(language, type) %>%
+  filter(coded_type == "word_forms") %>%
   datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
             options = list(pageLenth = 20))
-  
+
 grammar_items %>%
-  filter(coded_type == "Complexity (Syntactic)") %>%
-  dplyr::select(language, type, definition) %>%
-  arrange(language, type) %>%
+  filter(coded_type == "complexity") %>%
   datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
             options = list(pageLenth = 20))
 ```
 
-Plot score as a function of vocabulary size for each language and measure with model prediction curves.
+## Results
 
-Note that cubic clms don't work that well here. 
 
-```{r 7_grammar_data_plot}
-ggplot(filter(grammar_summary, coded_type != "Combine"),
-       aes(x = vocab_mean, y = mean)) + 
-  geom_jitter(alpha = 0.2, size = 0.75) +
-  facet_grid(coded_type ~ language) + 
-  geom_smooth(span = 1) +
-  # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-  #             size = 1, se = FALSE)
-  labs(x = "Vocabulary size (proportion of items)",
-       y = "Grammar score (proportion of items)")
-```
+### Combine
 
-Just complexity.
+```{r 7_combine_plot, fig.height=4.5}
+combine_compare <- grammar_combine %>%
+  gather(predictor, value, age, production) %>%
+  mutate(predictor = factor(
+    predictor, levels = c("age", "production"),
+    labels = c("Age (months)", "Productive vocabulary size")))
 
-```{r 7_grammar_data_plot_complexity}
-ggplot(filter(grammar_summary, coded_type == "Complexity (Syntactic)", language != "Slovak"),
-       aes(x = vocab_mean, y = mean)) + 
-  geom_jitter(alpha = 0.2, size = 0.75) +
-  facet_wrap(~ language) + 
-  geom_smooth(span = 1) +
-  # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-  #             size = 1, se = FALSE)
-  labs(x = "Vocabulary size (proportion of items)",
-       y = "Grammar score (proportion of items)")
-```
-
-```{r 7_combine_age_plot}
-combine_age <- grammar_data %>%
-  filter(coded_type == "Combine") %>%
-  group_by(language, age) %>%
-  summarise(prop = sum(value) / n(),
-            n = n())
-
-ggplot(filter(combine_age, n > 21), aes(x = age, y = prop)) +
-  facet_wrap(~language) +
-  geom_jitter() +
+ggplot(combine_compare, aes(x = value, y = positive, colour = language)) +
+  facet_wrap(~predictor, scales = "free_x") +
   geom_smooth(method = "glm", method.args = list(family = "binomial"),
               se = FALSE) +
-  labs(x = "Age (months)", y = "Proportion of children combining")
-```
-
-```{r 7_combine_vocab_plot}
-combine_vocab <- grammar_data %>%
-  filter(coded_type == "Combine") %>%
-  mutate(vocab_bin = cut(vocab_mean, breaks = seq(0, 1, 0.05),
-                         include.lowest = TRUE)) %>%
-  group_by(language, vocab_bin) %>%
-  summarise(prop = sum(value) / n(),
-            n = n())
-
-ggplot(filter(combine_vocab, n > 21), aes(x = vocab_bin, y = prop)) +
-  facet_wrap(~language) +
-  geom_jitter() +
-  geom_smooth(method = "glm", method.args = list(family = "binomial"),
-              se = FALSE) +
-  labs(x = "Vocabulary size (proportion of items)",
-       y = "Proportion of children combining")
+  scale_colour_solarized(name = "") +
+  labs(x = "", y = "Probability of combine") +
+  theme(legend.position = "bottom")
 ```
 
 
+### Grammar and lexicon relationship
 
-Define our signature here as $r^2$.
+```{r 7_vocab_models}
+vocab_model <- function(inst_data) {
+  lm(prop ~ I(production_prop ^ 3) + I(production_prop ^ 2) +
+       production_prop + 0, data = inst_data)
+}
 
-```{r}
-r2 <- function(x) {
-    r2 <- summary(lm(mean ~ vocab_mean, data = x))$r.squared
-    d <- data_frame(language = x$language[1], 
-                      coded_type = x$coded_type[1], 
-                      r2 = r2)
-    return(d)
-    }
+vocab_models <- grammar_morphosyntax %>%
+  group_by(language, instrument, coded_type) %>%
+  nest() %>%
+  mutate(
+    model = map(data, vocab_model),
+    rsq = map_dbl(model, ~summary(.x)$r.squared),
+    rsq_print = sprintf("r² = %.2f", rsq)
+  )
 
-r2s <- filter(grammar_summary, coded_type != "Combine") %>%
-  group_by(language, coded_type) %>%
-  do(r2(.))
-
-cvs <- r2s %>%
-  filter(is.finite(r2)) %>%
+cvs <- vocab_models %>%
   group_by(coded_type) %>%
-  summarise(cv = sd(r2) / mean(r2)) %>%
-  mutate(foo = "and Vocab (r2)") %>%
-  unite(measure, coded_type, foo)
+  summarise(cv = sd(rsq) / mean(rsq)) %>%
+  mutate(foo = "and Productive Vocabulary (r²)") %>%
+  unite(measure, coded_type, foo, sep = " ")
 
 write_feather(cvs, "data/cvs/grammar_lex.feather")
 ```
 
+```{r 7_grammar_data_plot}
+plot_vocab_type <- function(type) {
+  ggplot(filter(grammar_morphosyntax, coded_type == type),
+         aes(x = production_prop, y = prop)) +
+    geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
+    facet_wrap(~language) +
+    geom_smooth(method = "lm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x + 0,
+                size = 1, se = FALSE) +
+    geom_text(aes(label = rsq_print), x = 0.15, y = 1, size = 3, family = font,
+              data = filter(vocab_models, coded_type == type)) +
+    labs(x = "Productive vocabulary size (proportion of items)",
+         y = "Grammar score (proportion of items)",
+         title = type)
+}
+```
+
+```{r 7_grammar_plot_wordform}
+plot_vocab_type("Word forms")
+```
+```{r 7_grammar_plot_complexity, fig.height=7}
+plot_vocab_type("Complexity")
+```
+
+### Age effect
+
+```{r 7_grammar_age_models}
+vocab_step <- 0.01
+
+inst_model <- function(inst_data) {
+  lm(prop ~ I(production_prop ^ 3) * age + I(production_prop ^ 2) * age +
+       production_prop * age + 0, data = inst_data)
+}
+
+inst_predictions <- function(inst_data, inst_model) {
+  data_shape <- cross_df(list(age = seq(min(inst_data$age), max(inst_data$age)),
+                              production_prop = seq(0, 1, vocab_step)))
+  augment(inst_model, newdata = data_shape, type.predict = "response")
+}
+
+grammar_models <- grammar_morphosyntax %>%
+  group_by(language, instrument, coded_type) %>%
+  nest() %>%
+  mutate(
+    model = map(data, inst_model),
+    rsq = map_dbl(model, ~summary(.x)$r.squared),
+    predictions = map2(data, model, inst_predictions)
+  )
+
+num_age_admins <- grammar_morphosyntax %>%
+  ungroup() %>%
+  distinct(language, instrument, age, data_id) %>%
+  count(instrument, age)
+
+grammar_fits <- grammar_models %>%
+  select(language, instrument, coded_type, predictions) %>%
+  unnest() %>%
+  group_by(language, instrument) %>%
+  mutate(age_group = cut(age, 2, labels = c("younger", "older"))) %>%
+  left_join(num_age_admins) %>%
+  group_by(language, instrument, coded_type, age_group, production_prop) %>%
+  summarise(mean_fitted = weighted.mean(.fitted, n))
+
+grammar_morphosyntax <- grammar_morphosyntax %>%
+  group_by(instrument) %>%
+  mutate(age_group = cut(age, 2, labels = c("younger", "older")))
+```
+
+```{r 7_grammar_age_plots}
+grammar_age_plot <- function(type) {
+  ggplot(filter(grammar_morphosyntax, coded_type == type),
+         aes(x = production_prop, y = prop, colour = age_group)) +
+    facet_wrap(~language) +
+    geom_jitter(alpha = 0.1, size = 0.70, shape = 1) +
+    geom_line(aes(y = mean_fitted), size = 0.9,
+              data = filter(grammar_fits, coded_type == type)) +
+    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+    labs(x = "Productive vocabulary size (proportion of items)",
+         y = "Grammar score (proportion of items)",
+         title = type) +
+    scale_color_solarized(name = "") +
+    theme(legend.position = "top")
+}
+```
+```{r 7_age_plot_wordforms}
+grammar_age_plot("Word forms")
+```
+```{r 7_age_plot_complexity, fig.height=7}
+grammar_age_plot("Complexity")
+```
+
+```{r 7_grammar_diffs, fig.height=4}
+grammar_areas <- grammar_fits %>%
+  group_by(language, instrument, coded_type, age_group) %>%
+  summarise(area = sum(mean_fitted * vocab_step, na.rm = TRUE))
+
+ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
+  facet_wrap(~coded_type) +
+  geom_point() +
+  geom_line(aes(group = language)) +
+  geom_dl(aes(label = language),
+          method = list(first.qp, dl.trans(x = x - 0.2),
+                        cex = 0.7, fontfamily = font)) +
+  scale_colour_solarized(guide = FALSE) +
+  labs(x = "", y = "Area of grammar score\n across vocabulary size") +
+  expand_limits(x = 0)
+```
+
+### Individual items
+
+```{r 7_item_models}
+item_age_model <- function(item_data) {
+  glm(value ~ age + 0, data = item_data, family = "binomial")
+}
+
+item_vocab_model <- function(item_data) {
+  glm(value ~ production_prop + 0, data = item_data, family = "binomial")
+}
+
+item_age_vocab_model <- function(item_data) {
+  glm(value ~ production_prop + age + 0, data = item_data, family = "binomial")
+}
+
+item_models <- grammar_data_coded %>%
+  filter(!is.na(value), coded_type != "word_endings") %>%
+  group_by(language, form, coded_type, item_id, definition) %>%
+  nest() %>%
+  mutate(age_model = map(data, item_age_model),
+         vocab_model = map(data, item_vocab_model),
+         age_vocab_model = map(data, item_age_vocab_model))
+
+item_effects <- item_models %>%
+  gather(model_predictors, model, age_model, vocab_model, age_vocab_model) %>%
+  mutate(coefs = map(model, tidy),
+         AIC = map_dbl(model, AIC),
+         converged = map_lgl(model, ~.x$converged)) %>%
+  select(-data, -model) %>%
+  unnest()
+
+model_comp <- item_effects %>%
+  filter(converged,
+         model_predictors %in% c("vocab_model", "age_vocab_model")) %>%
+  distinct(language, coded_type, item_id, definition, model_predictors, AIC) %>%
+  spread(model_predictors, AIC) %>%
+  mutate(AIC_diff = age_vocab_model - vocab_model,
+         AIC_gain = AIC_diff < 0)
+```
+
+```{r 7_item_age_effects}
+complexity_cats <- items %>%
+  filter(type == "complexity") %>%
+  distinct(language, form, item_id, complexity_category)
+
+age_effects <- item_effects %>%
+  filter(converged, model_predictors == "age_vocab_model", term == "age") %>%
+  left_join(complexity_cats) %>%
+  mutate(
+    coded_type = if_else(
+      !is.na(complexity_category) & nchar(complexity_category) > 0,
+      complexity_category, coded_type),
+    coded_type = factor(
+      coded_type,
+      levels = c("combine", "word_forms", "morphology", "syntax", "complexity"),
+      labels = c("Combine", "Word forms", "Complexity (morphological)",
+                 "Complexity (syntactic)", "Complexity (unknown)"))
+  ) %>%
+  ungroup() %>%
+  arrange(language, form, estimate) %>%
+  mutate(order_item = paste(language, item_id, sep = "_"),
+         order_item = factor(order_item, levels = order_item))
+```
+
+```{r 7_item_effects_plot, fig.height=8}
+ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
+  facet_wrap(~language, scales = "free", ncol = 3) +
+  geom_pointrange(aes(ymin = estimate - 1.96 * std.error,
+                      ymax = estimate + 1.96 * std.error), fatten = 1.5) +
+  scale_colour_solarized(name = "") +
+  scale_x_discrete(name = "", breaks = NULL) +
+  theme(legend.position = "bottom", legend.direction = "vertical")
+```
 
 
-
-<!-- \begin{figure*}[t!] -->
-<!-- \centering -->
-<!-- \includegraphics[width=.72\textwidth]{plots/grammar_data_plot-1.png} -->
-<!-- \caption{\label{fig:grammar} Each point shows an individual child, indicating their total vocabulary size and Word Form or Complexity score, with color showing their age bin (English $n=4137$; Spanish $n=1094$; Norwegian $n=8505$; Danish $n=2074$). Panels show different languages, and curves are logistic regression models fit separately for each language and measure. The models were specified as {\small{\tt{score $\sim$ vocab + age}}}.}  -->
-<!-- \end{figure*} -->
-
-By two years, most children have a sizable working vocabulary, including verbs, prepositions, and closed class forms that perform grammatical work. They are also beginning to use multi-word combinations (e.g., _mommy sock_) and may demonstrate productive use of inflectional morphemes (e.g., past tense _-ed_). Previous studies have found a strong connection between the size of the lexicon and grammatical development as measured by the Complexity section, in many languages including English, Italian, Hebrew, and Spanish [see @bates1999]. However, no studies have had the power and cross-linguistic representation to go beyond this initial finding to explore relations to grammatical items that vary in morphosyntactic features. We extend this work by examining grammatical development using two measures: the Word Form checklist as a window into morphology and the Complexity checklist as a window into syntax. For each measure, we investigate the effects of vocabulary size and age.
-
-This suggests that the mechanisms guiding vocabulary and grammar learning are highly interdependent [@tomasello2003;@bresnan2001], a view at odds with the nativist assumption that grammar emerges independent of the lexicon [@chomsky1981].
-
-
-
-<!-- \begin{figure} -->
-<!-- \begin{center} -->
-<!-- \includegraphics[width=\linewidth]{plots/grammar_coef_plot-1.png} -->
-<!-- \end{center} -->
-<!-- \caption{\label{fig:coefs_grammar} For each language and measure, the model's age effect coefficient. Ranges show the 95\% confidence interval of the coefficient estimate. Across languages, Complexity has a substantially larger age effect than Word Form.} -->
-<!-- \end{figure} -->
-
+<!--
 
 We wanted to estimate how much variance in children's syntactic and morphological development remains after accounting for that child's vocabulary size. Specifically, we asked whether age provides additional predictive power beyond vocabulary size. To estimate this effect, we fit logistic regression models to each child's Word Form and Complexity scores, predicting score as a function of vocabulary size and age in months. For all languages and measures, the evidence is overwhelmingly in favor of the model using both vocabulary and age as predictors, as compared to the model using only vocabulary (the smallest difference in AIC is 76).
-
-```{r}
-#Main effects were always exceedingly reliable, but the interaction term had negligible magnitude and so we omit it here.
-```
 
 Figure~\ref{fig:grammar} shows data and models: each dot represents a child's score on a measure, while curves show the relationship between score and vocabulary size.
 %As seen most clearly for English and Norwegian---the languages for which we have most data---
 For all languages, the curves for Word Form are near-overlapping, showing little differentiation across age groups. This indicates only small contributions of age above and beyond vocabulary. In contrast, the curves for Complexity show a characteristic fan across age groups, indicating that the relationship between vocabulary size and complexity score is modulated by age. %The Spanish and Danish data show less of a clear complexity curve fan, possibly because of the relatively small number of data points in the youngest age group.
 
-<!-- \begin{figure*} -->
-<!-- \centering -->
-<!-- \includegraphics[width=.45\textwidth]{plots/item_coef_plot_norwegian-1.png} -->
-<!-- \includegraphics[width=.45\textwidth]{plots/item_coef_plot_english-1.png}\\ -->
-<!-- \includegraphics[width=.45\textwidth]{plots/item_coef_plot_danish-1.png} -->
-<!-- \includegraphics[width=.45\textwidth]{plots/item_coef_plot_spanish-1.png} -->
-<!-- \caption{\label{fig:interactions} For each language and item, the model's age effect coefficient. Ranges show the 95\% confidence interval of the coefficient estimate. Across languages, Word Form items tend to have smaller age effects, Morphological Complexity items tend to have middling age effects, and Syntactic Complexity items tend to have larger age effects. (Note: No Spanish complexity items had exclusively morphological content.)} -->
-<!-- \end{figure*} -->
-
-```{r 7_age_hist}
-# ggplot(grammar_data, aes(x=age)) + 
-#   geom_histogram() + 
-#   facet_wrap(~language)
-```
-
 Choosing cut points here is hard, since the age distribution/density is different from language to language. 
-
-```{r 7_age_plot, fig.width=8}
-# grammar_summary_age <- grammar_data %>%
-#   filter(!is.na(age)) %>%
-#   mutate(age_group = cut(age, c(12, 20, 28, 36))) %>%
-#   group_by(language, coded_type, data_id, age_group, vocab_mean) %>%
-#   summarise(sum = sum(value),
-#             diff = length(value) - sum,
-#             mean = sum / length(value))
-# 
-# ggplot(grammar_summary_age %>% filter(!(language %in% c("Slovak","Mandarin"))),
-#        aes(x = vocab_mean, y = mean, fill = age_group, col = age_group)) + 
-#   geom_jitter(alpha = 0.2, size = 0.75) +
-#   facet_grid(coded_type ~ language) + 
-#   # geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
-#   #             size = 1, se = FALSE) + 
-#   geom_smooth(method = "loess", se = FALSE, span = 1) + 
-#   scale_colour_solarized() + 
-#   scale_fill_solarized()
-```
-
-
-<!--
-UNUSED MODEL BASED ANALYSES BELOW
-
-Plot age effect coefficients for each language and measure.
-```{r grammar_coef_plot, fig.width=6, fig.height=4, eval=FALSE}
-ggplot(grammar.model.metrics, 
-       aes(x=language, y=age.coef, fill=measure)) + 
-  geom_bar(position="dodge", stat="identity") + 
-  geom_linerange(aes(ymin=age.coef-1.96*age.se, ymax=age.coef+1.96*age.se), 
-                 position = position_dodge(width=.9)) +
-  ylab("Age effect coefficient") + 
-  xlab("") +
-  theme_bw(base_size = 14) +
-  scale_fill_brewer(palette="Set2",
-                    name="Measure") +
-  theme(legend.position = c(0.15,0.86),
-        legend.text = element_text(size=14),
-        legend.title = element_text(size=15),
-        legend.key.height = unit(1.5, "char"),
-        legend.key = element_blank(),
-        legend.background = element_rect(fill="transparent"),
-        text=element_text(family=font))
-```
-
-Fit models for each wordform and complexity item and get their age coefficients.
-```{r item_models, eval=FALSE}
-item.models <- grammar.data %>%
-  group_by(language, item, coded.type) %>%
-  do(model = glm(value ~ vocab.mean + age, data = ., family = "binomial")) %>%
-  mutate(coef = coef(model)["age"],
-         se = se.coef(model)["age"])
-```
-
-Function for plotting age effect coefficients by item for a language.
-```{r item_coef_plot_fun, eval=FALSE}
-plot.item.coefs <- function(item.models, lang) {
-  
-  lang.item.models <- filter(item.models, language == lang) %>%
-    arrange(coef) %>%
-    mutate(item = factor(item, levels=item))
-  
-  item.plot <- ggplot(lang.item.models,
-                      aes(x=item, y=coef, fill=coded.type, label=item)) +
-    geom_bar(stat="identity", position="identity", alpha=.5, width=0.9) +
-    geom_linerange(aes(ymin=coef-1.96*se, ymax=coef+1.96*se),
-                   position = position_dodge(width=.9)) +
-    theme_bw(base_size = 12) +
-    scale_y_continuous(name="Age Effect Coefficient") +
-    scale_x_discrete(name="",breaks=NULL) +
-    annotate("text", x = length(lang.item.models$item)/2,
-             y = min(lang.item.models$coef-1.96*lang.item.models$se), vjust=0,
-             label = lang, size = 9, family=font) +
-    scale_fill_brewer(palette="Set2", name="Item Type", drop=FALSE) +
-    theme(legend.position = c(0.22,0.82),
-          legend.text = element_text(size=14),
-          legend.title = element_text(size=13),
-          legend.key = element_blank(),
-          legend.key.height = unit(1.5, "char"),
-          text = element_text(family=font),
-          axis.title.y = element_text(size=16),
-          axis.text.y = element_text(size=13))
-  
-  return(item.plot)
-  
-  }
-```
-
-Plot item interactions for Norwegian.
-```{r item_coef_plot_norwegian, fig.width=8, fig.height=4, eval=FALSE}
-plot.item.coefs(item.models, "Norwegian")
-```
-
-Plot item interactions for English.
-```{r item_coef_plot_english, fig.width=8, fig.height=4, eval=FALSE}
-plot.item.coefs(item.models, "English")
-```
-
-Plot item interactions for Danish.
-```{r item_coef_plot_danish, fig.width=8, fig.height=4, eval=FALSE}
-plot.item.coefs(item.models, "Danish")
-```
-
-Plot item interactions for Spanish.
-```{r item_coef_plot_spanish, fig.width=8, fig.height=4, eval=FALSE}
-plot.item.coefs(item.models, "Spanish")
-```
-
--->
 
 Because of the size of our samples, all main effects and interactions are highly significant. To assess the extent of the age contribution to children's morphological and syntactic development, we compared the coefficients of Word Form and Complexity models. Figure~\ref{fig:coefs_grammar} shows the coefficient of the age effect for each measure across languages. In each language, the age effect coefficient is substantially larger for Complexity than Word Form, indicating a greater age effect on those items that generally align with syntax than morphology.
 
@@ -451,84 +326,14 @@ Given the heterogeneous nature of the CDI instruments, particularly in the Compl
 
 We then fit predictive models as above separately for every item. Figure \ref{fig:interactions} shows the age effect coefficient of each item. In general, there is a three-way split: age effects are smallest for Word Form items, then Morphological Complexity items, and largest for Syntactic Complexity items, suggesting more syntactic phenomena have greater age contributions. 
 
-Building on previous analyses that showed a strong relationship between lexical and grammatical development, we added age into this relationship. Across languages, our measures of syntactic development consistently showed greater age modulation than measures of morphological development. Further distinguishing between items that were more reflective of morphology than syntax, we again found greater age effects for more syntactic items. Thus, this analysis provides evidence for a relationship between syntactic development and age \emph{not} captured by lexical development.
-
+Building on previous analyses that showed a strong relationship between lexical and grammatical development, we added age into this relationship. Across languages, our measures of syntactic development consistently showed greater age modulation than measures of morphological development. Further distinguishing between items that were more reflective of morphology than syntax, we again found greater age effects for more syntactic items. Thus, this analysis provides evidence for a relationship between syntactic development and age _not_ captured by lexical development.
+-->
 
 
 ## Discussion
 
-The current study revisits classic findings but also explores novel questions regarding lexicon-grammar relations and vocabulary composition through Wordbank, a newly-developed web-based tool for cross-linguistic analyses of large CDI datasets. Our results provided general support for a lexicalist view, in that, in `r num_langs` languages, variance in vocabulary production strongly aligned with variance in grammar. However, we also estimated additional age-related contributions, specifically contrasting the links to morphological forms vs. syntactic constructions, and for different lexical categories. In general, we find that measures of grammar that are more closely aligned with syntax are modulated by age to a greater extent than those reflecting inflectional morphology. Also, we find that the trajectories of predicate and function word representation in the vocabulary are modulated by age to a greater extent than noun representation (albeit with some variability across languages). Both findings suggest a place for developmental processes that facilitate grammatical acquisition beyond pure lexical growth.
+The current study revisits classic findings but also explores novel questions regarding lexicon-grammar relations and vocabulary composition through Wordbank, a newly-developed web-based tool for cross-linguistic analyses of large CDI datasets. Our results provided general support for a lexicalist view, in that, in `r num_langs` languages, variance in vocabulary production strongly aligned with variance in grammar. However, we also estimated additional age-related contributions, specifically contrasting the links to morphological forms vs. syntactic constructions, and for different lexical categories. In general, we find that measures of grammar that are more closely aligned with syntax are modulated by age to a greater extent than those reflecting inflectional morphology. <!-- Also, we find that the trajectories of predicate and function word representation in the vocabulary are modulated by age to a greater extent than noun representation (albeit with some variability across languages). Both findings suggest a place for developmental processes that facilitate grammatical acquisition beyond pure lexical growth. -->
 
-Our analyses suggest interesting new areas of research regarding possible mechanisms driving children's early lexical development and how those mechanisms might support children's transition from single words to more morphosyntactically complex utterances. One possibility is that these developments are dependent on maturational factors that operate on grammatical development in a domain-specific way, independent of lexical-semantic processes. Another possibility is that age-related effects represent more domain-general learning mechanisms, such as attention or working memory, that provide differential support for sentence-level processes than word-internal ones \cite{gathercole2014}. Future studies should also explore the extent to which lexical and age-related processes are shaped, either independently or in tandem, by features of the learning environments that children experience \cite<e.g.,>{weisleder2013}.
+Our analyses suggest interesting new areas of research regarding possible mechanisms driving children's early lexical development and how those mechanisms might support children's transition from single words to more morphosyntactically complex utterances. One possibility is that these developments are dependent on maturational factors that operate on grammatical development in a domain-specific way, independent of lexical-semantic processes. Another possibility is that age-related effects represent more domain-general learning mechanisms, such as attention or working memory, that provide differential support for sentence-level processes than word-internal ones [@gathercole2014]. Future studies should also explore the extent to which lexical and age-related processes are shaped, either independently or in tandem, by features of the learning environments that children experience [e.g., @weisleder2013].
 
 Questions about the nature of morphosyntactic representations in early language have often seemed deadlocked. But by mapping out developmental change across large samples and multiple languages, our findings here challenge theories across the full range of perspectives to more fully describe the mechanistic factors underlying the interaction of vocabulary, grammar, and development. 
-
-<!--
-
-```{r}
-# + 
-#   scale_x_continuous(limits = c(0,1), breaks = seq(0,1,.2),
-#                      name = "\nVocabulary Size") + 
-#   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.25),
-#                      "Score (Mean Items)\n") + 
-#   theme_bw(base_size = 11) +
-#   theme(legend.position = c(0.055,0.925),
-#         legend.text = element_text(size=9),
-#         legend.title = element_text(size=9),
-#         legend.key.height = unit(1, "char"),
-#         legend.key.width = unit(0.4, "cm"),
-#         legend.key = element_blank(),
-#         legend.background = element_rect(fill="transparent"),
-#         text=element_text(family=font)) +
-#   scale_color_brewer(type="div", palette=9,
-#                      name="Age Group\n (months)") +
-#   scale_fill_brewer(palette = "Spectral",
-#                     guide=FALSE)
-```
-
-Show these same models broken down by age. 
-
-Fit grammar score models and use them to predict data.
-```{r 7_grammar_predict, eval=FALSE}
-grammar_models <- grammar_summary %>%
-  group_by(language, measure) %>%
-  do(model = glm(cbind(sum, diff) ~ vocab_mean,
-                 data = ., family="binomial"))
-
-get.grammar.model <- function(lang, meas) {
-  return(filter(grammar.models, language == lang, measure == meas)$model[[1]])
-  }
-
-grammar.predicted.data <- grammar.summary %>%
-  group_by(language, measure) %>%
-  mutate(predicted = invlogit(predict.lm(get.grammar.model(unique(language),
-                                                           unique(measure)),
-                                         data = ., family="binomial")))
-```
-
-P
-
-Model comparison: fit grammar models and get their AICs and age coefficients.
-```{r grammar_models, eval=FALSE}
-grammar.model.metrics <- grammar.summary %>%
-  group_by(language, measure) %>%
-  do(model.vocab = glm(cbind(sum,diff) ~ vocab.mean, data = .,
-                       family="binomial"),
-     model.vocab.age = glm(cbind(sum,diff) ~ vocab.mean + age, data = .,
-                           family="binomial"),
-     model.vocab.age = glm(cbind(sum,diff) ~ vocab.mean * age, data = .,
-                           family="binomial")) %>%
-  mutate(AIC.vocab = AIC(model.vocab),
-         AIC.vocab.age = AIC(model.vocab.age),
-         deltaAIC = AIC.vocab - AIC.vocab.age,
-         age.coef = coef(model.vocab.age)["age"],
-         age.se = se.coef(model.vocab.age)["age"])
-```
-
-Show AICs of grammar models.
-```{r grammar_aic, eval=FALSE}
-kable(dplyr::select(grammar.model.metrics,
-             language, measure, AIC.vocab, AIC.vocab.age, deltaAIC))
-```
-
--->

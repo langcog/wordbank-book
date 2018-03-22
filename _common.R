@@ -1,11 +1,9 @@
 library(wordbankr)
 library(langcog)
-library(tidyverse)
 library(directlabels)
 library(forcats)
 library(DT)
 library(quantregGrowth)
-library(stringr)
 library(feather)
 library(ggrepel)
 library(ggdendro) # ch5
@@ -16,7 +14,8 @@ library(gridExtra)
 library(rlang)
 library(modelr) # ch 7b
 library(binom) # ch2
-select <- dplyr::select
+library(tidyverse) # keep tidyverse last to prevent conflicts
+
 # MASS dependency messes up lots of other dplyr code
 # library(robustbase) # appendix-aoa
 # library(arm) # appendix-aoa

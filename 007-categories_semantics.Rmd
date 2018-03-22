@@ -186,7 +186,7 @@ cat_order <- area_summary %>%
 
 ggplot(filter(area_summary, 
               form %in% WSs, 
-              category %in% cat_order[1:4]) %>%
+              category %in% c("sounds","games_routines","vehicles","body_parts")) %>%
          unite(langform, language, form),
        aes(x = langform, y = mean, colour = langform)) +
   facet_grid(.~category) +
@@ -198,12 +198,12 @@ ggplot(filter(area_summary,
   xlab("")
 ```
 
-We can zoom in on the most highly over-represeented categories. The highest mean comes from body parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of body parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest 
+We can zoom in on the most highly over-represeented categories. The highest mean comes from body parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of body parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sounds are quite highly variable but almost all positive, with Russian sounds being the outlier. Inspection of these items shows *negative* developmental trajectories for a number of animal sounds. We believe these data are likely an artifact of parents feeling that they "trade off" with noun labels for animals, and hence should be discounted. Finally, vehicles appear more variable with positive preferences across language families.
 
 ```{r}
 ggplot(filter(area_summary, 
               form %in% WSs, 
-              category %in% cat_order[5:8]) %>%
+              category %in% c("people","places","time_words")) %>%
          unite(langform, language, form),
        aes(x = langform, y = mean, colour = langform)) +
   facet_grid(.~category) +
@@ -214,8 +214,9 @@ ggplot(filter(area_summary,
   ylab("Relative representation in early vocabulary") + 
   xlab("")
 ```
+We end by considering people, places, and time words. People is a highly-variable category, with soem languages under-representing and others over-representing. @tardif2008 speculated that names for people were a substantial part of children's earliest words, but that may reflect that study's use of Mandarin and Cantonese data where people terms are very over-represented due to cultural emphasis on family connections. Surprisingly, despite the relatively multi-generational and family-centric nature of children's experience in Kenya [@alcock2013], people words were relatively under-represented in Kiswahili and Kigiriama. 
 
-
+In contrast to the heteroeneity in people words, words for places and, especially, time words were almost uniformly under-represented in children's vocabulary. As noted above, time is known to be conceptually difficult for children. Interestingly, though, less has been written about children's understanding of geographical vocabulary. Time words offer a number of conceptual challenges in terms of mapping an ordered set of durations (second < minute < hour < day, etc.) to a set of concepts that do not map cleanly onto perceptual experience. In some sense, many of the same conceptual difficulties hold true for larger locational/geographical hierarchies (neighborhood < city < state < country). Or alternatively, the under-representation of places in children's early vocabualry may simply reflect the relative lack of diversity of their experiences with some of the items that traditionally populate this section (e.g., *beach*, *camping*, *church*, *circus* to name the first four). See Appendix \@ref(appendix-psychometrics) for some evidence that *camping* especially may be variable in children's experience.
 
 ## Dimensionality Reduction Approach
 

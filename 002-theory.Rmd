@@ -1,5 +1,68 @@
 # Theoretical Foundations {#theory-intro}
 
+Language in its combinatorial richness is a uniquely human ability. The study of language acquisition has been a traditional locus of the search for the origins of this ability. As such, the history of language acquisition is one of "great debates" between different proposals about the core of human uniqueness. Does language arise from domain-specific adaptations for syntactic structure [@chomsky1981,@chomsky2014]? Or does it arise from a combination of environmental input and sophisticated, general-purpose learning mechanisms [@elman1996]? The traditional axis of debates regarding the origins of language is from domain-general empiricist proposals to domain-specific, nativist proposals. 
+
+
+```{r}
+knitr::include_graphics("images/axis.jpeg")
+```
+
+
+Empiricist proposals tend to emphasize the ability of children to learn structure across domains, the richness of the distributional input that children are exposed to... FILL OUT.
+
+Nativist proposals in contrast tend to focus on the complexity of the grammatical structures that even young children access and their relative rarity in children's environent. FILL OUT.
+
+A third thread in this discussion is the importance of the social and communicative nature of human language [@tomasello2010]. FILL OUT.
+
+Although these alternatives are philosophically appealing, this issue has not progressed scientifically for many years. Typically researchers work in their own siloed traditions (empiricist or nativist), working on individual phenomena that do not make contact with one another -- a classic version of @kuhn1964's "paradigms." From a scientific perspective, these theories are more like frameworks than actual hypotheses about the nature of the data that should be observed. Any individual observation cannot be said to be inconsistent with any but the absolute strongest nativist or empiricist position. 
+
+Because of this looseness in the relationship between theories and data, there is no sense in which our analyses in this book can be said to bear on the classic theoretical debate. Instead, our goal is to shift to a new -- related but distinct -- set of axes. We are interested in universals for the same reason that traditional nativist theorists have been interested in them: we believe that invariant aspects of human language can be evidence about the underlying mechanisms. On the other hand, we depart from this tradition in several ways. 
+
+First, any universal is likely to be a statistical or quantitative universal -- we refer to these as "consistencies." The variation across the world's languages is such that only the most tautological facts will be truly invariant [@evans2009]. Further, we are unlikely to be able to access the kinds of samples that would allow us to make claims of universality [@piantadosi2014]. Thus, we should talk about relative consistency and variability of particular phenomena rather than any sorts of absolutes.
+
+Second, language learning takes place at the timescale of years. CDI forms provide a global snapshot of a child's language at a particular point in time, rather than demonstrating the operation of a particular mechanism or principle. Substantial reconstruction is necessary to understand how processes operating over seconds -- for example, online statistical learning or pragmatic inference -- would result in particular structures accreting over time in the vocabulary. Thus, consistencies we observe are at best the basis for abductive inferences about underlying mechanisms. 
+
+Third, the regularities we observe are in the learning of vocabulary and constructions, rather than syntactic rules. These items *must* be learned from data. Thus any putative universals identified in our investigation must not be "content universals" that specific particular grammatical rules or linkages. They must be "process universals" in the sense that they specify mechanisms or processes that unfold over time and operate over children's interactional input in ways that produce the observed consistencies. 
+
+Finally, the project of this books is fundamentally about empirical unification of phenomena. By replication of analyses across different datasets, we provide a testbed for theoretical ideas that make contact with data. We believe our work here embodies the transformational potential of data. Data can provide precision in measurement, though -- as we are at pains to point out throughout -- doing so requires constant attention to sources of bias.
+
+In the remainder of this theoretical introduction, we expand upon each of these ideas. 
+
+
+## Variability and Consistency
+
+As we noted in the introduction, observing what "hangs together" in development can provide clues to the underlying system [@bates1988]. We think of these correlations as loose targets for theorists: a successful theory can gain support by providing an account for these observations. Crudely put, if a theory posits that some aspect of language acquisition is universal, it should be relatively more consistent in our data. 
+
+What are the units over which we compute variability and consistency? We refer to these as "signatures" -- loosely, things that can vary across populations. In practice, a signature can be the output of any analysis, with the simplest being vocabulary size or variability itself (as in Chapter \@ref(vocab)). Signatures are linked to particular theoretical goals by arguments about the validity of an analysis -- for example, the argument of @bates1994 that the over-representation of nouns in early vocabulary is a meaningful dimension of variation between individuals. A signature for our purposes is thus an analysis that yields a set of numbers. In nearly every substantive chapter of the book, we define one or several signatures whose variability we can measure. 
+
+Different sources of variance provide different sorts of evidence. Variance across cultures and languages can provide evidence on what patterns of acquis
+
+
+
+
+## Timescales and Mechanisms
+
+
+## Process Universals
+
+What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
+
+
+To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
+
+The first is the vast semantic and syntactic variation across the world's languages. For example, as illustrated by @slobin1996 and others, languages vary dramatically in the ways that they assign semantic content to verbs. If the semantic partition of verbs led to large-scale differences in the timeline or mechanism of acquisition, we might see systematic differences in the predictors of age of acquisition for verbs in these languages, yet we do not. Further, languages are more and less morphologically complex; while the most morphologically-complex, polysynthetic languages are not represented in Wordbank, we do have data from both Mandarin (less complex) and Russian (more complex). If morphosyntax were relatively more or less important in the acquisition of particular languages, we might expect radical differences in the noun bias, the grammar-lexicon correlation, or the predictors of age of acquisition across languages, yet we do not observe these. Of course, there is always room for finer-grained predictions -- with more detailed predictive models and better typological coverage, perhaps we will discover such signatures. Our point here is merely that neither morphosyntactic nor semantic variability across languages dominates the process of vocabulary acquisition. 
+
+The second set of language-specific particulars that might lead to variance across languages is the vast cultural variability across the communities represented in the Wordbank data. With N continents represented, we see both "individualist" and "collectivist" cultures [@markus1991,@nisbett] as well as both "loose fit" and "tight fit" cultures [@gelfand2011]. To the extent that parenting differs across these -- and there is good evidence that it does [CITES] -- we should see variance in the trajectory of language learning. For example, as mentioned previously, it would be quite reasonable to predict that the female advantage in vocabulary acquisition might vary as a function of cross-national gender biases [@nosek2009]. Yet it is strikingly consistent overall, again arguing that -- at the broadest level, at least -- cultural factors do not dominate other child-internal processes in the acquisition of vocabulary. 
+
+
+
+
+
+
+## Replication and Theory-Building
+
+One view of our enterprise is that its impact is fundamentally in the consolidation of knowledge through unifying -- replicating -- previous work. Crudely put, we have compiled all of the CDI data that we could, and all of the CDI analyses, and executed the cross of analyses and datasets. This project is thus a cross-linguistic replication study. 
+
 THEORY CHAPTER VERY FRAGMENTARY
 
 - theoretical debates that we sidestep
@@ -13,11 +76,10 @@ THEORY CHAPTER VERY FRAGMENTARY
 
 
 
----- other notes ----
+## Other Notes
 
 
 
-As we noted in the introduction, observing what "hangs together" in development can provide clues to the underlying system [@bates1988]. We think of these correlations as loose targets for theorists: a successful theory can gain support by providing an account for these observations. But what kinds of theories can these observations differentiate?
 
 ```{r theoryspace, fig.cap="A caricature of the traditional theoretical space in langauge acquisition research."}
 knitr::include_graphics("images/axis.jpeg")
@@ -38,8 +100,6 @@ Measurement
 
 
 
-## Process Universals
-
 NEW AXIS FIGURE
 
 VARIABLE                       CONSISTENT
@@ -48,15 +108,6 @@ SES / NOUN BIAS         GRAMMAR/LEX  COV  GENDER
 
 
 CULTURE/LANGUAGE            COGNITION
-
-What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
-
-
-To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
-
-The first is the vast semantic and syntactic variation across the world's languages. For example, as illustrated by @slobin1996 and others, languages vary dramatically in the ways that they assign semantic content to verbs. If the semantic partition of verbs led to large-scale differences in the timeline or mechanism of acquisition, we might see systematic differences in the predictors of age of acquisition for verbs in these languages, yet we do not. Further, languages are more and less morphologically complex; while the most morphologically-complex, polysynthetic languages are not represented in Wordbank, we do have data from both Mandarin (less complex) and Russian (more complex). If morphosyntax were relatively more or less important in the acquisition of particular languages, we might expect radical differences in the noun bias, the grammar-lexicon correlation, or the predictors of age of acquisition across languages, yet we do not observe these. Of course, there is always room for finer-grained predictions -- with more detailed predictive models and better typological coverage, perhaps we will discover such signatures. Our point here is merely that neither morphosyntactic nor semantic variability across languages dominates the process of vocabulary acquisition. 
-
-The second set of language-specific particulars that might lead to variance across languages is the vast cultural variability across the communities represented in the Wordbank data. With N continents represented, we see both "individualist" and "collectivist" cultures [@markus1991,@nisbett] as well as both "loose fit" and "tight fit" cultures [@gelfand2011]. To the extent that parenting differs across these -- and there is good evidence that it does [CITES] -- we should see variance in the trajectory of language learning. For example, as mentioned previously, it would be quite reasonable to predict that the female advantage in vocabulary acquisition might vary as a function of cross-national gender biases [@nosek2009]. Yet it is strikingly consistent overall, again arguing that -- at the broadest level, at least -- cultural factors do not dominate other child-internal processes in the acquisition of vocabulary. 
 
 QUANTITATIVE PREDICTIONS: 
 

@@ -124,7 +124,7 @@ We have limited direct evidence about the effects of particular administration d
 
 In one trial we conducted using electronic administration, we found that basic written instructions were misinterpreted by some proportion of parents (as evinced by an atypical number of floor and ceiling responses). This proportion appeared to decrease when we made an attempt to simplify and illustrate the instructions that we gave. Such experiences suggest -- congruent with the general warnings above -- that caution is warranted in interpreting absolute comparisons between different populations where there are also differences in administration style. 
 
-### Demographics
+### Demographic details
 
 In addition to differences in administration and form, samples from different studies also differ in myriad other ways. The most important of these, especially cultural differences between language communities, are extremely hard to quantify. But we can make a first stab at investigating some similarities and differences between the convenience samples from different studies by comparing demographics where they are available. 
 

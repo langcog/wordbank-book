@@ -1,6 +1,6 @@
 ###### Scripts to support categories_semantics chapter #######
 
-## DATA LOADING PLUS CATEGORY-FINDING
+## DATA LOADING PLUS CATEGORY-FINDING --------------------------
 
 get_cat_comp <- function(input_language, input_form) {
   print(paste(input_language,input_form))
@@ -49,7 +49,7 @@ cat_comp_data <- map2(included_instruments$language,
 
 write_feather(cat_comp_data, "data/cat_comp_data.feather")
 
-## RESAMPLING AND CACHING CODE
+## RESAMPLING AND CACHING CODE  --------------------------
 
 sample_areas <- function(d, nboot = 1000) {
 
@@ -81,5 +81,93 @@ sample_areas <- function(d, nboot = 1000) {
 
 areas <- sample_areas(cat_comp_data, nboot=100)
 write_feather(areas,"data/sem_vocab_comp_areas.feather")
+
+## SEMANTIC CATEGORY CACHING  --------------------------
+get_unilemma_trajectories <- function(target_category = NA,
+                                      uni_lemmas = NA,
+                                      threshold = 10) {
+
+  if (!is.na(target_category)) {
+
+    category_items <- items %>%
+      filter(category == target_category,
+             !is.na(uni_lemma),
+             form %in% WSs)
+  } else {
+    category_items <- items %>%
+      filter(!is.na(uni_lemma),
+             uni_lemma %in% uni_lemmas,
+             form %in% WSs)
+  }
+
+  # include with more than N unilemma languages
+  included_words <- category_items %>%
+    group_by(uni_lemma) %>%
+    summarise(n=n()) %>%
+    filter(n > threshold) %>%
+    pull(uni_lemma)
+
+  # filter
+  all_cat_items <- category_items %>%
+    filter(uni_lemma %in% included_words)
+
+  # get admins for each language and summarise immediately (for space/processing)
+  all_cat_items %>%
+    mutate(langform = paste(language, form, sep = " ")) %>%
+    split(.$langform) %>%
+    map_df(function (cat_items) {
+      print(cat_items$language[1])
+
+      get_instrument_data(language = cat_items$language[1],
+                          form = cat_items$form[1],
+                          items = cat_items$item_id,
+                          administrations = TRUE) %>%
+        mutate(produces = ifelse(is.na(value), FALSE, value == "produces")) %>%
+        select(num_item_id, age, produces) %>%
+        left_join(cat_items %>%
+                    select(num_item_id, definition, language, form, uni_lemma)) %>%
+        group_by(uni_lemma, age, language, form) %>%
+        summarise(ci_lower = binom.confint(x = sum(produces), n = n(),
+                                           method = "bayes")$lower,
+                  ci_upper = binom.confint(x = sum(produces), n = n(),
+                                           method = "bayes")$upper,
+                  mean = mean(produces),
+                  n = n())
+
+    })
+}
+
+# cache various
+# time, color, body parts, logic, number
+time_words <- get_unilemma_trajectories(target_category = "time_words")
+write_feather(time_words, "data/time_words.feather")
+
+
+body_words <- get_unilemma_trajectories(uni_lemmas = c("arm", "leg", "hand",
+                                                       "foot", "finger", "toe") )
+write_feather(body_words, "data/body_words.feather")
+
+
+color_words <- get_unilemma_trajectories(uni_lemmas = c("red","blue","green",
+                                                        "yellow","purple","pink",
+                                                        "orange","brown","gray",
+                                                        "black","white"),
+                                         threshold = 5)
+write_feather(color_words, "data/color_words.feather")
+
+
+logic_words <- get_unilemma_trajectories(uni_lemmas = c("no", "some", "all",
+                                                        "none","and","or",
+                                                        "not","because",
+                                                        "then","if"),
+                                         threshold = 5)
+write_feather(logic_words, "data/logic_words.feather")
+
+# not enoguh number, hard to map space.
+
+# control group
+animal_words <- get_unilemma_trajectories(target_category = "animals")
+write_feather(animal_words, "data/animal_words.feather")
+
 
 

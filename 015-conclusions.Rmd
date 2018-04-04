@@ -79,22 +79,15 @@ ggplot(cvs, aes(x = measure, y = cv)) +
 
 ```{r 8_covs}
 cvs_plot <- cvs %>%
-  filter(measure %in% c("Nouns WS produces", 
-                        "Predicates WS produces", 
-                        "Function Words WS produces", 
-                        "Female advantage", 
-                        "First-born advantage", 
-                        "College advantage", 
-                        "MADM 12-24mo WS production", 
-                        "Word Form_and Vocab (r2)", 
-                        "Complexity (Syntactic)_and Vocab (r2)")) %>%
+  filter(!str_detect(measure, "understands"), 
+         !str_detect(measure, "comprehension")) %>%
   mutate(measure_name = fct_recode(measure,
-                                   "Noun bias" = "Nouns WS produces", 
-                                   "Predicate bias" = "Predicates WS produces", 
-                        "Function word bias" = "Function Words WS produces", 
-                        "Toddler variability" = "MADM 12-24mo WS production", 
-                        "Morphology/vocab relation" = "Word Form_and Vocab (r2)", 
-                        "Grammar/vocab relation" = "Complexity (Syntactic)_and Vocab (r2)"))
+                                   "Noun bias" = "Nouns bias, produces", 
+                                   "Predicate bias" = "Predicates bias, produces", 
+                        "Function word bias" = "Function Words bias, produces", 
+                        "Toddler variability" = "MADM 12-24mo production", 
+                        "Morphology/vocab relation" = "Word Forms and Productive Vocabulary (r²)", 
+                        "Grammar/vocab relation" = "Complexity and Productive Vocabulary (r²)"))
                                    
 
 ggplot(cvs_plot, aes(x = measure_name, y = cv)) + 
@@ -106,15 +99,28 @@ ggplot(cvs_plot, aes(x = measure_name, y = cv)) +
   coord_flip() 
 ```
 
-```{r}
-ggplot(cvs, aes(x = cv, y = y, label = measure)) + 
+```{r, fig.height =1.25, fig.width = 3}
+ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
   geom_point() + 
   geom_label_repel() + 
-  ylim(c(-.5,.5)) + 
+  ylim(c(-.1,.1)) + 
   # xlim(c(0, 1)) + 
   scale_y_continuous(labels =  NULL) + 
   ylab("") + 
-  xlab("Coefficient of variation across languages") 
+  xlab("Coefficient of variation across languages") + 
+  theme(axis.line.y=element_blank(),
+      # axis.text.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank(),
+      # axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      legend.position="none",
+      panel.background=element_blank(),
+      panel.border=element_blank(),
+      panel.grid.major=element_blank(),
+      panel.grid.minor=element_blank(),
+      plot.background=element_blank())
+
 ```
 
 

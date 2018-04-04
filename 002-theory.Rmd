@@ -1,22 +1,36 @@
 # Theoretical Foundations {#theory-intro}
 
-Language in its combinatorial richness is a uniquely human ability. The study of language acquisition has been a traditional locus of the search for the origins of this ability. As such, the history of language acquisition is one of "great debates" between different proposals about the core of human uniqueness. Does language arise from domain-specific adaptations for syntactic structure [@chomsky1981,@chomsky2014]? Or does it arise from a combination of environmental input and sophisticated, general-purpose learning mechanisms [@elman1996]? The traditional axis of debates regarding the origins of language is from domain-general empiricist proposals to domain-specific, nativist proposals. 
+The ability to use language in its lexical and combinatorial richness -- with hundreds of thousands of words, and an infinity of possible meanings -- is uniquely human. In The study of language acquisition has been a traditional locus of our search to understand the nature of this ability. As such, the nature of the abilities that allow human children to acquire a language is one of the historical "great debates," in which different proposals about the architecture of the human mind and the nature of human uniqueness have been proposed. Does language arise from domain-specific adaptations for syntactic structure [@chomsky1981;@chomsky2014]? Or does it arise from a combination of environmental input and sophisticated, general-purpose learning mechanisms [@elman1996]? Two poles have traditionally emerged in this discussion (Figure \@ref(fig:poles) ): from domain-general empiricist proposals to domain-specific, nativist proposals. 
+
+In this chapter, we begin by presenting the perspective from these poles but argue that they are rarely helpful in the practice of understanding the scope and course of early language learning. Instead, we argue for the development of theories that describe the scope and course of language learning as a whole, as well as its quantative variation across children, langugaes, and cultures. These concerns lead us to develop a theoretical vocabulary that focuses on consistency and variability; connections across timescales of learning' and the notion of process, rather than content, universals. We end by discussing the role of replication and larger datasets in building quantitative theories. 
 
 
-```{r}
+## The Picture To Date
+
+```{r poles, out.width="70%"}
 knitr::include_graphics("images/axis.jpeg")
 ```
 
 
-Empiricist proposals tend to emphasize the ability of children to learn structure across domains, the richness of the distributional input that children are exposed to... FILL OUT.
+Empiricist proposals emphasize the ability of children to learn structure across domains, the richness of the distributional input that children are exposed to, and their ability to create appropriate abstractions from structured linguistic input. The components of these proposals are children's general statistical learning abilities [@saffran1996;@aslin2002],
+When applied to linguistic input, even general statistical tools can recover some aspects of structure [@redington1998,@frank2012].
+Such proposals have as their primary challenge the ability of children to create fast abstractions early in childhood that allow them to create systematic word orders even in the absence of input [@goldin-meadow1981], interpret the arguments of novel verbs [@gertner2006], and evidence of abstract category structure for syntactic elements like determiners [@yang2013] or for structures like the dative [@conwell2007] even at a very young age.
 
-Nativist proposals in contrast tend to focus on the complexity of the grammatical structures that even young children access and their relative rarity in children's environent. FILL OUT.
+Nativist proposals in contrast tend to focus on the complexity of the grammatical structures that even young children appear to possess, relative to their rarity in children's environment. Such arguments emphasize the poverty of the linguistic stimulus [e.g., @legate2002], relative to the richness of the structual generalizations children make [e.g., @crain2000]. The type of proposals that are on offer within this space include "principles and parameters" theories, in which languages share a set of syntactic principles that govern syntactic combination but vary on a relatively small set of parameters that control how these structures are combined  [@baker2005,@yang2002]. But these proposals are challenged by the vast cross-linguistic differences in syntactic abstractions [@evans2009], by the character and scope of children's syntactic generalizations [which are often tied to specific lexical structures; @tomasello000], and by evidence of early input-sensitive learning and generalization both within specific domains [e.g., @meylan2017] and in artificial language tasks [@gomez1999]. 
 
-A third thread in this discussion is the importance of the social and communicative nature of human language [@tomasello2010]. FILL OUT.
+This "great debate" is philosophically appealing, but has also led to a polarization of the field of language acquisition. Typically researchers work in their own siloed traditions (empiricist or nativist), working on individual phenomena that do not make contact with one another -- a classic version of @kuhn1964's "paradigms." Research in the nativist tradition often focuses on particular syntactic phenomena that are largely neglected in the empiricist tradition [e.g., the "optional infinitive," @wexler1998; but cf. @freudenthal2010]. In contrast, research in the empiricist tradition has often used artificial language learning tasks that are argued not to reflect on the underlying structural properties that are claimed to be innate [e.g., @lany2010; cf. @yang2004]. By focusing on different paradigms and phenomena and theorizing using distinct vocabularies, these traditions make less and less contact. 
 
-Although these alternatives are philosophically appealing, this issue has not progressed scientifically for many years. Typically researchers work in their own siloed traditions (empiricist or nativist), working on individual phenomena that do not make contact with one another -- a classic version of @kuhn1964's "paradigms." From a scientific perspective, these theories are more like frameworks than actual hypotheses about the nature of the data that should be observed. Any individual observation cannot be said to be inconsistent with any but the absolute strongest nativist or empiricist position. 
+In addition, these theories are frameworks, rather than than actual hypotheses: Few proposals can be said to generate testable and clearly competing predictions, even within a specific domain. Any individual observation cannot be said to be inconsistent with any but the absolute strongest nativist or empiricist position. To be tested, they must be instantiated in specific computational mechanisms. Computational models are an important proving grouping, but in practice they end up less differentiated than rhetoric suggests. In order to get off the ground in performing a particular empirical task, theories must often help themselves to generous amounts of both innate structure -- in the form of structured inputs from social, cognitive, or perceptual domains -- and statistical learning [@roy2003;@alishahi2008;@frank2009;@frank2010;@yang2004].^[The research on the nature of inflectional morphology -- the "past tense debate" -- is one place where computational models played a foundational role in instantiating theoretical claims about innateness and representational structure [e.g., @rumelhart1986;@pinker1988;@plunkett1993;@plunkett1991;@plunkett1996;@marcus1995;@marchman1996].]
 
-Because of this looseness in the relationship between theories and data, there is no sense in which our analyses in this book can be said to bear on the classic theoretical debate. Instead, our goal is to shift to a new -- related but distinct -- set of axes. We are interested in universals for the same reason that traditional nativist theorists have been interested in them: we believe that invariant aspects of human language can be evidence about the underlying mechanisms. On the other hand, we depart from this tradition in several ways. 
+Further, when these viewpoints come together, they are often instantiated in debates over phenomena that -- from a bird's eye view -- are trivial in the general course of language development. Abstraction debates have played out in the acquisition of the definite determiner "the" [@valian1986;@pine1997;@yang2013;@meylan2017], auxilliary inversion [@pullum2002;@legate2002], the use of anaphoric "one" [@akhtar2004'@regier2004;@lidz2003], for example. All of these phenomena concern syntactic abstractions, reflecting a broader historical argument that syntactic structure is the heart of the uniquely human language faculty [@chomky1967], and other aspects of language tend to be shared with other species [@hauser2002]. 
+
+But syntax is far from the only unique or notable feature of human communication, from an evolutionary perspective [e.g., @pinker2005;@tomasello2010]. The nature and range of communciative gestures, the variety of sounds, and the diversity of lexical items all  are relatively unprecedented -- especially in the primate lineage. And these observable aspects of language -- as well as the emergence of syntactic structure more broadly -- are some of what makes  the broad course of language acquisition striking from the perspective of a clinician or a parent. We notice the first communicative signals, the emergence and rapid growth of of vocabulary, the beginning of the productive combination of words, increases in the length and complexity of utterances, and the patterns of error and overgeneralization that remain in early childhood. 
+
+These broader patterns of language learning are the natural focus of investigations like ours that use parent report to learn about children's language. While parents are attentive and accurate observers of communicative gesture, vocabulary, and word combination, without linguistic training they may not even notice subtleties like non-productive determine use, auxilliary inversion, or anaphoric "one." Further, these investigations can in many case make productive contact with the rich literatures on early communication, speech perception [e.g., @kuhl2004], word learning [e.g., @bloom2002;@snedeker2009], and grammatical productivity through verb structure [@fisher2010]. While debates over the nature of syntactic knowledge and abstraction have raged, other subfields of language acquisition have prospered. 
+
+Research in these subfields makes at most limited contact with broad questions of nativism and empiricism, in part because they deal with phenomena that are language specific -- sounds, lexical items, grammatical constructions -- and hence that children *must* learn from their input. The question is then about the mechanisms and constraints that guide this process of learning , rather than about any posited universal or innate content (even at the level of abstractions). 
+
+So what should a unifying theoretical framework for language learning look like? Despite our critiques above, we still believe in the importance of the search for core, universal aspects of language learning that elucidate the process by which children acquire this uniquely human ability. Yet we believe that the sort of theory that describes such universals will likely look radically different from its historical antecedents. Below and in the remainder of this chapter, we sketch some aspects of what such a theory will look like and how this vision connects to the remainder of our manuscript. 
 
 First, any universal is likely to be a statistical or quantitative universal -- we refer to these as "consistencies." The variation across the world's languages is such that only the most tautological facts will be truly invariant [@evans2009]. Further, we are unlikely to be able to access the kinds of samples that would allow us to make claims of universality [@piantadosi2014]. Thus, we should talk about relative consistency and variability of particular phenomena rather than any sorts of absolutes.
 
@@ -25,8 +39,6 @@ Second, language learning takes place at the timescale of years. CDI forms provi
 Third, the regularities we observe are in the learning of vocabulary and constructions, rather than syntactic rules. These items *must* be learned from data. Thus any putative universals identified in our investigation must not be "content universals" that specific particular grammatical rules or linkages. They must be "process universals" in the sense that they specify mechanisms or processes that unfold over time and operate over children's interactional input in ways that produce the observed consistencies. 
 
 Finally, the project of this books is fundamentally about empirical unification of phenomena. By replication of analyses across different datasets, we provide a testbed for theoretical ideas that make contact with data. We believe our work here embodies the transformational potential of data. Data can provide precision in measurement, though -- as we are at pains to point out throughout -- doing so requires constant attention to sources of bias.
-
-In the remainder of this theoretical introduction, we expand upon each of these ideas. 
 
 
 ## Variability and Consistency
@@ -42,11 +54,30 @@ Different sources of variance provide different sorts of evidence. Variance acro
 
 ## Timescales and Mechanisms
 
+Back to the slobin/competition model argument. 
+
+Are some languages harder to learn than others. At some level yes, Danish is really hard [@bleses]
+
+We're not trying to argue against the data on spanish clitics or agglutinatives in russian. 
+
+On the other hand, the general developmental course is consistent. And degree of variation.
+
+The universal is in the general aspects, not the details. 
+
 
 ## Process Universals
 
 What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
 
+- IT'S ABOUT LEARNING - UPTAKE OF INPUT
+
+- COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING
+
+- UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES
+
+- IN THE CONTEXT OF CHIlD AND ENVIRONMENT
+
+- BRONFENBRENNER-ESQ
 
 To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
 
@@ -63,85 +94,43 @@ The second set of language-specific particulars that might lead to variance acro
 
 One view of our enterprise is that its impact is fundamentally in the consolidation of knowledge through unifying -- replicating -- previous work. Crudely put, we have compiled all of the CDI data that we could, and all of the CDI analyses, and executed the cross of analyses and datasets. This project is thus a cross-linguistic replication study. 
 
-THEORY CHAPTER VERY FRAGMENTARY
 
-- theoretical debates that we sidestep
-
-- variability and consistency
-
-- replication and measurement precision
-
-- universals
+## Conclusion
 
 
 
 
-## Other Notes
+
+
+<!-- BORNSTEIN QUOTE -->
+
+<!-- Weaker claim - the same variability is there across cultures/languages. -->
+
+<!-- DEMOGRAPHIC EXAMPLE - SES is variable, gender is consistent -->
+
+<!-- Relationship between size and variability should be informative -->
+
+<!-- A call to action to care about size and variability -->
+
+<!-- Measurement -->
+
+
+
+<!-- NEW AXIS FIGURE -->
+
+<!-- VARIABLE                       CONSISTENT -->
+<!-- <---------------------------------------> -->
+<!-- SES / NOUN BIAS         GRAMMAR/LEX  COV  GENDER -->
+
+
+<!-- CULTURE/LANGUAGE            COGNITION -->
+
+<!-- QUANTITATIVE PREDICTIONS:  -->
+
+<!-- if language moves your signature mean then you are a particular, not a universal -->
+<!-- - SES -->
+<!-- - noun bias -->
 
 
 
 
-```{r theoryspace, fig.cap="A caricature of the traditional theoretical space in langauge acquisition research."}
-knitr::include_graphics("images/axis.jpeg")
-```
-
-
-BORNSTEIN QUOTE
-
-Weaker claim - the same variability is there across cultures/languages.
-
-DEMOGRAPHIC EXAMPLE - SES is variable, gender is consistent
-
-Relationship between size and variability should be informative
-
-A call to action to care about size and variability
-
-Measurement
-
-
-
-NEW AXIS FIGURE
-
-VARIABLE                       CONSISTENT
-<--------------------------------------->
-SES / NOUN BIAS         GRAMMAR/LEX  COV  GENDER
-
-
-CULTURE/LANGUAGE            COGNITION
-
-QUANTITATIVE PREDICTIONS: 
-
-if language moves your signature mean then you are a particular, not a universal
-- SES
-- noun bias
-
-
-
-Claims of universals should always be taken with a grain of salt. In our case, a variety of caveats apply, from the relatively limited sample size N = `r length(unique(instruments$language))` [see @piantadosi2014 for guidance on claims about strict universals] to the strong Indo-European bias amongst the languages in the database. At best our claim is of a statistical universal rather than an absolute universal. In addition, nearly all of our data come from populations in relatively industrialized nations [cf. @henrich2010]. FURTHER CAVEATS
-
-### What is a Process?
-
-
-- IT'S ABOUT LEARNING - UPTAKE OF INPUT
-
-- COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING
-
-- UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES
-
-- IN THE CONTEXT OF CHIlD AND ENVIRONMENT
-
-- BRONFENBRENNER-ESQ
-
-
-
-### Local vs. Global Processes
-
-Back to the slobin/competition model argument. 
-
-Are some languages harder to learn than others. At some level yes, Danish is really hard [@bleses]
-
-We're not trying to argue against the data on spanish clitics or agglutinatives in russian. 
-
-On the other hand, the general developmental course is consistent. And degree of variation.
-
-The universal is in the general aspects, not the details. 

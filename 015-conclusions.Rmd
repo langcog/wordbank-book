@@ -139,6 +139,8 @@ Assuming that we can rule out reporting biases,
 
 
 
+Claims of universals should always be taken with a grain of salt. In our case, a variety of caveats apply, from the relatively limited sample size N = `r length(unique(instruments$language))` [see @piantadosi2014 for guidance on claims about strict universals] to the strong Indo-European bias amongst the languages in the database. At best our claim is of a statistical universal rather than an absolute universal. In addition, nearly all of our data come from populations in relatively industrialized nations [cf. @henrich2010]. FURTHER CAVEATS
+
 ## Limitations
 
 All of our analyses are fundamentally correlational. No causal inferences from Wordbank data are possible. We'll say this again so you know we mean it: *no causal inferences are possible*. All of the consistencies described above admit alternative causal explanations. 

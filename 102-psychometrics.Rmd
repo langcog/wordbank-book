@@ -353,4 +353,5 @@ In our last analysis, we turn to the WG data. The plot above shows the mean and 
 
 In sum, we do not find evidence that function words are particularly bad. Rather, there are some low-performing items spread across all categories of the CDI form, and many of these likely perform poorly for the reasons described above -- especially difficulty in interpretation of very early behavior and variability in home experience.
 
+
 <!-- ## Special cases by language -- RUSSIAN ANIMAL SOUNDS!! -->

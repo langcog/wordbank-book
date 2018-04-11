@@ -324,6 +324,7 @@ ggplot(ws_prod_data,
 
 We next turn from the question of central tendencies to the question of variability. One of the most important features of early vocabulary development is its variability [@fenson1994]. To examine variability, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability?^[@feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual.]
 
+### Quantifying Variability
 
 ```{r 3_eng_prod}
 eng_prod_data <- vocab_data %>%
@@ -416,9 +417,7 @@ ggplot(madm_data, aes(x = age, y = madm_p, col = language)) +
 
 The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable. Yet this variability is quite *consistent*! We summarize the MADM in the second year of life by taking its mean. This mean is close to 1 for almost every language and form for which we have data. 
 
-One question that could be raised regarding the analysis above is the extent to which variability is caused by *variability across children* vs. *variability in reporting*. The extreme values seen in the English data, for example, could easily be the result of a mixture of lazy parents who stopped answering the form with overly diligent parents who misunderstood and checked every box for a word they thought the child had been exposed to. Several arguments speak against this account, however. First, to the extent these biases are the source of variability, they are extremely *consistent* across languages -- which, recall, is the exact opposite argument from the one we considered above (where parent diligence was supposed to be variable enough across samples to lead to differences between languages). 
-
-In sum, although there are certainly some reporting biases represented in the data, these results do not appear likely to be an artifact of reporting bias. [MORE HERE?]
+One question that could be raised regarding the analysis above is the extent to which variability is caused by *variability across children* vs. *variability in reporting*. The extreme values seen in the English data, for example, could easily be the result of a mixture of lazy parents who stopped answering the form with overly diligent parents who misunderstood and checked every box for a word they thought the child had been exposed to. Several arguments speak against this account, however. First, to the extent these biases are the source of variability, they are extremely *consistent* across languages -- which, recall, is the exact opposite argument from the one we considered above (where parent diligence was supposed to be variable enough across samples to lead to differences between languages). In sum, although there are certainly some reporting biases represented in the data, these results do not appear likely to be an artifact of reporting bias. 
 
 ```{r 3_madm_summary}
 madm_summary_prod <- madm_data %>%
@@ -478,8 +477,146 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
 
-In sum, we observed a striking consistency in the individual variability of children's vocabulary during their second year. Across languages and forms, it appears to be the norm that toddlers vary. These results echo the conclusions of @bornstein2005 based their comparative data across Spanish, English, and Italian, who noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 
+### Item-response theory 
 
+The analysis above suggests that variability between individuals decreases. But this  conclusion is compromised by ceiling effects: once children begin to reach the ceiling of the CDI form, variability is necessarily truncated. No analysis can completely eliminate these effects, but the use of item response theory-based analyses can partially address the issue by estimating variation in latent ability (which leads to a particular score) rather than variation in raw scores themselves.  
+
+Appendix \@ref(appendix-psychometrics) provides a summary of our approach to using item response theory (IRT). In brief, item response theory provides a framework in which the full test (the CDI) is broken down into a series of items, with each having its own logistic model predicting the response for a particular child on the basis of their latent ability. In Appendix \@ref(appendix-psychometrics), we examine the parameters of individual items with respect to their properties; but fitting an IRT model also implies estimating a set of latent ability parameters for individual participants. These latent ability parameters are logistic regression coefficients and hence are not bounded in the same way that individual responses (and hence raw scores) are. Thus, we can examine their variability as a way of dealing with ceiling effects.
+
+```{r eval=FALSE}
+library(mirtCAT)
+
+mirt_params <- function(dx) {
+  language <- dx$language
+  form <- dx$form
+  print(paste(language, form))
+  
+  lang_data <- get_instrument_data(language = language, form = form, 
+                                   administrations = TRUE, iteminfo = TRUE)
+  
+  d <- lang_data %>%
+    filter(!is.na(lexical_class)) %>%
+    mutate(produces = value == "produces") %>%
+    select(data_id, item_id, produces, age, production) 
+  
+  d_wide <- d %>%
+    mutate(produces = as.numeric(produces)) %>%
+    dplyr::select(item_id, produces, data_id) %>%
+    spread(item_id, produces)
+  
+  d_mat <- d_wide %>%
+    dplyr::select(-data_id) %>% 
+    data.frame %>%
+    data.matrix
+  
+  colnames(d_mat) <- sort(unique(d$item_id))
+  rownames(d_mat) <- d_wide$data_id
+  
+  d_mat <- d_mat[complete.cases(d_mat),]
+  mod_4pl <- mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
+
+  fscores <- data_frame(data_id = rownames(d_mat), 
+                        ability = fscores(mod_4pl, method = "MAP")[,1])
+  fscores$language <- language
+  fscores$form <- form
+  
+  fscores <- fscores %>%
+    mutate(data_id = as.numeric(data_id)) %>%
+    left_join(get_administration_data(language = language, 
+                                      form = form))
+  
+  return(fscores)
+}
+  
+mirt_params <- instruments %>% 
+  filter(form %in% WSs) %>% 
+  mutate(idx = 1:n()) %>%
+  split(.$idx) %>%
+  map_df(possibly(mirt_params, otherwise = data_frame()))
+
+write_feather(mirt_params, "data/mirt_params.feather")
+```
+
+
+```{r}
+mirt_params <- read_feather("data/mirt_params.feather")
+
+mirt_sd <- mirt_params %>%
+  left_join(mirt_params %>% group_by(language, form) %>%
+              summarise(langform_sd = sd(ability))) %>%
+  mutate(langform = interaction(language,form)) %>%
+  group_by(langform, age) %>%
+  summarise(mean = mean(ability), 
+            sd = sd(ability), 
+            sd_normed = sd(ability) / mean(langform_sd),
+            n = n()) %>%
+  filter(n > 20) 
+  
+ggplot(mirt_sd, 
+       aes(x = age, y = sd, col = langform)) + 
+  facet_wrap(~langform) +
+  # geom_line() + 
+  # geom_smooth(se=FALSE, span = 1) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "black", lty=2 ) +
+  # geom_label_repel(data = mirt_sd %>%
+  #                    group_by(langform) %>%
+  #                    filter(age == max(age)),
+  #                  aes(label = langform), size = 3, segment.color = "grey") +
+  # # geom_dl(aes(label = langform, col = langform),
+  #         method = "last.points", ) + 
+  scale_color_discrete(guide = FALSE) + 
+  ylab("Latent Ability SD") + xlab("Age (Months)") +
+  xlim(12,40)
+```
+
+The above figure shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret -- the range of latent ability scores on a form is a function of how consistently difficult or easy the items are. Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children's abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases. 
+
+Interestingly, slopes for the variability of latent ability are fairly flat or ioncreasing (with Mandarin -- which has extreme ceiling effects -- the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. Variability is constant, or even increasing, with age.
+
+### Discussion 
+
+We observed a striking consistency in the individual variability of children's vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary.What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from @storvold2013. 
+
+```{r}
+p100 <- vocab_data %>%
+  filter(language == "Norwegian") %>%
+  group_by(age, form) %>%
+  summarise(`produces 200 words` = mean(production > 200),
+            `produces 100 words` = mean(production > 100), 
+            `produces 50 words` = mean(production > 50), 
+            `produces 10 words` = mean(production > 10), 
+            `understands 10 words` = mean(comprehension > 10),
+            `understands 50 words` = mean(comprehension > 50)) %>%
+  gather(response, prob, contains("words")) %>%
+  bind_rows(data_frame(age = c(12,13,14), 
+                       prob = c(.25, .50, .75), 
+                       response= "walking", 
+                       form = "MoBa"))
+  
+ggplot(p100, aes(x = age, y = prob, col = response)) +
+  geom_line(aes(group = interaction(response, form))) + 
+  geom_line(data = filter(p100, response == "walking"), 
+                          aes(group = interaction(response, form)), size = 2) + 
+  ylim(0,1) + 
+  scale_color_solarized() + 
+  theme(legend.position = "bottom") + 
+  ylab("Probability") + xlab("Age (months)")
+```
+
+```{r}
+p100 %>%
+  group_by(response) %>%
+  summarise(`25th percentile` = min(age[prob >= .25]),
+            `75th percentile` = min(age[prob >= .75]), 
+            range = `75th percentile` - `25th percentile`, 
+            `range (proportion of age)` = range / min(age[prob >=.5])) %>%
+  arrange(range) %>%
+  knitr::kable(digits = 2)
+```
+The 25th and 75th percentiles for a variety of behaviors are summarized in the table above. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
+
+In sum, these results echo the conclusions of @bornstein2005 based their comparative data across Spanish, English, and Italian, who noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 
 
 
 ```{r 3_save_covs}

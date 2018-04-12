@@ -572,7 +572,7 @@ ggplot(mirt_sd,
 
 The above figure shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret -- the range of latent ability scores on a form is a function of how consistently difficult or easy the items are. Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children's abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases. 
 
-Interestingly, slopes for the variability of latent ability are fairly flat or ioncreasing (with Mandarin -- which has extreme ceiling effects -- the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. Variability is constant, or even increasing, with age.
+Interestingly, slopes for the variability of latent ability are fairly flat or increasing (with Mandarin -- which has extreme ceiling effects -- the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. Variability is constant, or even increasing, with age.
 
 ### Discussion 
 
@@ -585,8 +585,7 @@ p100 <- vocab_data %>%
   summarise(`produces 200 words` = mean(production > 200),
             `produces 100 words` = mean(production > 100), 
             `produces 50 words` = mean(production > 50), 
-            `produces 10 words` = mean(production > 10), 
-            `understands 10 words` = mean(comprehension > 10),
+            `produces 10 words` = mean(production > 10),
             `understands 50 words` = mean(comprehension > 50)) %>%
   gather(response, prob, contains("words")) %>%
   bind_rows(data_frame(age = c(12,13,14), 
@@ -614,6 +613,7 @@ p100 %>%
   arrange(range) %>%
   knitr::kable(digits = 2)
 ```
+
 The 25th and 75th percentiles for a variety of behaviors are summarized in the table above. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
 
 In sum, these results echo the conclusions of @bornstein2005 based their comparative data across Spanish, English, and Italian, who noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 

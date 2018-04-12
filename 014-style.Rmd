@@ -356,6 +356,7 @@ ggplot(n_long_wg, aes(x = age, y = production)) +
   geom_line(data = ms_wg, col = "blue", size = 1.5)
 ```
 
+### GLMs
 
 Does a GLM fit the Norwegian longitudinal growth? 
 
@@ -419,5 +420,51 @@ ggplot(filter(n_long_wg, n_admins > ADMIN_CUTOFF),
 ```
 
 
+### Ganger & Brent
+
+
+```{r}
+ADMIN_CUTOFF <- 5
+
+range <- n_long_wg %>%
+  group_by(original_id) %>%
+  arrange(age) %>%
+  mutate(dv = c(NA, diff(production)), 
+         dt = c(NA, diff(age))) %>%
+  filter(!is.na(age))
+
+ggplot(filter(range, n_admins > ADMIN_CUTOFF), 
+       aes(x = age, y = dv)) + 
+  # geom_line() + 
+  geom_smooth(span = 1, col = "blue", se = FALSE) + 
+  geom_point() + 
+  facet_wrap(~fct_reorder(original_id, production)) +
+  scale_colour_discrete(guide = FALSE) + 
+  # scale_x_continuous(breaks = c(8, 16)) + 
+  ylim(0,50) + 
+  theme(strip.text = element_blank())
+```
+
+```{r}
+ADMIN_CUTOFF <- 10
+
+range <- n_long_ws %>%
+  group_by(original_id) %>%
+  arrange(age) %>%
+  mutate(dv = c(NA, diff(production)), 
+         dt = c(NA, diff(age))) %>%
+  filter(!is.na(age))
+
+ggplot(filter(range, n_admins > ADMIN_CUTOFF), 
+       aes(x = age, y = dv)) + 
+  # geom_line() + 
+  geom_smooth(span = 1, col = "blue", se = FALSE) + 
+  geom_point() + 
+  facet_wrap(~fct_reorder(original_id, production)) +
+  scale_colour_discrete(guide = FALSE) + 
+  # scale_x_continuous(breaks = c(8, 16)) + 
+  scale_y_continuous(breaks = c(-100, 50, 150), lim = c(-100,200)) +
+  theme(strip.text = element_blank())
+```
 
 ## Vocabulary Composition and Syntactic Growth

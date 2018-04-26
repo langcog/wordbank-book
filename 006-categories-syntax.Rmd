@@ -176,13 +176,13 @@ The figure above shows this analysis, carried out with English (American) WS dat
 models with the constraint that they must predict the point [1,1] so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked. These model fits are shown by the lines. 
 
 ```{r 4_resample}
+poly_area <- function(group_data) {
+  model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1,
+              data = group_data)
+  return((model$solution %*% c(1/4, 1/3, 1/2) - 0.5)[1])
+}
+
 sample_areas <- function(d, nboot = 1000) {
-  
-  poly_area <- function(group_data) {
-    model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1,
-                data = group_data)
-    return((model$solution %*% c(1/4, 1/3, 1/2) - 0.5)[1])
-  }
   
   counter <- 1
   sample_area <- function(d) {
@@ -425,7 +425,7 @@ The negative representation of function words is relatively consistent in overal
 consistency <- area_summary %>%
   filter((form %in% WGs & measure == "understands") |
            (form %in% WSs & measure == "produces"),
-         !(language == "Mandarin" & form == "WS")) %>% 
+         !(language == "Mandarin (Beijing)" & form == "WS")) %>% 
   # TC and IC are matched in Mandarin
   select(language, measure, lexical_category, mean) %>%
   spread(measure, mean) %>%
@@ -448,7 +448,231 @@ cors <- consistency %>%
 
 One natural question is how consistent estimates of bias are across comprehension and production. The plot above shows -- for the sample of languages in which we have data from matched WG- and WS-type instruments -- the relative bias we recovered in the analysis above. Somewhat surprisingly, correlations between these different instruments are quite low. Function word bias is negatively correlated between production and comprehension ($r$(`r cors$parameter[3]`) = `r signif(cors$estimate[3],2)`, $p$ = `r signif(cors$p.value[3],2)`). This result is likely due to Kiswahili and Kigiriama, discussed above, the lowest points for function word comprehension. But predicate bias estimates are close to uncorrelated with one another ($r$(`r cors$parameter[2]`) = `r signif(cors$estimate[2],2)`, $p$ = `r signif(cors$p.value[2],2)`), and the correlation between noun bias estimates is modest though positive ($r$(`r cors$parameter[1]`) = `r signif(cors$estimate[1],2)`, $p$ = `r signif(cors$p.value[1],2)`). 
 
-This analysis is relatively low power; it only conducted with `r cors$parameter[1]` languages and hence is relatively low power (despite the many thousands of children necessary to carry it out). Despite this, it casts some doubt on the reliability of individual bias estimates.
+This analysis is relatively low power; it only conducted with `r cors$parameter[1]` languages and hence is relatively low power (despite the many thousands of children necessary to carry it out). Despite this, it raises some important questions. A number of explanations of the data are consistent:
+
+1. Bias differs between comprehension and production, such that differences are related to type of response. 
+
+2. Estimates of bias are influenced by the composition of specific forms, so much so that WS- and WG-type forms yield radically different estimates of bias.
+
+3. Bias differs developmentally. Perhaps different biases are evident earlier vs. later in acquisition. 
+
+\noindent We assess each of these explanations in turn.
+
+
+```{r}
+vocab_comp_data %>%
+    filter(form %in% "Oxford CDI") %>%
+    mutate(lexical_category = factor(lexical_category,
+                                     levels = c("nouns", "predicates",
+                                                "function_words"),
+                                     labels = c("Nouns ", "Predicates ", 
+                                                "Function Words"))) %>%
+    ggplot(aes(x = vocab, y = prop, colour = lexical_category)) +
+    facet_wrap(~measure) +
+    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
+                       name = "Proportion of Category\n") +
+    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
+                       name = "\nVocabulary Size") +
+    scale_colour_solarized(name = "") +
+    theme(legend.position = "top",
+          legend.key = element_blank(),
+          legend.background = element_rect(fill = "transparent")) + 
+  geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
+  geom_jitter(size = 0.7, alpha = .3) +
+  geom_smooth(method = "clm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
+              size = 1, se = FALSE)
+
+```
+
+In order to assess comprehension/production differences as a source of bias, we examine the Oxford CDI, which is relatively unique in that it includes comprehension questions even later in development. Data on production from standard WG forms is simply too sparse to perform our bias assessment method; since most children do not produce half of the words on the form, the shape of the bias curves is driven primarily by older children. In contrast, for the Oxford CDI, it is possible to compare directly. The measured noun bias for comprehension is  `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Nouns", measure == "understands")$mean, digits = 2)`; for production it is `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Nouns", measure == "produces")$mean, digits = 2)`. These values for predicates are `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Predicates", measure == "understands")$mean, digits = 2)` and `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Predicates", measure == "produces")$mean, digits = 2)`, respectively. These values are somewhat similar to one another, but they do vary beyond the average confidence interval on each (+/- `r signif(mean(filter(area_summary, form=="Oxford CDI")$mean - filter(area_summary, form=="Oxford CDI")$ci_lower), digits = 2)`). Thus, there is some evidence for production/comprehension asymmetries. 
+
+What might be the mechanism for these aysmmetries? For languages that do not allow argument dropping, producing a predicate typically requires producing other words as well -- English-speaking children do not often produce bare predicates, for example. Thus, predicate production may be limited by other constraints on production in such languages; in contrast, predicate comprehension has no such limits. Further, felicitous predicate production requires some ability to combine words syntactically; in contrast, comprehension of predicates (especially verbs) can often be accomplished by guessing based on known arguments [e.g., @gillette1999]. For these reasons, there may be a greater bias against predicates in production compared with comprehension. This explanation is consistent with our data, in which the average production predicate bias is `r signif(mean(filter(area_summary, form %in% WSs, measure == "produces", lexical_category == "Predicates")$mean), digits = 2)`, while the average for comprehension is `r signif(mean(filter(area_summary, form %in% WGs, measure == "understands", lexical_category == "Predicates")$mean), digits = 2)`. Thus, production comprehension asymmetries likely explain some part of the differences we observed above.
+
+Another potential explanation is that form composition relates to bias estimates. For example, a form with more predicates might actually show a *lower* degree of predicate bias -- more predicates on the form would imply that some of those predicates are relatively more difficult (simply because the form designer had "run out" of easy predicatess) and hence would not be checked as frequently by parents. We assess this hypothesis in two ways. First, we examine the relationship between predicate bias and predicate representation (making use of predicates because they are a minority on the form). Second, we consider the case of Mandarin where we have data from two forms with different compositions.
+
+```{r}
+pred_prod <- filter(area_summary, form %in% WSs, measure == "produces", 
+                    lexical_category == "Predicates") %>%
+  left_join(filter(items, form %in% WSs) %>% 
+              group_by(language, form) %>% 
+              summarise(prop_pred = mean(lexical_category == "predicates", na.rm=TRUE))) %>%
+  mutate(langform =  paste(language, form)) 
+
+ggplot(pred_prod,
+       aes(x = prop_pred, y = mean, col = langform)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  geom_smooth(method = "lm", aes(group = 1)) + 
+  ylab("Predicate Bias") + 
+  xlab("Proportion Predicates on Form") + 
+  scale_color_discrete(guide = FALSE) + 
+  geom_label_repel(data = filter(pred_prod, prop_pred > .25), 
+                   aes(label = langform))
+```
+
+As shown above, there is no reliable relationship between the proportion of predicates on a form and the predicate bias that is demonstrated ($r(`r cor.test(pred_prod$mean, pred_prod$prop_pred)$parameter`) = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$estimate, digits = 2)`$, $p = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$p.value, digits = 2)`$). Thus, a simple relationship between form composition and bias is not supported. On the other hand, it does appear that there is greater variance in this area for those languages with larger numbers of predicates on the form, and those languages with the highest predicate representation do have the highest number of predicates on the form as well. Perhaps the causality is reversed: Greater numbers of predicates have been included in forms for languages like Cantonese, Mandarin, and Korean where the predicate bias is an open theoretical question (or where the acquisition of predicates is of special interest). 
+
+```{r mandarinFormComparisonMunging}
+
+mandarin_both_forms_items <- filter(items, 
+                                    language == "Mandarin (Beijing)", 
+                                    form %in% c("WS","TC")) %>%
+  filter(lexical_category %in% c("nouns", "predicates", "function_words")) %>%
+  group_by(definition) %>%
+  filter(any(form == "TC") & any(form == "WS")) 
+
+tc_items <- filter(mandarin_both_forms_items, form == "TC")
+ws_items <- filter(mandarin_both_forms_items, form == "WS")
+  
+tc_vocab_data <- get_instrument_data(language = "Mandarin (Beijing)",
+                                       form = "TC",
+                                       items = tc_items$item_id, 
+                                       iteminfo = tc_items) %>%
+  mutate(value = ifelse(is.na(value), "", value),
+         produces = value == "produces",
+         understands = value == "produces" | value == "understands") %>%
+  dplyr::select(-value) %>%
+  gather(measure, value, produces, understands)
+
+ws_vocab_data <- get_instrument_data(language = "Mandarin (Beijing)",
+                                       form = "WS",
+                                       items = ws_items$item_id, 
+                                       iteminfo = ws_items) %>%
+  mutate(value = ifelse(is.na(value), "", value),
+         produces = value == "produces",
+         understands = value == "produces" | value == "understands") %>%
+  dplyr::select(-value) %>%
+  gather(measure, value, produces, understands)
+
+tc_num_words <- nrow(tc_items)
+ws_num_words <- nrow(ws_items)
+
+tc_vocab_summary <- tc_vocab_data %>%
+  group_by(data_id, measure, lexical_category) %>%
+  summarise(num_true = sum(value),
+            prop = sum(value) / n())
+
+ws_vocab_summary <- ws_vocab_data %>%
+  group_by(data_id, measure, lexical_category) %>%
+  summarise(num_true = sum(value),
+            prop = sum(value) / n())
+
+
+tc_vocab_sizes <- tc_vocab_summary %>%
+  summarise(vocab_num = sum(num_true),
+            vocab = sum(num_true) / tc_num_words)
+
+ws_vocab_sizes <- ws_vocab_summary %>%
+  summarise(vocab_num = sum(num_true),
+            vocab = sum(num_true) / ws_num_words)
+
+mandarin_all <- bind_rows(tc_vocab_summary %>%
+                            left_join(tc_vocab_sizes) %>%
+                            mutate(prop_vocab = num_true / vocab_num) %>%
+                            dplyr::select(-num_true) %>%
+                            mutate(language = "Mandarin (Beijing)", 
+                                   form = "TC"),
+                          ws_vocab_summary %>%
+                            left_join(ws_vocab_sizes) %>%
+                            mutate(prop_vocab = num_true / vocab_num) %>%
+                            dplyr::select(-num_true) %>%
+                            mutate(language = "Mandarin (Beijing)", 
+                                   form = "WS"))
+```
+
+```{r mandarinFormComparison}
+pts <- seq(0, 1, 0.01)
+
+predictions <- mandarin_all %>%
+  group_by(language, form, lexical_category) %>%
+  do(model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = .)) %>%
+  ungroup() %>%
+  mutate(idx = 1:n()) %>%
+  split(.$idx) %>%
+  map_df(function(x) {
+    data.frame(vocab = pts,
+               prop = predict(x$model[[1]], newdata = data.frame(vocab = pts)),
+               lexical_category = x$lexical_category,
+               form = x$form,
+               language = x$language)
+  })
+  
+
+diagonal <- expand.grid(vocab = rep(rev(pts)),
+                        language = "Mandarin (Beijing)",
+                        form = c("WS","TC"),
+                        lexical_category = unique(mandarin_all$lexical_category))
+diagonal$prop <- diagonal$vocab
+
+area_poly <- bind_rows(predictions, diagonal) %>%
+  mutate(panel = paste(language, "(models)"))
+
+mandarin_areas <- predictions %>%
+  group_by(form, lexical_category) %>%
+  summarise(area = sum(prop - vocab)/100)
+
+ggplot(predictions, 
+       aes(x = vocab, y = prop)) +
+  geom_point(data = mandarin_all, aes(x = vocab, prop, col = lexical_category), 
+             alpha = .03) +
+  facet_grid(form ~ lexical_category) +
+  geom_line(aes(colour = lexical_category), size = 1) +
+  geom_polygon(data = filter(area_poly, language == "English"),
+               aes(fill = lexical_category), alpha = 0.2) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") + 
+  scale_y_continuous(limits = c(0, 1), breaks = c(),
+                     name = "") +
+  scale_x_continuous(limits = c(0, 1), breaks = c(),
+                     name = "") +
+  scale_colour_solarized(guide = FALSE) +
+  scale_fill_solarized(guide = FALSE) 
+```
+
+
+The existence of two different forms for Mandarin opens the possibility of a further, more direct test of this issue. The Mandarin WS form [@tardif2009] and the Mandarin TC [toddler checklist; @hao2008] are completely independent forms but represent large datasets collected on Beijing Mandarin specifically. The Mandarin WS form is `r round(filter(pred_prod, language == "Mandarin (Beijing)", form == "WS")$prop_pred, 2)*100`% predicates and shows overall a `r round(filter(pred_prod, language == "Mandarin (Beijing)", form == "WS")$mean, 2)` predicate preference, while the TC form is `r round(filter(pred_prod, language == "Mandarin (Beijing)", form == "TC")$prop_pred, 2)*100`% predicates and shows overall a `r round(filter(pred_prod, language == "Mandarin (Beijing)", form == "TC")$mean, 2)` predicate preference. The intersection of these forms yields `r length(unique(mandarin_both_forms_items$definition))` items, with `r round(mean(mandarin_both_forms_items$lexical_category == "predicates"), digits = 2)*100`% predicates. Interestingly, the predicate representation for the TC and WS samples, analyzing *only* shared predicates still differs, if anything more substantially: for WS it is `r signif(filter(mandarin_areas, form=="WS", lexical_category=="predicates")$area, 2)` and for TC, `r signif(filter(mandarin_areas, form=="TC", lexical_category=="predicates")$area, 2)`. 
+
+This result is worrisome -- these are samples from the same city and using the same items. They even include very similar age ranges: 16--30 month-olds and 17--30 month olds respectively, with approximately uniform sampling. The suggestion is then that differences in predicate bias can be substantial based on relatively minor details, such as specifics of administration or form context or specifics of sample composition. Despite the apparent stability of these estimates under resampling (confidence intervals for bias estimates are around +/- .005 in the analysis above), we should be cautious in over-estimating our degree of certainty in particular bias estimates. Further, these data provide more data against the notion that form composition (or at least the specific sample of predicates being assessed) is the primary determinant of bias. 
+
+```{r}
+age_areas <- vocab_comp_data %>%
+  filter(form %in% WSs, measure == "produces") %>%
+  left_join(select(admins, data_id, age)) %>%
+  filter(!is.na(age)) %>%
+  mutate(langform = paste(language, form)) %>%
+  group_by(langform) %>%
+  mutate(age_group = ifelse(age > median(age), "older","younger")) %>%
+  group_by(langform, lexical_category, age_group) %>%
+  do(area = poly_area(.)) %>%
+  mutate(area = area[1])
+
+age_areas$langform = fct_reorder2(as.factor(age_areas$langform), age_areas$area, 
+                                  age_areas$lexical_category, 
+                                        fun = function(x, y) {
+                                          mean(x[y=="predicates"])}, .desc=FALSE)
+
+
+ggplot(age_areas, aes(x = langform, y = area, col = age_group)) + 
+  geom_point() + 
+  facet_wrap(~lexical_category) +
+  coord_flip()  + 
+  xlab("")
+```
+
+
+The final hypothesis that we examine is that there are development differences in bias. Such differences would help to explain the observed differences between bias in early comprehension and later production.  To address this question, we split data from each language and form into older and younger groups at the median of the data for that sample. We then recomputed our bias estimates, shown above. There was a developmental difference such that older children showed less of a negative function word bias, but differences in noun and predicate bias were very slight for most languages. Thus, overall we do not see evidence that bias estimates for nouns and verbs are globally different for older vs. younger children. 
+
+In sum, we did not find strong support for effects of form composition or age on bias estimates. Each of these factors of course could contribute in part to the mismatch between WG comprehension and WS production estimates, but neither one was particularly. On the other hand, data from the Oxford CDI suggested some differences in bias estimates between comprehension and production on the same form, with the bias against predicates and for nouns being substantially more pronounced for production than for comprehension. Further, data from two different Beijing Mandarin datasets suggest possible factors relating to population and administration. 
+
+
+## Discussion
+
+This chapter presented a comprehensive examination of the issue of biases for and against particular syntactic categories in acquisition. Building on earlier work by @bates1994, we created a quantitative measure of noun, predicate, and function word bias and examined variability in these measures across languages. Overall, a number of generalizations emerged. 
+
++ Nearly every language showed a positive bias for nouns, though the degree of this bias varied. + Every language showed a substantial bias against function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency (see \@ref(aoa-pred)). This bias was larger on average than biases in type of content words. 
++ In comprehension there was variability in the degree of predicate representation; in production, as has previously been reported, languasges were mostly biased against predicates. There were a few notable exceptions among the East-Asian languages. 
++ Measures of bias in production and comprehension were not highly correlated with one another, especially for predicates and function words. There are likely many causes of these, but greater predicate comprehension compared with production appears to be one likely culprit. 
+
+
+
 
 ```{r export_vocab_comp}
 cvs <- area_summary %>%

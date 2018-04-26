@@ -53,16 +53,17 @@ if (local_data) {
   write_feather(admins, "data/admins.feather")
   items <- get_item_data()
   write_feather(items, "data/items.feather")
-
-  # cleanup of non-WS/WG instruments
-
 }
 
 
+### FORM VARIANTS
+WGs <- c("WG", "IC", "Oxford CDI")
+WSs <- c("WS", "TC")
+
 ## functions
-ci.t <- function (x) {
+ci.t <- function(x) {
   n = sum(is.finite(x))
-  qt(0.975, df=n - 1) * sd(x, na.rm=TRUE)/sqrt(n)
+  qt(0.975, df = n - 1) * sd(x, na.rm = TRUE)/sqrt(n)
 }
 
 ## FIXME! these have no error checking
@@ -79,7 +80,7 @@ fit_gcrq <- function(x) {
                                       lambda = 1000),
                   tau = taus, data = x))
 
-  if(inherits(mod, "try-error"))
+  if (inherits(mod, "try-error"))
   {
     return(NA)
   }
@@ -108,8 +109,3 @@ pred_gcrq <- function(x, mods) {
     return(preds)
   }
 }
-
-### FORM VARIANTS
-WGs <- c("WG", "IC", "Oxford CDI")
-WSs <- c("WS", "TC")
-

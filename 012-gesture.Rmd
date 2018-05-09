@@ -1,26 +1,60 @@
 # Gesture and Communication {#gestures}
+```{r gesture_libraries}
+library(widyr)
+library(broom)
+library(knitr)
+```
 
 This chapter contains analysis of the “early gesture” items from the CDI. Analyses will focus on the cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo.
 
+```{r load_data, eval = F}
+wgs <- get_instruments() %>%
+  filter(form == "WG")
 
-Let's try out some basic descriptives. What do these things look like? Let's arrange them in order of difficulty(on the bases of highest proportion of non-producers).
+wg_data <- map(pull(wgs, language), 
+               ~ get_instrument_data(.x, "WG", administrations = T, 
+                                     iteminfo = T)) %>%
+  bind_rows()
 
-```{r load_gesture_data, fig.width = 10, fig.height = 6}
-library(stringr)
-if(!local_data) {
-eng_data <- get_instrument_data(instrument_language = "English (American)", 
-                                instrument_form = "WG",
-                                administrations = TRUE,
-                                iteminfo = TRUE)
-write_feather(eng_data, "data/eng_wg_data.feather")
-} else{ eng_data <- read_feather("data/eng_wg_data.feather")}
+gesture_langs <- wg_data %>%
+  filter(str_detect(type, "gestures")) %>%
+  distinct(language) %>%
+  pull()
 
-gesture_data <- eng_data %>%
-  filter(str_detect(type, "gesture"))
+# Hebrew is mismapped
+# gestures = gestures_first
+# gestures_object = gestures_objects
+# gestures_actions = gestures_adult
+# gestures_pretend = gestures_parent
 
+# Italian has an extra gestures_play which is just one item of pretend play
+hebrew_mappings <- data_frame(type = c("gestures", "gestures_object",
+                                       "gestures_actions", "gestures_pretend"),
+                              new_type = c("gestures_first", "gestures_objects",
+                                           "gestures_adult", "gestures_parent"))
+
+
+
+gesture_data <- wg_data %>%
+  filter(language %in% gesture_langs) %>%
+  filter(str_detect(type, "gestures") | type == "word") %>%
+  filter(type != "gestures_play") %>%
+  left_join(hebrew_mappings) %>%
+  mutate(type = if_else(is.na(new_type), type, new_type)) %>%
+  select(-new_type)
+
+write_feather(gesture_data, "data/gesture_data.feather")
+```
+
+```{r load_data_local}
+gesture_data <- read_feather("data/gesture_data.feather")
+```
+
+I can't tell if sometimes/often really carries very much signal. It looks like it's all over the place for the earliest gestures and almost overlapping for the latest ones. Let's try compressing to a binary
+```{r first_gestures}
 # Get the First Gestures
-first_gestures <- gesture_data %>% 
-  filter(type == "gestures_first") %>%
+eng_first_gestures <- gesture_data %>% 
+  filter(type == "gestures_first", language == "English (American)") %>%
   filter(!is.na(value)) %>%
   mutate(value = parse_factor(value, c("not yet", "sometimes", "often"))) %>%
   group_by(age, definition, value) %>%
@@ -28,14 +62,14 @@ first_gestures <- gesture_data %>%
   mutate(n = n/sum(n)) %>%
   complete(age, definition, value, fill = list(n = 0)) 
 
-# Order by approxiamate acquistion order to make plotting nicer
-acq_order <- first_gestures %>%
+# Order by approximate acquistion order to make plotting nicer
+acq_order <- eng_first_gestures %>%
   filter(value == "not yet") %>%
   group_by(definition) %>%
   summarise(n = mean(n)) %>%
   arrange(n)
 
-first_gestures_ordered <- first_gestures %>%
+first_gestures_ordered <- eng_first_gestures %>%
   ungroup() %>%
   mutate(definition = parse_factor(definition, acq_order$definition))
 
@@ -47,35 +81,17 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
   scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(7.5, 21),
                     breaks = seq(8, 18)) + 
-  theme_bw()
-
+  theme_classic()
 ```
 
-I can't tell if sometimes/often really carries very much signal. It looks like it's all over the place for the earliest gestures and almost overlapping for the latest ones. Let's try compressing to a binary
-
-```{r bin_gestures, fig.with = 6, fig.height = 4}
-first_gestures_binary <- first_gestures_ordered %>%
-  filter(value == "not yet") %>%
-  mutate(known = 1- n)
-
-ggplot(first_gestures_binary, aes(x = age, y = known, color = definition, 
-                                  label = definition)) + 
-  geom_point() + 
-  geom_smooth(method = "loess", se = FALSE) +
-  geom_dl(method = list(dl.trans(x=x -.2), "first.qp", cex=1)) +
-  scale_color_brewer(palette = "Set1") + 
-  scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
-                    breaks = seq(8, 18)) + 
-  theme_bw()
-
-```
 
 These look pretty reasonable to me, and a lot more stable. Also smacklip doesn't seem to have much of any kind of trajectory, which makes me think that parents don't know what do with it. For comparison, let's try the other gesture categories.
 
 ```{r other_gestures, fig.width = 10, fig.height = 5}
 # Get the First Gestures
 other <- gesture_data %>% 
-  filter(type != "gestures_first") %>%
+  filter(!type %in% c("gestures_first", "word"), 
+         language == "English (American)") %>%
   filter(!is.na(value)) %>%
   mutate(value = parse_factor(value, c("no", "yes"))) %>%
   group_by(age, type, definition, value) %>%
@@ -112,68 +128,307 @@ ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition,
   #scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
                     breaks = seq(8, 18)) + 
-  theme_bw() + 
+  theme_classic() + 
   theme(legend.position = "none")
 ```
 
+
 Interesting, ok most of these look like they have some signal (with the exception maybe of sobig). Also some of them don't look terribly different from the First Gestures.
 
-Let's try looking at correlations with vocabulary size
 
-```{r cor_vocab, fig.width = 4, fig.height = 4}
-cor_data <- gesture_data %>%
-  filter(!is.na(value), !value %in% c("no", "not yet")) %>%
-  group_by(age, comprehension, production, data_id) %>%
-  summarise(produced_gestures = n())
+Let's try out some basic descriptives. What do these things look like? Let's arrange them in order of difficulty(on the bases of highest proportion of non-producers).
 
-cols <- c("comprehension", "production", "produced_gestures")
+```{r bin_gestures, fig.with = 6, fig.height = 4}
+first_gestures_binary <- first_gestures_ordered %>%
+  filter(value == "not yet") %>%
+  mutate(known = 1- n)
 
-cor_data %>% select_(.dots = cols) %>%
-  ggcorplot()
+ggplot(first_gestures_binary, aes(x = age, y = known, color = definition, 
+                                  label = definition)) + 
+  geom_point() + 
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_dl(method = list(dl.trans(x=x -.2), "first.qp", cex=1)) +
+  scale_color_brewer(palette = "Set1") + 
+  scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
+                    breaks = seq(8, 18)) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 ```
 
-Wow, age is really predictive of gesture, even more so than comprehension/production. Let's looking at the effect when we fit age simultaneously.
-
-```{r partial_cor}
-library(lme4)
-num_gestures <- length(unique(gesture_data$definition))
-
-age_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
-                 ~ scale(age) + (1|data_id), 
-                 family = "binomial", data = cor_data)
+2. Intercorrelation among gestures
+```{r intercorrelation}
+binary_data <- gesture_data %>%
+  filter(type != "word") %>%
+  mutate(value = if_else(is.na(value) | value == "", NA, 
+                         if_else(value %in% c("no", "not yet", "never"), F, T)))
 
 
-age_production_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
-                 ~ scale(age) + scale(production) + (1|data_id), 
-                 family = "binomial", data = cor_data)
+kid_type_data <- binary_data %>%
+  group_by(language, type, data_id) %>%
+  summarise(prop = mean(value, na.rm = T)) 
+  
 
-summary(age_production_cor)
+intercor_data <- kid_type_data %>%
+  split(.$language) %>%
+  map(~ pairwise_cor(.x, type, data_id, prop, use = "pairwise.complete")) %>%
+  bind_rows(.id = "language") %>%
+  group_by(language) %>%
+  summarise(mean = mean(correlation), sd = sd(correlation))
 
-age_comprehension_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
-                 ~ scale(age) + scale(comprehension) + (1|data_id), 
-                 family = "binomial", data = cor_data)
-
-summary(age_comprehension_cor)
-
-age_both_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
-                 ~ scale(age) + scale(comprehension) + scale(production) +  (1|data_id), 
-                 family = "binomial", data = cor_data)
-
-summary(age_both_cor)
-
-anova(age_production_cor, age_cor)
-anova(age_comprehension_cor, age_cor)
-anova(age_comprehension_cor, age_both_cor)
-
-age_interaction_cor <- glmer(cbind(produced_gestures, num_gestures - produced_gestures) 
-                             ~ scale(age) * scale(comprehension) + scale(age) * 
-                               scale(production) + (1|data_id), 
-                             control = glmerControl(optimizer = "bobyqa"), 
-                 family = "binomial", data = cor_data)
-
-anova(age_comprehension_cor, age_interaction_cor)
-
-summary(age_interaction_cor)
+kable(intercor_data)
 ```
 
-Ok so all of the things that are positively correlated contain some signal in predicting each-other over and above age. It also looks like there is some non-linearity in the correlation, because the age * comprehension/production correlations are negative. Presumably this is some kind of ceiling effect where the gestures in general are producted before the words? Let's check that next.
+Reproduce intercorrelations among items found in Fenson et al. ~.6 in English and similar cross-linguistically
+
+3. Age and gesture
+```{r age_cor}
+age_cors <- binary_data %>%
+  group_by(language, age, comprehension, production, data_id) %>%
+  summarise(gesture = mean(value, na.rm =T)) %>%
+  ungroup() %>%
+  gather(measure, value, comprehension, production, gesture) %>%
+  split(paste0(.$language,  "_", .$measure)) %>%
+  map(~ cor(.x$age, .x$value, use = "pairwise.complete")) %>%
+  as_data_frame() %>%
+  gather(id, cor) %>%
+  separate(id, into = c("language", "measure"), "_") %>%
+  spread(measure, cor) %>%
+  select(language, gesture, comprehension, production)
+
+kable(age_cors)
+``` 
+
+Crosslingusitic plot
+
+```{r growths, fig.width = 10, fig.height = 6}
+binary_data %>%
+  group_by(language, age, data_id) %>%
+  summarise(prop = mean(value, na.rm = T)) %>%
+  ggplot(aes(x = age, y = prop, color = language,
+             group = language, label = language)) + 
+  geom_jitter(alpha = .1, size = .1) + 
+  geom_smooth(method = "loess", se = F) + 
+  geom_dl(method = "smart.grid", cex=1) +
+  theme_classic() + 
+  theme(legend.position = "none")
+```
+
+Gestures correlates more with comprehension than production 
+```{r gest_lang}
+gest_lang_data <- binary_data %>%
+  group_by(language, comprehension, production, data_id) %>%
+  summarise(gesture = mean(value, na.rm = T)) %>%
+  ungroup() %>%
+  gather(measure, value, comprehension, production) %>%
+  split(paste0(.$language,  "_", .$measure)) %>%
+  map(~ cor(.x$gesture, .x$value, use = "pairwise.complete")) %>%
+  as_data_frame() %>%
+  gather(id, cor) %>%
+  separate(id, into = c("language", "measure"), "_") %>%
+  spread(measure, cor) 
+
+kable(gest_lang_data)
+```
+
+This emerges around 12 months
+
+```{r correlation_over_age}
+age_cor_data <- binary_data %>%
+  filter(age >= 8) %>%
+  group_by(language, age, comprehension, production, data_id) %>%
+  summarise(gesture = mean(value, na.rm = T)) %>%
+  group_by(language, age) %>%
+  mutate_at(c("comprehension", "production", "gesture"), scale) %>%
+  group_by(language, age) %>%
+  gather(measure, value, comprehension, production) 
+
+age_cor_data %>%
+  group_by(age, measure, language) %>%
+  summarise(correlation = cor(value, gesture, use = "pairwise.complete")) %>%
+  ggplot(aes(x = age, y = correlation, color = measure, fill = measure, 
+             label = measure)) +
+  geom_smooth(se = T) + 
+  geom_jitter(alpha = .5, size = .5) + 
+  theme_classic() + 
+  geom_dl(method = list(dl.trans(x=x +.2), "last.qp", cex=1)) +
+  theme(legend.position = "none") + 
+  scale_x_continuous(limits = c(6, 30))
+
+age_cor_model <- lmer(gesture ~ value * measure  * age + 
+                        (measure|language), data = age_cor_data)
+
+tidy(age_cor_model, "fixed") %>%
+  kable()
+
+```
+
+Type and sex. Small female advantage overall, but big interaction in gestures_parent
+```{r sex_type_plot, fig.width = 8, fig.height = 6}
+sex_type_kid_data <- binary_data %>%
+  filter(!is.na(sex), !is.na(value)) %>%
+  group_by(language, age, sex, type, data_id) %>%
+  summarise(gesture = mean(value, na.rm = T)) 
+
+sex_type_data <- sex_type_kid_data %>%
+  summarise(gesture = mean(gesture, na.rm = T),
+            n = n()) %>%
+  mutate(se = sqrt((gesture * (1-gesture))/n))
+
+ggplot(sex_type_data, aes(x = age, y = gesture, color = sex, label = sex)) + 
+  facet_grid(language ~ type) +
+  geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
+  geom_smooth(se = F) +
+  theme_classic() + 
+  geom_dl(method = list("smart.grid", cex=1)) + 
+  theme(legend.position = "none")
+```
+
+
+```{r sex_type_model}
+sex_type_model_data <- binary_data %>%
+  mutate(type = factor(type,
+                       levels = c("gestures_first", "gestures_games", 
+                                  "gestures_objects", "gestures_parent",
+                                  "gestures_adult"))) %>%
+  group_by(language, age, sex, data_id, type) %>%
+  summarise(gesture = mean(value, na.rm = T))
+
+sex_type_model <- sex_type_model_data %>%
+  lmer(gesture ~ age * sex * type + (1 | data_id) +
+                (1 | language), data = .)
+
+tidy(sex_type_model, "fixed") %>%
+  kable()
+```
+
+Type and ses. Very small low-ses advantage?
+```{r ses_type_plot, fig.width = 8, fig.height = 6}
+ses_type_kid_data <- binary_data %>%
+  filter(!is.na(mom_ed), !is.na(value)) %>%
+  mutate(ses = if_else(mom_ed %in% c("College", "Some Graduate",
+                                     "Graduate"), "high", "low")) %>%
+  group_by(language, age, ses, type, data_id) %>%
+  summarise(gesture = mean(value, na.rm = T)) 
+
+ses_type_data <- ses_type_kid_data %>%
+  summarise(gesture = mean(gesture, na.rm = T),
+            n = n()) %>%
+  mutate(se = sqrt((gesture * (1-gesture))/n))
+
+ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) + 
+  facet_grid(language ~ type) +
+  geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
+  geom_smooth(se = F) +
+  theme_classic() + 
+  geom_dl(method = list("smart.grid", cex=1)) + 
+  theme(legend.position = "none")
+```
+
+
+```{r ses_type_model}
+ses_type_kid_model <- ses_type_kid_data %>%
+  lmer(gesture ~ age * type + ses * type + 
+         age * ses + (1 | data_id) +
+                (1 | language), data = .)
+
+tidy(ses_type_kid_model, "fixed") %>%
+  kable()
+```
+
+```{r gesture_word_type_cor_plot}
+reorder_factors_with_clusters <- function(m) {
+ 
+   m_wide <- m %>%
+    spread(item2, correlation) %>%
+    select(-1) %>%
+    as.matrix() 
+  
+  item1_order <- hclust(dist(m_wide))$order
+  item2_order <- hclust(dist(t(m_wide)))$order
+  
+  df_reordered <- m %>%
+    mutate(item1 = fct_relevel(item1, levels(m$item1)[item1_order]),
+           item2 = fct_relevel(item2, levels(m$item2)[item2_order]))
+
+  df_reordered
+}
+
+
+word_type_data <- gesture_data %>%
+  filter(type == "word", !category %in% 
+           c("other", "connecting_words", "helping_verbs")) %>%
+  group_by(type, language, age, category, data_id) %>%
+  summarise(produces = mean(value == "produces", na.rm = T), 
+            comprehends = mean(value %in% c("produces", "comprehends"),
+                               na.rm = T)) %>%
+  gather(measure, value, comprehends, produces)
+
+gesture_type_data <- binary_data %>%
+  group_by(language, age, type, data_id) %>%
+  summarise(value = mean(value)) %>%
+  rename(category = type) %>%
+  mutate(measure = "gestures", type = "gesture")
+
+
+type_cor_data <- bind_rows(word_type_data, gesture_type_data)
+
+comp_cor_bylang<- type_cor_data %>%
+  filter(measure != "produces") %>%
+  split(.$language) %>%
+  map(~ pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
+  bind_rows(.id = "language") %>%
+  filter(item1 %in% binary_data$type & !item2 %in% binary_data$type) %>%
+  filter(!item2 %in% c("connecting_words", "helping_verbs", "other"))
+
+
+comp_cor_bylang %>%
+  group_by(item1, item2) %>%
+  summarise(correlation = mean(correlation, na.rm = T)) %>%
+  ungroup() %>%
+  mutate_at(c("item1", "item2"), as.factor) %>%
+  reorder_factors_with_clusters %>%
+  bind_rows(.id = "language") %>%
+  ggplot(aes(x = item1, y = item2)) + 
+  geom_tile(aes(fill = correlation)) +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
+
+
+
+prod_cor_bylang <- type_cor_data %>%
+  filter(measure != "comprehends") %>%
+  split(.$language) %>%
+  map(~ pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
+  bind_rows(.id = "language") %>%
+  filter(item1 %in% binary_data$type & !item2 %in% binary_data$type) %>%
+  filter(!item2 %in% c("connecting_words", "helping_verbs", "other"))
+
+
+prod_cor_bylang %>%
+  group_by(item1, item2) %>%
+  summarise(correlation = mean(correlation, na.rm = T)) %>%
+  ungroup() %>%
+  mutate_at(c("item1", "item2"), as.factor) %>%
+  reorder_factors_with_clusters %>%
+  bind_rows(.id = "language") %>%
+  ggplot(aes(x = item1, y = item2)) + 
+  geom_tile(aes(fill = correlation)) +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
+```
+
+```{r gesture_word_cor_model}
+gesture_word_cord_model_data <- comp_cor_bylang %>%
+  mutate(measure = "comprehends") %>%
+  bind_rows(mutate(prod_cor_bylang, measure = "produces")) %>%
+  mutate(item1 = factor(item1, levels = c("gestures_first", "gestures_games", "gestures_objects", "gestures_parent", "gestures_adult")))
+
+gesture_word_cord_model <- lmer(correlation ~ item1 * item2 * measure + (1|language),
+                                data = gesture_word_cord_model_data)
+
+tidy(gesture_word_cord_model, "fixed") %>%
+  arrange(desc(abs(statistic))) %>%
+  kable()
+
+```
+

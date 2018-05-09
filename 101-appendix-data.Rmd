@@ -3,7 +3,7 @@
 This appendix give the specifics of the data represented in each of the languages of the book.  
 
 ```{r}
-datasets <- jsonlite::fromJSON("../wordbank/static/json/datasets.json")
+datasets <- jsonlite::fromJSON("../site/static/json/datasets.json")
 ```
 
 ```{r results="asis"}

@@ -73,6 +73,7 @@ ggplot(wg_summary,
                    aes(label = language))
 ```
 
+QUANTIFY THIS VARIABILITY ACROSS LANGUAGES A LA 4.
 
 ## Variation in Vocabulary Composition
 

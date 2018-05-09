@@ -538,7 +538,7 @@ write_feather(mirt_params, "data/mirt_params.feather")
 ```
 
 
-```{r}
+```{r variability_IRT_slopes}
 mirt_params <- read_feather("data/mirt_params.feather")
 
 mirt_sd <- mirt_params %>%
@@ -578,7 +578,7 @@ Interestingly, slopes for the variability of latent ability are fairly flat or i
 
 We observed a striking consistency in the individual variability of children's vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary.What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from @storvold2013. 
 
-```{r}
+```{r walking_comparison}
 p100 <- vocab_data %>%
   filter(language == "Norwegian") %>%
   group_by(age, form) %>%
@@ -603,7 +603,7 @@ ggplot(p100, aes(x = age, y = prob, col = response)) +
   ylab("Probability") + xlab("Age (months)")
 ```
 
-```{r}
+```{r walking_comparison_2}
 p100 %>%
   group_by(response) %>%
   summarise(`25th percentile` = min(age[prob >= .25]),

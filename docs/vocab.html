@@ -159,7 +159,7 @@ Figure 4.2: Median production using the Words and Sentences form. Included are o
 <p><img src="wordbank-book_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In the remainder of this section, we consider the other languages in the WS sample. The figure above shows estimates of the median 24-month vocabulary in both raw scores and proportions. (To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months). Clearly there are substantial differences in raw scores. We consider a range of explanations for this pattern.</p>
 <ol style="list-style-type: decimal">
-<li>Differences could be due to differences in form length. As shown in the plot above, medians for production and raw scores are highly correlated (<span class="math inline">\(r\)</span>(15) = 0.654, <span class="math inline">\(p\)</span> = 0.00442), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length (<span class="math inline">\(r\)</span>(15) = 0.376, <span class="math inline">\(p\)</span> = 0.137), this correlation changes direction and is no longer reliable for proportions (<span class="math inline">\(r\)</span>(15) = -0.451, <span class="math inline">\(p\)</span> = 0.0693). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. See below for a plot of the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).</li>
+<li>Differences could be due to differences in form length. As shown in the plot above, medians for production and raw scores are highly correlated (<span class="math inline">\(r\)</span>(13) = 0.609, <span class="math inline">\(p\)</span> = 0.0159), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length (<span class="math inline">\(r\)</span>(13) = 0.382, <span class="math inline">\(p\)</span> = 0.16), this correlation changes direction and is no longer reliable for proportions (<span class="math inline">\(r\)</span>(13) = -0.495, <span class="math inline">\(p\)</span> = 0.0605). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. See below for a plot of the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).</li>
 </ol>
 <p><img src="wordbank-book_files/figure-html/3_medians_production_ws_prop-1.png" width="672" style="display: block; margin: auto;" /></p>
 <ol start="2" style="list-style-type: decimal">
@@ -236,14 +236,14 @@ Figure 4.2: Median production using the Words and Sentences form. Included are o
 <h3><span class="header-section-number">4.2.2</span> Item-response theory</h3>
 <p>The analysis above suggests that variability between individuals decreases. But this conclusion is compromised by ceiling effects: once children begin to reach the ceiling of the CDI form, variability is necessarily truncated. No analysis can completely eliminate these effects, but the use of item response theory-based analyses can partially address the issue by estimating variation in latent ability (which leads to a particular score) rather than variation in raw scores themselves.</p>
 <p>Appendix <a href="appendix-psychometrics.html#appendix-psychometrics">C</a> provides a summary of our approach to using item response theory (IRT). In brief, item response theory provides a framework in which the full test (the CDI) is broken down into a series of items, with each having its own logistic model predicting the response for a particular child on the basis of their latent ability. In Appendix <a href="appendix-psychometrics.html#appendix-psychometrics">C</a>, we examine the parameters of individual items with respect to their properties; but fitting an IRT model also implies estimating a set of latent ability parameters for individual participants. These latent ability parameters are logistic regression coefficients and hence are not bounded in the same way that individual responses (and hence raw scores) are. Thus, we can examine their variability as a way of dealing with ceiling effects.</p>
-<p><img src="wordbank-book_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="wordbank-book_files/figure-html/variability_IRT_slopes-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The above figure shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret – the range of latent ability scores on a form is a function of how consistently difficult or easy the items are. Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children’s abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases.</p>
 <p>Interestingly, slopes for the variability of latent ability are fairly flat or increasing (with Mandarin – which has extreme ceiling effects – the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. Variability is constant, or even increasing, with age.</p>
 </div>
 <div id="discussion" class="section level3">
 <h3><span class="header-section-number">4.2.3</span> Discussion</h3>
 <p>We observed a striking consistency in the individual variability of children’s vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary.What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from <span class="citation">Størvold, Aarethun, and Bratberg (<a href="references.html#ref-storvold2013">2013</a>)</span>.</p>
-<p><img src="wordbank-book_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="wordbank-book_files/figure-html/walking_comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
 <table>
 <thead>
 <tr class="header">
@@ -256,48 +256,41 @@ Figure 4.2: Median production using the Words and Sentences form. Included are o
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">understands 10 words</td>
-<td align="right">8</td>
-<td align="right">10</td>
-<td align="right">2</td>
-<td align="right">0.22</td>
-</tr>
-<tr class="even">
 <td align="left">walking</td>
 <td align="right">12</td>
 <td align="right">14</td>
 <td align="right">2</td>
 <td align="right">0.15</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">produces 10 words</td>
 <td align="right">13</td>
 <td align="right">16</td>
 <td align="right">3</td>
 <td align="right">0.21</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">produces 50 words</td>
 <td align="right">17</td>
 <td align="right">20</td>
 <td align="right">3</td>
 <td align="right">0.17</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">produces 100 words</td>
 <td align="right">18</td>
 <td align="right">23</td>
 <td align="right">5</td>
 <td align="right">0.25</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">understands 50 words</td>
 <td align="right">10</td>
 <td align="right">15</td>
 <td align="right">5</td>
 <td align="right">0.42</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">produces 200 words</td>
 <td align="right">20</td>
 <td align="right">26</td>

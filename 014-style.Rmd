@@ -11,104 +11,47 @@ structure and strategy, referential vs. expressive distinction
 
 @bates1994
 
-@mayor2014
+Further, idiosyncrasy in children's vocabulary is an interesting measure suggested by @mayor2014.
 
-**notes on new intro**
-in general, analyses from before can be individual differences?
+The general issue of this chapter is that there are many measures we can define regarding individual variability, and the trick will be telling signal from noise (and from artifact). We typically rely on three strategies. The first is to ask whether a particular measure is valid in the sense that it is related to some other aspect of the data. We are in the position of not having independent validation measures to apply to, but we can still reasonably ask whether one measure (e.g., proportion of nouns) is related to another (e.g., vocabulary for age). The second strategy is -- as throughout -- to look for consistency across samples in a particular pattern. Such consistency suggests some signal, though in each case we will try to be cautious about differentiating this signal from statistical artifact. The third strategy is to look for consistency in a particular measure throughout development (e.g., evaluating "test-retest" reliability of a measure). 
 
-- rate diffeences
-- syntactic category composition differences
-- vocabulary in particular (idiosyncrasy)
+Summarizing the conclusions from our various different sub-analyses:
 
+* Referential vs. expressive variation is present but is over-estimated by analyses that do not correct for vocabulary size, since smaller vocabularies tend to be more noun-heavy. 
 
-## Variation in Production/Comprehension Tradeoffs
-
-Example for English.
-
-```{r}
-eng_wg <- filter(admins, language == "English (American)", form == "WG")
-
-ggplot(eng_wg, 
-       aes(x = comprehension, y = production)) + 
-  geom_point() + 
-  geom_abline(lty = 2, col = "red") + 
-  geom_smooth()
-```
-
-All languages.
-
-
-```{r}
-wg <- filter(admins, form == "WG")
-
-ggplot(wg, 
-       aes(x = comprehension, y = production)) + 
-  geom_point() + 
-  geom_abline(lty = 2, col = "red") + 
-  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) + 
-  facet_wrap(~language)
-```
-
-
-Now consolidated across languages. 
-
-```{r}
-wg <- filter(admins, form == "WG")
-
-wg_summary <- wg %>%
-  group_by(language, age) %>%
-  summarise(comprehension = mean(comprehension),
-            production = mean(production), 
-            n = n())
-  
-ggplot(wg_summary, 
-       aes(x = comprehension, y = production, col = language)) + 
-  geom_abline(lty = 2, col = "black") + 
-  geom_point(aes(size = n)) + 
-  scale_color_solarized(guide = FALSE) + 
-  geom_smooth(se=FALSE, method = "lm", formula = y ~ I(x^2), aes(weight  = 1/n)) +
-  geom_label_repel(data = wg_summary %>%
-                     group_by(language) %>%
-                     filter(age == max(age)), 
-                   aes(label = language))
-```
-
-QUANTIFY THIS VARIABILITY ACROSS LANGUAGES A LA 4.
+* It is tricky to use comprehension data to estimate variability between individuals in how much they produce vs. comprehend, due to likely cross-linguistic differences in the uptake of instructions regarding comprehension. 
 
 ## Variation in Vocabulary Composition
 
-See @bates1994.
+In this subsection we examine the question of variation across children in referential vs. expressive vocabulary. Following @bates1994, we operationalize out the notion of a "referential" vocabulary as simply one that has relatively more nouns. While there are other more nuanced measures that we can construct, this one has the advantage of being directly related to the framework in Chapter \@ref(categories). We use that framework investigate vocabulary composition in individuals. Recall that we computed the proportion of children's vocabulary that was made up of nouns as a function of age in that chapter. 
 
-### Nouns
-
-```{r}
+```{r 14_re_beginning}
 vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
-```
 
-Start with WS.
-
-```{r}
 ws_vc <- vocab_comp_data %>%
-  filter(form == "WS") 
-```
+  filter(form %in% WSs)  %>%
+  mutate(langform = paste(language, form))
 
-Here is proportion nouns as a function of total vocab size. 
-
-```{r}
 ws_vc_all <- ws_vc %>%
-  filter(measure == "produces", lexical_category == "nouns")
-
+  filter(measure == "produces", 
+         lexical_category == "nouns")
 
 ggplot(ws_vc_all, 
        aes(x = vocab, y = prop_vocab)) + 
-  geom_point(alpha = .1) + 
+  geom_point(alpha = .05) + 
   geom_smooth() + 
-  facet_wrap(~language) + 
-  xlab("Total Vocabulary Size (proportion)") + 
-  ylab("Proportion Nouns") 
+  facet_wrap(~langform) + 
+  scale_x_continuous(name = "Total Vocabulary Size (proportion)", breaks = c(0,.5,1)) + 
+  scale_y_continuous(name = "Proportion Nouns", breaks = c(0,.5,1)) + 
+  geom_hline(data = ws_vc_all %>%
+               group_by(langform) %>%
+               filter(vocab == max(vocab)) %>%
+               sample_n(size = 1), 
+             aes(yintercept = prop_vocab), lty = 2, col = "red")
 ```
+That pattern is shown in the figure above. It's clear that there is an overall trend for an over-representation of nouns, as shown by the blue line (representing the smoothed mean proportion nouns) being above the red dashed line (total porportion nouns on the form). The size of this over-representation is the topic of Chapter \@ref(categories). Here we examine variability in over-representation. 
 
-Test @nelson1973's suggestion that more referential is related to faster vocab growth. How do we do this? Well, one way of cashing out the relationship says that prop nouns should be a predictor of vocab size within language, over and above age?
+In particular, we follow @nelson1973, who  suggests that chilren who are more referential in their style also have faster vocabulary growth.^[Referential style was also associated with a variety of other variables like socioeconomic status and birth order that are themselves related to vocabulary outcomes.] One way of cashing out this claim empirically is to suggest that the proportion of nouns in a child's vocabulary should be a predictor of vocabulary size, over and above age. We evaluate this claim below. 
 
 ```{r}
 n_items <- items %>%
@@ -122,61 +65,61 @@ vc_pred <- left_join(ws_vc_all, admins) %>%
   rename(noun_prop = prop_vocab)
 ```
 
-Not sure about the model to use here. First, try linear model of proportions (wrong). 
 
 ```{r}
 coefs <- vc_pred %>%
   filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
-  group_by(language) %>%
-  do(tidy(lm(prop ~ age * noun_prop, data = .))) 
+  group_by(language, form) %>%
+  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * noun_prop, 
+              data = ., family = "binomial"))) %>%
+  mutate(langform = paste(language, form)) %>%
+  filter(term %in% c("age", "noun_prop","age:noun_prop")) %>%
+  mutate(term = factor(term, 
+                        labels = c("Age", "Prop. Nouns","Age x Prop. Nouns"), 
+                        levels = c("age", "noun_prop", "age:noun_prop")))
 
-ggplot(filter(coefs, term %in% c("age", "noun_prop","age:noun_prop")), 
-       aes(x = fct_reorder(language, estimate), y = estimate, col = term)) + 
+ggplot(coefs, 
+       aes(x = fct_reorder(langform, estimate), y = estimate, 
+           col = term)) + 
   geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
   facet_wrap(~term, scales = "free_x") + 
   geom_hline(yintercept = 0, lty = 2) + 
-  coord_flip() 
+  coord_flip()+ 
+  xlab("") +
+  ylab("Coefficient Estimate") +
+  scale_color_solarized(name = "Term") + 
+  theme(legend.position = "bottom")
 ```
 
-Now try glm over total outcomes. 
+A simple model of this hypothesis is a GLM predicting the number of CDI words a child produces as a function of age, proportion nouns, and their interaction. The coefficients of this model are shown above. Age coefficients are positive (indicating more words with age) and proportion of nouns is positive as well, indicating an independent contribution of this variable over and above age. The interaction of the two is negative because proportion of nouns converges to the total proportion of nouns on the form as vocabulary is large, so this variable is uniform across children for older ages. 
+
+This result appears to provide support for the relationship between the referential/expressive distinction and vocabulary size. But, as noted by @lieven1992, the bigger your vocabulary is, the bigger your noun bias on average. Thus, the causality in the relation above could be reversed. Proportion nouns could be predictive of vocabulary size not because children with a particular style have bigger vocabularies, but because having more nouns in your vocabulary tends to indicate that you are further along. 
+
+Put another way, perhaps all children follow the same trajectory through the noun bias. Even in this scenario, knowing the size of a child's noun bias will tell you something about vocabulary size, without that implying that the child is following a different trajectory.
+
+One way to circumvent this critique statistically is to measure whether a particular child has a greater-than-average, vocabulary-adjusted noun-bias. In other words, if we remove the endogenous signal (the average correlation with noun bias and vocabulary), can we still find a relation with individuals' degree of noun bias and vocabulary size? Will children with even more noun bias tend to have even larger vocabularies relative to age?
 
 ```{r}
-coefs <- vc_pred %>%
-  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
-  group_by(language) %>%
-  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * noun_prop, data = ., family = "binomial"))) 
+eng_ex <- filter(vc_pred, language == "English (American)") %>%
+  mutate(resid_noun_prop = resid(lm(noun_prop ~ prop + I(prop^2) + I(prop^3)))) %>%
+  gather(measure_type, value, noun_prop, resid_noun_prop) %>%
+  mutate(measure_type = factor(measure_type, 
+                               levels = c("noun_prop","resid_noun_prop"), 
+                               labels = c("Prop. Nouns", "Residual Prop. Nouns")))
 
-ggplot(filter(coefs, term %in% c("age", "noun_prop","age:noun_prop")), 
-       aes(x = fct_reorder(language, estimate), y = estimate, col = term)) + 
-  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
-  facet_wrap(~term, scales = "free_x") + 
-  geom_hline(yintercept = 0, lty = 2) + 
-  coord_flip() 
-```
-
-Model is largely the same, more overconfident but harder to interpret. 
-
-In both cases, there's clear support for @nelson1973's R/E distinction in that kids with larger noun biases early tend also to have bigger vocabularies for their age. 
-
-This is true fro all languages except for Mandarin, which doesn't show a noun bias at all. Interestingly, it's true in Cantonese too. Odd. 
-
-On the other hand, that might just be a consequence of reverse causality: the bigger your vocabulary is, the bigger your noun bias on average, so you might just be picking up on the fact that kids with bigger vocabularies are showing the noun bias that would emerge later for every kid anyway. 
-
-This is the critique leveled by @pine1990.
-
-One way to deal with this is to find out if a kid has a greater than vocabulary-size adjusted noun bias.
-
-What that looks like:
-
-```{r}
-x <- filter(vc_pred, language == "English")
-qplot(prop, noun_prop, data=x) + 
+ggplot(eng_ex, aes(x = prop, y = value)) +
+  geom_point(alpha = .2) + 
+  facet_wrap(~measure_type)+ 
   geom_smooth(method = "lm", 
-              formula = y ~ x + I(x^2) + I(x^3))
+              formula = y ~ x + I(x^2) + I(x^3)) + 
+  xlab("Total Vocabulary Size (proportion)") + 
+  ylab("Measure")
 ```
 
+The figure above shows both the English noun-proportion data and the resulting residuals from that distribution when fit via a cubic model (blue curve). These residuals can then be used to test for incremental contributions to total vocabulary over and above age. 
+
 ```{r}
-vc_pred <- vc_pred %>%
+resid_vc_pred <- vc_pred %>%
   filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
   split(.$language) %>%
   map_df(function(x) {
@@ -184,21 +127,34 @@ vc_pred <- vc_pred %>%
     x$resid_noun_prop <- resid(mod)
     return(x)
   })
-  
 
-coefs <- vc_pred %>%
-  group_by(language) %>%
-  do(tidy(lm(prop ~ age * resid_noun_prop, data = .))) 
+resid_coefs <- resid_vc_pred %>%
+  group_by(language, form) %>%
+  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * resid_noun_prop, 
+              family = "binomial", data = .)))  %>%
+  filter(term %in% c("age", "resid_noun_prop","age:resid_noun_prop")) %>%
+  mutate(term = factor(term, 
+                     labels = c("Age", "Resid. Nouns", "Age x Resid. Nouns"), 
+                     levels = c("age", "resid_noun_prop", "age:resid_noun_prop")), 
+         langform = paste(language, form)) 
 
-ggplot(filter(coefs, term %in% c("age", "resid_noun_prop","age:resid_noun_prop")), 
-       aes(x = fct_reorder(language, estimate), y = estimate, col = term)) + 
-  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+
+ggplot(resid_coefs, 
+       aes(x = fct_reorder(langform, estimate), 
+           y = estimate, col = term)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, 
+                      ymax = estimate + std.error)) + 
   facet_wrap(~term, scales = "free_x") + 
   geom_hline(yintercept = 0, lty = 2) + 
-  coord_flip() 
+  coord_flip() +
+  xlab("") +
+  ylab("Coefficient Estimate") +
+  scale_color_solarized(name = "Term") + 
+  theme(legend.position = "bottom")
 ```
 
-OK, it's a lot less obviously true that Rs have bigger vocabs than Es, at least by this analysis. 
+
+
 
 ### Closed class words
 
@@ -218,6 +174,115 @@ ggplot(ws_vc_all,
   xlab("Total Vocabulary Size (proportion)") + 
   ylab("Proportion Function Words") 
 ```
+
+
+
+## Variation in Production vs. Comprehension
+
+Our first investigation concerns the question of how tightly comprehension and production are yoked within CDI data. Our assumption is that there is variability between children on this dimension -- while some children produce a large amount of language, others appear to produce less but still understand substantial amounts. How does the ratio of production to comprehension vary across ages, and across cultures? 
+
+
+Before we begin the analysis it is important to be clear that some of the pattern in this variable could be due to variation between parents in under- or over-reporting comprehension (or for that matter, production, but we assume -- and Appendix \@ref(appendix-psychometrics) confirms that production reports likely carries more signal). For example, we might be detecting variation in the threshold at which parents assume that a response indicates comprehension. Some parents might be very liberal and recall a generally-understood story that included a particular word, while others might be searching for a specific anecdote that clearly illustrates comprehension of that word. 
+
+Of course this type of analysis can only be conducted on WG-type forms, because of the presence of comprehension information. We begin by investigating the American English WG data as an example. 
+
+
+```{r}
+eng_wg <- filter(admins, language == "English (American)", form == "WG")
+
+ggplot(eng_wg, 
+       aes(x = comprehension, y = production)) + 
+  geom_point(alpha = .2) + 
+  geom_abline(lty = 2, col = "red") + 
+  geom_smooth() + 
+  xlab("Total Comprehension") + 
+  ylab("Total Production")
+```
+
+The figure above shows individual children's comprehension and production plotted against one another. The diagonal indicates a child who comprehends and produces exactly the same number of words. In practice, this measure is always below the diagonal because by the design of the form, a child cannot "say but not understand" a particular word, they can only "understand" or "say and understand." We can convert these data into a productivity ratio:
+
+$$productivity = \frac{\# produced}{\# understood}$$
+\noindent and plot this ratio for all children. 
+
+```{r}
+eng_wg$productivity <- eng_wg$production / eng_wg$comprehension
+
+ggplot(eng_wg, aes(x = age, y = productivity)) + 
+  geom_jitter(alpha = .2) + 
+  geom_smooth() + 
+  xlab("Age (Months)") + 
+  ylab("Productivity Ratio")
+```
+The resulting scatterplot is quite interpretable. It contains a few outliers at the very top of the range for very young children (whose parents report them producing and comprehending the same number of words). But for most others, the ratio is low, increasing from about 10% to 30% by the top of the form. 
+
+```{r}
+wg <- filter(admins, form %in% WGs) %>%
+  mutate(productivity = production / comprehension) %>%
+  mutate(langform = paste(language, form))
+
+wg$langform <- fct_reorder(factor(wg$langform), wg$productivity, 
+                           fun = function(x) {mean(x, na.rm=TRUE)}, .desc = FALSE)
+
+ggplot(filter(wg, age >= 8, age <= 18),
+       aes(x = age, y = productivity)) + 
+  geom_jitter(alpha = .05) +
+  geom_smooth(method = "lm") + 
+  facet_wrap(~langform) + 
+  scale_y_continuous(name = "Productivity Ratio", breaks = c(0,.5,1)) + 
+  scale_x_continuous(name = "Age (Months)", breaks = c(8, 12, 16)) 
+
+```
+
+The figure above plots these productivity ratios by language for an age-restricted subset between 8 and 18 months. Plots are sorted by the mean productivity ratio. While the majority of languages show the same pattern as English (an increase from around 10% to 30%) there are some outliers that show a flatter slope. 
+
+[Note that there is currently an error with Kiswahili and Kigiriama but we are fixing this]. 
+
+
+```{r}
+ggplot(filter(wg, !(langform %in% c("British Sign Language WG", 
+                                    "Kigiriama WG", "Kiswahili WG"))),
+       aes(x = age, y = productivity, col = langform)) + 
+  # geom_jitter(alpha = .2) + 
+  # geom_smooth(method = "loess", se = FALSE, span = 1, alpha = .5) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  xlab("Age (Months)") + 
+  ylab("Productivity Ratio") + 
+  theme(legend.position = "bottom") + 
+  xlim(8,18) + 
+  ylim(0,.4)
+```
+
+We can see this pattern even better by plotting the best-fit lines across languages. Nearly all of these go up with age and have similar slopes. 
+
+```{r}
+productivity_coefs <- wg %>%
+  group_by(language, form) %>%
+  do(tidy(lm(productivity ~ age, data = .))) %>%
+  filter(term == "age") %>%
+  ungroup %>%
+  mutate(langform = fct_reorder(paste(language, form), estimate, fun = mean))
+  
+ggplot(productivity_coefs, 
+       aes(x = langform, y = estimate)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+  coord_flip()
+```
+
+
+Going back to the scatter plots, however, in nearly every language to one degree or another, we see ratios > .95, indicating that parents are essentially not using "understands" as a separate option. 
+
+```{r}
+wg %>%
+  group_by(langform)%>%
+  summarise(no_comprehension = signif(mean(productivity > .95, na.rm=TRUE), 2)) %>%
+  arrange(desc(no_comprehension)) %>%
+  datatable()
+```
+In this table, we see that a number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages. 
+
+In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of instructions regarding comprehension in CDI administration. 
+
+
 
 ## Overlap in vocabulary
 

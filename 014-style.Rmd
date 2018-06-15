@@ -445,7 +445,7 @@ n_cross_ws <- admins %>%
   filter(n_admins == 1)
 
 # gets percentiles for longitudinal based on cross-sectional. 
-get_percentiles <- function (df) {
+get_empirical_percentiles <- function (df) {
   # assumes ages are uniform in this sample
   this_age <- df$age[1]
   this_lang <- df$language[1]
@@ -463,7 +463,7 @@ get_percentiles <- function (df) {
 
 n_long_ws <- n_long_ws %>%
   split(list(.$age,.$language), drop = TRUE) %>%
-  map_df(get_percentiles)
+  map_df(get_empirical_percentiles)
 ```
 
 Replot those top ones. 
@@ -475,6 +475,39 @@ ggplot(filter(n_long_ws, n_admins > 10,
   geom_line() + 
   scale_colour_discrete(guide = FALSE)
 ```
+We can see that these are visually quite stable. We can quantify this by the standard deviation.
+
+```{r}
+n_long_ws %>%
+  group_by(language, original_id) %>%
+  summarise(sd = sd(percentile, na.rm = TRUE), 
+            mean_pairwise_diff = mean(diff(percentile), na.rm=TRUE)) %>%
+  summarise(sd = mean(sd, na.rm = TRUE), 
+            mean_pairwise_diff = mean(mean_diff, na.rm=TRUE))
+```
+
+Another way to look at this is the difference in percentile ranks by the age gap.
+
+```{r}
+ms <- n_long_ws %>%
+  group_by(language, original_id) %>%
+  mutate(pct_diff = c(NA, diff(percentile)), 
+         age_diff = c(NA, diff(age))) 
+
+ggplot(ms, aes(x = age_diff, y= pct_diff)) + 
+  geom_jitter(alpha = .1) + 
+  geom_smooth(method = "lm") + 
+  facet_wrap(~language)+ 
+  geom_hline(yintercept = 0, lty = 2, col = "red")
+```
+
+```{r}
+ggplot(ms, aes(x = pct_diff * 100)) + 
+  geom_histogram() + 
+  facet_wrap(~language)
+
+```
+
 
 
 ## "Spurts" in Vocabualry

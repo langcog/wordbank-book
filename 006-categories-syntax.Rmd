@@ -34,13 +34,13 @@ One notable exception in a literature where samples have been small -- in terms 
 
 Each CDI form contains a mixture of words in different classes. We adopt the categorization of @bates1994, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as "closed class" words), and other words. For each child's vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by @bates1994, for each of the languages in our sample, we plot these proportions against total vocabulary. Each dot represents a child's knowledge of a particular class, while curves show the relationship between a class and the whole vocabulary. If categories grow independently of one another, these curves should approximate the diagonal. 
 
-```{r 4_items}
+```{r 6_items}
 items <- items %>%
   filter(type == "word") %>%
   mutate(num_item_id = as.numeric(substr(item_id, 6, nchar(item_id))))
 ```
 
-```{r 4_vocab_comp_fun}
+```{r 6_vocab_comp_fun}
 get_vocab_comp <- function(input_language, input_form) {
   # print(paste(input_language,input_form))
   
@@ -78,7 +78,7 @@ get_vocab_comp <- function(input_language, input_form) {
 }
 ```
 
-```{r 4_vocab_comp, eval=FALSE}
+```{r 6_vocab_comp, eval=FALSE}
 instruments <- instruments %>%
   filter(form %in% c(WSs,WGs)) %>%
   dplyr::select(language, form) %>%
@@ -92,7 +92,7 @@ write_feather(vocab_comp_data, "data/vocab_comp_data.feather")
 ```
 
 
-```{r 4_sample_sizes}
+```{r 6_sample_sizes}
 vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
 
 sample_sizes <- vocab_comp_data %>%

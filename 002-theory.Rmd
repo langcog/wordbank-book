@@ -39,6 +39,8 @@ Second, language learning takes place at the timescale of years. CDI forms provi
 
 Third, the regularities we observe are in the learning of vocabulary and constructions, rather than syntactic rules. These items *must* be learned from data. Thus any putative universals identified in our investigation must not be "content universals" that specific particular grammatical rules or linkages. They must be "process universals" in the sense that they specify mechanisms or processes that unfold over time and operate over children's interactional input in ways that produce the observed consistencies. 
 
+<!-- Note that these got merged below.  -->
+
 Finally, the project of this book is fundamentally about empirical unification of phenomena. By replication of analyses across different datasets, we provide a testbed for theoretical ideas that make contact with data. We believe our work here embodies the transformational potential of data. Data can provide precision in measurement, though -- as we are at pains to point out throughout -- doing so requires constant attention to sources of bias.
 
 
@@ -62,9 +64,52 @@ Second, the genesis of the investigations documented in this book was in part th
 
 The final reason we consider cross-language variability as our primary lever is a negative one. The obvious competitor as a source of variability is variation across individuals. We examine this variability briefly in Chapter \@ref(vocab) and more extensively in Chapter \@ref(style). While we document substantial and stable variability across individuals [echoing @bates 1994], this variability empirically proves to be less of a lever into theoretical issues of interest than we would hope. One part of this is data-related -- we have far more cross-sectional than longitudinal data in the Wordbank dataset -- and hence we cannot track stability and change over time as easily or powerfully as we would like. Further, we have very few additional measures on most children in the dataset (beyond the occasional demographic feature). In addition, as we show in Chapter \@ref(style), much apparent variability in children's style of language learning can be traced to variation in rate. Thus, and in contrast to the exciting emergent conclusions from cross-lingustic variation, individual variation appears to be a less powerful theoretical lever. 
 
-In Chapter \@ref(theory), we bring together estimates of variability of individual signatures from each of the earlier constituent chapters. We combine these into a single, data-driven continuum from absolute consistency to high variability, and use this continuum to drive speculations about the sorts of mechanisms that would produce a particular set of consistencies. 
+In Chapter \@ref(theory), we bring together estimates of variability of individual signatures from each of the earlier constituent chapters. We combine these into a single, data-driven continuum from absolute consistency to high variability, and use this continuum to drive speculations about the sorts of mechanisms that would produce a particular set of consistencies.
 
-## Timescales and Mechanisms
+## Process Universals
+
+### Preconditions
+
+Imagine we were to uncover an aspect of language development that was completely consistent across languages. (Surprisingly, as we'll see in Chapter \@ref(theory) there are some!). What could we then infer from this observation? Not much, it turns out. The observed regularity could be due to different sources in different datasets or it could be uninteresting from a theoretical perspective.  
+
+First, even if the consistency is interesting, any inference from it will always be abductive -- an inference backwards from observation to cause These abductive inferences will always be underconstrained and tentative, thus they will always be at best empirically-grounded speculations that should be brought together with other data to make a test. In some sense, this is the fundamental caveat governing our entire enterprise here. The research design is correlational and so causal inferences are not available. 
+
+But things can go wrong even within this more limited paradigm. For example, we could observe that, across languages, we saw hypothetically that some word X was always produced earliest. But it could be the case that the word happened to be learned earliest in some languages because it was short and easy to pronounce, while in other languages it was learned early due to a high frequency of usage in the input. This example is artificial of course, but illustrates the difficulties of reverse inference from consistency. Similarly, we could observe that a certain distributional form always described children's vocabulary estimates, across languages. This regularity could be due to the operation of the central limit theorem rather than any interesting or substantive mechanism that we might be interested in as psychologists. 
+
+These problems mean that we need to have two (somewhat informal) conditions on the consistencies that we posit. First, we need to consider the possibility of multiple routes to the same observed consistency. To the extent that observed regularities are specific and surprising, it will be less likely that there are multiple routes across different languages to observing the same thing. Second, for any potential causal story that we posit, we need to be able to posit a plausible or interesting causal story that does *not* generate the observed regularity. The tightness of this comparsion with a counterfactual governs the strength of the inteference. 
+
+### The nature of the universals
+
+Suppose the consistency we identify meets the conditions we describe above: it is sufficiently surprising that we don't see a parsimonious story for how the data for different languages could have been generated by different processes, and there are close counterfactuals in which this consistency did not emerge. Further, in our example suppose we have a larger and more diverse set of languages and cultures represented in our dataset such that we can justify using the title "universal" rather than the more descriptive and limited "consistency." We can then imagine trying to constrain the nature of the sort of universal that could give rise to this type of consistency.  
+
+What can we say about putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
+
+Further, these 
+
+
+
+From the perspective of the language learning literature, there are obvious candidates for the sort of universals we are talking about. The general idea of "statistical learning" is one  [@saffran1996a;@saffran2018]. 
+
+Processes of generalization are also implicated. 
+
+
+In addition, a number of process*ing* factors might lead to *processes* that are universal. Developmentalists will see 
+
+<!-- COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING -->
+
+<!-- Yet these process universals need not be internal to the child  -->
+
+<!-- - IT'S ABOUT LEARNING - UPTAKE OF INPUT -->
+
+
+<!-- - UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES -->
+
+<!-- - IN THE CONTEXT OF CHIlD AND ENVIRONMENT -->
+
+<!-- - BRONFENBRENNER-ESQ -->
+
+## Alternatives
+
 
 Back to the slobin/competition model argument. 
 0-
@@ -77,27 +122,6 @@ On the other hand, the general developmental course is consistent. And degree of
 The universal is in the general aspects, not the details. 
 
 
-## Process Universals
-
-What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
-
-From the perspective of the language learning literature, there are obvious candidates for the sort of universals we are talking about. The general idea of "statistical learning" is one  [@saffran1996a;@saffran2018]. 
-
-
-In addition, a number of process*ing* factors might lead to *processes* 
-
-COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING
-
-Yet these process universals need not be internal to the child 
-
-- IT'S ABOUT LEARNING - UPTAKE OF INPUT
-
-
-- UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES
-
-- IN THE CONTEXT OF CHIlD AND ENVIRONMENT
-
-- BRONFENBRENNER-ESQ
 
 To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
 
@@ -112,8 +136,13 @@ The second set of language-specific particulars that might lead to variance acro
 
 ## Replication and Theory-Building
 
-One view of our enterprise is that its impact is fundamentally in the consolidation of knowledge through unifying -- replicating -- previous work. Crudely put, we have compiled all of the CDI data that we could, and all of the CDI analyses, and executed the cross of analyses and datasets. This project is thus a cross-linguistic replication study. 
+Changing gears, we can consider the nature of the theory that emerges from the work we do here. One set of concepts that is subsumed in our interest in consistency is that theory be supported by observations that are reproducible, replicable, and robust [munafo2017]. A theory of consistencies is, again, *a fortiori* all of these. If a particular characteristic can be shown again and again across individuals, samples, and languages it is replicable. Indeed, one view of our enterprise is that its impact is fundamentally in the consolidation of knowledge through unifying -- replicating -- previous work. 
 
+Crudely put, we have compiled all of the CDI data that we could, and all of the CDI analyses, and executed the cross of analyses and datasets. This project is thus a cross-linguistic replication study. And so, when we state that some phenomenon is consistent across languages, it is by definition replicated -- but it is additionally robust to a number of different procedural decisions (such as the design or administrtion of the CDI form) that end up varying widely in our data. 
+
+Finally, this work is also fully computationally reproducible -- the analytic conclusions we draw here based on a set of open data and code that can be rerun to create the figures and tables in the manuscript. This characteristic alone does not guarantee their correctness, but their provenance is known. 
 
 ## Conclusion
+
+In this chapter, we have sketched a bit of what we see to be the unique theoretical contributions of work with a much larger dataset than is usual in developmental language acquisition research. In a nutshell, the 
 

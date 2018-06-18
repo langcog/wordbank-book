@@ -483,7 +483,7 @@ n_long_ws %>%
   summarise(sd = sd(percentile, na.rm = TRUE), 
             mean_pairwise_diff = mean(diff(percentile), na.rm=TRUE)) %>%
   summarise(sd = mean(sd, na.rm = TRUE), 
-            mean_pairwise_diff = mean(mean_diff, na.rm=TRUE))
+            mean_pairwise_diff = mean(mean_pairwise_diff, na.rm=TRUE))
 ```
 
 Another way to look at this is the difference in percentile ranks by the age gap.

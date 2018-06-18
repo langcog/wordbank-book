@@ -11,7 +11,6 @@ In this chapter, we begin by presenting the perspective from these poles but con
 knitr::include_graphics("images/axis.jpeg")
 ```
 
-
 Empiricist proposals emphasize the ability of children to learn structure across domains, the richness of the distributional input that children are exposed to, and their ability to create appropriate abstractions from structured linguistic input. The components of these proposals are children's general statistical learning abilities [@saffran1996;@aslin2002],
 When applied to linguistic input, even general statistical tools can recover some aspects of structure [@redington1998,@frank2012].
 Such proposals have as their primary challenge the ability of children to create fast abstractions that allow them to create systematic word orders even in the absence of input [@goldin-meadow1981], interpret the arguments of novel verbs [@gertner2006], and show evidence of abstract category structure for syntactic categories such as determiners [@yang2013] or  structures such as the dative [@conwell2007], even at a very young age.
@@ -47,17 +46,28 @@ Finally, the project of this book is fundamentally about empirical unification o
 
 As we noted in the introduction, observing what "hangs together" in development can provide clues to the underlying system [@bates1988]. We think of these correlations as loose targets for theorists: a successful theory can gain support by providing an account for these observations. Crudely put, if a theory posits that some aspect of language acquisition is universal, it should be relatively more consistent in our data. 
 
-What are the units over which we compute variability and consistency? We refer to these as "signatures" -- loosely, things that can vary across populations. In practice, a signature can be the output of any analysis, with the simplest being vocabulary size or variability itself (as in Chapter \@ref(vocab)). Signatures are linked to particular theoretical goals by arguments about the validity of an analysis -- for example, the argument of @bates1994 that the over-representation of nouns in early vocabulary is a meaningful dimension of variation between individuals. A signature for our purposes is thus an analysis that yields a set of numbers. In nearly every substantive chapter of the book, we define one or several signatures whose variability we can measure. 
+What are the units over which we compute variability and consistency? We refer to these as "signatures" -- loosely, things that can vary across populations. In practice, a signature can be the output of any analysis, with the simplest being vocabulary size or variability itself (as in Chapter \@ref(vocab)). Signatures are linked to particular theoretical goals by arguments about the validity of an analysis -- for example, the argument of @bates1994 that the over-representation of nouns in early vocabulary is a meaningful dimension of variation between individuals. A signature for our purposes is thus an analysis that yields a set of numbers. In nearly every chapter of the book, we define one or several signatures whose variability we can measure. 
 
-Different sources of variance provide different sorts of evidence. Variance across cultures and languages can provide evidence on what patterns of acquis
+Different sources of variance provide different sorts of evidence. One sense of the notion of "universal" that dates to early generative syntax (CITE?) is the notion of typological invariance [@greenberg1963]. Following this general idea, in the majority of the book we focus on variability in some signature across languages. The implied inference is that consistency across languages points to the idea that a signature results from some mechanism (more on inferences about mechanism below) that is independent of the language being learned and the context in which it is learned. 
 
+But when we assess the variability of some signature across datatsets, many things vary that are not the target of our inference. Although language and culture typically vary (except in the case of multiple instruments that are assessed on the same data source), many other things vary as well. Different datasets are constructed by different researchers with different goals. They use different instruments with different items -- and different length and composition. These instruments are administered to different samples, with different sampling strategies. And the nature of the administration is different as well. 
 
+Thus, when a particular response appears to be consistent, we can say *a fortiori* that none of these sources of variation appear to have affected the consistency of the response. (Or at least that if they have, they have canceled each other out in a highly non-random way). But when variability does occur, we cannot make the opposite inference. Variability has many explanations, but consistency tends to point us towards a single inference. 
 
+We focus on cross-*dataset* variabity as the primary source of variability in this book. We refer to this variability throughout as cross-*linguistic* variability, though in fact there are a number of caveats that must be stated. First, many things vary between datasets far beyond language (as noted above). And second, some datasets represent the same language in different dialects (e.g., Australian and British English). Some even reflect the same language and dialect, measured using two different instruments (e.g., the two Beijing Mandarin datasets). In some cases we will even leverage these parallels to help us rule out alternative explanations. The reasons we focus on cross-dataset variability are three.
+
+First, datasets vary so much that -- assuming this variation is somewhat random -- claims of consistency are stronger when they emerge from this sort of data. Imagine counterfactully that all of the instruments we used had exactly the same structure and item set, and all were administered identically. Certainly this lack of variation would make our life easier in a number of ways when making quantitative comparisons between datasets! But it also then means that these consistencies would be confounded in our data -- particular item sets (plausibly) or administration instructions (somewhat less plausibly) could be the source of an observed consistency in the data. In contrast, while the messiness and inconsistency of the data in the Wordbank dataset make many aspects of our analysis much harder, it actually increases the strength of the inferences we can draw when -- despite this -- we see some phenomenon emerge with striking consistency.^[Of course, we also consider the confounds that do remain at the end of the book. In particular, confounding related to the parent report structure of the CDI is a major risk.]
+
+Second, the genesis of the investigations documented in this book was in part the observation that several phenomena that we examined were strikingly consistent across languages. For example, the gender effects shown in Chapter \@ref(demographics) were much more consistent than any of us thought [being at the time ignorant about the previous literature in this particular area; @eriksson2012]. Empirically, we found a lot to look at that was both surprising and interpretable when we examined well-known signatures as they varied across languages. Thus, our motivation is in part the emergent success of this approach.  
+
+The final reason we consider cross-language variability as our primary lever is a negative one. The obvious competitor as a source of variability is variation across individuals. We examine this variability briefly in Chapter \@ref(vocab) and more extensively in Chapter \@ref(style). While we document substantial and stable variability across individuals [echoing @bates 1994], this variability empirically proves to be less of a lever into theoretical issues of interest than we would hope. One part of this is data-related -- we have far more cross-sectional than longitudinal data in the Wordbank dataset -- and hence we cannot track stability and change over time as easily or powerfully as we would like. Further, we have very few additional measures on most children in the dataset (beyond the occasional demographic feature). In addition, as we show in Chapter \@ref(style), much apparent variability in children's style of language learning can be traced to variation in rate. Thus, and in contrast to the exciting emergent conclusions from cross-lingustic variation, individual variation appears to be a less powerful theoretical lever. 
+
+In Chapter \@ref(theory), we bring together estimates of variability of individual signatures from each of the earlier constituent chapters. We combine these into a single, data-driven continuum from absolute consistency to high variability, and use this continuum to drive speculations about the sorts of mechanisms that would produce a particular set of consistencies. 
 
 ## Timescales and Mechanisms
 
 Back to the slobin/competition model argument. 
-
+0-
 Are some languages harder to learn than others. At some level yes, Danish is really hard [@bleses]
 
 We're not trying to argue against the data on spanish clitics or agglutinatives in russian. 
@@ -71,9 +81,17 @@ The universal is in the general aspects, not the details.
 
 What is the nature of these putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
 
+From the perspective of the language learning literature, there are obvious candidates for the sort of universals we are talking about. The general idea of "statistical learning" is one  [@saffran1996a;@saffran2018]. 
+
+
+In addition, a number of process*ing* factors might lead to *processes* 
+
+COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING
+
+Yet these process universals need not be internal to the child 
+
 - IT'S ABOUT LEARNING - UPTAKE OF INPUT
 
-- COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING
 
 - UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES
 
@@ -98,41 +116,4 @@ One view of our enterprise is that its impact is fundamentally in the consolidat
 
 
 ## Conclusion
-
-
-
-
-
-
-<!-- BORNSTEIN QUOTE -->
-
-<!-- Weaker claim - the same variability is there across cultures/languages. -->
-
-<!-- DEMOGRAPHIC EXAMPLE - SES is variable, gender is consistent -->
-
-<!-- Relationship between size and variability should be informative -->
-
-<!-- A call to action to care about size and variability -->
-
-<!-- Measurement -->
-
-
-
-<!-- NEW AXIS FIGURE -->
-
-<!-- VARIABLE                       CONSISTENT -->
-<!-- <---------------------------------------> -->
-<!-- SES / NOUN BIAS         GRAMMAR/LEX  COV  GENDER -->
-
-
-<!-- CULTURE/LANGUAGE            COGNITION -->
-
-<!-- QUANTITATIVE PREDICTIONS:  -->
-
-<!-- if language moves your signature mean then you are a particular, not a universal -->
-<!-- - SES -->
-<!-- - noun bias -->
-
-
-
 

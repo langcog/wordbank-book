@@ -1,3 +1,0 @@
-# Vocabulary Networks {#networks}
-
-To be filled in with CogSci paper.

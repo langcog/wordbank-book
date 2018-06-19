@@ -3,6 +3,8 @@ bookdown::gitbook:
   config:
     edit: https://github.com/langcog/wordbank-book/edit/master/%s
     download: ["pdf"]
+    toc:
+      collapse: section
 # bookdown::pdf_book:
 #   includes:
 #     in_header: preamble.tex

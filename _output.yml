@@ -1,10 +1,3 @@
-bookdown::pdf_book:
-  includes:
-    in_header: preamble.tex
-  latex_engine: pdflatex
-  citation_package: natbib
-  keep_tex: yes
-
 bookdown::gitbook:
   split_bib: no
   config:
@@ -12,4 +5,11 @@ bookdown::gitbook:
     download: ["pdf"]
     toc:
       collapse: section
+
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: pdflatex
+  citation_package: natbib
+  keep_tex: yes
 

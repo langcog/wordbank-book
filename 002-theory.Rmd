@@ -84,65 +84,36 @@ Suppose the consistency we identify meets the conditions we describe above: it i
 
 What can we say about putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
 
-Further, since these processes are fundamentally learning processes, they operate at the timescale of moment-to-moment interactions [@frank2009,@mcmurray2012]. Using the CDI, we observe the accretion of vocabulary and linguistic competence over the course of millions of these interactions [see e.g., @dupoux2018 for estimates]. 
+Further, since these processes are fundamentally learning processes, they operate at the timescale of moment-to-moment interactions [@frank2009,@mcmurray2012]. In contrast, using the CDI, we observe the accretion of vocabulary and linguistic competence over the course of millions of these interactions [see e.g., @dupoux2018 for estimates]. This mismatch makes inferences about the nature of the processes even trickier -- in some sense, we are attempting to uncover what eroded a hillside when all we see are the uncovered strata. We discuss some of these timescale issues in Chapter \@ref(aoa-pred). 
+
+Yet, from the perspective of the language learning literature, there are still obvious candidates for the sort of universals we are talking about. The general idea of "statistical learning" is one [@saffran1996a;@saffran2018]. From a very early age, children are sensitive to regularities in their sensory environments and track statistical associations between elements in these environments. Concrete examples of these mechanisms in action include the tracking of syllable-to-syllable conditional probabilities [@saffran1996a] and the tracking of word-referent corresspondences [@smith2008], but in principle these mechanisms are likely operating over every level of representation present in early language [@shukla2011].
+
+Of course, these processes of statistical learning operate in a social context. Statistical learning processes certainly operate over social input that includes information from social partners [@yu2007]. In addition, it is likely that statistical learners take into account the nature of the social context in the inferences that they make [@frank2009;@shafto2012;@frank2014]. [TODO: MORE HERE]
+
+Processes of generalization are also strong candidates for process universals. The nature of these generalization mechanisms is of course highly controversial (for all the reasons discussed above), but every account of learning requires some type of generalization from specific lexical items to syntactic constructions or morphological rules [@tomasello2003;@yang2016]. [TODO: MORE HERE]
 
 
+In addition, a number of process*ing* factors might lead to *processes* that are universal. At the same time as children's language abilities are growing, a variety of core aspects of cognition are undergoing developmental change as well. Children's general speed of processing is changing [@kail1991;@frank2016b] -- including changes in memory [@ross-sheehy2003;@rovee-collier1997], attention [@colombo2001], and executive function [@davidson2006]. Although much of the developmental literature on these cognitive constructs focuses either on infancyor the preschool years -- because one- and two-year-olds are hard to measure with standard cognitive psychology tasks -- the assumption is that these processes are developing continuously throughout the period we focus on here. These developmental changes mean that the processes that we describe are themselves not static but -- inasmuch as they draw on these capacities -- they are themselves a moving target. 
 
-From the perspective of the language learning literature, there are obvious candidates for the sort of universals we are talking about. The general idea of "statistical learning" is one  [@saffran1996a;@saffran2018]. 
-
-Processes of generalization are also implicated. 
-
-
-In addition, a number of process*ing* factors might lead to *processes* that are universal. Developmentalists will see 
-
-<!-- COGNITIVE COMPONENTS, PROCESSING SPEED, ATTENTION, GENERALIZATION, LEARNING -->
-
-<!-- Yet these process universals need not be internal to the child  -->
-
-<!-- - IT'S ABOUT LEARNING - UPTAKE OF INPUT -->
-
-
-<!-- - UNFOLDING OVER TIME - IT'S FUNDAMENTALLY DEVELOPMENTAL, ABOUT THE WAY THAT KNOWLEDGE ACCUMULATES -->
-
-<!-- - IN THE CONTEXT OF CHIlD AND ENVIRONMENT -->
-
-<!-- - BRONFENBRENNER-ESQ -->
+Finally, it is important to note that process universals need not be internal to the child. Instead, they may be universals of interaction between children and their caregivers. Such processes could lead to the emergence of specific signatures just as well as processes internal to the learner. To take a concrete example, the timing of turn-taking in converation is an example of one such proposed interactional universal [@stivers2009]. In particular, it is entirely possible that some of the specific consistencies in the content of children's early vocabulary (Chapter \@ref(items)) that we observe in fact emerge from the nature of children's early environment. 
 
 ### Alternatives
 
+In Chapter \@ref(theory), we will examine the empirical support for the claim of consistent signatures in language learning across languages. Yet our further claim is that these consistencies are supported by universal processes.  To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One important alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
 
-Back to the slobin/competition model argument. 
-0-
-Are some languages harder to learn than others. At some level yes, Danish is really hard [@bleses]
+The first is the vast semantic and syntactic variation across the world's languages. For example, as illustrated by @slobin1996 and others, languages vary dramatically in the ways that they assign semantic content to verbs. If the semantic partition of verbs led to large-scale differences in the timeline or mechanism of acquisition, we might see systematic differences in the predictors of age of acquisition for verbs in these languages, yet we do not. Further, languages are more and less morphologically complex; while the most morphologically-complex, polysynthetic languages are not represented in Wordbank, we do have data from both Mandarin (less complex) and Russian (more complex). If morphosyntax were relatively more or less important in the acquisition of particular languages, we might expect radical differences in the noun bias, the grammar-lexicon correlation, or the predictors of age of acquisition across languages, yet we do not observe these. Of course, there is always room for finer-grained predictions -- with more detailed predictive models and better typological coverage, perhaps we will discover such signatures. Our point here is merely that -- to the extent that we observe consistencies, neither morphosyntactic nor semantic variability across languages dominates the process of vocabulary acquisition. 
 
-We're not trying to argue against the data on spanish clitics or agglutinatives in russian. 
+The second set of language-specific particulars that might lead to variance across languages is the vast cultural variability across the communities represented in the Wordbank data. Our data contain both "individualist" and "collectivist" cultures [@markus1991,@nisbett] as well as both "loose fit" and "tight fit" cultures [@gelfand2011]. To the extent that parenting differs across these cultures -- and there is good evidence that it does [CITES] -- we should see variance in the trajectory of language learning. For example, it would be quite reasonable to predict that the female advantage in vocabulary acquisition might vary as a function of cross-national gender biases [@nosek2009]. Yet it is strikingly consistent overall (presaging the conclusions in Chapter \@ref(demographics)), again arguing that -- at the broadest level, at least -- variable cultural factors do not dominate other processes in the acquisition of vocabulary. 
 
-On the other hand, the general developmental course is consistent. And degree of variation.
+## Replication and Theory-Building: Conclusions
 
-The universal is in the general aspects, not the details. 
+In this chapter, we have sketched a bit of what we see to be the unique theoretical contributions of work with a much larger dataset than is usual in developmental language acquisition research. In a nutshell, doing this work at scale allows for the identification of sources of variability in the "signatures" of language learning. What these signatures are is a matter for further development -- each chapter will describe and motivate the particular signatures that it includes. Further, the consistency of these signatures can provide a motivation for positing process universals that underly the emergence of these signatures (pending the caveats stated above). We return to the general picture of language learning that emerges from our study in Chapter \@ref(theory2). 
 
-
-
-To examine whether there is content to the claim of process universals, it is helpful to consider the alternative hypothesis. One alternative is that the process of language acquisition is specific and particular, rather than universal. Two prominent particulars pull against universal tendencies. 
-
-The first is the vast semantic and syntactic variation across the world's languages. For example, as illustrated by @slobin1996 and others, languages vary dramatically in the ways that they assign semantic content to verbs. If the semantic partition of verbs led to large-scale differences in the timeline or mechanism of acquisition, we might see systematic differences in the predictors of age of acquisition for verbs in these languages, yet we do not. Further, languages are more and less morphologically complex; while the most morphologically-complex, polysynthetic languages are not represented in Wordbank, we do have data from both Mandarin (less complex) and Russian (more complex). If morphosyntax were relatively more or less important in the acquisition of particular languages, we might expect radical differences in the noun bias, the grammar-lexicon correlation, or the predictors of age of acquisition across languages, yet we do not observe these. Of course, there is always room for finer-grained predictions -- with more detailed predictive models and better typological coverage, perhaps we will discover such signatures. Our point here is merely that neither morphosyntactic nor semantic variability across languages dominates the process of vocabulary acquisition. 
-
-The second set of language-specific particulars that might lead to variance across languages is the vast cultural variability across the communities represented in the Wordbank data. With N continents represented, we see both "individualist" and "collectivist" cultures [@markus1991,@nisbett] as well as both "loose fit" and "tight fit" cultures [@gelfand2011]. To the extent that parenting differs across these -- and there is good evidence that it does [CITES] -- we should see variance in the trajectory of language learning. For example, as mentioned previously, it would be quite reasonable to predict that the female advantage in vocabulary acquisition might vary as a function of cross-national gender biases [@nosek2009]. Yet it is strikingly consistent overall, again arguing that -- at the broadest level, at least -- cultural factors do not dominate other child-internal processes in the acquisition of vocabulary. 
-
-
-
-
-
-
-## Replication and Theory-Building
-
-Changing gears, we can consider the nature of the theory that emerges from the work we do here. One set of concepts that is subsumed in our interest in consistency is that theory be supported by observations that are reproducible, replicable, and robust [munafo2017]. A theory of consistencies is, again, *a fortiori* all of these. If a particular characteristic can be shown again and again across individuals, samples, and languages it is replicable. Indeed, one view of our enterprise is that its impact is fundamentally in the consolidation of knowledge through unifying -- replicating -- previous work. 
+One final note about nature of the theory that emerges from the work we do here. One set of concepts that is subsumed in our interest in consistency is that theory be supported by observations that are reproducible, replicable, and robust [munafo2017]. A theory of consistencies is, again, *a fortiori* all of these. If a particular characteristic can be shown again and again across individuals, samples, and languages it is replicable. Indeed, one view of our enterprise is that its impact is fundamentally in the consolidation of knowledge through unifying -- replicating -- previous work. 
 
 Crudely put, we have compiled all of the CDI data that we could, and all of the CDI analyses, and executed the cross of analyses and datasets. This project is thus a cross-linguistic replication study. And so, when we state that some phenomenon is consistent across languages, it is by definition replicated -- but it is additionally robust to a number of different procedural decisions (such as the design or administrtion of the CDI form) that end up varying widely in our data. 
 
 Finally, this work is also fully computationally reproducible -- the analytic conclusions we draw here based on a set of open data and code that can be rerun to create the figures and tables in the manuscript. This characteristic alone does not guarantee their correctness, but their provenance is known. 
 
-## Conclusion
 
-In this chapter, we have sketched a bit of what we see to be the unique theoretical contributions of work with a much larger dataset than is usual in developmental language acquisition research. In a nutshell, the 
 

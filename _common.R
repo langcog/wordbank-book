@@ -22,6 +22,10 @@ library(widyr) # gesture
 library(knitr)
 library(tidyverse) # keep tidyverse last to prevent conflicts
 
+# to deal with font issue perhaps?
+library(extrafont)
+loadfonts()
+
 select <- dplyr::select
 summarise <- dplyr::summarise
 # library(robustbase) # appendix-aoa

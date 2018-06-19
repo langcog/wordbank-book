@@ -8,6 +8,7 @@ biblio-style: apalike
 link-citations: true
 github-repo: langcog/wordbank-book
 description: ""
+always_allow_html: yes
 output:
   bookdown::gitbook
 ---

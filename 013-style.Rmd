@@ -318,12 +318,9 @@ ggplot(filter(wg, age >= 8, age <= 18),
 
 The figure above plots these productivity ratios by language for an age-restricted subset between 8 and 18 months. Plots are sorted by the mean productivity ratio. While the majority of languages show the same pattern as English (an increase from around 10% to 30%) there are some outliers that show a flatter slope. 
 
-[Note that there is currently an error with Kiswahili and Kigiriama but we are fixing this]. 
-
 
 ```{r}
-ggplot(filter(wg, !(langform %in% c("British Sign Language WG", 
-                                    "Kigiriama WG", "Kiswahili WG"))),
+ggplot(filter(wg, !(langform %in% c("British Sign Language WG"))),
        aes(x = age, y = productivity, col = langform)) + 
   # geom_jitter(alpha = .2) + 
   # geom_smooth(method = "loess", se = FALSE, span = 1, alpha = .5) + 

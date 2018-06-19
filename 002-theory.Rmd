@@ -84,7 +84,7 @@ Suppose the consistency we identify meets the conditions we describe above: it i
 
 What can we say about putatitive universals? By virtue of the learning problem that they arise from, they cannot be universals of *content*. A child's vocabulary is made up of individual words, each arising from a set of specific interactional circumstances (e.g., the trip to the zoo where a giraffe was seen for the first time). And each of these words is -- of course -- specific to a particular language. Thus, there is no viable sense in which any possible universals for vocabulary learning can be content universals: no particular content of this type could be innately given. For this reason, we describe these as "process" universals: they relate to the process by which each individual extracts a lexicon from their own idiosyncratic linguistic experiences.
 
-Further, these 
+Further, since these processes are fundamentally learning processes, they operate at the timescale of moment-to-moment interactions [@frank2009,@mcmurray2012].
 
 
 

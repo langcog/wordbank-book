@@ -169,8 +169,9 @@ props <- left_join(ordering_props, num_words)
 prop_cor <- cor.test(props$estimate, props$n)
 
 num_prop <- ords %>%
-  select(estimate, measure, language) %>%
+  select(estimate, measure, language, form) %>%
   spread(measure, estimate) 
+
 num_prop_cor <- cor.test(num_prop$raw, num_prop$proportion)
 ```
 

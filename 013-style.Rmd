@@ -396,13 +396,21 @@ n_long_ws <- admins %>%
   mutate(n_admins = n()) %>%
   filter(n_admins > 1)
 
-# ms_ws <- n_long_ws %>%
-#   group_by(language, age) %>%
-#   summarise(production = median(production))
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% c("Norwegian", "English (American)"),
+         form == "WG") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
 
-# ms_wg <- n_long_wg %>%
-#   group_by(age) %>%
-  # summarise(production = median(production))
+ms_ws <- n_long_ws %>%
+  group_by(language, age) %>%
+  summarise(production = median(production))
+
+ms_wg <- n_long_wg %>%
+  group_by(age) %>%
+  summarise(production = median(production))
 ```
 
 
@@ -522,20 +530,20 @@ To address this question, we examine the Norwegian dataset.
 
 and WG
 
-<!-- ```{r} -->
+```{r}
 
-<!-- n_long_wg <- admins %>% -->
-<!--   filter(original_id %in% longitudinal_admins$original_id,  -->
-<!--          language %in% c("Norwegian", "English (American)"), -->
-<!--          form == "WG") %>% -->
-<!--   group_by(original_id) %>% -->
-<!--   mutate(n_admins = n()) %>% -->
-<!--   filter(n_admins > 1) -->
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id,
+         language %in% c("Norwegian", "English (American)"),
+         form == "WG") %>%
+  group_by(original_id) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
 
-<!-- ggplot(n_long_wg, aes(x = age, y = production)) +  -->
-<!--   geom_line(aes(group = original_id), alpha = .1) +  -->
-<!--   geom_line(data = ms_wg, col = "blue", size = 1.5) -->
-<!-- ``` -->
+ggplot(n_long_wg, aes(x = age, y = production)) +
+  geom_line(aes(group = original_id), alpha = .1) +
+  geom_line(data = ms_wg, col = "blue", size = 1.5)
+```
 
 ### GLMs
 

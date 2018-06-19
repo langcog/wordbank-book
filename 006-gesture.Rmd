@@ -1,9 +1,4 @@
 # Gesture and Communication {#gestures}
-```{r gesture_libraries}
-library(widyr)
-library(broom)
-library(knitr)
-```
 
 This chapter contains analysis of the “early gesture” items from the CDI. Analyses will focus on the cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo.
 

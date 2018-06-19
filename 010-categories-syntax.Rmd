@@ -284,7 +284,7 @@ Comprehension results are shown above. Overall, the largest trend that is visibl
 plot_areas_wg <- filter(area_summary, form %in% WGs, measure == "understands") %>%
          unite(langform, language, form, sep = " ") %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
-                                        fun = function(x, y) {
+                                        .fun = function (x, y) {
                                           x[y=="Nouns"]}, .desc=FALSE))
                 
 ggplot(filter(plot_areas_wg, lexical_category != "Function Words"), 
@@ -362,7 +362,7 @@ We next turn to production data from WS-type forms. We can immediately see the s
 plot_areas_ws <- filter(area_summary, form %in% WSs, measure == "produces") %>%
          unite(langform, language, form, sep = " ") %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
-                                        fun = function(x, y) {
+                                        .fun = function(x, y) {
                                           x[y=="Nouns"]}, .desc=FALSE))
                 
 ggplot(filter(plot_areas_ws, lexical_category != "Function Words"),
@@ -648,7 +648,7 @@ age_areas <- vocab_comp_data %>%
 
 age_areas$langform = fct_reorder2(as.factor(age_areas$langform), age_areas$area, 
                                   age_areas$lexical_category, 
-                                        fun = function(x, y) {
+                                        .fun = function(x, y) {
                                           mean(x[y=="predicates"])}, .desc=FALSE)
 
 

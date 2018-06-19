@@ -6,13 +6,13 @@ library(DT)
 library(quantregGrowth)
 library(feather)
 library(ggrepel)
-library(ggdendro) # ch5
+library(ggdendro) # item consistency
 library(rms)
 library(metafor)
 library(broom)
 library(gridExtra)
 library(modelr) # ch 7b
-library(binom) # ch2
+library(binom) # data
 library(lme4)
 library(ggfortify)
 library(rlang)
@@ -20,6 +20,8 @@ library(glue)
 library(jsonlite)
 library(widyr) # gesture
 library(knitr)
+library(multidplyr) # for style
+library(parallel) # for style
 library(tidyverse) # keep tidyverse last to prevent conflicts
 
 # to deal with font issue perhaps?

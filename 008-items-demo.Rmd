@@ -396,7 +396,7 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
                      label.padding = 0.15,
                      point.padding = unit(0.2, "lines"),
                      arrow = arrow(length = unit(0.01, "npc")),
-                     nudge_y = 5,
+                     nudge_y = 1,
                      family = font, size = 2.5, fill = "white") +
     scale_fill_solarized(guide = FALSE) +
     scale_color_solarized() + 
@@ -471,32 +471,90 @@ In sum, there appear to be two different processes at work in the gender effects
 
 ### Birth order
 
-```{r items_demo_bo_table_understands}
-demo_ranef %>%
-  filter(!is.na(sexMale), 
-         measure == "produces", 
-         abs(sexMale) > .5) %>%
-  mutate(male_advantage = signif(sexMale, 2)) %>%
-  select(language, definition, male_advantage) %>%
-  arrange(language, desc(male_advantage)) %>%
-  datatable()
-```
+Again following Chapter \@ref(demographics), we consider individual items that are more or less likely in the vocabularies of first-born vs. later-born children. Here we consider both the contrast between second- and first-born children as well as between third- or later-born and second-born children. The number of languages for which we have birth order data is dramatically smaller, however, so conclusions are necessarily more tentative.
+
 
 ```{r 9_ranef_plot_bo_comp, dependson="9_plot_ranef", fig.height=5}
 plot_demo_ranef("birth_order", "understands")
 ```
+
+
+```{r items_demo_bo_table_understands}
+demo_ranef %>%
+  filter(!is.na(birth_order1), !is.na(birth_order2),
+         measure == "understands", 
+         abs(birth_order1) > .5 | abs(birth_order2) > .5) %>%
+  mutate(secondborn_advantage = signif(birth_order1, 2),
+         laterborn_advantage = signif(birth_order2, 2)) %>%
+  select(language, definition, secondborn_advantage, laterborn_advantage) %>%
+  arrange(language, desc(secondborn_advantage)) %>%
+  datatable()
+```
+
+The figure and table above again represent random effects coefficients for particular items in comprehension. In general there are few surprises here: the words for "brother" and "sister" are much more likely for second-born children to understand, and even more likely for later-born children. The Norwegian data additionally show a few other words that second- and later-born children might be more likely to be exposed to via their siblings, including "skole" (school) and "sukkertøy" (sweets, hard candy).
+
 ```{r 9_ranef_plot_bo_prod, dependson="9_plot_ranef", fig.height=9}
 plot_demo_ranef("birth_order", "produces")
 ```
 
-### Maternal Education
-
-```{r 9_ranef_plot_me_prod, dependson="9_plot_ranef", fig.height=7}
-plot_demo_ranef("mom_ed", "produces")
+```{r items_demo_bo_table_produces}
+demo_ranef %>%
+  filter(!is.na(birth_order1), !is.na(birth_order2),
+         measure == "produces", 
+         abs(birth_order1) > .5 | abs(birth_order2) > .5) %>%
+  mutate(secondborn_advantage = signif(birth_order1, 2),
+         laterborn_advantage = signif(birth_order2, 2)) %>%
+  select(language, definition, secondborn_advantage, laterborn_advantage) %>%
+  arrange(language, desc(secondborn_advantage)) %>%
+  datatable()
 ```
 
-```{r 9_ranef_plots_me_comp, dependson="9_plot_ranef", fig.height=5}
+The same general patterns are present in the production data, with further evidence that having elder siblings appears to be related exposure to sweets, at least in some cultures: "popsicle," "donut," and "candy" all appear now in the English data, and "tyggegummi" (gum) and several soda- and candy-related words appear in the Nowegian data. ("Hate" also appears in the English data, suggesting some emotional expressions due to having a sibling). We interpret this pattern with caution, however, as birth order is likely partially confounded with socio-economic status, and so later-born children might also be from low-SES families who have more environmental exposure to "junk foods" like soda and candy.
+
+### Maternal Education
+
+Our final set of analyses examine vocabulary items that are differentially present in the vocabulary of children with lower maternal education. As noted in Chapter \@ref(demographics, there are substantial cross-linguistic differences in how large the overall socioeconomic stratification is. For example, we observe large differences in children's vocabulary size in the English (American) data, with children of less educated mothers reporting substantially lower production vocabulary. 
+
+```{r 9_ranef_plots_me_comp, dependson="9_plot_ranef"}
 plot_demo_ranef("mom_ed", "understands")
 ```
 
+```{r items_demo_momed_table_understands}
+demo_ranef %>%
+  filter(!is.na(mom_ed1), !is.na(mom_ed2),
+         measure == "understands", 
+         abs(mom_ed1) > .5 | abs(mom_ed2) > .5) %>%
+  mutate(secondary_advantage = signif(mom_ed1, 2),
+         college_advantage = signif(mom_ed2, 2)) %>%
+  select(language, definition, secondary_advantage, college_advantage) %>%
+  arrange(language, desc(secondary_advantage)) %>%
+  datatable()
+```
+
+The figure and table above show comprehension results. The majority of words that exceed our (somewhat arbitrary) .5 bound come from the English (American) data. This finding is consistent with the idea that there may be more substantial maternal education effects in this dataset more generally. The words that are more likely to be understood by children of college- and secondary- educated mothers are often animal-related and may speculatively be related to reading books about animals (since these farm animals might not be prominent in all children's experience). "Read" is also on this list, perhaps related to reading practices (or the perception of the importance of these practices). Negatively linked words include "cake" (supporting the speculation above) and a number of other items that are perhaps harder to interpret as being SES-linked. 
+
+```{r 9_ranef_plot_me_prod, dependson="9_plot_ranef"}
+plot_demo_ranef("mom_ed", "produces")
+```
+
+```{r items_demo_momed_table_produces}
+demo_ranef %>%
+  filter(!is.na(mom_ed1), !is.na(mom_ed2),
+         measure == "produces", 
+         abs(mom_ed1) > .5 | abs(mom_ed2) > .5) %>%
+  mutate(secondary_advantage = signif(mom_ed1, 2),
+         college_advantage = signif(mom_ed2, 2)) %>%
+  select(language, definition, secondary_advantage, college_advantage) %>%
+  arrange(language, desc(secondary_advantage)) %>%
+  datatable()
+```
+
+Production data show a similar but more extreme picture, with a larger number of words linked to maternal education. Examination of the English data suggests that animal vocaulary is again more prevalent for the children of more educated parents (as are babysitters). Again supporting the birth-order/maternal education link, "brother" is less common for the children of more highly educated moms, as are "candy," "gum," and "soda." Again, the most extreme linkage to maternal education was found in the English (American) sample.  
+
 ## Conclusions
+
+Demographic factors like sex, birth order, and maternal education are related to children's vocabulary size. But in addition to these more global associations, they appear to be specifically associated with particular vocabulary items. Many of these are straighforwardly explicable in terms of differences in the environmental frequency (and importance) of particular lexical items for children in different circumstances. For example, there are many reasons why second-born children should say "brother" or "sister" more frequently than first-born children! 
+
+More generally, item level variation relates to two issues of interest within the context of our project. The first is the validity of CDI-based measuserment. From a psychometric perspective, the sort of variation reported here is known as "differential item function" [@hambleton1991] and is a negative characteristic of tests that impairs their validity. Thus, from a test-design perspective, items like "babysitter" (or even "brother") should probably not be included. (See \@ref(appendix-psychometrics) for more details on this issue). 
+
+The second broader issue is the question of mechanisms responsible for the demographic associations documented in Chapter \@ref(demographics). Sex differences in vocabulary appear quite consistent across languages. Why is this? We gain one small piece of leverage on the issue by noticing that there appear to be two qualitatively different processes involved in the demographic effects we observed: first, girls have a small bump in their probability of producing almost every word, and second, there are a small number of particular words for which their production probability is substantially different. To the extent these are separable, we might look for causal mechansisms that would provide a broader boost to language (rather than trying to explain the small number of spefically gender-linked items identified above). Such hypotheses might appeal to dyadic factors like differences in amount of language input directed to girls, or learner-internal factors like stronger social cognition. 

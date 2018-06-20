@@ -1,4 +1,4 @@
-library(wordbankr)
+library(wordbankr) # all
 library(langcog)
 library(directlabels)
 library(forcats)
@@ -17,7 +17,7 @@ library(lme4)
 library(ggfortify)
 library(rlang)
 library(glue)
-library(jsonlite)
+library(jsonlite) # appendix data
 library(widyr) # gesture
 library(knitr)
 library(multidplyr) # for style

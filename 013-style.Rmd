@@ -1,5 +1,12 @@
 # Individual Children {#style}
 
+new order:   
+- overall stability
+- spurts
+- referential expressive
+- comprehension production
+
+
 > Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development, If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994]
 
 In an early report on individual differences in vocabulary acquisition, @nelson1973 noticed that there was substantial variation in how many nouns 
@@ -269,6 +276,14 @@ Before we begin the analysis it is important to be clear that some of the patter
 
 Of course this type of analysis can only be conducted on WG-type forms, because of the presence of comprehension information. We begin by investigating the American English WG data as an example. 
 
+
+RELEVANT FOR CLINICAL
+
+CDI DATA HAS AN ARTIFACT - NEED OTHER SOURCES
+
+MANY REASONS FOR PRODUCTION VARIATION
+
+STABLE ACROSS LANGUAGES THOUGH
 
 ```{r}
 eng_wg <- filter(admins, language == "English (American)", form == "WG")

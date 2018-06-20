@@ -388,9 +388,9 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
   )
 
   ggplot(demo_data, aes(x = estimate, fill = term)) +
-    facet_wrap(~language + term, ncol = 4) +
-    geom_density() +
-    geom_label_repel(aes(label = definition, y = 0),
+    facet_wrap(~language, ncol = 4) +
+    geom_density(alpha = .5) +
+    geom_label_repel(aes(label = definition, y = 0, col = term),
                      data = demo_labelled,
                      segment.size = 0.3,
                      label.padding = 0.15,
@@ -399,8 +399,10 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
                      nudge_y = 5,
                      family = font, size = 2.5, fill = "white") +
     scale_fill_solarized(guide = FALSE) +
-    labs(x = "Coefficient estimate", y = "Number of words",
-         title = glue("{demo_labels[[plot_demo]]} ({plot_measure})"))
+    scale_color_solarized() + 
+    theme(legend.position = "bottom") + 
+    labs(x = "Coefficient estimate", y = "Number of words") 
+         # title = glue("{demo_labels[[plot_demo]]} ({plot_measure})")
 }
 ```
 
@@ -469,7 +471,16 @@ In sum, there appear to be two different processes at work in the gender effects
 
 ### Birth order
 
-
+```{r items_demo_bo_table_understands}
+demo_ranef %>%
+  filter(!is.na(sexMale), 
+         measure == "produces", 
+         abs(sexMale) > .5) %>%
+  mutate(male_advantage = signif(sexMale, 2)) %>%
+  select(language, definition, male_advantage) %>%
+  arrange(language, desc(male_advantage)) %>%
+  datatable()
+```
 
 ```{r 9_ranef_plot_bo_comp, dependson="9_plot_ranef", fig.height=5}
 plot_demo_ranef("birth_order", "understands")

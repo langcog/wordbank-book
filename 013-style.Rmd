@@ -515,7 +515,7 @@ ggplot(ms, aes(x = pct_diff * 100)) +
 
 
 
-## "Spurts" in Vocabualry
+## "Spurts" in Vocabulary
 
 A special case of the preceeding 
 

@@ -1,4 +1,4 @@
-# Concluding Thoughts {#conclusion-final}
+# Conclusions {#conclusions}
 
 Wordbank embodies our belief that scale is in itself transformative. The existence of a noun bias is a fascinating observation, but this observation gives limited leverage to differentiate theories. The magnitude of a noun bias provides more leverage for quantiative theorizing. And the distribution of magnitudes across many of the world's languages gives greater leverage still. Our hope is that, by generalizing and applying many influential analyses by many contributors, our work here can affect theory more broadly.
 

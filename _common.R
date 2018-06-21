@@ -20,9 +20,10 @@ library(glue)
 library(jsonlite) # appendix data
 library(widyr) # gesture
 library(knitr)
-library(multidplyr) # for style
-library(parallel) # for style
+library(multidplyr) # for item demographics
+library(parallel) # for item demographics
 library(tidyverse) # keep tidyverse last to prevent conflicts
+library(viridis) # for style
 
 # to deal with font issue perhaps?
 library(extrafont)

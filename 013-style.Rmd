@@ -133,10 +133,7 @@ ggplot(filter(n_long_ws, n_admins > 10,
   geom_line() + 
   scale_colour_discrete(guide = FALSE)
 ```
-One way to operationalize the question of stability is how children's percentile ranks tend to change over time. We examine this question creating an empirical CDF for each age group. We could use a model-based method (e.g., the `gcrq` method used in the Wordbank app and Chapter \@ref(vocab) and \@ref(demographics)) but in practice we have enough data in each of these cases that this method should perform well. [**TODO: say how much in the worst age bin**] As shown above, these are visually quite stable. 
-
-This transformation to percentile ranks allows us to assess the correlation between a child's percentile rank at time 1 and their rank at time 2, depending on the gap between these two. 
-
+One way to operationalize the question of stability is how children's percentile ranks tend to change over time. We examine this question creating an empirical CDF for each age group. We could use a model-based method (e.g., the `gcrq` method used in the Wordbank app and Chapter \@ref(vocab) and \@ref(demographics)) but in practice we have enough data in each of these languages that this method should perform well. As shown above, these are visually quite stable. 
 ```{r style_pairwise_long_cors}
 long_cors <- n_long_ws %>%
   unite("id", c("original_id", "source_name")) %>%
@@ -180,10 +177,14 @@ ggplot(long_cor_pairs,
        aes(x = dist, y = cor, col = age1)) +
   geom_point(aes(size = n)) + 
   geom_smooth(method = "lm", method.args = list(weight = n)) + 
-  facet_wrap(~language)
+  facet_wrap(~language) + 
+  ylab("Correlation") + 
+  xlab("Measurement Gap (Months)") + 
+  viridis::scale_color_viridis(name = "Starting Age")
     
 ```  
 
+This transformation to percentile ranks allows us to assess the correlation between a child's percentile rank at time 1 and their rank at time 2, depending on the gap between these two. 
 
 ```{r style_pairwise_long_cors_raw}
 long_cors <- n_long_ws %>%
@@ -232,35 +233,6 @@ ggplot(long_cor_pairs,
     
 ```  
 
-```{r}
-  group_by(language, original_id) %>%
-  summarise(sd = sd(percentile, na.rm = TRUE), 
-            mean_pairwise_diff = mean(diff(percentile), na.rm=TRUE)) %>%
-  summarise(sd = mean(sd, na.rm = TRUE), 
-            mean_pairwise_diff = mean(mean_pairwise_diff, na.rm=TRUE))
-```
-
-Another way to look at this is the difference in percentile ranks by the age gap.
-
-```{r}
-ms <- n_long_ws %>%
-  group_by(language, original_id) %>%
-  mutate(pct_diff = c(NA, diff(percentile)), 
-         age_diff = c(NA, diff(age))) 
-
-ggplot(ms, aes(x = age_diff, y= pct_diff)) + 
-  geom_jitter(alpha = .1) + 
-  geom_smooth(method = "lm") + 
-  facet_wrap(~language)+ 
-  geom_hline(yintercept = 0, lty = 2, col = "red")
-```
-
-```{r}
-ggplot(ms, aes(x = pct_diff * 100)) + 
-  geom_histogram() + 
-  facet_wrap(~language)
-
-```
 
 
 

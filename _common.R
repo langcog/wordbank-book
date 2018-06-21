@@ -1,3 +1,4 @@
+library(MASS)
 library(wordbankr) # all
 library(langcog)
 library(directlabels)
@@ -24,6 +25,8 @@ library(multidplyr) # for item demographics
 library(parallel) # for item demographics
 library(tidyverse) # keep tidyverse last to prevent conflicts
 library(viridis) # for style
+library(mirtCAT) # style, psychometrics, vocab
+library(ggthemes)
 
 # to deal with font issue perhaps?
 library(extrafont)

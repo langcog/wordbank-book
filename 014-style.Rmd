@@ -1,0 +1,891 @@
+# Individual Children {#style}
+
+<!-- new order:    -->
+<!-- - overall stability -->
+<!-- - spurts -->
+<!-- - referential expressive -->
+<!-- - comprehension production -->
+
+
+> Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development, If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994]
+
+
+
+In an early report on individual differences in vocabulary acquisition, @nelson1973 noticed that there was substantial variation in how many nouns 
+
+"referential" (more than 50% nouns) - more object-focused, found to be less syntactically complex - faster vocabulary growth
+"expressive" (less than 50% nouns) - more self-focused, more syntactically complex
+
+@dore1973 proposed a related version of this distinction, focusing on speech acts from two children in the middle of the second year and labeling them as "code oriented" (focused on labeling) vs. "message oriented" (instrumental, social requests).
+
+
+
+@bates1994
+
+Further, idiosyncrasy in children's vocabulary is an interesting measure suggested by @mayor2014.
+
+The general issue of this chapter is that there are many measures we can define regarding individual variability, and the trick will be telling signal from noise (and from artifact). We typically rely on three strategies. The first is to ask whether a particular measure is valid in the sense that it is related to some other aspect of the data. We are in the position of not having independent validation measures to apply to, but we can still reasonably ask whether one measure (e.g., proportion of nouns) is related to another (e.g., vocabulary for age). The second strategy is -- as throughout -- to look for consistency across samples in a particular pattern. Such consistency suggests some signal, though in each case we will try to be cautious about differentiating this signal from statistical artifact. The third strategy is to look for consistency in a particular measure throughout development (e.g., evaluating "test-retest" reliability of a measure). 
+
+Summarizing the conclusions from our various different sub-analyses:
+
+* Variation between individuals appears extremely stable from a longitudinal perspective, at least as far as we can ascertain given the measurement properties of the CDI. 
+
+* The apparent phenomenon of the "vocabulary spurt" is not reliably observed across participants. 
+
+* Referential vs. expressive variation is present but is over-estimated by analyses that do not correct for vocabulary size, since smaller vocabularies tend to be more noun-heavy. 
+
+* It is tricky to use comprehension data to estimate variability between individuals in how much they produce vs. comprehend, due to likely cross-linguistic differences in the uptake of instructions regarding comprehension. 
+
+## Variation in Vocabulary Growth Rate
+
+
+```{r styLe_long_data}
+longitudinal_admins <- admins %>% 
+  mutate(langform = paste(language, form)) %>%
+  group_by(langform, original_id) %>% 
+  count() %>% 
+  filter(n > 1) 
+
+n_long_ws <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% c("Norwegian", "English (American)"),
+         form == "WS") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% c("Norwegian", "English (American)"),
+         form == "WG") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+ms_ws <- n_long_ws %>%
+  group_by(language, age) %>%
+  summarise(production = median(production))
+
+ms_wg <- n_long_wg %>%
+  group_by(age) %>%
+  summarise(production = median(production))
+```
+
+The first locus for individual differences in language acquisition is the rate of growth. As already discussed in Chapter \@ref(vocab), there is substantial variability between children in vocabulary size. As we showed there, across many languages there is a consistent -- and high -- rate of variability between children. 
+
+Because these data were cross-sectional in nature rather than longitudinal, they cannot answer the question of whether the variability observed is *stable* as well as *substantial* (parphrasing Bates). In this and the next subsection, we make use of longitudinal data in the Wordbank dataset to investigate this idea. 
+
+```{r style_long_data_table}
+datatable(longitudinal_admins %>% 
+            group_by(langform) %>%
+            count %>% 
+            arrange(desc(nn)))
+```
+
+In our first investigation of the longitudinal data, we look at how stable individual children are. There are only a small number of deeply longitudinal corpora in Wordbank, so we will limit our investigation to two languages: Norwegian and English. Furthermore, the largest group of longitudinal data cover the WS form so we restrict to these data for simplicity. Within each of these datasets, the modal number of observations is two, but there are some children with more than 10 CDIs on record. 
+
+```{r style_long_data_spaghetti}
+ggplot(filter(n_long_ws, n_admins > 10, 
+              language == "Norwegian"), 
+       aes(x = age, y = production, col = fct_reorder(original_id, production))) + 
+  geom_line() + 
+  # facet_wrap(~language) + 
+  scale_colour_discrete(guide = FALSE) + 
+  ylab("Words Produced") + 
+  xlab("Age (Months)")
+```
+
+
+The figure above shows the trajectories of children who were measured a large number of times (>10), and includes Norwegian data only due to data sparsity issues in English. Thes trajectories appear quite stable; the ranking of individuals does not appear to change much over the course of several years. This conclusion is ratified by other studies using different datasets, for example @bornstein2012, who found substantial stability ($r = .84$) between latent constructs inferred from early language at 20 months and later language measured at 48 months. 
+
+```{r style_long_data_ecdf}
+n_cross_ws <- admins %>%
+  filter(language %in% c("Norwegian", "English (American)"),
+         form == "WS") %>%
+  group_by(original_id, language) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins == 1)
+
+# gets percentiles for longitudinal based on cross-sectional. 
+get_empirical_percentiles <- function (df) {
+  # assumes ages are uniform in this sample
+  this_age <- df$age[1]
+  this_lang <- df$language[1]
+  
+  cross_data <- filter(n_cross_ws, 
+                       age == this_age, 
+                       language == this_lang)
+  
+  Fn <- ecdf(cross_data$production) 
+  
+  df$percentile <- Fn(df$production)
+  
+  return(df)
+}
+
+n_long_ws <- n_long_ws %>%
+  split(list(.$age,.$language), drop = TRUE) %>%
+  map_df(get_empirical_percentiles)
+```
+
+```{r style_long_data_norwegian_ecdf}
+ggplot(filter(n_long_ws, n_admins > 10, 
+              language == "Norwegian"), 
+       aes(x = age, y = percentile, col = fct_reorder(original_id, production))) + 
+  geom_line() + 
+  scale_colour_discrete(guide = FALSE)
+```
+One way to operationalize the question of stability is how children's percentile ranks tend to change over time. We examine this question creating an empirical CDF for each age group. We could use a model-based method (e.g., the `gcrq` method used in the Wordbank app and Chapter \@ref(vocab) and \@ref(demographics)) but in practice we have enough data in each of these languages that this method should perform well. As shown above, these are visually quite stable. 
+```{r style_pairwise_long_cors}
+age_binsize <- 2
+  
+long_cors <- n_long_ws %>%
+  unite("id", c("original_id", "source_name")) %>%
+  mutate(age = round(age/age_binsize) * age_binsize) %>% # round age into two-month bins
+  select(id, language, age, percentile) %>%
+  group_by(id, age) %>%
+  sample_n(size = 1) %>% # if there are multiple measurements from one age, remove
+  ungroup 
+  
+long_cor_ns <- long_cors %>%
+  split(.$language) %>%
+  map_df(function (df) {
+    language <- df$language[1] 
+    df %>% 
+      select(-language) %>%
+      pairwise_count(age, id) %>%
+      mutate(language = language) %>%
+      rename(age1 = item1, 
+             age2 = item2)
+  })
+
+long_cor_pairs <-  long_cors %>% 
+  spread(age, percentile) %>%
+  split(.$language) %>%
+  map_df(function (df) {
+    language <- df$language[1]
+    cor_mat <- select(df, -language, -id) %>%
+      cor(use='pairwise.complete.obs') 
+    
+    as_data_frame(cor_mat) %>%
+      mutate(age2 = rownames(cor_mat)) %>%
+      gather(age1, cor, -age2) %>%
+      mutate(language = language,
+             age1 = as.numeric(age1), 
+             age2 = as.numeric(age2), 
+             dist = age2 - age1) %>%
+      filter(dist > 0)
+  }) %>%
+  left_join(long_cor_ns)
+
+ggplot(filter(long_cor_pairs, n >= 50), 
+       aes(x = dist, y = cor, col = age1)) +
+  geom_point(aes(size = n)) + 
+  geom_smooth(method = "lm", method.args = list(weight = n)) + 
+  facet_wrap(~language) + 
+  ylab("Correlation") + 
+  xlab("Measurement Gap (Months)") + 
+  scale_color_viridis(name = "Starting Age") + 
+  scale_size_continuous(name = "N")  + 
+  ylim(0,1)
+    
+```  
+
+This transformation to percentile ranks allows us to assess the correlation between a child's percentile rank at time 1 and their rank at time 2, depending on the gap between these two. Because of sparsity, we bin children into two-month age bins and eliminate age bins with fewer than 50 children, then calculate between-bin correlations in percentiles. The figure above shows this analysis, which reveals that percentile ranks are quite stable; across a 2-4 month age gap they are correlated at better than .8. This stability declines to around .5 at 16 months, but this decline should be taken with a grain of salt. First, this range is a doubling of the child's age, so stability might be expected to be lower. But second, even with the use of percentile ranks, many childen who are measured longitudinally across a 16-month gap will be expected to move from the floor of the form to the ceiling, compromising measurement accuracy. 
+
+
+```{r style_mirt_etc, eval=FALSE}
+mirt_params <- function(dx) {
+  language <- dx$language
+  form <- dx$form
+  print(paste(language, form))
+  
+  lang_data <- get_instrument_data(language = language, form = form, 
+                                   administrations = TRUE, iteminfo = TRUE)
+  
+  d <- lang_data %>%
+    filter(!is.na(lexical_class)) %>%
+    mutate(produces = value == "produces") %>%
+    select(data_id, item_id, produces, age, production) 
+  
+  d_wide <- d %>%
+    mutate(produces = ifelse(is.na(produces), 0, as.numeric(produces))) %>%
+    dplyr::select(item_id, produces, data_id) %>%
+    spread(item_id, produces)
+  
+  d_mat <- d_wide %>%
+    dplyr::select(-data_id) %>% 
+    data.frame %>%
+    data.matrix
+  
+  colnames(d_mat) <- sort(unique(d$item_id))
+  rownames(d_mat) <- d_wide$data_id
+  
+  d_mat <- d_mat[complete.cases(d_mat),]
+  mod_4pl <- mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
+
+  fscores <- data_frame(data_id = rownames(d_mat), 
+                        ability = fscores(mod_4pl, method = "MAP")[,1])
+  fscores$language <- language
+  fscores$form <- form
+  
+  fscores <- fscores %>%
+    mutate(data_id = as.numeric(data_id)) %>%
+    left_join(get_administration_data(language = language, 
+                                      form = form))
+  
+  return(fscores)
+}
+  
+mirt_params <- instruments %>% 
+  filter(form %in% WSs, language %in% c("Norwegian", "English (American)")) %>% 
+  mutate(idx = 1:n()) %>%
+  split(.$idx) %>%
+  map_df(possibly(mirt_params, otherwise = data_frame()))
+
+write_feather(mirt_params, "data/long_mirt_params.feather")
+```
+
+
+```{r style_long_mirt_stability}
+mirt_params <- read_feather("data/long_mirt_params.feather")
+
+long_cors_mirt <- n_long_ws %>%
+  left_join(select(mirt_params, data_id, ability, language, form)) %>%
+  unite("id", c("original_id", "source_name")) %>%
+  mutate(age = round(age/age_binsize) * age_binsize) %>% # round age into two-month bins
+  select(id, language, age, ability) %>%
+  group_by(id, age) %>%
+  sample_n(size = 1) %>% # if there are multiple measurements from one age, remove
+  ungroup 
+  
+long_cor_pairs_mirt <-  long_cors_mirt %>% 
+  spread(age, ability) %>%
+  split(.$language) %>%
+  map_df(function (df) {
+    language <- df$language[1]
+    cor_mat <- select(df, -language, -id) %>%
+      cor(use='pairwise.complete.obs') 
+    
+    as_data_frame(cor_mat) %>%
+      mutate(age2 = rownames(cor_mat)) %>%
+      gather(age1, cor, -age2) %>%
+      mutate(language = language,
+             age1 = as.numeric(age1), 
+             age2 = as.numeric(age2), 
+             dist = age2 - age1) %>%
+      filter(dist > 0)
+  }) %>%
+  left_join(long_cor_ns)
+```
+
+```{r style_long_raw_stability}
+long_cors_raw <- n_long_ws %>%
+  unite("id", c("original_id", "source_name")) %>%
+  mutate(age = round(age/age_binsize) * age_binsize) %>% # round age into two-month bins
+  select(id, language, age, production) %>%
+  group_by(id, age) %>%
+  sample_n(size = 1) %>% # if there are multiple measurements from one age, remove
+  ungroup 
+  
+long_cor_pairs_raw <-  long_cors_raw %>% 
+  spread(age, production) %>%
+  split(.$language) %>%
+  map_df(function (df) {
+    language <- df$language[1]
+    cor_mat <- select(df, -language, -id) %>%
+      cor(use='pairwise.complete.obs') 
+    
+    as_data_frame(cor_mat) %>%
+      mutate(age2 = rownames(cor_mat)) %>%
+      gather(age1, cor, -age2) %>%
+      mutate(language = language,
+             age1 = as.numeric(age1), 
+             age2 = as.numeric(age2), 
+             dist = age2 - age1) %>%
+      filter(dist > 0)
+  }) %>%
+  left_join(long_cor_ns)
+```
+
+
+```{r style_cor_methods_comparisons}
+min_n <- 50
+all_cors <- left_join(long_cor_pairs_mirt %>% 
+                        filter(n >= min_n) %>%
+                      group_by(language, dist) %>% 
+                      summarise(`IRT ability` = mean(cor, na.rm=TRUE)), 
+                    long_cor_pairs %>% 
+                      filter(n >= min_n) %>%
+                      group_by(language, dist) %>% 
+                      summarise(Percentile = mean(cor, na.rm=TRUE))) %>%
+  left_join(long_cor_pairs_raw %>% 
+              filter(n >= min_n) %>%
+            group_by(language, dist) %>% 
+            summarise(`Raw score` = mean(cor, na.rm=TRUE))) %>%
+  filter(is.finite(`Raw score`)) %>%
+  gather(measure, value, `IRT ability`, Percentile, `Raw score`)
+
+ggplot(all_cors, aes(x = dist, y = value, col = measure)) +
+  geom_line() + 
+  facet_wrap(~language) + 
+  ylim(0,1) + 
+  ylab("Correlation") + 
+  xlab("Measurement Gap (Months)") + 
+  scale_color_ptol(name = "Measure")
+```
+
+To test this last hypothesis, we evaluated the longitudinal stability of correlations using the same analysis as above. We varied whether we used latent abilities derived from a 4-parameter IRT model as in Appendix \@ref(psychometrics), raw scores, or the percentiles used above. While the IRT model abilities realized a consistent improvement over the use of raw scores, percentiles realized a further gain over IRT ability scores. 
+
+In sum, the variability between children that we observe in the CDI is quite stable longitudinally. It declines over time, but some of this decline may simply be due to the unavoidable limitations of CDI forms with respect to floor and ceiling effects. 
+
+## "Spurts" in Vocabulary
+
+```{r style_median_production}
+admins %>%
+  filter(language == "English (American)", form == "WG") %>%
+  group_by(age) %>%
+  summarise(production = median(production, na.rm=TRUE)) %>%
+  ggplot(aes(x = age, y = production)) +
+ geom_point() + 
+  geom_smooth(span = 1, se=FALSE) +
+  xlab("Age (months)") + 
+  ylab("Median Productive Vocabulary") 
+```
+
+
+One of the most obvious aspects of early vocabulary is that it picks up speed over the second year after birth. First words are hard-won but soon children's language appears to "explode." This acceleration is easily visible in the plot above, which shows the median productive vocabulary from 8 - 18 months (English (American) Words and Gestures data). (We could measure the rate of learning by taking the derivative of this curve; but this rate calculation is slightly misleading for cross-sectional data and so we postpone this analysis until below). This increase in the rate of vocabulary learning has been much remarked on in the literature. 
+
+Many early authors discussed this rate change in terms of a "referential insight" [e.g., @kamhi1986], which allows for faster and more accurate word learning [@dore1974, @mcshane1980]. 
+
+For example, @goldfield1990
+
+More recent computational work by @mcmurray2007 proposed that.... But this work does not answer the question of whether the rate does change.
+
+@ganger2004 provides an analysis of this question, using longitudinal data to examine changes in children's growth rate via a curve fitting procedure. 
+
+
+```{r style_wg_spaghetti}
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id,
+         language %in% c("Norwegian", "English (American)"),
+         form == "WG") %>%
+  group_by(original_id, language) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 3)
+
+ggplot(n_long_wg, aes(x = age, y = production)) +
+  geom_line(aes(group = original_id), alpha = .1) +
+  facet_wrap(~language) + 
+  ylab("Production") + 
+  xlab(" Age (months)")
+```
+We use the dense longitudinal data available through the Norwegian dataset to examine this question. Because we are interested in computing changes in rate, we minimally need three datapoints from each child as a minimum. And the @ganger2004 model actually requires at least four points to distinguish between a logistic model and a quadratic model. This winnowing leaves us with data from `r length(unique(n_long_wg$original_id))` children, whose growth curves are shown in the figure above.  
+
+```{r style_wg_rates}
+wg_rates <- n_long_wg %>%
+  select(original_id, age, production, n_admins) %>%
+  group_by(original_id) %>%
+  arrange(age) %>%
+  mutate(initial_vocab = production[1],
+         dv = c(0, diff(production)), 
+         dt = c(0, diff(age)), 
+         rate = dv/dt) %>%
+  filter(is.finite(rate))
+
+ggplot(filter(wg_rates, n_admins > 6, initial_vocab < 30), 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_line() + 
+  # geom_smooth(method = "lm", formula = y ~ x + I(x^2), se=FALSE, span = 1) +   
+  facet_wrap(~original_id) + 
+  scale_y_continuous(lim = c(0, 50), 
+                     breaks = c(0, 50)) + 
+  scale_x_continuous(lim = c(0, 100), 
+                   breaks = c(0, 100))+
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)")
+```
+The figure above shows data for those children with a starting vocabulary of less than 30 words and at least 6 datapoints measured. Each subplot shows the rate of growth (words/month) plotted by total vocabulary. The question of vocabulary spurts, as posed by @ganger2004, is whether rate continues to increase (indicating constant acceleration) or whether it moves from one equilibrium point to another. The visual impression from the current data is certainly not clear. 
+
+```{r}
+ggplot(wg_rates, 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
+
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)")
+```
+To calibrate our expectations regarding the function linking growth rate to total production, the figure below shows this relation for the full dataset. First, we should look beyond a few outliers that do not afect the overall fit much. Overall, we see a linear function (shown in red), with some deceleration towards the end. Intuitively, we should expect deceleration due to the measurement properties of the CDI form: as children learn more words, the form should tend to be less complete due both to ceiling effects (hard words not included) and omissions (easier words not included). (See \@ref(appendix-vocab-estimation) for more details on this issue). 
+
+```{r}
+ggplot(wg_rates, 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
+
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)") + 
+  xlim(0, 100) + ylim(-25, 80)
+```
+Attempting to avoid this issue, we can zoom in on the first 100 words (the focus of previous inquiries), where we see an extremely consistent linear function with essentially no quadratic elements. 
+
+Is this linear function consistent with a vocabulary spurt? In the case where children move between a lower rate of vocabulary acquisition and a second, higher rate of vocabulary acquisition, there will tend to be some deceleration as more and more children reach their higher equilibrium. It is not impossible to produce a linear function in this scenario, but it will only happen if children who experience a later spurt *also* have a higher rete 
+
+```{r style_ws_rates}
+ws_rates <- n_long_ws %>%
+  select(original_id, age, production, n_admins) %>%
+  group_by(original_id) %>%
+  arrange(age) %>%
+  mutate(initial_vocab = production[1],
+         dv = c(0, diff(production)), 
+         dt = c(0, diff(age)), 
+         rate = dv/dt) %>%
+  filter(is.finite(rate))
+
+ggplot(filter(ws_rates, n_admins > 8, initial_vocab < 30), 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_line() + 
+  # geom_smooth(method = "lm", formula = y ~ x + I(x^2), se=FALSE, span = 1) + 
+  facet_wrap(~original_id) + 
+  scale_y_continuous(breaks = c(0, 100), lim = c(-10, 100)) + 
+  scale_x_continuous(breaks = c(0, 300))+ 
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)")
+```
+Examining Words and Sentences data for convergent evidence, we see the same general pattern of deceleration. In this case it is very clearly due to measurement issues as many children in this dataset are reaching ceiling. 
+
+```{r}
+ggplot(ws_rates, 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
+
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)") + 
+  xlim(0, 100) + ylim(-25, 80)
+```
+Again we can zoom in on the first 100 words, recognizing that this selects children who are likely later learners (because they are above 16 months due to the use of the WS form). And again we see a very linear relationship between vocabulary size and rate. 
+
+Overall, 
+
+## Variation in Vocabulary Composition
+
+In this subsection we examine the question of variation across children in referential vs. expressive vocabulary. Following @bates1994, we operationalize out the notion of a "referential" vocabulary as simply one that has relatively more nouns. While there are other more nuanced measures that we can construct, this one has the advantage of being directly related to the framework in Chapter \@ref(categories). We use that framework investigate vocabulary composition in individuals. Recall that we computed the proportion of children's vocabulary that was made up of nouns as a function of age in that chapter. 
+
+```{r 14_re_beginning}
+vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
+
+ws_vc <- vocab_comp_data %>%
+  filter(form %in% WSs)  %>%
+  mutate(langform = paste(language, form))
+
+ws_vc_all <- ws_vc %>%
+  filter(measure == "produces", 
+         lexical_category == "nouns")
+
+ggplot(ws_vc_all, 
+       aes(x = vocab, y = prop_vocab)) + 
+  geom_point(alpha = .05) + 
+  geom_smooth() + 
+  facet_wrap(~langform) + 
+  scale_x_continuous(name = "Total Vocabulary Size (proportion)", breaks = c(0,.5,1)) + 
+  scale_y_continuous(name = "Proportion Nouns", breaks = c(0,.5,1)) + 
+  geom_hline(data = ws_vc_all %>%
+               group_by(langform) %>%
+               filter(vocab == max(vocab)) %>%
+               sample_n(size = 1), 
+             aes(yintercept = prop_vocab), lty = 2, col = "red")
+```
+That pattern is shown in the figure above. It's clear that there is an overall trend for an over-representation of nouns, as shown by the blue line (representing the smoothed mean proportion nouns) being above the red dashed line (total porportion nouns on the form). The size of this over-representation is the topic of Chapter \@ref(categories). Here we examine variability in over-representation. 
+
+### Variability and Vocabulary Size
+
+We follow @nelson1973, who suggests that chilren who are more referential in their style also have faster vocabulary growth.^[Referential style was also associated with a variety of other variables like socioeconomic status and birth order that are themselves related to vocabulary outcomes.] One way of cashing out this claim empirically is to suggest that the proportion of nouns in a child's vocabulary should be a predictor of vocabulary size, over and above age. We evaluate this claim below. 
+
+```{r}
+n_items <- items %>%
+  group_by(language, form) %>%
+  summarise(n = n())
+
+vc_pred <- left_join(ws_vc_all, admins) %>%
+  left_join(n_items) %>%
+  mutate(produces = vocab_num, 
+         doesnt_produce = n - vocab_num) %>%
+  rename(noun_prop = prop_vocab)
+```
+
+
+```{r}
+coefs <- vc_pred %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  group_by(language, form) %>%
+  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * noun_prop, 
+              data = ., family = "binomial"))) %>%
+  mutate(langform = paste(language, form)) %>%
+  filter(term %in% c("age", "noun_prop","age:noun_prop")) %>%
+  mutate(term = factor(term, 
+                        labels = c("Age", "Prop. Nouns","Age x Prop. Nouns"), 
+                        levels = c("age", "noun_prop", "age:noun_prop")))
+
+ggplot(coefs, 
+       aes(x = fct_reorder(langform, estimate), y = estimate, 
+           col = term)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+  facet_wrap(~term, scales = "free_x") + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  coord_flip()+ 
+  xlab("") +
+  ylab("Coefficient Estimate") +
+  scale_color_solarized(name = "Term") + 
+  theme(legend.position = "bottom")
+```
+
+A simple model of this hypothesis is a GLM predicting the number of CDI words a child produces as a function of age, proportion nouns, and their interaction. The coefficients of this model are shown above. Age coefficients are positive (indicating more words with age) and proportion of nouns is positive as well, indicating an independent contribution of this variable over and above age. The interaction of the two is negative because proportion of nouns converges to the total proportion of nouns on the form as vocabulary is large, so this variable is uniform across children for older ages. 
+
+This result appears to provide support for the relationship between the referential/expressive distinction and vocabulary size. But, as noted by @lieven1992, the bigger your vocabulary is, the bigger your noun bias on average. Thus, the causality in the relation above could be reversed. Proportion nouns could be predictive of vocabulary size not because children with a particular style have bigger vocabularies, but because having more nouns in your vocabulary tends to indicate that you are further along. 
+
+Put another way, perhaps all children follow the same trajectory through the noun bias. Even in this scenario, knowing the size of a child's noun bias will tell you something about vocabulary size, without that implying that the child is following a different trajectory.
+
+One way to circumvent this critique statistically is to measure whether a particular child has a greater-than-average, vocabulary-adjusted noun-bias. In other words, if we remove the endogenous signal (the average correlation with noun bias and vocabulary), can we still find a relation with individuals' degree of noun bias and vocabulary size? Will children with even more noun bias tend to have even larger vocabularies relative to age?
+
+```{r}
+eng_ex <- filter(vc_pred, language == "English (American)") %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  mutate(resid_noun_prop = resid(lm(noun_prop ~ prop + I(prop^2) + I(prop^3)))) %>%
+  gather(measure_type, value, noun_prop, resid_noun_prop) %>%
+  mutate(measure_type = factor(measure_type, 
+                               levels = c("noun_prop","resid_noun_prop"), 
+                               labels = c("Prop. Nouns", "Residual Prop. Nouns")))
+
+ggplot(eng_ex, aes(x = prop, y = value)) +
+  geom_point(alpha = .2) + 
+  facet_wrap(~measure_type)+ 
+  geom_smooth(method = "lm", 
+              formula = y ~ x + I(x^2) + I(x^3)) + 
+  xlab("Total Vocabulary Size (proportion)") + 
+  ylab("Measure")
+```
+
+The figure above shows both the English noun-proportion data and the resulting residuals from that distribution when fit via a cubic model (blue curve). These residuals can then be used to test for incremental contributions to total vocabulary over and above age. 
+
+```{r}
+resid_vc_pred <- vc_pred %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  split(.$language) %>%
+  map_df(function(x) {
+    mod <- lm(noun_prop ~ prop + I(prop^2) + I(prop^3), data = x)
+    x$resid_noun_prop <- resid(mod)
+    return(x)
+  })
+
+resid_coefs <- resid_vc_pred %>%
+  group_by(language, form) %>%
+  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * resid_noun_prop, 
+              family = "binomial", data = .)))  %>%
+  filter(term %in% c("age", "resid_noun_prop","age:resid_noun_prop")) %>%
+  mutate(term = factor(term, 
+                     labels = c("Age", "Resid. Nouns", "Age x Resid. Nouns"), 
+                     levels = c("age", "resid_noun_prop", "age:resid_noun_prop")), 
+         langform = paste(language, form)) 
+
+
+ggplot(resid_coefs, 
+       aes(x = fct_reorder(langform, estimate), 
+           y = estimate, col = term)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, 
+                      ymax = estimate + std.error)) + 
+  facet_wrap(~term, scales = "free_x") + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  coord_flip() +
+  xlab("") +
+  ylab("Coefficient Estimate") +
+  scale_color_solarized(name = "Term") + 
+  theme(legend.position = "bottom")
+```
+
+**THIS MODEL APPEARS BROKEN - LOOK AT ANTI-CORRELATION OF RESIDUAL AND INTERACTION**
+
+> As we might expect from the results presented earlier (see especwlly Figs 5 and i), the raw measure of referential style was significantly correlated with age(r=+0'3I, P<0'001) andtotalvocabularysize(r=+0'35,P<0'001), There was also a small but reliable correl8tion with birth order, indicating that later-born children have lower scores for referential style (r = - 0.12., P < 0'05). Finally, there were small but statistically significant co:nlntions with maternal education (r = +O' 1 I, P < 0'05), paternal education (r = +O'II, P< 0'05) and paternal occupation (r = +0'10, P< 0'05). [n short, results obtained with the unadjusted scores for referential style replicate other reports in the literature using this measure. (Bates et al. 1994)
+
+with percentiles:
+
+> The conelation with age was still significa.nt (r "'" +0'15, P < 0'01) - but notice that this is a positive correlation, suggesting that children high in referential style are actually somewhat older than children with proportionally fewer common nouns.
+
+** ALSO NEEDS TO BE LOOKED AT IN WG DATA **
+
+
+### Quantifying variability in bias
+
+Again following @bates1994, we can quantify residual variability in noun bias. 
+
+We begin by doing this in Words and Sentences.
+
+```{r}
+resid_vars <- resid_vc_pred %>%
+  group_by(langform, age) %>%
+  summarise(sd = sd(resid_noun_prop))
+  
+ggplot(resid_vars, aes(x = age, y = sd, col = langform)) + 
+  geom_point() + 
+  geom_smooth(se=FALSE, span = 1) +
+  theme(legend.position = "bottom")
+```
+
+Variability was high but itself somewhat consistent. [** TODO: THINK ABOUT ERROR BARS **]
+
+```{r}
+ms <- resid_vars %>%
+  group_by(langform) %>%
+  summarise(sd = mean(sd, na.rm=TRUE)) %>%
+  ungroup() %>%
+  mutate(langform = fct_reorder(langform, sd))
+  
+ggplot(ms, aes(x = langform, y = sd)) + 
+  geom_point() + 
+  coord_flip() + 
+  ylim(0,.2)
+```
+
+
+@bates1994 focus on variability being highest in the very earliest parts of word learning. We can verify this claim using Words and Gestures data. 
+
+```{r}
+wg_vc_all <- vocab_comp_data %>%
+  filter(form %in% WGs)  %>%
+  mutate(langform = paste(language, form)) %>%
+  filter(measure == "produces", 
+         lexical_category == "nouns")
+
+n_items <- items %>%
+  group_by(language, form) %>%
+  summarise(n = n())
+
+vc_pred_wg <- left_join(wg_vc_all, admins) %>%
+  left_join(n_items) %>%
+  mutate(produces = vocab_num, 
+         doesnt_produce = n - vocab_num) %>%
+  rename(noun_prop = prop_vocab)
+
+resid_vc_pred_wg <- vc_pred_wg %>%
+  filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
+  split(.$language) %>%
+  map_df(function(x) {
+    mod <- lm(noun_prop ~ prop + I(prop^2) + I(prop^3), data = x)
+    x$resid_noun_prop <- resid(mod)
+    return(x)
+  })
+
+resid_vars_wg <- resid_vc_pred_wg %>%
+  group_by(langform, age) %>%
+  summarise(sd = sd(resid_noun_prop), 
+            n = n())
+  
+ggplot(resid_vars_wg, aes(x = age, y = sd, col = langform)) + 
+  geom_point(aes(size = n)) + 
+  geom_smooth(se=FALSE, span = 1) +
+  theme(legend.position = "bottom") + 
+  geom_smooth(aes(group = 1)) 
+```
+As discussed by @nelson1973 and @bates1994, variability declines with age. Intuitively, this pattern makes sense -- the point of most variability is when you have the smallest sample of words. A child who speaks one word can have either 0% or 100% noun representation. Everything gets less variable from there. 
+
+[ **COULD DO CLOSED CLASS**]
+
+> In analysing the correlates of closed-class style, we found some limited evidence in support of a link between rate of development (i,e. precocity) and closed-class proportion scores...
+
+```{r, eval = FALSE}
+ws_vc_all <- ws_vc %>%
+  filter(measure == "produces", lexical_category == "function_words")
+
+
+ggplot(ws_vc_all, 
+       aes(x = vocab, y = prop_vocab)) + 
+  geom_point(alpha = .02) + 
+  geom_smooth() + 
+  facet_wrap(~language) + 
+  xlab("Total Vocabulary Size (proportion)") + 
+  ylab("Proportion Function Words") 
+```
+
+
+
+## Variation in Production vs. Comprehension
+
+Our next investigation concerns the question of how tightly comprehension and production are yoked within CDI data. Our assumption is that there is variability between children on this dimension -- while some children produce a large amount of language, others appear to produce less but still understand substantial amounts. How does the ratio of production to comprehension vary across ages, and across cultures? 
+
+Before we begin the analysis it is important to be clear that some of the pattern in this variable could be due to variation between parents in under- or over-reporting comprehension (or for that matter, production, but we assume -- and Appendix \@ref(appendix-psychometrics) confirms that production reports likely carries more signal). For example, we might be detecting variation in the threshold at which parents assume that a response indicates comprehension. Some parents might be very liberal and recall a generally-understood story that included a particular word, while others might be searching for a specific anecdote that clearly illustrates comprehension of that word. 
+
+Of course this type of analysis can only be conducted on WG-type forms, because of the presence of comprehension information. We begin by investigating the American English WG data as an example. 
+
+
+RELEVANT FOR CLINICAL
+
+CDI DATA HAS AN ARTIFACT - NEED OTHER SOURCES
+
+MANY REASONS FOR PRODUCTION VARIATION
+
+STABLE ACROSS LANGUAGES THOUGH
+
+```{r}
+eng_wg <- filter(admins, language == "English (American)", form == "WG")
+
+ggplot(eng_wg, 
+       aes(x = comprehension, y = production)) + 
+  geom_point(alpha = .2) + 
+  geom_abline(lty = 2, col = "red") + 
+  geom_smooth() + 
+  xlab("Total Comprehension") + 
+  ylab("Total Production")
+```
+
+The figure above shows individual children's comprehension and production plotted against one another. The diagonal indicates a child who comprehends and produces exactly the same number of words. In practice, this measure is always below the diagonal because by the design of the form, a child cannot "say but not understand" a particular word, they can only "understand" or "say and understand." We can convert these data into a productivity ratio:
+
+$$productivity = \frac{\# produced}{\# understood}$$
+\noindent and plot this ratio for all children. 
+
+```{r}
+eng_wg$productivity <- eng_wg$production / eng_wg$comprehension
+
+ggplot(eng_wg, aes(x = age, y = productivity)) + 
+  geom_jitter(alpha = .2) + 
+  geom_smooth() + 
+  xlab("Age (Months)") + 
+  ylab("Productivity Ratio")
+```
+The resulting scatterplot is quite interpretable. It contains a few outliers at the very top of the range for very young children (whose parents report them producing and comprehending the same number of words). But for most others, the ratio is low, increasing from about 10% to 30% by the top of the form. 
+
+```{r}
+wg <- filter(admins, form %in% WGs) %>%
+  mutate(productivity = production / comprehension) %>%
+  mutate(langform = paste(language, form))
+
+wg$langform <- fct_reorder(factor(wg$langform), wg$productivity, 
+                           fun = function(x) {mean(x, na.rm=TRUE)}, .desc = FALSE)
+
+ggplot(filter(wg, age >= 8, age <= 18),
+       aes(x = age, y = productivity)) + 
+  geom_jitter(alpha = .05) +
+  geom_smooth(method = "lm") + 
+  facet_wrap(~langform) + 
+  scale_y_continuous(name = "Productivity Ratio", breaks = c(0,.5,1)) + 
+  scale_x_continuous(name = "Age (Months)", breaks = c(8, 12, 16)) 
+
+```
+
+The figure above plots these productivity ratios by language for an age-restricted subset between 8 and 18 months. Plots are sorted by the mean productivity ratio. While the majority of languages show the same pattern as English (an increase from around 10% to 30%) there are some outliers that show a flatter slope. 
+
+
+```{r}
+ggplot(filter(wg, !(langform %in% c("British Sign Language WG"))),
+       aes(x = age, y = productivity, col = langform)) + 
+  # geom_jitter(alpha = .2) + 
+  # geom_smooth(method = "loess", se = FALSE, span = 1, alpha = .5) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  xlab("Age (Months)") + 
+  ylab("Productivity Ratio") + 
+  theme(legend.position = "bottom") + 
+  xlim(8,18) + 
+  ylim(0,.4)
+```
+
+We can see this pattern even better by plotting the best-fit lines across languages. Nearly all of these go up with age and have similar slopes. 
+
+```{r}
+productivity_coefs <- wg %>%
+  group_by(language, form) %>%
+  do(tidy(lm(productivity ~ age, data = .))) %>%
+  filter(term == "age") %>%
+  ungroup %>%
+  mutate(langform = fct_reorder(paste(language, form), estimate, fun = mean))
+  
+ggplot(productivity_coefs, 
+       aes(x = langform, y = estimate)) + 
+  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
+  coord_flip()
+```
+
+
+Going back to the scatter plots, however, in nearly every language to one degree or another, we see ratios > .95, indicating that parents are essentially not using "understands" as a separate option. 
+
+```{r}
+wg %>%
+  group_by(langform)%>%
+  summarise(no_comprehension = signif(mean(productivity > .95, na.rm=TRUE), 2)) %>%
+  arrange(desc(no_comprehension)) %>%
+  datatable()
+```
+In this table, we see that a number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages. 
+
+In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of instructions regarding comprehension in CDI administration. 
+
+
+
+<!-- ## Overlap in vocabulary -->
+
+<!-- @mayor2014 create several procedures for examining idiosyncrasy of vocabulary. We are able to use the most direct one because of the accessibility of full item-wise data.  -->
+
+<!-- > This direct measure is computed by calculating the mean Euclidean distance between individual vocabularies and the mean vocabulary, where each word is either understood/produced (coded as 1 in a vector containing all words on the CDI) or not understood/not produced (coded as 0). As this metric is heavily dependent on the total number of words known on the CDI, these mean Euclidean distances are then normalized by the underlying binomial distribution, produced by measuring the Euclidean distance when vector values are drawn at random. The Normalized Euclidean Distance (NED hereafter) is computed according to the following equation: -->
+
+<!-- $$NED = \frac{\sum_{i \in N} \sum_{j \in W} (x_{ij} - p_i)^2}{\sum_{i \in N} \sum_{j \in W} (y_{ij} - q_i)^2}$$ -->
+
+<!-- > where $W$ refers to the number of words on the CDI, $N$ the number of infants, $x_{ij}$ is equal to 1 if the word $i$ is understood/produced by infant $j$ and 0 otherwise. $p_i$ corresponds to the fraction of infants that understand/ produce word $i$. $y_{ij}$ corresponds to the random assignment to word $i$ in run $j$, where 1 and 0 are assigned randomly so that mean vocabularies match and $q_i$ corresponds to the fraction of runs for which word $i$ is understood/produced.  -->
+
+<!-- I take $y_{ij}$ to be a permutation of words within vocabularies.  -->
+
+<!-- ```{r} -->
+<!-- eng_wg <- read_feather("data/eng_wg_data.feather") %>% -->
+<!--   filter(type == "word") %>% -->
+<!--   filter(!is.na(value)) %>% -->
+<!--   select(data_id, value, age, language, form, item_id, definition) %>% -->
+<!--   mutate(understands = value == "produces" | value == "understands",  -->
+<!--          produces = value == "produces") %>% -->
+<!--   select(-value) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- get_ED <- function (x) { -->
+<!--   mean_vocab <- as.data.frame(x) %>%  -->
+<!--     group_by(item_id, definition) %>% -->
+<!--     summarise(mean_understands = mean(understands),  -->
+<!--               mean_produces = mean(produces)) -->
+
+<!--   y <- left_join(as.data.frame(x), mean_vocab) -->
+
+<!--   y %>% -->
+<!--     group_by(age, item_id) %>% -->
+<!--     summarise(understands_ed = sum((understands - mean_understands)^2),  -->
+<!--               produces_ed = sum((produces - mean_produces)^2)) %>% -->
+<!--     summarise(understands_ed = sum(understands_ed),  -->
+<!--               produces_ed = sum(produces_ed))  -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r eval=FALSE} -->
+<!-- real_ed <- get_ED(eng_wg) -->
+
+<!-- perms <- eng_wg %>%  -->
+<!--   split(.$age) %>% -->
+<!--   map(function(x) {modelr::permute(x, col="understands",2)}) -->
+
+<!-- perm_ed <- map_df(perms,  -->
+<!--                function (x) { -->
+<!--                  map_df(x$perm, get_ED, .id = "id") %>% -->
+<!--                    summarise(understands_red = mean(understands_ed), -->
+<!--                              produces_red = mean(produces_ed)) -->
+<!--                  }) -->
+
+<!-- left_join(real_ed, perm_ed) %>% -->
+<!--   mutate(understands_ned = understands_ed / understands_red,  -->
+<!--          produces_ned = produces_ed / produces_red) -->
+<!-- ``` -->
+
+
+
+
+
+## Vocabulary Composition and Syntactic Growth

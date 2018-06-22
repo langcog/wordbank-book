@@ -1,8 +1,8 @@
-```{r}
+```{r gram_params}
 params <- list(min_admins = 100, min_age_var = 8)
 ```
 
-```{r 7_grammar_items}
+```{r gram_grammar_items}
 morphosyntax_fields <- c("combine", "complexity", "word_forms", "word_endings",
                          "word_forms_nouns", "word_forms_verbs", 
                          "word_endings_nouns", "word_endings_verbs", 
@@ -28,7 +28,7 @@ grammar_items <- items %>%
   filter(!is.na(coded_type))
 ```
 
-```{r 7_grammar_data}
+```{r gram_grammar_data}
 num_words <- items %>%
   filter(type == "word") %>%
   count(language, form)
@@ -65,11 +65,11 @@ grammar_data <- grammar_items %>%
   split(paste(.$language, .$form)) %>%
   map_df(get_grammar_data)
 
-write_feather(grammar_data, "data/grammar_data.feather")
+write_feather(grammar_data, "data/grammar/grammar_data.feather")
 ```
 
-```{r 7_grammar_summary}
-# grammar_data <- read_feather("data/grammar_data.feather")
+```{r gram_grammar_data_coded}
+# grammar_data <- read_feather("data/grammar/grammar_data.feather")
 
 num_age_admins <- grammar_data %>%
   ungroup() %>%
@@ -107,10 +107,10 @@ grammar_data_coded <- grammar_data_filtered %>%
   mutate(value = if_else(sum(!is.na(unique(value))) < 2 & is.na(value),
                          FALSE, value))
 
-write_feather(grammar_data_coded, "data/grammar_data_coded.feather")
+write_feather(grammar_data_coded, "data/grammar/grammar_data_coded.feather")
 ```
 
-```{r}
+```{r gram_grammar_summary}
 grammar_summary <- grammar_data_coded %>%
   filter(!is.na(value)) %>%
   group_by(language, form, age, data_id, coded_type,
@@ -121,5 +121,5 @@ grammar_summary <- grammar_data_coded %>%
             prop = positive / num_items) %>%
   mutate(instrument = paste(language, form))
 
-write_feather(grammar_summary, "data/grammar_summary.feather")
+write_feather(grammar_summary, "data/grammar/grammar_summary.feather")
 ```

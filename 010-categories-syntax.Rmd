@@ -131,7 +131,7 @@ get_lang_predictions <- function(lang) {
 }
 ```
 
-```{r 4_plot_area_demo}
+```{r 4_plot_area_demo, fig.asp=0.5}
 demo_lang <- "English (American)"
 demo_data <- filter(vocab_comp_data, form == "WS", 
                     language == demo_lang) %>%
@@ -269,7 +269,7 @@ base_plot <- function(input_forms, input_measure) {
 ### Comprehension: Words and Gestures
 
 
-```{r 4_plot_points_wg_comp}
+```{r 4_plot_points_wg_comp, fig.asp=1.25}
 base_plot(WGs, "understands") + 
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3) +
@@ -348,7 +348,7 @@ Function words are substantially under-represented across nearly every language 
 ### Production: Words and Sentences
 
 
-```{r 4_plot_points_ws}
+```{r 4_plot_points_ws, fig.asp=1.25}
 base_plot(WSs, "produces") + 
   geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3) +

@@ -1,0 +1,134 @@
+```{r}
+source("_common.R")
+library(cowplot)
+
+demo_ranef <- read_feather("data/items-demo/demo_ranef.feather")
+
+demo_ranef_coded <- demo_ranef %>%
+  gather(term, estimate, -language, -measure, -demo, -definition) %>%
+  filter(!is.na(estimate)) %>%
+  filter(!(term %in% c("(Intercept)", "age"))) %>%
+  mutate(term = term %>%
+           fct_recode("Male – Female" = "sexMale",
+                      "Secondary – Below Secondary" = "mom_ed1",
+                      "College and Above – Secondary" = "mom_ed2",
+                      "Second – First" = "birth_order1",
+                      "Third+ – Second" = "birth_order2",
+                      NULL = "mom_edCollege and Above"),
+         demo = demo %>% fct_recode("Birth order" = "birth_order",
+                                    "Maternal education" = "mom_ed",
+                                    "Sex" = "sex")) %>%
+  filter(!is.na(term))
+```
+
+```{r}
+plot_demo_ranef_lang <- function(plot_measure, plot_language) {
+  
+  demo_data <- demo_ranef_coded %>%
+    filter(measure == plot_measure, language == plot_language)
+  
+  demo_labelled <- bind_rows(
+    demo_data %>% group_by(language, term) %>% top_n(num_extremes, estimate),
+    demo_data %>% group_by(language, term) %>% top_n(num_extremes, -estimate)
+  )
+  
+  ggplot(demo_data, aes(x = estimate, fill = term)) +
+    facet_wrap(~demo + term, ncol = 3) +
+    geom_density(alpha = .4) +
+    geom_label_repel(aes(label = definition, y = 0, col = term),
+                     data = demo_labelled,
+                     segment.size = 0.3,
+                     label.padding = 0.15,
+                     point.padding = unit(0.2, "lines"),
+                     arrow = arrow(length = unit(0.01, "npc")),
+                     nudge_y = 1.5,
+                     family = font, size = 2.5, fill = "white") +
+    scale_fill_solarized(guide = FALSE) +
+    scale_color_solarized(guide = FALSE) +
+    labs(x = "Coefficient estimate", y = "Number of words") 
+}
+
+plot_demo_ranef_lang("produces", "English (American)")
+ggsave("item_diffs_eng_prod.png", width = 8, height = 5.5)
+```
+
+```{r}
+demo_ranef_var <- demo_ranef_coded %>%
+  group_by(language, measure, demo, term) %>%
+  nest() %>%
+  mutate(ranef_var = map_dbl(data, ~var(.x$estimate)))
+
+terms <- unique(demo_ranef_coded$term)
+term_colours <- ptol_pal()(length(terms)) %>% set_names(terms)
+
+plot_demo_var <- function(plot_demo) {
+  plot_data <- demo_ranef_var %>%
+    filter(demo == plot_demo,
+           measure == "produces") %>%
+    arrange(term, ranef_var) %>%
+    mutate(language = fct_inorder(language))
+  ggplot(plot_data, aes(x = ranef_var, y = language, colour = term)) +
+    geom_point() +
+    scale_colour_manual(values = term_colours) +
+    labs(x = "Variance of word effects", y = "", colour = plot_demo) +
+    theme(legend.position = "top", legend.direction = "vertical")
+}
+
+plot_grid(
+  plot_demo_var("Birth order"),
+  plot_demo_var("Maternal education"),
+  plot_demo_var("Sex"),
+  nrow = 1
+)
+ggsave("item_vars_prod.png", width = 14, height = 6)
+```
+
+```{r}
+demo_ranef_coded %>%
+  distinct(language, measure, demo) %>%
+  count(measure, demo)
+
+demo_ranef_coded %>%
+  distinct(language, measure, definition) %>%
+  count(language, measure) %>%
+  filter(measure == "produces") %>%
+  pull(n) %>%
+  mean()
+
+langs <- demo_ranef_coded %>%
+  distinct(language, measure, demo)
+
+admin_samples <- admins %>%
+  select(data_id, language, form, birth_order, sex, mom_ed) %>%
+  gather(demo, value, birth_order, sex, mom_ed) %>%
+  filter(!is.na(value)) %>%
+  count(language, form, demo) %>%
+  mutate(measure = map(form, function(f) {
+    if (f == "WG") data_frame(measure = c("produces", "understands")) else if (f %in% c("WS", "TEDS Twos")) data_frame(measure = "produces") else data_frame()
+  })) %>%
+  select(-form) %>%
+  unnest() %>%
+  mutate(demo = demo %>% fct_recode("Birth order" = "birth_order",
+                                    "Maternal education" = "mom_ed",
+                                    "Sex" = "sex")) %>%
+  right_join(langs) %>%
+  arrange(n) %>%
+  filter(measure == "produces")
+
+min(admin_samples$n)
+max(admin_samples$n)
+mean(admin_samples$n)
+
+admins %>%
+  distinct(language, form, age) %>%
+    mutate(measure = map(form, function(f) {
+    if (f == "WG") data_frame(measure = c("produces", "understands")) else if (f %in% c("WS", "TEDS Twos")) data_frame(measure = "produces") else data_frame()
+  })) %>%
+  select(-form) %>%
+  unnest() %>%
+  filter(measure == "produces") %>%
+  group_by(language) %>%
+  summarise(min_age = min(age),
+            max_age = max(age)) %>%
+  distinct(min_age, max_age)
+```

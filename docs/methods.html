@@ -54,14 +54,6 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
-<link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-bootstrap-1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="libs/dt-core-bootstrap-1.10.16/js/dataTables.bootstrap.min.js"></script>
-<link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
-<script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
-<link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
-<script src="libs/selectize-0.12.0/selectize.min.js"></script>
 
 
 
@@ -93,6 +85,7 @@
 <li class="chapter" data-level="1.4.2" data-path="intro.html"><a href="intro.html#our-approach"><i class="fa fa-check"></i><b>1.4.2</b> Our approach</a></li>
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#our-data-wordbank"><i class="fa fa-check"></i><b>1.5</b> Our data: Wordbank</a></li>
+<li class="chapter" data-level="1.6" data-path="intro.html"><a href="intro.html#whats-missing"><i class="fa fa-check"></i><b>1.6</b> What’s missing?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="theory-intro.html"><a href="theory-intro.html"><i class="fa fa-check"></i><b>2</b> Theoretical Foundations</a><ul>
 <li class="chapter" data-level="2.1" data-path="theory-intro.html"><a href="theory-intro.html#the-picture-to-date"><i class="fa fa-check"></i><b>2.1</b> The Picture To Date</a></li>
@@ -255,6 +248,7 @@
 <li class="chapter" data-level="E.5" data-path="appendix-aoa.html"><a href="appendix-aoa.html#hierarchical-glm-model"><i class="fa fa-check"></i><b>E.5</b> Hierarchical GLM model</a></li>
 <li class="chapter" data-level="E.6" data-path="appendix-aoa.html"><a href="appendix-aoa.html#full-comparison-between-models"><i class="fa fa-check"></i><b>E.6</b> Full comparison between models</a></li>
 <li class="chapter" data-level="E.7" data-path="appendix-aoa.html"><a href="appendix-aoa.html#sparsity-simulations"><i class="fa fa-check"></i><b>E.7</b> Sparsity simulations</a></li>
+<li class="chapter" data-level="E.8" data-path="appendix-aoa.html"><a href="appendix-aoa.html#conclusion"><i class="fa fa-check"></i><b>E.8</b> Conclusion</a></li>
 </ul></li>
 <li class="chapter" data-level="F" data-path="appendix-vocab-estimation.html"><a href="appendix-vocab-estimation.html"><i class="fa fa-check"></i><b>F</b> Estimating Total Vocabulary</a><ul>
 <li class="chapter" data-level="F.1" data-path="appendix-vocab-estimation.html"><a href="appendix-vocab-estimation.html#further-thoughts-on-mayor-plunkett-model"><i class="fa fa-check"></i><b>F.1</b> Further thoughts on Mayor &amp; Plunkett model</a></li>
@@ -278,11 +272,11 @@
 
             <section class="normal" id="section-">
 <div id="methods" class="section level1">
-<h1><span class="header-section-number">3</span> Methods and Data<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></h1>
+<h1><span class="header-section-number">3</span> Methods and Data<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h1>
 <p>We begin by introducing the structure of our dataset and the database that contains it. In the second section, we give some descriptive information on the datasets included in the database.</p>
 <div id="database" class="section level2">
 <h2><span class="header-section-number">3.1</span> Database</h2>
-<p>Why use a database to store vocabulary data? Consider the standard format of raw CDI data. Here is a small slice of the original CDI norming data <span class="citation">(L. Fenson et al. <a href="references.html#ref-fenson1994">1994</a>; L. Fenson et al. <a href="references.html#ref-fenson2007">2007</a>)</span>. <img src="images/itembychild.png" alt="Example data from the CDI norming sample (Fenson et al., 2007). Each row has a unique child identifier, demographics, and word-by-word checklist data." /></p>
+<p>Why use a database to store vocabulary data? Consider the standard format of raw CDI data. Here is a small slice of the original CDI norming data <span class="citation">(Fenson et al. <a href="references.html#ref-fenson1994">1994</a>; Fenson et al. <a href="references.html#ref-fenson2007">2007</a>)</span>. <img src="images/itembychild.png" alt="Example data from the CDI norming sample (Fenson et al., 2007). Each row has a unique child identifier, demographics, and word-by-word checklist data." /></p>
 <p>Each row is a child, each column gives a variable – either a demographic variable or the result of a particular word being administered to a particular child. Although this format is useful for homogeneous administrations of a single instrument, it cannot accommodate multiple instruments, multiple languages, or datasets with different sources or kinds of demographic information. Consolidating data across different instruments is very difficult in this format, and tracking data on children with multiple longitudinal administrations of a single instrument must also be done in an ad-hoc manner. The move to a database format allows far more flexible and programmatic handling of heterogeneous data structures from different sources.</p>
 <p>Further, as information about particular entities becomes available – for example, cross-linguistic mappings of lexical items – this information can be added in a way that preserves previous analyses. In a tabular format, such functionality is not guaranteed, and changes to the structure of the dataset will necessarily break previous analyses. A database, especially when supplemented with an appropriate application programming interface (API, see below), can solve this problem elegantly.</p>
 <div id="database-architecture" class="section level3">
@@ -306,12 +300,12 @@
 <div id="the-wordbankr-api" class="section level3">
 <h3><span class="header-section-number">3.1.3</span> The <code>wordbankr</code> API</h3>
 <p>An application programming interface (API) is a set of abstractions that allow applications to interact with a resource (e.g., a set of data like Wordbank) through consistent abstractions. Although in principle it is possible to construct raw SQL queries to Wordbank, in practice all access is through an <code>R</code> API that constructs individual SQL calls. This API is distributed to <code>R</code> users through the <code>wordbankr</code> package, which is available through the Comprehensive R Network (CRAN).</p>
-<p>We developed this package, <code>wordbankr</code>, to provide a simple and flexible API for the Wordbank dataset <span class="citation">(M. C. Frank et al. <a href="references.html#ref-frank2016">2016</a>)</span>, and our current book depends on it heavily. The package provides a consistent set of function calls for retrieving data from the underlying database, for example <code>get_instruments</code> or <code>get_administrations</code> to retrieve all or subsections of these tables, respectively. We do not describe the package in depth here, since it is described in our previous paper and in its <a href="https://github.com/langcog/wordbankr">online documentation</a></p>
+<p>We developed this package, <code>wordbankr</code>, to provide a simple and flexible API for the Wordbank dataset <span class="citation">(Frank et al. <a href="references.html#ref-frank2016">2016</a>)</span>, and our current book depends on it heavily. The package provides a consistent set of function calls for retrieving data from the underlying database, for example <code>get_instruments</code> or <code>get_administrations</code> to retrieve all or subsections of these tables, respectively. We do not describe the package in depth here, since it is described in our previous paper and in its <a href="https://github.com/langcog/wordbankr">online documentation</a></p>
 </div>
 <div id="unilemmas-cross-linguistic-conceptual-mappings" class="section level3">
 <h3><span class="header-section-number">3.1.4</span> “Unilemmas”: cross-linguistic conceptual mappings</h3>
 <p>As described in Chapter <a href="intro.html#intro">1</a>, it is sometimes useful to (cautiously) compare the developmental trajectory for a single concept across multiple languages. To facilitate these comparisons, we created “unilemmas,” cross-linguistic mappings from lexical items to single (English) forms that stand for a particular conceptual abstraction. Some lexical items are represented on only one or a handful of instruments, but there are many that are common across a large number of instruments, leading to an opportunity for cross-linguistic comparison.</p>
-<p>Unilemmas were created for particular instruments by following a two-step procedure. First, using a pool of English unilemmas, we proposed candidate mappings for each lexical item on a form. This first step was often accomplished by a non-native speaker using translation resources and the context of the form (e.g., that an item occurs in the “animal sounds” section). Second, we recruited a linguistically-sophisticated native speaker of the language (often a psychologist or linguist), provided them with the candidate unilemma list, and asked them to review this list item by item and suggest corrections and amendments.<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<p>Unilemmas were created for particular instruments by following a two-step procedure. First, using a pool of English unilemmas, we proposed candidate mappings for each lexical item on a form. This first step was often accomplished by a non-native speaker using translation resources and the context of the form (e.g., that an item occurs in the “animal sounds” section). Second, we recruited a linguistically-sophisticated native speaker of the language (often a psychologist or linguist), provided them with the candidate unilemma list, and asked them to review this list item by item and suggest corrections and amendments.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
 <p>Not every instrument has unilemma mappings, but they are currently available for FIXME forms in FIXME languages.</p>
 </div>
 <div id="a-note-on-age" class="section level3">
@@ -325,7 +319,7 @@
 <p>This section gives a broad overview of the data we have available. Unlike projects in which data are collected by the organizers, in our work here, we rely on the kindness of others in contributing data that are often years or decades old. Some datasets come via an email containing well-curated tabular data; others were contributed in more idiosyncratic formats or even on paper. One dataset was even retrieved by one of us from a doorstep several hours drive away, in the form of a paper bag full of old paper forms. Thus, the amount and type of meta-data available for some datasets is limited. For example, we have limited demographic information for some datasets and only vocabulary – not complexity or gesture – items for others. In many cases we do not have full details of instructions and administration for a particular dataset. This section gives an overview of data availability and some demographic comparisons of the samples. Specifics of each dataset – to the extent that they are available – are given in Appendix <a href="appendix-data.html#appendix-data">A</a>.</p>
 <div id="data-provenance" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Data Provenance</h3>
-<p>As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the <a href="http://wordbank.stanford.edu/contributors.html">Wordbank contributors page</a>. Several of these datasets were transferred second-hand from a pre-existing database <span class="citation">(CLEX-CDI; R. N. Jørgensen et al. <a href="references.html#ref-jorgensen2010">2010</a>)</span>, while many of the others were contributed directly via electronic or paper forms. In the case of paper forms, we re-keyed the forms using double-entry methods (either ourselves or via a commercial contractor).<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></p>
+<p>As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the <a href="http://wordbank.stanford.edu/contributors.html">Wordbank contributors page</a>. Several of these datasets were transferred second-hand from a pre-existing database <span class="citation">(CLEX-CDI; R. N. Jørgensen et al. <a href="references.html#ref-jorgensen2010">2010</a>)</span>, while many of the others were contributed directly via electronic or paper forms. In the case of paper forms, we re-keyed the forms using double-entry methods (either ourselves or via a commercial contractor).<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
 <p>Each of these datasets is then imported to the database by creating a custom import key that matches individual columns of the dataset to particular database fields (e.g., item types like words or gestures, or standardized demographic fields). These mappings are preserved along with the raw data so that they can be re-checked later.</p>
 </div>
 <div id="overview-of-the-data" class="section level3">
@@ -343,7 +337,7 @@
 <h3><span class="header-section-number">3.2.3</span> Administration details</h3>
 <p>Data in the dataset were gathered between the beginning of the first CDI norming study in 1990 and the present, with the majority of datasets gathered within the 10–15 years prior to the writing of this book. The details of administration vary widely from dataset to dataset. Though we have different levels of knowledge regarding the exact details of administration, we know that the three most common circumstances of administration (in no particular order) are:</p>
 <ol style="list-style-type: decimal">
-<li>On paper in a lab or other space, with instructions given in person by a researcher <span class="citation">(e.g., L. Fenson et al. <a href="references.html#ref-fenson1994">1994</a>)</span>;</li>
+<li>On paper in a lab or other space, with instructions given in person by a researcher <span class="citation">(e.g., Fenson et al. <a href="references.html#ref-fenson1994">1994</a>)</span>;</li>
 <li>On paper, with the form sent by mail with written or telephone instructions from a researcher <span class="citation">(e.g., the British English Twins Early Development data, which were sent home as part of a packet; <span class="citeproc-not-found" data-reference-id="dale2003"><strong>???</strong></span>)</span>; or</li>
 <li>Electronically, with instructions given either electronically or by phone <span class="citation">(e.g., Kristoffersen et al. <a href="references.html#ref-kristoffersen2013">2013</a>)</span>.</li>
 </ol>
@@ -362,7 +356,8 @@
 <div id="longitudinal-vs.cross-sectional-data" class="section level3">
 <h3><span class="header-section-number">3.2.5</span> Longitudinal vs. cross-sectional data</h3>
 <p><img src="wordbank-book_files/figure-html/methods_longitudinal-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>The strongest developmental inferences can be made by the examination of longitudinal data, in which children’s individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. For normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints; for this reason much of our data are cross-sectional. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the extensive Norwegian longitudinal data in Chapter <a href="style.html#style">14</a>, however.</p>
+<p>The strongest developmental inferences can be made by the examination of longitudinal data, in which children’s individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. The figure above shows the number of administrations for particular languages that come from longitudinal datasets with a particular depth. There is a substantial amount of two-administration longitudinal data for several languages, but only a few have more than two observations for an individual child.</p>
+<p>In general, this aspect of our data is a consequence of the fact that, for normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the more extensive Norwegian and English longitudinal data in Chapter <a href="style.html#style">14</a>, however.</p>
 </div>
 <div id="conclusions" class="section level3">
 <h3><span class="header-section-number">3.2.6</span> Conclusions</h3>
@@ -373,10 +368,10 @@
 </div>
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>Some material in this chapter is adapted from <span class="citation">M. C. Frank et al. (<a href="references.html#ref-frank2016">2016</a>)</span>.<a href="methods.html#fnref6">↩</a></p></li>
-<li id="fn7"><p>The specific direction they were given was: “We’re looking for the best English translation of these words. These are words that are among the first words that children learn, so your translation should be closest to the meaning of the word as it would be used by a young child (say, under 3 years old). For cases when there are two equally good English words, put both. If you don’t think there is a good translation into a reasonable English word that a kid might know, you can leave the alternative translation blank.”<a href="methods.html#fnref7">↩</a></p></li>
-<li id="fn8"><p>In a check for errors in the re-keying of one Korean dataset, we found that there were 4 incorrect fields in 10 full records for an error rate of ~0.06%.<a href="methods.html#fnref8">↩</a></p></li>
+<ol start="2">
+<li id="fn2"><p>Some material in this chapter is adapted from <span class="citation">Frank et al. (<a href="references.html#ref-frank2016">2016</a>)</span>.<a href="methods.html#fnref2">↩</a></p></li>
+<li id="fn3"><p>The specific direction they were given was: “We’re looking for the best English translation of these words. These are words that are among the first words that children learn, so your translation should be closest to the meaning of the word as it would be used by a young child (say, under 3 years old). For cases when there are two equally good English words, put both. If you don’t think there is a good translation into a reasonable English word that a kid might know, you can leave the alternative translation blank.”<a href="methods.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>In a check for errors in the re-keying of one Korean dataset, we found that there were 4 incorrect fields in 10 full records for an error rate of ~0.06%.<a href="methods.html#fnref4">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -426,19 +421,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>

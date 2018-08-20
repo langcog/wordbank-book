@@ -203,23 +203,32 @@ In summary, our samples differ substantially in their demographic makeup. Presum
 
 ```{r methods_longitudinal}
 longitudinal <- admins %>%
-  filter(form %in% c("WS","WG"), 
-         !is.na(birth_order)) %>%
+  filter(form %in% c(WSs,WGs), 
+         !is.na(original_id)) %>%
   group_by(language, form, original_id) %>%
   count %>%
   transmute(n_admins = n) %>%
+  mutate(n_admins = cut(n_admins,
+                        breaks = c(0, 1,  2,  3,    6,    16),
+                        labels = c("1","2","3","4-6","7-16"))) %>%
   group_by(language, form, n_admins) %>%
-  count
+  count 
 
-ggplot(longitudinal, 
-       aes(x = n_admins, y = n, col = language)) + 
+ggplot(filter(longitudinal, n_admins != "1") %>%
+         ungroup %>%
+         mutate(language = fct_reorder(language, n)), 
+       aes(x = language, y = n, fill = language)) + 
   geom_bar(stat="identity") + 
-  facet_grid(~form) + 
+  facet_wrap(~n_admins) + 
+  coord_flip() + 
+  scale_fill_discrete(guide = FALSE) + 
   ylab("Number of Children") + 
   xlab("Number of Administrations")
 ```
 
-The strongest developmental inferences can be made by the examination of longitudinal data, in which children's individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. For normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints; for this reason much of our data are cross-sectional. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the extensive Norwegian longitudinal data in Chapter \@ref(style), however.
+The strongest developmental inferences can be made by the examination of longitudinal data, in which children's individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. The figure above shows the number of administrations for particular languages that come from longitudinal datasets with a particular depth. There is a substantial amount of two-administration longitudinal data for several languages, but only a few have more than two observations for an individual child. 
+
+In general, this aspect of our data is a consequence of the fact that, for normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the more extensive Norwegian and English longitudinal data in Chapter \@ref(style), however.
 
 ### Conclusions
 

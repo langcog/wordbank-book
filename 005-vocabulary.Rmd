@@ -1,8 +1,9 @@
-# Vocabulary Development {#vocab}
+# Vocabulary Size {#vocab}
 
 > Far from simply reflecting noise in our measuring instruments or variability in low-level aspects of physiological maturation, the variations that we will document (in vocabulary development) are *substantial,* *stable,* and have their own *developmental course.* Because this variation is substantial, it is critical for defining the boundary between normal and abnormal development; because it is stable, it provides a window onto the correlates and (by inference) the causes of developmental change; and because it has its own developmental course, it can be used to pinpoint critical developmental transitions that form the basis for theories of learning and change. (Bates et al., 1995)
 
-This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows, out of the total in the form. (We discuss why we use raw score, as opposed to other measures, in \@ref(appendix-psychometrics)). We begin by quantifying the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data.  
+This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows, out of the total in the form. We begin by quantifying the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data.  
+<!-- (We discuss why we use raw score, as opposed to other measures, in \@ref(psychometrics)).  -->
 
 This chapter trades in variability, but variability is only meaningful in the case that it is stable; that is, that it reflects signal about individuals (or cultures) rather than measurement error. With respect to the CDI, the strong evidence for the reliability and validity of the forms -- reviewed in Chapter \@ref(intro) and in @fenson2007 -- provides support for the contention that observed variability is meaningful. Such evidence has primarily been collected for the English CDI, however. In this chapter we examine variability across the full set of languages, and it is worth noting up front that we project the reliability and validity of the English instrument to its adaptations. 
 
@@ -28,6 +29,7 @@ max_age <- max(vocab_data$age)
 taus <-  c(0.1, 0.25, 0.5, 0.75, 0.9)
 ages <- 8:18
 ```
+
 ## Central Tendencies 
 
 One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown below.

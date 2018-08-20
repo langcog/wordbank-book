@@ -1,4 +1,4 @@
-# Demographic Variables {#demographics}
+# Demographic Effects on Vocabulary Size {#demographics}
 
 Chapter \@ref(vocab) examined cross-linguistic consistency and variability in children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. Our goal is to develop a framework for comparing the magnitude of these effects.
 

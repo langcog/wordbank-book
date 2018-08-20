@@ -1,4 +1,34 @@
 rm(list = ls())
+library(maps) # conflicts with purrr
+library(MASS)
+library(wordbankr) # all
+library(langcog)
+library(directlabels)
+library(forcats)
+library(DT)
+library(quantregGrowth)
+library(feather)
+library(ggrepel)
+library(ggdendro) # item consistency
+library(rms)
+library(metafor)
+library(broom)
+library(gridExtra)
+library(modelr) # ch 7b
+library(binom) # data
+library(lme4)
+library(ggfortify)
+library(rlang)
+library(glue)
+library(jsonlite) # appendix data
+library(widyr) # gesture
+library(knitr)
+library(multidplyr) # for item demographics
+library(parallel) # for item demographics
+library(viridis) # for style
+library(mirtCAT) # style, psychometrics, vocab
+library(ggthemes)
+library(tidyverse) # keep tidyverse last to prevent conflicts
 
 source("helper/predictQR.R")
 source("helper/stats_funs.R")

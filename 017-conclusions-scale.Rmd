@@ -1,4 +1,15 @@
-# Conclusions {#conclusions}
+# Language Development at Scale {#theory2}
+
+This chapter synthesizes knowledge gained from the broader wordbank package, in the sense of attempting to make generalizations about early language development that hold true across the different datasets in our sample. 
+
+
+1. The first words are very consistent across languages and largely social in nature
+2. Early social/communicative gesture is correlated with language.
+3. Across children, variability is a constant in early language.
+4. While there is a noun bias in early language, verbs/adjectives vary by language.
+5. The growth of grammar is linked to vocabulary growth.
+
+
 
 Wordbank embodies our belief that scale is in itself transformative. The existence of a noun bias is a fascinating observation, but this observation gives limited leverage to differentiate theories. The magnitude of a noun bias provides more leverage for quantiative theorizing. And the distribution of magnitudes across many of the world's languages gives greater leverage still. Our hope is that, by generalizing and applying many influential analyses by many contributors, our work here can affect theory more broadly.
 

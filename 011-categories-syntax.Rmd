@@ -1,4 +1,4 @@
-# Categorical Composition: Syntax^[An earlier version of this work was reported to the Boston University Conference on Language Development in 2015 by Braginsky, Marchman, Yurovsky, & Frank.] {#categories}
+# Vocabulary Composition: Syntactic^[An earlier version of this work was reported to the Boston University Conference on Language Development in 2015 by Braginsky, Marchman, Yurovsky, & Frank.] {#categories}
 
 This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words. In Chapter \@ref(style), we consider variation of this sort within individuals. 
 

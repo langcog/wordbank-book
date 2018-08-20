@@ -1,4 +1,4 @@
-# Synthesis: Variability and Consistency {#theory}
+# Variability and Consistency {#theory}
 
 In the preceding chapters, we have have presented evidence from a wide range of analyses of the Wordbank dataset. These analyses have revealed both striking variability across our units of sampling -- children, primarily, but also words and even languages -- but they have also revealed substantial consistency. In this conclusion we discuss the interplay and tension between these two ideas, variability and consistency, and how they interact with and inform theoretical conceptions of language acquisition more broadly.
 

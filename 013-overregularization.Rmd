@@ -1,4 +1,4 @@
-# Overregularization
+# Morphological (Over-)Generalization
 
 ```{r ovreg_prep_data, eval=FALSE}
 grammar_data_coded <- read_feather("data/grammar/grammar_data_coded.feather")

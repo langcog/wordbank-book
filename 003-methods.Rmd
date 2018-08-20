@@ -113,7 +113,7 @@ ggplot(admin_summary, aes(x = language, y = n, col = form)) +
 
 The number of administrations available is highly variable across instruments and languages, however. The log-scaled plot above shows the distribution of administrations across forms and languages. 
 
-```{r}
+```{r methods_map}
 # write_csv(data.frame(unique(instruments$language)), "data/languages_countries.csv")
 
 languages_countries <- read_csv("data/languages_countries.csv")

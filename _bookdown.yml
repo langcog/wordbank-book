@@ -1,4 +1,8 @@
+github-repo: langcog/wordbank-book
+description: ""
+always_allow_html: yes
 book_filename: "wordbank-book"
 chapter_name: ""
-before_chapter_script: "_common.R"
 output_dir: "docs"
+delete_merged_file: false
+before_chapter_script: "_common.R"

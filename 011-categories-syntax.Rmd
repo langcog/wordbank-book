@@ -1,4 +1,4 @@
-# Vocabulary Composition: Syntactic^[An earlier version of this work was reported to the Boston University Conference on Language Development in 2015 by Braginsky, Marchman, Yurovsky, & Frank.] {#categories}
+# Vocabulary Composition: Syntactic^[An earlier version of this work was reported to the Boston University Conference on Language Development in 2015 by Braginsky, Marchman, Yurovsky, & Frank.] {#categories-syntactic}
 
 This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we report the degree of bias for or against verbs and closed-class words. In Chapter \@ref(style), we consider variation of this sort within individuals. 
 
@@ -8,7 +8,7 @@ Over the first few years, young children are exposed to a "sea of words" across 
 
 The composition of early vocabulary is complicated by the fact that we categorize words by their adult syntactic category. We do so in the discussion below without presupposing that children themselves do this categorization, however [@tomasello2000]. Children may be sensitive to these categories very early in development [@valian1986,@yang2013] or they may discover them either gradually [@pine1997] or more quickly [@meylan2017]. Importantly, though, we treat adult syntactic categories as an analytic convenience that describes certain regularities in how groups of words are distributed in language samples and how they function in different contexts, rather than as an ontological fact about children's knowledge. Chapter \@ref(aoapred) breaks down these categories further, asking what sorts of information predicts the order of acquisition for individual words, both within and across categories. 
 
-```{r, fig.cap="Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary"}
+```{r catsyn-bates, fig.cap="Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary"}
 knitr::include_graphics("images/bates1994.png")
 ```
 
@@ -34,13 +34,13 @@ One notable exception in a literature where samples have been small -- in terms 
 
 Each CDI form contains a mixture of words in different classes. We adopt the categorization of @bates1994, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as "closed class" words), and other words. For each child's vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by @bates1994, for each of the languages in our sample, we plot these proportions against total vocabulary. Each dot represents a child's knowledge of a particular class, while curves show the relationship between a class and the whole vocabulary. If categories grow independently of one another, these curves should approximate the diagonal. 
 
-```{r 6_items}
+```{r catsyn-items}
 items <- items %>%
   filter(type == "word") %>%
   mutate(num_item_id = as.numeric(substr(item_id, 6, nchar(item_id))))
 ```
 
-```{r 6_vocab_comp_fun}
+```{r catsyn-vocab_comp_fun}
 get_vocab_comp <- function(input_language, input_form) {
   # print(paste(input_language,input_form))
   
@@ -56,7 +56,7 @@ get_vocab_comp <- function(input_language, input_form) {
     mutate(value = ifelse(is.na(value), "", value),
            produces = value == "produces",
            understands = value == "produces" | value == "understands") %>%
-    dplyr::select(-value) %>%
+    select(-value) %>%
     gather(measure, value, produces, understands)
   
   num_words <- nrow(lang_vocab_items)
@@ -73,15 +73,15 @@ get_vocab_comp <- function(input_language, input_form) {
   lang_vocab_summary %>%
     left_join(lang_vocab_sizes) %>%
     mutate(prop_vocab = num_true / vocab_num) %>%
-    dplyr::select(-num_true) %>%
+    select(-num_true) %>%
     mutate(language = input_language, form = input_form)
 }
 ```
 
-```{r 6_vocab_comp, eval=FALSE}
+```{r catsyn-vocab_comp, eval=FALSE}
 instruments <- instruments %>%
   filter(form %in% c(WSs,WGs)) %>%
-  dplyr::select(language, form) %>%
+  select(language, form) %>%
   distinct()
 
 vocab_comp_data <- map2(instruments$language,
@@ -92,14 +92,14 @@ write_feather(vocab_comp_data, "data/vocab_comp_data.feather")
 ```
 
 
-```{r 6_sample_sizes}
+```{r catsyn-sample_sizes}
 vocab_comp_data <- read_feather("data/vocab_comp_data.feather")
 
 sample_sizes <- vocab_comp_data %>%
   group_by(language, form, measure, lexical_category) %>%
   summarise(n = n()) %>%
   ungroup() %>%
-  dplyr::select(language, form, n) %>%
+  select(language, form, n) %>%
   distinct() 
 
 sample_sizes %>%
@@ -109,13 +109,13 @@ sample_sizes %>%
 
 We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms like the British English TEDS don't typically include category information. The sample sizes included in this analysis are given above. 
 
-```{r fig.cap="Schematic of our vocabulary composition analysis."}
+```{r catsyn-schematic, fig.cap="Schematic of our vocabulary composition analysis."}
 knitr::include_graphics("images/vocab_comp_schematic.png")
 ```
 
 Building on the method of @bates1994, our analyses relies on plotting the proportion of words known in a particular category (e.g., nouns) in a child's vocabulary by the proportion of all words in the child's vocabulary. This approach is shown schematically above. If every time a child learns a word, that word is sampled randomly from the different words available on the form, then the proportion of nouns in vocabulary should track perfectly with the proportion of total vocabulary (the diagonal). In contrast, if nouns are over-represented, the child will be represented by a point above the diagonal; if nouns are under-represented, they will be under the diagonal.
 
-```{r 4_area_funs}
+```{r catsyn-area_funs}
 get_lang_lexcat_predictions <- function(lang, lexcat) {
   model <- filter(models, language == lang, lexical_category == lexcat)$model[[1]]
   data.frame(vocab = pts,
@@ -131,7 +131,7 @@ get_lang_predictions <- function(lang) {
 }
 ```
 
-```{r 4_plot_area_demo, fig.asp=0.5}
+```{r catsyn-plot_area_demo, fig.asp=0.5}
 demo_lang <- "English (American)"
 demo_data <- filter(vocab_comp_data, form == "WS", 
                     language == demo_lang) %>%
@@ -175,7 +175,7 @@ ggplot(predictions,
 The figure above shows this analysis, carried out with English (American) WS data. Each point shows an individual child's vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). We capture the overall trend in this plot by estimating a linear model over the data, predicting category proportion as a function of total production. This model is fit with third-order polynomials (so as to allow both concave/convex functions and also changes in convexity). We fit these 
 models with the constraint that they must predict the point [1,1] so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked. These model fits are shown by the lines. 
 
-```{r 4_resample}
+```{r catsyn-resample}
 poly_area <- function(group_data) {
   model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1,
               data = group_data)
@@ -206,17 +206,17 @@ sample_areas <- function(d, nboot = 1000) {
 }
 ```
 
-```{r 4_areas, eval=FALSE}
+```{r catsyn-areas_compute, eval=FALSE}
 areas <- sample_areas(vocab_comp_data, 1000)
 write_feather(areas,"data/vocab_comp_areas.feather")
 ```
 
 
-```{r 4_areas2}
+```{r catsyn-areas_read}
 areas <- read_feather("data/vocab_comp_areas.feather")
 ```
 
-```{r 4_areas3}
+```{r catsyn-area_summary}
 area_summary <- areas %>%
   group_by(language, form, measure, lexical_category) %>%
   summarise(mean = mean(area),
@@ -241,7 +241,7 @@ Critically, this analysis controls for a number of confounds in previous analyse
 
 We present results of this analysis across languages, beginning with comprehension on WG-type forms and moving to production in WS-type forms. We do not analyze WG production data here. For the most part, production estimates on WG forms are quite low, and hence curves are relatively unconstrained (or determined by a small number of children who are reported to have very large early vocabulary). 
 
-```{r 4_base_plot}
+```{r catsyn-base_plot}
 base_plot <- function(input_forms, input_measure) {
   vocab_comp_data %>%
     filter(form %in% input_forms, 
@@ -269,7 +269,7 @@ base_plot <- function(input_forms, input_measure) {
 ### Comprehension: Words and Gestures
 
 
-```{r 4_plot_points_wg_comp, fig.asp=1.25}
+```{r catsyn-plot_points_wg_comp, fig.asp=1.25}
 base_plot(WGs, "understands") + 
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3) +
@@ -280,7 +280,7 @@ base_plot(WGs, "understands") +
 Comprehension results are shown above. Overall, the largest trend that is visible in these plots is the under-representation of function words, with nouns and predicates appearing quite close to one another. For further comparison, we show summaries of curve areas for each language below. 
 
 
-```{r 4_plot_areas_WG}
+```{r catsyn-plot_areas_WG}
 plot_areas_wg <- filter(area_summary, form %in% WGs, measure == "understands") %>%
          unite(langform, language, form, sep = " ") %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
@@ -304,7 +304,7 @@ npcor_wg <- cor.test(plot_areas_wg$mean[plot_areas_wg$lexical_category == "Nouns
 
 Nouns are over-represented in many -- but not all -- languages. Portuguese, Turkish, Korean, and Slovak, a set of typologically- and culturally-distinct languages,  show slight under representation, with BSL and British English showing the largest over-representation of nouns. Predicates are under-represented in some languages and over-represented in others.
 
-```{r 4_prod_vs_comp_vocab_comp_wg}
+```{r catsyn-prod_vs_comp_vocab_comp_wg}
 area_scatter_data <- area_summary %>%
   filter(form %in% WGs, 
          lexical_category %in% c("Nouns","Predicates"), 
@@ -330,7 +330,7 @@ ggplot(area_scatter_data,
 As seen above, there is a strong anti-correlation between noun and predicate bias  measures ($r$(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure). 
 
 
-```{r}
+```{r catsyn-function_words_comp}
 ggplot(filter(plot_areas_wg, lexical_category == "Function Words"), 
        aes(x = langform, y = mean, colour = lexical_category)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
@@ -348,7 +348,7 @@ Function words are substantially under-represented across nearly every language 
 ### Production: Words and Sentences
 
 
-```{r 4_plot_points_ws, fig.asp=1.25}
+```{r catsyn-plot_points_ws, fig.asp=1.25}
 base_plot(WSs, "produces") + 
   geom_abline(slope = 1, intercept = 0, color = "gray", linetype = "dashed") + 
   geom_jitter(size = 0.7, alpha = .3) +
@@ -358,7 +358,7 @@ base_plot(WSs, "produces") +
 
 We next turn to production data from WS-type forms. We can immediately see the same function-word trend as was visible in comprehension. In addition, in many but not all languages, a noun bias is evident.
 
-```{r 4_plot_areas_ws}
+```{r catsyn-plot_areas_ws}
 plot_areas_ws <- filter(area_summary, form %in% WSs, measure == "produces") %>%
          unite(langform, language, form, sep = " ") %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
@@ -381,7 +381,7 @@ npcor <- cor.test(plot_areas_ws$mean[plot_areas_ws$lexical_category == "Nouns"],
 ```
 Turning to the language summaries, we see a larger pattern of variation in nouns and predicate representation. Every language has a relative over-representation of nouns, though the degree of this over-representation varies, with German and Korean especially high, and Mandarin and Cantonese especially low (we return to this trend below). Overall this trend is more extreme and more consistent in production data than comprehension. Predicate representation is both more variable and more negative than we observed for comprehension. Here we see Mandarin and Cantonese as the only two languages with substantial over-representation for predicates.
 
-```{r 4_prod_vs_comp_vocab_comp}
+```{r catsyn-prod_vs_comp_vocab_comp}
 area_scatter_data <- area_summary %>%
   filter(form %in% WSs, 
          lexical_category %in% c("Nouns","Predicates"), 
@@ -404,7 +404,7 @@ ggplot(area_scatter_data,
 
 Noun and predicate representation is again anti-correlated, at $r$(`r npcor$parameter`) = `r signif(npcor$estimate,2)`, though this correlation is somewhat weaker than for comprehension. 
 
-```{r}
+```{r catsyn-function_words_prod}
 ggplot(filter(plot_areas_ws, lexical_category == "Function Words"),
        aes(x = langform, y = mean, colour = lexical_category)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
@@ -421,7 +421,7 @@ The negative representation of function words is relatively consistent in overal
 
 ### Reliability of bias estimates
 
-```{r}
+```{r catsyn-consistency}
 consistency <- area_summary %>%
   filter((form %in% WGs & measure == "understands") |
            (form %in% WSs & measure == "produces"),
@@ -459,7 +459,7 @@ This analysis is relatively low power; it only conducted with `r cors$parameter[
 \noindent We assess each of these explanations in turn.
 
 
-```{r}
+```{r catsyn-vocab_comp_plot}
 vocab_comp_data %>%
     filter(form %in% "Oxford CDI") %>%
     mutate(lexical_category = factor(lexical_category,
@@ -492,7 +492,7 @@ What might be the mechanism for these aysmmetries? For languages that do not all
 
 Another potential explanation is that form composition relates to bias estimates. For example, a form with more predicates might actually show a *lower* degree of predicate bias -- more predicates on the form would imply that some of those predicates are relatively more difficult (simply because the form designer had "run out" of easy predicatess) and hence would not be checked as frequently by parents. We assess this hypothesis in two ways. First, we examine the relationship between predicate bias and predicate representation (making use of predicates because they are a minority on the form). Second, we consider the case of Mandarin where we have data from two forms with different compositions.
 
-```{r}
+```{r catsyn-pred_prod}
 pred_prod <- filter(area_summary, form %in% WSs, measure == "produces", 
                     lexical_category == "Predicates") %>%
   left_join(filter(items, form %in% WSs) %>% 
@@ -513,7 +513,7 @@ ggplot(pred_prod,
 
 As shown above, there is no reliable relationship between the proportion of predicates on a form and the predicate bias that is demonstrated ($r(`r cor.test(pred_prod$mean, pred_prod$prop_pred)$parameter`) = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$estimate, digits = 2)`$, $p = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$p.value, digits = 2)`$). Thus, a simple relationship between form composition and bias is not supported. On the other hand, it does appear that there is greater variance in this area for those languages with larger numbers of predicates on the form, and those languages with the highest predicate representation do have the highest number of predicates on the form as well. Perhaps the causality is reversed: Greater numbers of predicates have been included in forms for languages like Cantonese, Mandarin, and Korean where the predicate bias is an open theoretical question (or where the acquisition of predicates is of special interest). 
 
-```{r mandarinFormComparisonMunging}
+```{r catsyn-mandarin_form_comparison_munging}
 
 mandarin_both_forms_items <- filter(items, 
                                     language == "Mandarin (Beijing)", 
@@ -532,7 +532,7 @@ tc_vocab_data <- get_instrument_data(language = "Mandarin (Beijing)",
   mutate(value = ifelse(is.na(value), "", value),
          produces = value == "produces",
          understands = value == "produces" | value == "understands") %>%
-  dplyr::select(-value) %>%
+  select(-value) %>%
   gather(measure, value, produces, understands)
 
 ws_vocab_data <- get_instrument_data(language = "Mandarin (Beijing)",
@@ -542,7 +542,7 @@ ws_vocab_data <- get_instrument_data(language = "Mandarin (Beijing)",
   mutate(value = ifelse(is.na(value), "", value),
          produces = value == "produces",
          understands = value == "produces" | value == "understands") %>%
-  dplyr::select(-value) %>%
+  select(-value) %>%
   gather(measure, value, produces, understands)
 
 tc_num_words <- nrow(tc_items)
@@ -570,18 +570,18 @@ ws_vocab_sizes <- ws_vocab_summary %>%
 mandarin_all <- bind_rows(tc_vocab_summary %>%
                             left_join(tc_vocab_sizes) %>%
                             mutate(prop_vocab = num_true / vocab_num) %>%
-                            dplyr::select(-num_true) %>%
+                            select(-num_true) %>%
                             mutate(language = "Mandarin (Beijing)", 
                                    form = "TC"),
                           ws_vocab_summary %>%
                             left_join(ws_vocab_sizes) %>%
                             mutate(prop_vocab = num_true / vocab_num) %>%
-                            dplyr::select(-num_true) %>%
+                            select(-num_true) %>%
                             mutate(language = "Mandarin (Beijing)", 
                                    form = "WS"))
 ```
 
-```{r mandarinFormComparison}
+```{r catsyn-mandarin_form_comparison}
 pts <- seq(0, 1, 0.01)
 
 predictions <- mandarin_all %>%
@@ -634,7 +634,7 @@ The existence of two different forms for Mandarin opens the possibility of a fur
 
 This result is worrisome -- these are samples from the same city and using the same items. They even include very similar age ranges: 16--30 month-olds and 17--30 month olds respectively, with approximately uniform sampling. The suggestion is then that differences in predicate bias can be substantial based on relatively minor details, such as specifics of administration or form context or specifics of sample composition. Despite the apparent stability of these estimates under resampling (confidence intervals for bias estimates are around +/- .005 in the analysis above), we should be cautious in over-estimating our degree of certainty in particular bias estimates. Further, these data provide more data against the notion that form composition (or at least the specific sample of predicates being assessed) is the primary determinant of bias. 
 
-```{r}
+```{r catsyn-age_areas}
 age_areas <- vocab_comp_data %>%
   filter(form %in% WSs, measure == "produces") %>%
   left_join(select(admins, data_id, age)) %>%
@@ -676,7 +676,7 @@ This chapter presented a comprehensive examination of the issue of biases for an
 
 
 
-```{r export_vocab_comp}
+```{r catsyn-export_vocab_comp}
 cvs <- area_summary %>%
   filter((form %in% WGs & measure == "understands") |
            (form %in% WSs & measure == "produces")) %>%

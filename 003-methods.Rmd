@@ -66,7 +66,7 @@ Each of these datasets is then imported to the database by creating a custom imp
 
 Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments in the original Words & Gestures (infant) / Words & Sentences (toddler) format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable by the researchers constructing the adaptation). 
 
-```{r methods_overview}
+```{r methods-overview}
 items %>%
   group_by(language, form) %>%
   summarise(words = sum(type=="word"),
@@ -78,7 +78,7 @@ items %>%
 
 This table gives an overview of the available instruments in the dataset.
 
-```{r methods_otherforms}
+```{r methods-otherforms}
 items %>%
   group_by(language, form) %>%
   summarise(items = n(),
@@ -90,7 +90,7 @@ items %>%
 
 Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
 
-```{r methods_admins}
+```{r methods-admins}
 admins_grouped <- admins %>%
     mutate(form = ifelse(form %in% c("WS","WG"), form, "other"))
 
@@ -154,7 +154,7 @@ In one trial we conducted using electronic administration, we found that basic w
 
 In addition to differences in administration and form, samples from different studies also differ in myriad other ways. The most important of these, especially cultural differences between language communities, are extremely hard to quantify. But we can make a first stab at investigating some similarities and differences between the convenience samples from different studies by comparing demographics where they are available. 
 
-```{r methods_gender}
+```{r methods-gender}
 gender_counts <- admins_grouped %>%
   filter(!is.na(sex)) %>%
   group_by(language, form, sex) %>%
@@ -180,7 +180,7 @@ ggplot(filter(gender_counts, sex == "Female"),
 ```
 Sex proportions tend to be quite close to .5, with a few exceptions for small datasets. Several WG datasets (e.g., British Sign Language, Russian, Italian, Quebec French) have more males than would be expected by chance. This pattern is important because (as we will investigate in Chapter \@ref(demographics)), there are systematic differences in vocabulary size between boys and girls, and so sample differences in gender will lead to absolute differences in mean vocabulary size. 
 
-```{r methods_momed}
+```{r methods-momed}
 momed_counts <- admins %>%
   filter(form %in% c("WS","WG"), 
          !is.na(mom_ed)) %>%
@@ -201,7 +201,7 @@ ggplot(momed_counts,
 ```
 Although we have maternal education data for far fewer datasets, there are also substantial differences between datasets on this variable (we will also return to this issue again in Chapter \@ref(demographics)). Analyses of this variable are complicated by different reporting formats, so for example the German and Mexican Spanish datasets have no separate categorization for graduate education. That said, even for datasets with the most fine-grained maternal education breakdown, we see substantial differences.
 
-```{r methods_ord}
+```{r methods-ord}
 ord_counts <- admins %>%
   filter(form %in% c("WS","WG"), 
          !is.na(birth_order)) %>%
@@ -227,7 +227,7 @@ In summary, our samples differ substantially in their demographic makeup. Presum
 
 ### Longitudinal vs. cross-sectional data
 
-```{r methods_longitudinal}
+```{r methods-longitudinal}
 longitudinal <- admins %>%
   filter(form %in% c(WSs,WGs), 
          !is.na(original_id)) %>%

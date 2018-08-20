@@ -2,7 +2,7 @@
 
 In this Appendix, we systematically compare methods for estimating age of acquisition, using the English Words and Sentences data as a case study.
 
-```{r aa_read_data, eval=FALSE}
+```{r appaoa-read_data, eval=FALSE}
 eng_ws <- get_instrument_data(instrument_language = "English (American)",
                            instrument_form = "WS", 
                            iteminfo = TRUE,
@@ -10,13 +10,13 @@ eng_ws <- get_instrument_data(instrument_language = "English (American)",
 write_feather(eng_ws, "data/eng_ws_raw_data.feather")
 ```
 
-```{r aa_load_data}
+```{r appaoa-load_data}
 eng_ws <- read_feather("data/eng_ws_raw_data.feather")
 ```
 
 All the AOA curves. 
 
-```{r aa_means}
+```{r appaoa-means}
 ms <- eng_ws %>%
   group_by(definition, age, category) %>%
   summarise(prop = mean(value=="produces", na.rm=TRUE), 
@@ -37,7 +37,7 @@ Let's compare methods.
 
 First try empirical quantiles. This loses many observations that never go above 50%. 
 
-```{r}
+```{r appaoa-empirical}
 empirical_aoas <- ms %>%
   group_by(definition, category) %>%
   summarise(empirical_aoa = min(age[prop > .5]))
@@ -50,7 +50,7 @@ qplot(empirical_aoa, facets = ~ category, data = empirical_aoas)
 
 Now let's try the basic GLM version. 
 
-```{r}
+```{r appaoa-glm}
 fit_glm <- function(data) {
   model <- glm(cbind(num_true, num_false) ~ age, family = "binomial", 
                data = data)
@@ -73,7 +73,7 @@ qplot(glm_aoa, facets = ~ category, data = glm_aoas)
 
 Compare. The GLM AOA gives some very early values, but it is OK with a lot of data (as in the case of English).
 
-```{r}
+```{r appaoa-glm_compare}
 aoas <- full_join(empirical_aoas, glm_aoas)
 
 ggplot(aoas, aes(x = empirical_aoa, y = glm_aoa, col = category)) + 
@@ -89,9 +89,9 @@ aoas %>%
 ## Robust GLM
 
 
-```{r}
+```{r appaoa-rglm}
 fit_rglm <- function(data) {
-  model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, family = "binomial", 
+  model <- glmrob(cbind(num_true, num_false) ~ age, family = "binomial", 
                data = data)
   fit <- predict(model, newdata = data.frame(age = 0:36), se.fit = TRUE)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
@@ -114,16 +114,16 @@ qplot(rglm_aoa, facets = ~ category, data = rglm_aoas)
 
 Looks totally reasonable except for the two crazy ones. 
 
-```{r}
+```{r appaoa-rglm_outliers}
 rglm_aoas$definition[rglm_aoas$rglm_aoa < 0] 
 ```
 
 
 ## Bayes GLM
 
-Can we do a arm::bayesglm to regularize things a bit? Let's explore a single curve. Basically, arm::bayesglm does *exactly* the same thing as GLM because of the huge amount of data, no matter what prior. Let's try also robust GLM.   
+Can we do a `arm::bayesglm` to regularize things a bit? Let's explore a single curve. Basically, `arm::bayesglm` does *exactly* the same thing as GLM because of the huge amount of data, no matter what prior. Let's try also robust GLM.   
 
-```{r}
+```{r appaoa-bayes_sample}
 target_words <- 
   sample(unique(ms$definition), 20)
 # c((c("pattycake","mommy*","bye", "tomorrow","play pen", "today",
@@ -134,7 +134,7 @@ do.fits <- function(data) {
   glm_model <- glm(cbind(num_true, num_false) ~ age, 
                    family = "binomial", 
                    data = data)
-  bayes_model <- arm::bayesglm(cbind(num_true, num_false) ~ age, 
+  bayes_model <- bayesglm(cbind(num_true, num_false) ~ age, 
                           family = binomial(link="logit"),
                           prior.mean = .25, 
                           prior.scale = c(.01), 
@@ -142,7 +142,7 @@ do.fits <- function(data) {
                           prior.scale.for.intercept = 2.5,
                           prior.df=Inf, 
                           data = data)
-  rob_model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, 
+  rob_model <- glmrob(cbind(num_true, num_false) ~ age, 
                       family = binomial(link="logit"), data = data)
   
   
@@ -182,9 +182,9 @@ ggplot(mms, aes(x = age)) +
 
 Now apply this more broadly. Note that the 50% point for logistic regression = $- \beta_1 / \beta_2$.
 
-```{r}
+```{r appaoa-bayes_all}
 fit_bglm <- function(data) {
-  model <- arm::bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
+  model <- bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
                     prior.mean = .25, 
                           prior.scale = c(.01), 
                           prior.mean.for.intercept = 0, 
@@ -204,9 +204,9 @@ bglm_aoas <- ms %>%
   bind_rows
 ```
 
-arm::bayesglm is working very well here, basically moving Mommy and Daddy a bit more conservative but otherwise preserving most of the curve. 
+`arm::bayesglm` is working very well here, basically moving Mommy and Daddy a bit more conservative but otherwise preserving most of the curve. 
 
-```{r}
+```{r appaoa-bayes_plot}
 aoas <- left_join(bglm_aoas, glm_aoas)
 ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) + 
   geom_point() + 
@@ -223,14 +223,14 @@ ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) +
 
 
 
-arm::bayesglm with these made-up parameters fixes some of the issues, produces a better-looking distribution with fewer crazy outliers. 
+`arm::bayesglm` with these made-up parameters fixes some of the issues, produces a better-looking distribution with fewer crazy outliers. 
 
 ## Hierarchical GLM model
 
 Set some stan settings. 
 
-```{r}
-rstan::rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
+```{r appaoa-stan_setup}
+rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
 # ms <- read_csv("engdata.csv")
 ```
 
@@ -241,7 +241,7 @@ The model. Constraints:
 * Much weaker prior on intercepts, though yoked their SDs (perhaps too tightly?
 
 
-```{r}
+```{r appaoa-stan_model}
 hierarchical_logit <-'
 data {                            
   int<lower=1> W; // number of words
@@ -289,14 +289,14 @@ model {
 
 Now reformat the data to stan format and compute. 
 
-```{r}
+```{r appaoa-stan_prep}
 model.data <- ms %>%
   ungroup %>%
   mutate(word = definition, 
          n = num_true,
          N = num_true + num_false) %>%
   # filter(word %in% c("daddy*","mommy*","no","bye")) %>%
-  dplyr::select(word, age, category, n, N)
+  select(word, age, category, n, N)
 
 ages <- unique(model.data$age)
 n.words <- length(unique(model.data$word))
@@ -310,8 +310,8 @@ dat <- list(age = ages,
             A = length(ages))
 ```
 
-```{r eval=FALSE}
-samps <- rstan::stan(model_code = hierarchical_logit, 
+```{r appaoa-stan_fit, eval=FALSE}
+samps <- stan(model_code = hierarchical_logit, 
               cores = 4, 
               data = dat, iter = 200, warmup=100, chains = 4, 
               pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
@@ -320,15 +320,15 @@ save(samps, "data/aoa-samps.Rds")
 
 Diagnostics.
 
-```{r eval=FALSE}
+```{r appaoa-stan-diagnostics, eval=FALSE}
 load("data/aoa-samps.Rds")
-rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
+traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
                  inc_warmup = TRUE)
 ```
 
 Explore parameters. 
 
-```{r eval=FALSE}
+```{r appaoa-stan_params, eval=FALSE}
 coefs <- data.frame(summary(samps)$summary)
 coefs$name <- rownames(coefs)
 
@@ -342,7 +342,7 @@ words <- coefs %>%
   separate(name, c("variable", "word_id"), "\\[") %>%
   mutate(word_id = as.numeric(str_replace(word_id, "]", ""))) %>%
   left_join(word_ids) %>%
-  dplyr::select(mean, variable, word, category) %>%
+  select(mean, variable, word, category) %>%
   spread(variable, mean) %>%
   mutate(aoa = intercept / slope) %>%
   arrange(aoa) %>%
@@ -353,7 +353,7 @@ words <- coefs %>%
 
 and plot again:
 
-```{r eval=FALSE}
+```{r appaoa-stan_plot, eval=FALSE}
 age_range <- 0:36
 preds <- words %>%
   group_by(word, category) %>%
@@ -370,7 +370,7 @@ ggplot(filter(preds, word %in% target_words), aes(x = age, y = prop)) +
 
 Check the histogram.
 
-```{r eval=FALSE}
+```{r appaoa-stan_hist, eval=FALSE}
 hglm.aoas <- words %>%
   mutate(aoa = -intercept / slope)
 
@@ -381,7 +381,7 @@ qplot(aoa, geom = "blank", data = hglm.aoas) +
 
 What are the crazy ones? 
 
-```{r eval=FALSE}
+```{r appaoa-stan_outliers, eval=FALSE}
 hglm.aoas$word[hglm.aoas$aoa <10]
 ```
 
@@ -391,14 +391,14 @@ Don't know what's going on with these but everything else looks good.
 
 Merge with previous data frame. 
 
-```{r eval=FALSE}
+```{r appaoa-compare, eval=FALSE}
 all.preds <- left_join(mms, 
                        preds %>% 
                          ungroup %>%
                          rename(hglm = pred.prop, 
                                 definition = word) %>% 
-                         dplyr::select(definition, age, hglm)) %>%
-  dplyr::select(-num_true, -num_false)
+                         select(definition, age, hglm)) %>%
+  select(-num_true, -num_false)
 
 ggplot(all.preds, aes(x = age)) + 
   geom_line(aes(y = glm), col = "red") + 
@@ -419,18 +419,18 @@ ggplot(all.preds, aes(x = age)) +
 
 AOA distribution
 
-```{r eval=FALSE}
+```{r appaoa-compare_dist, eval=FALSE}
 
 aoas <- full_join(full_join(glm_aoas, full_join(bglm_aoas, rglm_aoas)), empirical_aoas) %>%
   full_join(hglm.aoas %>% rename(definition = word, 
                                hglm_aoa = aoa) %>% 
-            dplyr::select(-intercept, -slope))
+            select(-intercept, -slope))
   
 ```
 
 Plot.
 
-```{r eval=FALSE}
+```{r appaoa-compare_plot, eval=FALSE}
 qplot(aoa,facets = ~ measure, 
       data = aoas %>% gather(measure, aoa, ends_with("aoa")))
 ```
@@ -438,9 +438,9 @@ qplot(aoa,facets = ~ measure,
 
 And pairs plots. 
 
-```{r eval=FALSE}
+```{r appaoa-compare_pairs, eval=FALSE}
 pair_data <- aoas %>% 
-  dplyr::select(ends_with("aoa")) %>%
+  select(ends_with("aoa")) %>%
           mutate(empirical_aoa = ifelse(is.infinite(empirical_aoa), 
                                        NA, empirical_aoa)) %>%
   filter(glm_aoa > 0, glm_aoa < 50, rglm_aoa > 0, rglm_aoa < 50)
@@ -456,7 +456,7 @@ One consideration remains: does it perform well with very sparse data?
 
 Examples of this process with 100 children actually look much stronger overall. 
 
-```{r}
+```{r appaoa-sparcity}
 ids <- eng_ws %>%
   group_by(data_id) %>%
   count %>%
@@ -494,7 +494,7 @@ ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) +
 ```
 ## Conclusion
 
-arm::bayesglm with hand-tuned priors seems to perform pretty well. 
+`arm::bayesglm` with hand-tuned priors seems to perform pretty well. 
 
 To Do:
 * Test with WG comprehension

@@ -2,13 +2,13 @@
 
 First, connect to the Wordbank database and pull out the English WS and WG data.
 
-```{r}
+```{r vocabest-load}
 ws <- read_feather("data/eng_ws_raw_data.feather")
 ```
 
 Now aggregate by item. 
 
-```{r}
+```{r vocabest-by_item}
 items <- ws %>%
   filter(!is.na(category)) %>%
   group_by(definition, age) %>%
@@ -17,7 +17,7 @@ items <- ws %>%
 
 Now arrange.
 
-```{r}
+```{r vocabest-order}
 ordered <- items %>%
   group_by() %>%
   arrange(age, desc(produces)) %>%
@@ -27,7 +27,7 @@ ordered <- items %>%
 
 Plot this with a glm sinusoid like in the Mayor & Plunkett (2011) paper.
 
-```{r}
+```{r vocabest-plot}
 ggplot(ordered,
        aes(x = index, y = produces)) + 
   facet_wrap(~age) + 
@@ -40,7 +40,7 @@ ggplot(ordered,
 
 Try a polynomial fit.
 
-```{r}
+```{r vocabest-poly}
 ggplot(ordered,
        aes(x = index, y = produces)) + 
   facet_wrap(~age) + 
@@ -55,7 +55,7 @@ Doesn't work that well for the younger ages, though looks fine later.
 
 Note age interactions in the stats.
 
-```{r}
+```{r vocabest-glm}
 mp.glm <- glm(produces ~ index * age, family = "binomial", data = ordered)
 summary(mp.glm)
 ```
@@ -74,7 +74,7 @@ $$
 p(w_i) = 1 - \frac{1}{1 + e^{\frac{-(i-a)}{b}}}
 $$
 
-```{r}
+```{r vocabest-ranks}
 a <- 600 # from figure 6c for a 30mo
 b <- 180 # from figure 6c
 ranks <- 0:3000
@@ -106,7 +106,7 @@ $$
 
 Note that (strikingly), M&P2011 never give their value of $\alpha$ in the text. I estimate it below so that I can make an estimate of what correction 2 actually looks like... 
 
-```{r}
+```{r vocabest-corrected}
 a <- 600 
 b <- 180 
 ranks <- 1:3000

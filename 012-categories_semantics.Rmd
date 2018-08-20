@@ -1,4 +1,4 @@
-# Vocabulary Composition: Semantic {#categories-semantic} 
+# Vocabulary Composition: Semantic {#categories-semantic}
 
 Following the approach in the previous chapter, we investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," are some languages "vehicle-focused"? These analyses are expected to reveal cultural and linguistic differences in the specific words learned by children (perhaps due to differences in the content of their environment). 
 
@@ -6,7 +6,7 @@ Following the approach in the previous chapter, we investigate the consistency o
 
 In contrast to the "noun bias" literature, where a wide variety of hypotheses have been articulated over the preceding decades, differences in content have been less explored and so these analyses are far more exploratory. To limit the scope of this exploration, we focus on WS-type forms and production measures, which we have reason to believe will be most reliable. 
 
-```{r 7_ccs_items}
+```{r catsem-items}
 items <- items %>%
   filter(type == "word") %>%
   mutate(num_item_id = as.numeric(substr(item_id, 6, nchar(item_id))))
@@ -43,13 +43,13 @@ included_cats <- category_freqs %>%
 In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., "animals" or "body parts"). As the figure above shows, while some semantic categories are shared across many instruments, there are others that are quite rare (many corresponding to specific syntactic categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, "action words" and "descriptive words" tend to be broad predicate classes without as much clear semantic differentiation). This filtering step leaves `r length(included_cats)` categories: `r Reduce(paste0, sprintf("%s, ", included_cats[1:length(included_cats)-1]))` and `r included_cats[length(included_cats)]`. Samples included in this analysis are shown below 
 
 
-```{r, eval=FALSE}
+```{r catsem-script, eval=FALSE}
 # this code contains caching for the various feathers. 
 source("_categories_semantics.R")
 ```
 
 
-```{r 7_ccs_sample_sizes}
+```{r catsem-sample_sizes}
 cat_comp_data <- read_feather("data/cat_comp_data.feather")
 areas <- read_feather("data/sem_vocab_comp_areas.feather")
 
@@ -69,7 +69,7 @@ sample_sizes <- cat_comp_data %>%
   group_by(language, form, measure, category) %>%
   summarise(n = n()) %>%
   ungroup() %>%
-  dplyr::select(language, form, n) %>%
+  select(language, form, n) %>%
   distinct() 
 
 sample_sizes %>%
@@ -77,7 +77,7 @@ sample_sizes %>%
 ```
 
 
-```{r 7_ccs_plot_area_demo}
+```{r catsem-plot_area_demo}
 get_lang_cat_predictions <- function(lang, cat) {
   model <- filter(models, 
                   language == lang, 
@@ -117,7 +117,7 @@ area_poly <- bind_rows(predictions, diagonal) %>%
   mutate(panel = paste(language, "(models)"))
 ```
 
-```{r 7_eng_preds}
+```{r catsem-eng_preds}
 ggplot(filter(predictions, language == "English (American)") %>%
          mutate(category = fct_reorder2(category, vocab, prop, function(x, y) {
            sum(x - y)
@@ -149,7 +149,7 @@ We next turn to how this pattern varies across languages.
 
 ## Global Results
 
-```{r 7_ccs_plot_points_ws}
+```{r catsem-plot_points_ws}
 plot_data <- cat_comp_data %>%
     filter(form %in% WSs, 
            category %in% included_cats) %>%
@@ -177,7 +177,7 @@ ggplot(plot_data,
 
 Because there are so many different languages represented in this analysis, the simplest analysis examines the spread of languages across categories. Somewhat surprisingly, the ordering of categories looks quite similar to what was observed in English. Sounds, Games and Routines, and Body parts are all over-represented. Vehicles, Food and Drink, Animals, and Clothing all are variable across cultures, as is People. Household, Outside, and Furniture and Rooms show variability but overall less bias. Finally, Places and Time Word are both under-represented systematically across all languages. 
 
-```{r 7_ccs_plot_areas}
+```{r catsem-plot_areas}
 cat_order <- area_summary %>%
   filter(category %in% included_cats) %>%
   group_by(category) %>%
@@ -201,7 +201,7 @@ ggplot(filter(area_summary,
 
 We can zoom in on the most highly over-represented categories. The highest mean comes from body parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of body parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sounds are quite highly variable but almost all positive, with Russian sounds being the outlier. Inspection of these items shows *negative* developmental trajectories for a number of animal sounds. We believe these data are likely an artifact of parents feeling that they "trade off" with noun labels for animals, and hence should be discounted. Finally, vehicles appear more variable with positive preferences across language families.
 
-```{r 7_people_places_time}
+```{r catsem-people_places_time}
 ggplot(filter(area_summary, 
               form %in% WSs, 
               category %in% c("people","places","time_words")) %>%
@@ -222,7 +222,7 @@ In contrast to the heterogeneity in people words, words for places and, especial
 ### Dimensionality reduction
 
 
-```{r 7_ccs_princomp}
+```{r catsem-princomp}
 areas <- filter(area_summary_ordered, 
               form %in% WSs, 
               measure == "produces", 
@@ -231,10 +231,10 @@ areas <- filter(area_summary_ordered,
   filter(category != "sounds")
 
 areas <- areas %>%
-  dplyr::select(langform, category, mean) %>%
+  select(langform, category, mean) %>%
   spread(category, mean) 
 
-areas_matrix <- as.matrix(dplyr::select(areas, -langform))
+areas_matrix <- as.matrix(select(areas, -langform))
 row.names(areas_matrix) <- areas$langform
 
 # remove NAs 
@@ -247,7 +247,7 @@ Our next analysis of these data takes an exploratory dimensionality-reduction ap
 
 Standard PCA requires no missing data, thus we removed languages with missing categories. This analysis thus includes `r nrow(areas_matrix_clean)` language/form combinations and `r ncol(areas_matrix_clean)` categories (we exclude sounds because of the issue with Russian sounds and other missing data). 
 
-```{r 7_pca_autoplot}
+```{r catsem-pca_autoplot}
 
 autoplot(pcs,  label.repel = TRUE, loadings.label.repel = TRUE)
 autoplot(pcs,  loadings = TRUE, loadings.label=TRUE, 
@@ -263,7 +263,7 @@ Several observations emerge: Mandarin and Cantonese WS data are very far towards
 In this section, we isolate individual items from specific domains of interest. Our approach is to use the "universal lemma" mappings (see Chapter \@ref(methods)) to find matching lexical items across languages. The specific domains we consider are time, color, body parts, and logical words. We also investigated spatial prepositions and number words, but do not include them here. Spatial prepositions present a wide variety of mapping issues since lexical items "cut up" space differently across languages  [see e.g., @bowerman1996]. And number words are not found on enough CDI forms to have sufficient data for inclusion. 
 
 
-```{r 7_semantics_base_plot_for_unigrams}
+```{r catsem-semantics_base_plot_for_unigrams}
 plot_unis <- function(uni_data) {
   uni_data <- uni_data %>%
     mutate(uni_lemma = fct_reorder(uni_lemma, mean, .desc=TRUE)) %>%
@@ -287,14 +287,14 @@ plot_unis <- function(uni_data) {
 ### Time 
 
 
-```{r 7_time}
+```{r catsem-time}
 time_words <- read_feather("data/time_words.feather")
 time_unis <- unique(time_words$uni_lemma)
 ```
 
 As discussed above, the semantics of time words are very challenging for children through middle childhood [@tillman2014;@tillman2016]. Despite this, parents report that children do produce them by age 2.5. The set of words with sufficient translation equivalents for inclusion was `r Reduce(paste0,sprintf("%s, ", time_unis[1:length(time_unis)-1]))` and `r time_unis[length(time_unis)]`. 
 
-```{r 7_time_words}
+```{r catsem-time_words}
 plot_unis(time_words)
 ```
 
@@ -306,7 +306,7 @@ The plot above shows trajectories for these lexical items across languages, sort
 Color word acquisition has been a focus of interest at least since early work by  @carey1978's influential study of "fast mapping." Although early work suggested that color words were learned almost simultaneously [@bartlett1977], more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space [@wagner2013]. Adding to the complexity of this issue is substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms [@bornstein1985].
 
 
-```{r 7_color}
+```{r catsem-color}
 color_words <- read_feather("data/color_words.feather")
 color_unis <- unique(color_words$uni_lemma)
 ```
@@ -314,13 +314,13 @@ color_unis <- unique(color_words$uni_lemma)
 There is tremendous cross-linguistic variation in color vocabulary [@kay2009]. We take advantage of the fact that most of the languages in our dataset have relatively larger color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.^[Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like "red" would be much larger than in English.] Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was `r Reduce(paste0,sprintf("%s, ", color_unis[1:length(color_unis)-1]))` and `r color_unis[length(color_unis)]`.
 
 
-```{r 7_color_words}
+```{r catsem-color_words}
 plot_unis(color_words)
 ```
 
 In this set of words, we see that *red* is typically the first learned, although their is substantial variability in when it is learned. It is followed by *yellow*, *blue*, and *green*, with *black* and *white* following behind (consistent with reports by @wagner2013. We additionally see an ordering across languages in which have higher rates of color word production reported.
 
-```{r 7_color_langs_words}
+```{r catsem-color_langs_words}
 color_langs <- color_words %>%
   unite(langform, language, form) %>%
   group_by(langform, age) %>%
@@ -345,7 +345,7 @@ As in other analyses (see Chapter \@ref(vocab)), Mandarin WS has the highest lev
 
 ### Body parts
 
-```{r 7_body_words}
+```{r catsem-body_words}
 body_words <- read_feather("data/body_words.feather")
 plot_unis(body_words)
 ```
@@ -354,7 +354,7 @@ Words for body parts are produced very early by most children, and variance is q
 
 ### Logic
 
-```{r 7_logic_words}
+```{r catsem-logic_words}
 logic_words <- read_feather("data/logic_words.feather")
 plot_unis(logic_words)
 logic_unis <- unique(logic_words$uni_lemma)
@@ -368,7 +368,7 @@ Finally, we examine words for logical operators. The only items that are availab
 Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 20-30 month-olds (chosen somewhat arbitrarily as the age range of highest coverage across forms), we compute the coefficient of variation for children at each age on each lexical item. We additionally add animal words for the sake of comparison. The table below gives the coefficient of variation for each category above, averaging across lexical items. 
 
 
-```{r 7_cat_var}
+```{r catsem-cat_var}
 animal_words <- read_feather("data/animal_words.feather")
 cat_var <- bind_rows(time_words %>% mutate(category = "time"),
           body_words %>% mutate(category = "body"),
@@ -387,7 +387,7 @@ cat_var %>%
 
 Body words as well as animal words are highly consistent across languages. In contrast, color, logic words, and time words are far less consistent. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
 
-```{r 7_cat_var2}
+```{r catsem-cat_var2}
 cat_var %>%
   mutate(cv = round(cv,2)) %>%
     datatable(colnames = c("Category","Word", "Coefficient of Variation"))

@@ -1,4 +1,4 @@
---- 
+---
 title: "Variability and Consistency in Early Language Learning: The Wordbank Project"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
 site: bookdown::bookdown_site
@@ -6,12 +6,12 @@ documentclass: book
 bibliography: book.bib
 biblio-style: apalike
 link-citations: true
-github-repo: langcog/wordbank-book
-description: ""
-always_allow_html: yes
-output:
-  bookdown::gitbook
 ---
+
+```{r setup}
+source("_setup.R")
+```
+
 
 # Preface {-}
 
@@ -41,7 +41,7 @@ Although our goal is a full exploration of the phenomena of child language acqui
 
 <!-- (shown in Figure \@ref(1_outline_diagram)), -->
 
-```{r fig.cap="A graphical outline of the book.", eval=FALSE}
+```{r preface-outline, fig.cap="A graphical outline of the book.", eval=FALSE}
 knitr::include_graphics("images/outline.png")
 ```
 

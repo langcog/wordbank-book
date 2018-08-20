@@ -1,4 +1,4 @@
-# Variability and Consistency {#theory}
+# Variability and Consistency {#consistency}
 
 In the preceding chapters, we have have presented evidence from a wide range of analyses of the Wordbank dataset. These analyses have revealed both striking variability across our units of sampling -- children, primarily, but also words and even languages -- but they have also revealed substantial consistency. In this conclusion we discuss the interplay and tension between these two ideas, variability and consistency, and how they interact with and inform theoretical conceptions of language acquisition more broadly.
 
@@ -56,7 +56,7 @@ In sum, for many of our proposed consistencies, we can begin to muster evidence 
 ## Consistency in Variability
 
 
-```{r}
+```{r cons-cvs_load}
 files <- dir("data/cvs/", pattern = "*.feather")
 
 cvs <- data_frame(name = files) %>%
@@ -68,7 +68,7 @@ cvs <- data_frame(name = files) %>%
          measure = fct_reorder(measure, cv))
 ```
 
-```{r}
+```{r cons-cvs_plot_1}
 ggplot(cvs, aes(x = measure, y = cv)) + 
   geom_point() + 
   # ylim(c(0,1)) + 
@@ -77,7 +77,7 @@ ggplot(cvs, aes(x = measure, y = cv)) +
   coord_flip() 
 ```
 
-```{r 8_covs}
+```{r cons-cvs_plot_2}
 cvs_plot <- cvs %>%
   filter(!str_detect(measure, "understands"), 
          !str_detect(measure, "comprehension")) %>%
@@ -99,7 +99,7 @@ ggplot(cvs_plot, aes(x = measure_name, y = cv)) +
   coord_flip() 
 ```
 
-```{r, fig.height =1.25, fig.width = 3}
+```{r cons-cvs_plot_3, fig.height =1.25, fig.width = 3}
 ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
   geom_point() + 
   geom_label_repel() + 
@@ -124,7 +124,7 @@ ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) +
 ```
 
 
-```{r 8_cvs_continuum}
+```{r cons-cvs_continuum}
 ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
   geom_point() + 
   geom_label_repel(segment.alpha = .5, force = 5) + 

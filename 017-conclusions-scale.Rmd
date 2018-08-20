@@ -1,4 +1,4 @@
-# Language Development at Scale {#theory2}
+# Language Development at Scale {#scale}
 
 This chapter synthesizes knowledge gained from the broader wordbank package, in the sense of attempting to make generalizations about early language development that hold true across the different datasets in our sample. 
 

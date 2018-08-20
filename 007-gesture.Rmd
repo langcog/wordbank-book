@@ -8,7 +8,7 @@ Early gestures serve many different functions. Children typically first begin to
 
 This chapter contains analysis of the “early gesture” items from the CDI. Our goals here are to examine the degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo. 
 
-```{r load_data, eval = F}
+```{r gesture-load_data, eval = F}
 wgs <- get_instruments() %>%
   filter(form == "WG")
 
@@ -47,12 +47,12 @@ gesture_data <- wg_data %>%
 write_feather(gesture_data, "data/gesture_data.feather")
 ```
 
-```{r load_data_local}
+```{r gesture-load_data_local}
 gesture_data <- read_feather("data/gesture_data.feather")
 ```
 
 I can't tell if sometimes/often really carries very much signal. It looks like it's all over the place for the earliest gestures and almost overlapping for the latest ones. Let's try compressing to a binary
-```{r first_gestures}
+```{r gesture-first_gestures}
 # Get the First Gestures
 eng_first_gestures <- gesture_data %>% 
   filter(type == "gestures_first", language == "English (American)") %>%
@@ -88,7 +88,7 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
 
 These look pretty reasonable to me, and a lot more stable. Also smacklip doesn't seem to have much of any kind of trajectory, which makes me think that parents don't know what do with it. For comparison, let's try the other gesture categories.
 
-```{r other_gestures, fig.width = 10, fig.height = 5}
+```{r gesture-other_gestures, fig.width = 10, fig.height = 5}
 # Get the First Gestures
 other <- gesture_data %>% 
   filter(!type %in% c("gestures_first", "word"), 
@@ -139,7 +139,7 @@ Interesting, ok most of these look like they have some signal (with the exceptio
 
 Let's try out some basic descriptives. What do these things look like? Let's arrange them in order of difficulty(on the bases of highest proportion of non-producers).
 
-```{r bin_gestures, fig.with = 6, fig.height = 4}
+```{r gesture-bin_gestures, fig.with = 6, fig.height = 4}
 first_gestures_binary <- first_gestures_ordered %>%
   filter(value == "not yet") %>%
   mutate(known = 1- n)
@@ -157,7 +157,7 @@ ggplot(first_gestures_binary, aes(x = age, y = known, color = definition,
 ```
 
 2. Intercorrelation among gestures
-```{r intercorrelation}
+```{r gesture-intercorrelation}
 binary_data <- gesture_data %>%
   filter(type != "word") %>%
   mutate(value = if_else(is.na(value) | value == "", NA, 
@@ -182,7 +182,7 @@ kable(intercor_data)
 Reproduce intercorrelations among items found in Fenson et al. ~.6 in English and similar cross-linguistically
 
 3. Age and gesture
-```{r age_cor}
+```{r gesture-age_cor}
 age_cors <- binary_data %>%
   group_by(language, age, comprehension, production, data_id) %>%
   summarise(gesture = mean(value, na.rm =T)) %>%
@@ -201,7 +201,7 @@ kable(age_cors)
 
 Crosslingusitic plot
 
-```{r growths, fig.width = 10, fig.height = 6}
+```{r gesture-growths, fig.width = 10, fig.height = 6}
 binary_data %>%
   group_by(language, age, data_id) %>%
   summarise(prop = mean(value, na.rm = T)) %>%
@@ -215,7 +215,7 @@ binary_data %>%
 ```
 
 Gestures correlates more with comprehension than production 
-```{r gest_lang}
+```{r gesture-gest_lang}
 gest_lang_data <- binary_data %>%
   group_by(language, comprehension, production, data_id) %>%
   summarise(gesture = mean(value, na.rm = T)) %>%
@@ -233,7 +233,7 @@ kable(gest_lang_data)
 
 This emerges around 12 months
 
-```{r correlation_over_age}
+```{r gesture-correlation_over_age}
 age_cor_data <- binary_data %>%
   filter(age >= 8) %>%
   group_by(language, age, comprehension, production, data_id) %>%
@@ -264,7 +264,7 @@ tidy(age_cor_model, "fixed") %>%
 ```
 
 Type and sex. Small female advantage overall, but big interaction in gestures_parent
-```{r sex_type_plot, fig.width = 8, fig.height = 6}
+```{r gesture-sex_type_plot, fig.width = 8, fig.height = 6}
 sex_type_kid_data <- binary_data %>%
   filter(!is.na(sex), !is.na(value)) %>%
   group_by(language, age, sex, type, data_id) %>%
@@ -285,7 +285,7 @@ ggplot(sex_type_data, aes(x = age, y = gesture, color = sex, label = sex)) +
 ```
 
 
-```{r sex_type_model}
+```{r gesture-sex_type_model}
 sex_type_model_data <- binary_data %>%
   mutate(type = factor(type,
                        levels = c("gestures_first", "gestures_games", 
@@ -303,7 +303,7 @@ tidy(sex_type_model, "fixed") %>%
 ```
 
 Type and ses. Very small low-ses advantage?
-```{r ses_type_plot, fig.width = 8, fig.height = 6}
+```{r gesture-ses_type_plot, fig.width = 8, fig.height = 6}
 ses_type_kid_data <- binary_data %>%
   filter(!is.na(mom_ed), !is.na(value)) %>%
   mutate(ses = if_else(mom_ed %in% c("College", "Some Graduate",
@@ -326,7 +326,7 @@ ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) +
 ```
 
 
-```{r ses_type_model}
+```{r gesture-ses_type_model}
 ses_type_kid_model <- ses_type_kid_data %>%
   lmer(gesture ~ age * type + ses * type + 
          age * ses + (1 | data_id) +
@@ -336,7 +336,7 @@ tidy(ses_type_kid_model, "fixed") %>%
   kable()
 ```
 
-```{r gesture_word_type_cor_plot}
+```{r gesture-gesture_word_type_cor_plot}
 reorder_factors_with_clusters <- function(m) {
  
    m_wide <- m %>%
@@ -418,7 +418,7 @@ prod_cor_bylang %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
 ```
 
-```{r gesture_word_cor_model}
+```{r gesture-gesture_word_cor_model}
 gesture_word_cord_model_data <- comp_cor_bylang %>%
   mutate(measure = "comprehends") %>%
   bind_rows(mutate(prod_cor_bylang, measure = "produces")) %>%

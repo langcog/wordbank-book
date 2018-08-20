@@ -64,8 +64,7 @@ Each of these datasets is then imported to the database by creating a custom imp
 
 ### Overview of the data
 
-Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments in the original Words & Gestures (infant) / Words & Sentences (toddler) format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable by the researchers constructing the adaptation). The table below gives an overview of the available instruments in the dataset.
-
+Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments in the original Words & Gestures (infant) / Words & Sentences (toddler) format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable by the researchers constructing the adaptation). 
 
 ```{r methods_overview}
 items %>%
@@ -77,7 +76,7 @@ items %>%
   datatable
 ```
 
-Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
+This table gives an overview of the available instruments in the dataset.
 
 ```{r methods_otherforms}
 items %>%
@@ -89,7 +88,7 @@ items %>%
   datatable
 ```
 
-The number of administrations available is highly variable across instruments and languages, however.
+Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
 
 ```{r methods_admins}
 admins_grouped <- admins %>%
@@ -111,6 +110,33 @@ ggplot(admin_summary, aes(x = language, y = n, col = form)) +
   ylab("Language") +
   scale_y_log10()
 ```
+
+The number of administrations available is highly variable across instruments and languages, however. The log-scaled plot above shows the distribution of administrations across forms and languages. 
+
+```{r}
+# write_csv(data.frame(unique(instruments$language)), "data/languages_countries.csv")
+
+languages_countries <- read_csv("data/languages_countries.csv")
+# country_coords <- read_csv("data/country_coords.csv") # from https://developers.google.com/public-data/docs/canonical/countries_csv
+# 
+# lang_coords <- left_join(languages_countries, country_coords)
+# 
+
+map_world <- map_data(map="world") %>%
+  rename(country= region) 
+ggplot() + 
+  geom_polygon(data = right_join(map_world, languages_countries), 
+               aes(x=long, y = lat, group = group), 
+               fill = "gray") + 
+  geom_polygon(data = map_world, 
+                        aes(x=long, y = lat, group = group), 
+               colour = "black", fill = NA, size = .4) +
+  theme_minimal() +
+  xlab("") + ylab("") +
+  scale_x_continuous(labels = NULL) + 
+  scale_y_continuous(labels = NULL, lim = c(-55,90)) 
+```
+These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-represented. 
 
 ### Administration details
 

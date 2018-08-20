@@ -35,9 +35,13 @@ This set of contributions reflects an important guiding principle of our work he
 
 ## Outline of the Book {-}
 
-Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data. Considering the data in this way (shown in Figure \@ref(1_outline_diagram)), leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. 
+THIS SECTION IS OUT OF DATE - WE WILL UPDATE ONCE THE WORKING DRAFT IS DONE. 
 
-```{r fig.cap="A graphical outline of the book."}
+Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data. Considering the data in this way leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data.
+
+<!-- (shown in Figure \@ref(1_outline_diagram)), -->
+
+```{r fig.cap="A graphical outline of the book.", eval=FALSE}
 knitr::include_graphics("images/outline.png")
 ```
 
@@ -61,7 +65,7 @@ Many of the analyses reported here were first described in earlier publications 
 
 The dataset in Wordbank is constantly growing and changing as we add new features, new data, and new languages. In addition, as users of the data occasionally identify issues and errors, we make will make corrections to the database. In writing this manuscript, we have attempted to find a middle ground between a completely dynamic document that responds to any change in the database, on the one hand, and a traditional, static book, on the other. A static manuscript would be a shame given the potential for dynamic extension and updating with new data. On the other hand, if the data were completely dynamic, any claim we made in prose would risk being out of date almost as soon as we wrote it. 
 
-For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. This build of the book is based on FIXME DATE.
+For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. This build of the book is from `r date()`.
 
 ## Acknowledgements {-}
 

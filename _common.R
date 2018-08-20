@@ -1,3 +1,4 @@
+# library(maps) # conflicts with purrr
 library(MASS)
 library(wordbankr) # all
 library(langcog)
@@ -23,10 +24,11 @@ library(widyr) # gesture
 library(knitr)
 library(multidplyr) # for item demographics
 library(parallel) # for item demographics
-library(tidyverse) # keep tidyverse last to prevent conflicts
 library(viridis) # for style
 library(mirtCAT) # style, psychometrics, vocab
 library(ggthemes)
+library(tidyverse) # keep tidyverse last to prevent conflicts
+
 
 # to deal with font issue perhaps?
 library(extrafont)

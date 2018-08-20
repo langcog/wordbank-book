@@ -1,4 +1,8 @@
-# Psychometric Properties of the CDI {#psychometrics}
+# Measurement Properties of the CDI {#psychometrics}
+
+Many researchers are initially shocked to hear that one of the most important methods for studying child language is parent report. The goal of this chapter is to revisit this question in depth, since the 
+
+The first answer to the question of "why parent report" is "what else is there?" From a first-principles approach, there are more or less three primary methods for measuring very early language: 1) natural observation, 2) in-lab experimental testing, and 3) 
 
 ## Limitations of parent report
 

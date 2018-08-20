@@ -6,11 +6,11 @@ Although the standardization of parent reports using the CDI contributes to the 
 
 <!-- The figure below uses graphical model notation to depict the multiple sources of information that could be reflected in parent report [@jordan2004]. -->
 
-```{r fig.cap="The statistical structure of parent report.", eval=FALSE}
-knitr::include_graphics("docs/tex/parent_model.png", auto_pdf = FALSE)
+```{r psycho-parent_model, fig.cap="The statistical structure of parent report.", eval=FALSE}
+knitr::include_graphics("tex/parent_model.png", auto_pdf = FALSE)
 ```
 
-```{r fig.cap="The intuitive structure of parent report."}
+```{r psycho-parent_sketch, fig.cap="The intuitive structure of parent report."}
 knitr::include_graphics("images/parent_report_sketch.png")
 ```
 
@@ -58,53 +58,51 @@ Overall, the conclusions of our analysis are that:
 
 ## Preliminary Estimation 
 
-```{r irt_prelims_ws}
-library(mirtCAT)
-
+```{r psycho-irt_prelims_ws}
 eng_ws <- read_feather("data/eng_ws_raw_data.feather")
 
-d <- eng_ws %>%
+d_ws <- eng_ws %>%
   mutate(produces = value == "produces") %>%
   filter(!is.na(category)) %>%
   select(data_id, produces, age, production, sex, definition) 
 
-d_wide <- d %>%
+d_wide_ws <- d_ws %>%
   mutate(produces = as.numeric(produces)) %>%
-  dplyr::select(definition, produces, data_id) %>%
+  select(definition, produces, data_id) %>%
   spread(definition, produces)
   
-d_mat <- d_wide %>%
-  dplyr::select(-data_id) %>% 
+d_mat_ws <- d_wide_ws %>%
+  select(-data_id) %>% 
   data.frame %>%
   data.matrix
 
-colnames(d_mat) <- sort(unique(d$definition))
-rownames(d_mat) <- d_wide$data_id
+colnames(d_mat_ws) <- sort(unique(d_ws$definition))
+rownames(d_mat_ws) <- d_wide_ws$data_id
 
 # Requires no empty rows - `personfit` doesn't work with `removeEmptyRows=TRUE` even though the model fit will work that way. 
 
-d_mat <- d_mat[complete.cases(d_mat),]
+d_mat_ws <- d_mat_ws[complete.cases(d_mat_ws),]
 ```
 
 Practically, we use the `mirt` package [@chalmer2012,@chalmers2016] to estimate the parameters of a four-parameter IRT model. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds. Our goal in this first analysis is simply to examine parameter estimates across individuals and items. 
 
-```{r fit_irt_ws, eval = FALSE}
-mod_4pl <- mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
+```{r psycho-fit_irt_ws, eval = FALSE}
+mod_4pl <- mirt(d_mat_ws, 1, itemtype='4PL', verbose=TRUE)
 
 coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
   mutate(definition = rownames(coef(mod_4pl, simplify = TRUE)$items))
-fscores_4pl <- data_frame(data_id = rownames(d_mat), 
+fscores_4pl <- data_frame(data_id = rownames(d_mat_ws), 
                              ability = fscores(mod_4pl, method = "MAP")[,1])
 
 save(file = "data/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
 ```
 
-```{r load_irt_data_ws}
+```{r psycho-load_irt_data_ws}
 load("data/eng_ws_mod_4pl.Rds")
 ```
 
-```{r irt_summary}
-d_summary <- d %>%
+```{r psycho-irt_summary}
+d_ws_summary <- d_ws %>%
   group_by(data_id, sex, age) %>%
   summarise(production = production[1]) %>%
   right_join(fscores_4pl %>%
@@ -112,8 +110,8 @@ d_summary <- d %>%
   filter(!is.na(sex))
 ```
 
-```{r}
-d_summary %>%
+```{r psycho-irt_summary_plot}
+d_ws_summary %>%
   gather(measure, value, production, ability, age) %>%
   mutate(measure = fct_recode(measure, 
                               Production = "production", 
@@ -125,27 +123,27 @@ d_summary %>%
   facet_wrap(~measure, scales="free_x")
 ```
 
-We begin by estimating this model with data from `r nrow(d_mat)` from the English (American) WG dataset. We first examine the histograms of latent ability scores and compare them with chronological age (because sampling is non-uniform) and raw production scores. As can be seen above, latent ability shows a peak in the middle of the range and generally fewer cases distributed at floor and ceiling. This shift indicates first, that floor and ceiling effects in the form are partially rectified by the model, and second, that many children in the middle of the form's range are not well-distinguished from one another. 
+We begin by estimating this model with data from `r nrow(d_mat_ws)` from the English (American) WG dataset. We first examine the histograms of latent ability scores and compare them with chronological age (because sampling is non-uniform) and raw production scores. As can be seen above, latent ability shows a peak in the middle of the range and generally fewer cases distributed at floor and ceiling. This shift indicates first, that floor and ceiling effects in the form are partially rectified by the model, and second, that many children in the middle of the form's range are not well-distinguished from one another. 
 
 One question regarding these scores is whether they should be used in place of proportion scores for some of the estimation problems we encounter throughout the rest of the book. These latent ability scores might be overall better reflections of children's vocabulary than raw proportions in the best case. Nevertheless, we do not adopt them, for two reasons.
 
-```{r}
-d_gender <- d_summary %>%
+```{r psycho-gender_plot}
+d_ws_gender <- d_ws_summary %>%
   gather(measure, value, production, ability) %>%
   mutate(measure = fct_recode(measure, 
                               `Raw Production` = "production", 
                               `Latent Ability` = "ability") %>%
            fct_relevel("Raw Production")) 
 
-ggplot(d_gender, aes(x = age, y = value, col = sex)) + 
+ggplot(d_ws_gender, aes(x = age, y = value, col = sex)) + 
   geom_jitter(alpha = .1) + 
   geom_smooth() + 
   facet_wrap(~measure, scales="free_y") + 
   ylab("Parameter Value") + xlab("Age (Months)")
 ```
 
-```{r}
-d_gender_summary <- d_gender %>%
+```{r psycho-gender_summary}
+d_ws_gender_summary <- d_ws_gender %>%
   group_by(measure, age) %>%
   summarise(female_advantage = mean(value[sex == "Female"]) - 
               mean(value[sex == "Male"])) %>%
@@ -154,13 +152,13 @@ d_gender_summary <- d_gender %>%
   
 ```
 
-First, they do not perform better empirically. The analysis above shows gender differences (cf. Chapter \@ref(#demographics)) by both measures. Surprisingly, there appear to be limited differences in the curves recovered by the analyses. For example, for raw production, the coefficient of variation across age in the gender differences is `r signif(d_gender_summary$cv[d_gender_summary$measure == "Raw Production"], 2)`. For the latent ability estimates, the CV is `r signif(d_gender_summary$cv[d_gender_summary$measure == "Latent Ability"], 2)`. Thus, based on the assumption that gender differences are constant across age, there is no evidence for better measurement. Of course, this assumption may be wrong, but this analysis does not yield evidence in favor of adoption. (Perhaps a smaller sample might yield different results; it could be that raw scores are stable due to the large amount of data in this analysis). 
+First, they do not perform better empirically. The analysis above shows gender differences (cf. Chapter \@ref(#demographics)) by both measures. Surprisingly, there appear to be limited differences in the curves recovered by the analyses. For example, for raw production, the coefficient of variation across age in the gender differences is `r signif(d_ws_gender_summary$cv[d_ws_gender_summary$measure == "Raw Production"], 2)`. For the latent ability estimates, the CV is `r signif(d_ws_gender_summary$cv[d_ws_gender_summary$measure == "Latent Ability"], 2)`. Thus, based on the assumption that gender differences are constant across age, there is no evidence for better measurement. Of course, this assumption may be wrong, but this analysis does not yield evidence in favor of adoption. (Perhaps a smaller sample might yield different results; it could be that raw scores are stable due to the large amount of data in this analysis). 
 
 Second, there are other negatives associated with swapping an imperfect but straightforward measure (raw scores) to a model-derived measure (latent ability). Interpretation clearly suffers if we use the model-derived measure, since readers will not be able to map scores back to actual behavior in terms of the checklist. In addition, model estimation issues across instruments introduce further difficulties in interpretation. Most obviously model estimates with smaller datasets may vary in unpredictable ways; similarly, the presence of poorly-performing items (see below) in certain datasets may lead to systematic issues in the latent estimates for those datasets. 
 
 ## Item effects in WS
 
-```{r}
+```{r psycho-items_ws}
 ggplot(coefs_4pl,  
        aes(x = a1, y = d)) + 
   geom_point(alpha = .3) + 
@@ -175,7 +173,7 @@ ggplot(coefs_4pl,
 Our next analysis examines items in the same WS dataset. The plot above shows item discrimination and difficulty, with outlying items labeled. Visual inspection shows a long tail of items with limited discrimination and low difficulty (e.g., *mommy*, *ball*, *bye*, etc.). These are clearly those items that are produced by nearly all of the children in the sample -- they do not discriminate because they are passed by all children in the sample. If the only goal of the instrument were discrimination of different ability levels, they could likely be removed. On the lower right hand side of the plot, the remainder of items are clumped, with discrimination above zero and somewhat higher difficulty. The right-hand tip of this triangle shows the most diagnostic words (e.g., *run*, *kitchen*, and *table*), all of which effectively distinguish between the upper and lower groups of children in the sample. Finally, at the bottom of this triangle is a large cluster of words that are quite difficult. Some of these do not show good discrimination (e.g., *country*), since it is likely too difficult for nearly all children in the sample. 
 
 
-```{r}
+```{r psycho-disc_hist}
 ggplot(coefs_4pl,  
        aes(x = a1)) + 
   geom_histogram(binwidth = .2) + 
@@ -185,7 +183,7 @@ ggplot(coefs_4pl,
 We can follow up on the question of word inclusion by examining the distribution of discrimination parameters alone. Overall, this plot suggests that there are some items that could be dropped without major penalty. In particular, along with the very easy words in the left tail, there is a large cluster of words that are perhaps too difficult to be useful for most children. 
 
 
-```{r}
+```{r psycho-bounds_plot}
 ggplot(coefs_4pl,  
        aes(x = g, y = u)) + 
   geom_point() + 
@@ -198,10 +196,10 @@ ggplot(coefs_4pl,
 
 As a separate check on this analysis, we can examine the upper and lower bounds estimated for particular words. These bounds show words that are known by only a small number of children at ceiling or have a very high floor (respectively). Examining those with a very low ceiling, we see items that are likely to be quite idiosyncratic, for a variety of reasons. For example, *babysitter*, *camping*, and *basement* likely vary by children's home experiences (further mediated by access to resources, parenting practices, and circumstances). In contrast, genital items (e.g. *vagina\**) vary by gender (see Chapter \@ref(words-demographics)). Examining those items with a very high base rate shows a similar set to those with very low discrimination patterns, suggesting that the four-parameter model may have fit these words as having a high chance level with essentially no discrimination ability. 
 
-```{r}
+```{r psycho-weirds}
 weird_words <- c("grrr", "woof woof", "moo","yum yum")
 
-d %>%
+d_ws %>%
   filter(definition %in% weird_words) %>%
   group_by(definition, age) %>%
   summarise(produces = mean(produces, na.rm=TRUE)) %>%
@@ -220,7 +218,7 @@ Finally, we see items like *grrr*, *woof woof*, *moo*, and *yum yum*. These item
 ## Production and comprehension
 
 
-```{r}
+```{r psycho-prod_comp}
 eng_wg <- read_feather("data/eng_wg_data.feather")
 
 d_wg <- eng_wg %>%
@@ -231,21 +229,21 @@ d_wg <- eng_wg %>%
 
 d_wide_wg_produces <- d_wg %>%
   mutate(produces = as.numeric(produces)) %>%
-  dplyr::select(definition, produces, data_id) %>%
+  select(definition, produces, data_id) %>%
   spread(definition, produces)
 
 d_wide_wg_understands <- d_wg %>%
   mutate(understands = as.numeric(understands)) %>%
-  dplyr::select(definition, understands, data_id) %>%
+  select(definition, understands, data_id) %>%
   spread(definition, understands)
 
 d_mat_wg_produces <- d_wide_wg_produces %>%
-  dplyr::select(-data_id) %>% 
+  select(-data_id) %>% 
   data.frame %>%
   data.matrix
 
 d_mat_wg_understands <- d_wide_wg_understands %>%
-  dplyr::select(-data_id) %>% 
+  select(-data_id) %>% 
   data.frame %>%
   data.matrix
 
@@ -260,7 +258,7 @@ d_mat_wg_produces <- d_mat_wg_produces[complete.cases(d_mat_wg_produces) & rowSu
 d_mat_wg_understands <- d_mat_wg_understands[complete.cases(d_mat_wg_understands) & rowSums(d_mat_wg_understands) > 0,]
 ```
 
-```{r fit_irt_wg, eval = FALSE}
+```{r psycho-fit_irt_wg, eval = FALSE}
 mod_4pl_wg_produces <- mirt(d_mat_wg_produces, 1, itemtype='4PL', verbose=TRUE)
 mod_4pl_wg_understands <- mirt(d_mat_wg_understands, 1, itemtype='4PL', verbose=TRUE)
 
@@ -279,7 +277,7 @@ save(file = "data/eng_wg_mods_4pl.Rds",
      "coefs_4pl_wg_understands")
 ```
 
-```{r load_irt_data_wg}
+```{r psycho-load_irt_data_wg}
 load("data/eng_wg_mods_4pl.Rds")
 
 coefs_4pl_wg <- bind_rows(coefs_4pl_wg_produces %>%
@@ -317,7 +315,7 @@ This pattern of findings -- lower discrimination values for comprehension -- cou
 One hypothesis that we have often speculated about is the question of whether there are special psychometric issues with particular word classes. For example, do parents struggle especially to identify whether children produce or understand function words? 
 
 
-```{r}
+```{r psycho-lexcat}
 coefs_4pl <- coefs_4pl %>%
   left_join(items %>% 
                filter(language == "English (American)", 
@@ -350,7 +348,7 @@ grid.arrange(a, b)
 The plot above reproduces the WG by-item analyses above but with color given by lexical class. Many of the easy, non-discriminating items are found in the "other" section. In contrast, the hardest items tend to be function words. These items tend to have lower discrimination on average (`r signif(class_summary$a1[class_summary$lexical_class == "function_words"],2)`) compared with nouns (`r signif(class_summary$a1[class_summary$lexical_class == "nouns"],2)`), adjectives (`r signif(class_summary$a1[class_summary$lexical_class == "adjectives"],2)`), and especially verbs (`r signif(class_summary$a1[class_summary$lexical_class == "verbs"],2)`). Nevertheless, the situation is not dire: most have a discrimination parameter above one. Thus, although function words are not the most discriminative items on the CDI WS, these items still appear to encode valid signal about children's abilities.
 
 
-```{r}
+```{r psycho-lexcat_sumamry}
 coefs_4pl_wg <- coefs_4pl_wg %>%
   left_join(items %>% 
                filter(language == "English (American)", 
@@ -401,7 +399,7 @@ In sum, we do not find evidence that function words are particularly bad. Rather
 ## Stability of the CDI
 
 
-```{r styLe_long_data}
+```{r psycho-style_long_data}
 longitudinal_admins <- admins %>% 
   mutate(langform = paste(language, form)) %>%
   group_by(langform, original_id) %>% 
@@ -437,7 +435,7 @@ The first locus for individual differences in language acquisition is the rate o
 
 Because these data were cross-sectional in nature rather than longitudinal, they cannot answer the question of whether the variability observed is *stable* as well as *substantial* (parphrasing Bates). In this and the next subsection, we make use of longitudinal data in the Wordbank dataset to investigate this idea. 
 
-```{r style_long_data_table}
+```{r psycho-style_long_data_table}
 datatable(longitudinal_admins %>% 
             group_by(langform) %>%
             count %>% 
@@ -446,7 +444,7 @@ datatable(longitudinal_admins %>%
 
 In our first investigation of the longitudinal data, we look at how stable individual children are. There are only a small number of deeply longitudinal corpora in Wordbank, so we will limit our investigation to two languages: Norwegian and English. Furthermore, the largest group of longitudinal data cover the WS form so we restrict to these data for simplicity. Within each of these datasets, the modal number of observations is two, but there are some children with more than 10 CDIs on record. 
 
-```{r style_long_data_spaghetti}
+```{r psycho-style_long_data_spaghetti}
 ggplot(filter(n_long_ws, n_admins > 10, 
               language == "Norwegian"), 
        aes(x = age, y = production, col = fct_reorder(original_id, production))) + 
@@ -460,7 +458,7 @@ ggplot(filter(n_long_ws, n_admins > 10,
 
 The figure above shows the trajectories of children who were measured a large number of times (>10), and includes Norwegian data only due to data sparsity issues in English. Thes trajectories appear quite stable; the ranking of individuals does not appear to change much over the course of several years. This conclusion is ratified by other studies using different datasets, for example @bornstein2012, who found substantial stability ($r = .84$) between latent constructs inferred from early language at 20 months and later language measured at 48 months. 
 
-```{r style_long_data_ecdf}
+```{r psycho-style_long_data_ecdf}
 n_cross_ws <- admins %>%
   filter(language %in% c("Norwegian", "English (American)"),
          form == "WS") %>%
@@ -490,7 +488,7 @@ n_long_ws <- n_long_ws %>%
   map_df(get_empirical_percentiles)
 ```
 
-```{r style_long_data_norwegian_ecdf}
+```{r psycho-style_long_data_norwegian_ecdf}
 ggplot(filter(n_long_ws, n_admins > 10, 
               language == "Norwegian"), 
        aes(x = age, y = percentile, col = fct_reorder(original_id, production))) + 
@@ -498,7 +496,7 @@ ggplot(filter(n_long_ws, n_admins > 10,
   scale_colour_discrete(guide = FALSE)
 ```
 One way to operationalize the question of stability is how children's percentile ranks tend to change over time. We examine this question creating an empirical CDF for each age group. We could use a model-based method (e.g., the `gcrq` method used in the Wordbank app and Chapter \@ref(vocab) and \@ref(demographics)) but in practice we have enough data in each of these languages that this method should perform well. As shown above, these are visually quite stable. 
-```{r style_pairwise_long_cors}
+```{r psycho-style_pairwise_long_cors}
 age_binsize <- 2
   
 long_cors <- n_long_ws %>%
@@ -556,7 +554,7 @@ ggplot(filter(long_cor_pairs, n >= 50),
 This transformation to percentile ranks allows us to assess the correlation between a child's percentile rank at time 1 and their rank at time 2, depending on the gap between these two. Because of sparsity, we bin children into two-month age bins and eliminate age bins with fewer than 50 children, then calculate between-bin correlations in percentiles. The figure above shows this analysis, which reveals that percentile ranks are quite stable; across a 2-4 month age gap they are correlated at better than .8. This stability declines to around .5 at 16 months, but this decline should be taken with a grain of salt. First, this range is a doubling of the child's age, so stability might be expected to be lower. But second, even with the use of percentile ranks, many childen who are measured longitudinally across a 16-month gap will be expected to move from the floor of the form to the ceiling, compromising measurement accuracy. 
 
 
-```{r style_mirt_etc, eval=FALSE}
+```{r psycho-style_mirt_etc, eval=FALSE}
 mirt_params <- function(dx) {
   language <- dx$language
   form <- dx$form
@@ -565,28 +563,28 @@ mirt_params <- function(dx) {
   lang_data <- get_instrument_data(language = language, form = form, 
                                    administrations = TRUE, iteminfo = TRUE)
   
-  d <- lang_data %>%
+  d_lang <- lang_data %>%
     filter(!is.na(lexical_class)) %>%
     mutate(produces = value == "produces") %>%
     select(data_id, item_id, produces, age, production) 
   
-  d_wide <- d %>%
+  d_lang_wide <- d_lang %>%
     mutate(produces = ifelse(is.na(produces), 0, as.numeric(produces))) %>%
-    dplyr::select(item_id, produces, data_id) %>%
+    select(item_id, produces, data_id) %>%
     spread(item_id, produces)
   
-  d_mat <- d_wide %>%
-    dplyr::select(-data_id) %>% 
+  d_lang_mat <- d_lang_wide %>%
+    select(-data_id) %>% 
     data.frame %>%
     data.matrix
   
-  colnames(d_mat) <- sort(unique(d$item_id))
-  rownames(d_mat) <- d_wide$data_id
+  colnames(d_lang_mat) <- sort(unique(d_lang$item_id))
+  rownames(d_lang_mat) <- d_lang_wide$data_id
   
-  d_mat <- d_mat[complete.cases(d_mat),]
-  mod_4pl <- mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
+  d_lang_mat <- d_lang_mat[complete.cases(d_lang_mat),]
+  mod_4pl <- mirt(d_lang_mat, 1, itemtype='4PL', verbose=TRUE)
 
-  fscores <- data_frame(data_id = rownames(d_mat), 
+  fscores <- data_frame(data_id = rownames(d_lang_mat), 
                         ability = fscores(mod_4pl, method = "MAP")[,1])
   fscores$language <- language
   fscores$form <- form
@@ -609,7 +607,7 @@ write_feather(mirt_params, "data/long_mirt_params.feather")
 ```
 
 
-```{r style_long_mirt_stability}
+```{r psycho-style_long_mirt_stability}
 mirt_params <- read_feather("data/long_mirt_params.feather")
 
 long_cors_mirt <- n_long_ws %>%
@@ -641,7 +639,7 @@ long_cor_pairs_mirt <-  long_cors_mirt %>%
   left_join(long_cor_ns)
 ```
 
-```{r style_long_raw_stability}
+```{r psycho-style_long_raw_stability}
 long_cors_raw <- n_long_ws %>%
   unite("id", c("original_id", "source_name")) %>%
   mutate(age = round(age/age_binsize) * age_binsize) %>% # round age into two-month bins
@@ -671,7 +669,7 @@ long_cor_pairs_raw <-  long_cors_raw %>%
 ```
 
 
-```{r style_cor_methods_comparisons}
+```{r psycho-style_cor_methods_comparisons}
 min_n <- 50
 all_cors <- left_join(long_cor_pairs_mirt %>% 
                         filter(n >= min_n) %>%

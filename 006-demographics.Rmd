@@ -6,14 +6,14 @@ One important tension in this chapter reflects many earlier discussions of varia
 
 Our analyses in this chapter are unfortunately limited to a subset of languages, as demographic data for many contributed datasets were not available. We begin with sex, the variable for which the most analysis has already been done and for which we have the most data, then move on to birth order and finally maternal education. 
 
-```{r 3b_vocab_admins}
+```{r demo-vocab_admins}
 num_words <- items %>%
   filter(type == "word") %>%
   group_by(language, form) %>%
   summarise(n = n())
 
 vocab_data <- admins %>%
-  dplyr::select(data_id, language, form, age, sex, 
+  select(data_id, language, form, age, sex, 
                 mom_ed, birth_order, production, comprehension) %>% 
   left_join(num_words) %>%
   mutate(birth_order = fct_collapse(birth_order,
@@ -31,7 +31,7 @@ vocab_data <- admins %>%
 
 ```
 
-```{r}
+```{r demo-funs}
 # get means split by demographic features
 get_demo_means <- function (data, demo = ~sex, measure = ~production) {
   data %>%
@@ -132,7 +132,7 @@ get_mmad_summary <- function(data) {
 ```
 
 
-```{r eval=FALSE}
+```{r demo-analyses, eval=FALSE}
 # this code block does all the analyses above to all the combos of measures, forms, and demographics
 
 # build all the combos to analyze
@@ -193,7 +193,7 @@ analyses <- analysis_combos %>%
 save(file = "data/3b-demo-analyses.Rds", analyses)
 ```
 
-```{r}
+```{r demo-load}
 load(file = "data/3b-demo-analyses.Rds")
 ```
 
@@ -209,7 +209,7 @@ Our analyses below replicate and extend the results of @eriksson2012, who used a
 
 We begin by examining Words and Gestures data on comprehension. 
 
-```{r 3_gender_plot_wg_comp}
+```{r demo-gender_plot_wg_comp}
 ggplot(analyses$WG.comprehension$sex$means,
        aes(x = age, y = median, colour = sex)) +
   facet_wrap(~interaction(language, form)) +
@@ -229,7 +229,7 @@ ggplot(analyses$WG.comprehension$sex$means,
 
 Our first plot shows comprehension on Words and Gestures. Visual inspection of the data suggest limited differences, but a female advantage in some languages (most pronounced in Korean, Latvian, and Hebrew). Note that many authors do not find gender differences in early comprehension [e.g., @eriksson2012]. @feldman2000 also did not using a large, relatively representative American dataset, though they had data only from younger children (10-13 months). 
 
-```{r}
+```{r demo-sex_wg_comp}
 analyses$WG.comprehension$sex$model_summary %>%
   datatable
 ```
@@ -241,7 +241,7 @@ $$d = \frac{\mu_2 - \mu_1}{SD_{pooled}}$$
 
 But as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components:  the difference between medians, divided by the MAD. (We call this the MMAD). 
 
-```{r 3b_gender_mmad_wg_comp}
+```{r demo-gender_mmad_wg_comp}
 ggplot(analyses$WG.comprehension$sex$mmad_ratio,
        aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
@@ -254,7 +254,7 @@ ggplot(analyses$WG.comprehension$sex$mmad_ratio,
         legend.text = element_text(size = 7)) 
 ```
 
-```{r}
+```{r demo-mmad_plot}
 ggplot(analyses$WG.comprehension$sex$mmad_summary, 
        aes(x = interaction(language, form), y = mmad_mean)) + 
   geom_point() + 
@@ -269,7 +269,7 @@ Applying this measure to the data on comprehension, we see a quite small average
 ### Production (Words and Gestures)
 
 
-```{r 3_gender_plot_wg_prod}
+```{r demo-gender_plot_wg_prod}
 ggplot(analyses$WG.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
   facet_wrap(~interaction(language, form)) +
@@ -288,13 +288,13 @@ ggplot(analyses$WG.production$sex$means,
 ```
 
 
-```{r}
+```{r demo-sex_prod_table}
 analyses$WG.production$sex$model_summary %>%
   datatable
 ```
 We next turn to production data. As in many of our subsequent analyses, data on production from Words and Gestures forms tend to be at floor, so they are of limited utility and the failure to find differences may reflect floor effects rather than any true differences. Visual inspection confirms differences at the edge of the age range covered by Words and Gestures forms, however, so for completeness we give the comparable statistical analyses as above. Here `r nrow(filter(analyses$WG.production$sex$model_summary, p < .05, beta < 0))` of `r nrow(analyses$WG.production$sex$model_summary)` languages show a statistically significant female advantage.
 
-```{r 3b_gender_mmad_wg_prod}
+```{r demo-gender_mmad_wg_prod}
 a <- ggplot(analyses$WG.production$sex$mmad_ratio,
             aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
@@ -321,7 +321,7 @@ Examining the MMAD effect size measures, it is clear that there is limited signa
 
 ### Production (Words and Sentences)
 
-```{r 3_gender_plot_ws_prod}
+```{r demo-gender_plot_ws_prod}
 ggplot(analyses$WS.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
   facet_wrap(~interaction(language, form)) +
@@ -339,14 +339,14 @@ ggplot(analyses$WS.production$sex$means,
   scale_size(guide = FALSE)
 ```
 
-```{r}
+```{r demo-ws_prod_table}
 analyses$WS.production$sex$model_summary %>%
   datatable
 ```
 
 We next turn to production data on the Words and Sentences instrument, which we expect to be much more informative regarding production.  Visual inspection confirms differences in almost every case, and an analysis of the fitted models shows that `r nrow(filter(analyses$WS.production$sex$model_summary, p < .05, beta < 0))` of `r nrow(analyses$WS.production$sex$model_summary)` languages show a statistically significant female advantage!
 
-```{r 3b_gender_mmad_ws_prod}
+```{r demo-gender_mmad_ws_prod}
 a <- ggplot(analyses$WS.production$sex$mmad_ratio,
             aes(x = age, y = mmad, col = interaction(language, form))) +
   geom_jitter() +
@@ -380,7 +380,7 @@ Do these differences reflect differences in measurement that are unique to the C
 For external validation, we turn to two other studies that provide more objective (non parent-report) measurements of early language. First, a seminal study by @huttenlocher1991 measured gender effects in vocabulary production as estimated from a naturalistic language sample, finding substantial differences in vocabulary growth favoring girls. Although the measures from this study are not comparable to the current data, the effects are quite large (and are relatively unaffected by controlling for maternal language exposure). 
 
 
-```{r 3b_bornstein}
+```{r demo-bornstein}
 b2012 <- read_csv("data/bornstein2012/bornstein2012_combined.csv")
 nrow(b2012)
 
@@ -410,7 +410,7 @@ Here, we can examine birth order effects in early vocabulary comprehension and p
 
 ### Comprehension
 
-```{r 3_birth_order_wg_comp}
+```{r demo-birth_order_wg_comp}
 ggplot(analyses$WG.comprehension$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
@@ -426,11 +426,7 @@ ggplot(analyses$WG.comprehension$birth_order$means,
   theme(legend.position = "bottom",
         strip.text.x = element_text(size = 7)) + 
   scale_size(guide = FALSE)
-```
 
-
-
-```{r}
 analyses$WG.comprehension$birth_order$model_summary %>%
   datatable
 
@@ -461,7 +457,7 @@ grid.arrange(a, b, ncol=2)
 
 ### Production (WG)
 
-```{r 3_birth_order_wg_prod}
+```{r demo-birth_order_wg_prod}
 ggplot(analyses$WG.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
@@ -503,7 +499,7 @@ grid.arrange(a, b, ncol=2)
 
 ### Production (WS)
 
-```{r 3_birth_order_ws_prod}
+```{r demo-birth_order_ws_prod}
 ggplot(analyses$WS.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
@@ -557,7 +553,7 @@ In the current dataset, we have the opportunity to explore the extent of these e
 
 <!-- We use maternal education as a proxy for socio-economic status. -->
 
-```{r 3b_momed_wg_comp}
+```{r demo-momed_wg_comp}
 ggplot(analyses$WG.comprehension$mom_ed$means,
        aes(x = age, y = median, colour = mom_ed,
            label = mom_ed)) +
@@ -573,11 +569,7 @@ ggplot(analyses$WG.comprehension$mom_ed$means,
   theme(legend.position = "bottom",
         strip.text.x = element_text(size = 7)) + 
   scale_size(guide = FALSE)
-```
 
-
-
-```{r}
 analyses$WG.comprehension$mom_ed$model_summary %>%
   datatable
 
@@ -607,7 +599,7 @@ grid.arrange(a, b, ncol=2)
 
 ### Production (WG)
 
-```{r 3_mom_ed_wg_prod}
+```{r demo-momed_wg_prod}
 ggplot(analyses$WG.production$mom_ed$means,
        aes(x = age, y = median, colour = mom_ed,
            label = mom_ed)) +
@@ -649,7 +641,7 @@ grid.arrange(a, b, ncol=2)
 
 ### Production (WS)
 
-```{r 3_mom_ed_ws_prod}
+```{r demo-momed_ws_prod}
 ggplot(analyses$WS.production$mom_ed$means,
        aes(x = age, y = median, colour = mom_ed)) +
   facet_wrap( ~language) +

@@ -17,7 +17,7 @@ get_cat_comp <- function(input_language, input_form) {
     mutate(value = ifelse(is.na(value), "", value),
            produces = value == "produces",
            understands = value == "produces" | value == "understands") %>%
-    dplyr::select(-value) %>%
+    select(-value) %>%
     gather(measure, value, produces, understands)
 
   num_words <- nrow(lang_vocab_items)
@@ -34,7 +34,7 @@ get_cat_comp <- function(input_language, input_form) {
   lang_vocab_summary %>%
     left_join(lang_vocab_sizes) %>%
     mutate(prop_vocab = num_true / vocab_num) %>%
-    dplyr::select(-num_true) %>%
+    select(-num_true) %>%
     mutate(language = input_language, form = input_form)
 }
 

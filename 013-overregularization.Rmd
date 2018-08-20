@@ -1,6 +1,6 @@
-# Morphological (Over-)Generalization
+# Morphological (Over-)Generalization {#overregularization}
 
-```{r ovreg_prep_data, eval=FALSE}
+```{r ovreg-prep_data, eval=FALSE}
 grammar_data_coded <- read_feather("data/grammar/grammar_data_coded.feather")
 
 overreg_data <- grammar_data_coded %>%
@@ -12,7 +12,7 @@ overreg_data <- grammar_data_coded %>%
 write_feather(overreg_data, "data/overreg_data.feather")
 ```
 
-```{r ovreg_load_data}
+```{r ovreg-load_data}
 overreg_data <- read_feather("data/grammar/overreg_data.feather")
 
 overreg_longs <- overreg_data %>%
@@ -25,7 +25,7 @@ overreg_longs <- overreg_data %>%
 
 First, look at the trajectories of how many children are reported to produce each item.
 
-```{r ovreg_byitem}
+```{r ovreg-byitem}
 overreg_item_summary <- overreg_data %>%
   group_by(language, age, type, definition) %>%
   summarise(num_true = sum(value, na.rm = TRUE),
@@ -44,22 +44,22 @@ plt_item_traj <- function(lang, typ) {
 ```
 
 __English nouns__
-```{r ovreg_plt_traj_eng_nouns, dependson="ovreg_byitem", fig.height=5}
+```{r ovreg-plt_traj_eng_nouns, dependson="ovreg_byitem", fig.height=5}
 plt_item_traj("English (American)", "nouns")
 ```
 
 __English verbs__
-```{r ovreg_plt_traj_eng_verbs, dependson="ovreg_byitem", fig.height=11}
+```{r ovreg-plt_traj_eng_verbs, dependson="ovreg_byitem", fig.height=11}
 plt_item_traj("English (American)", "verbs")
 ```
 
 __Norwegian nouns__
-```{r ovreg_plt_traj_nor_nouns, dependson="ovreg_byitem", fig.height=5}
+```{r ovreg-plt_traj_nor_nouns, dependson="ovreg_byitem", fig.height=5}
 plt_item_traj("Norwegian", "nouns")
 ```
 
 __Norwegian verbs__
-```{r ovreg_plt_traj_nor_verbs, dependson="ovreg_byitem", fig.height=11}
+```{r ovreg-plt_traj_nor_verbs, dependson="ovreg_byitem", fig.height=11}
 plt_item_traj("Norwegian", "verbs")
 ```
 
@@ -69,7 +69,7 @@ Many of these looks flat over development, some go up, some have U-shape or othe
 
 Next, take only the longitudinal data and categorize each child's trajectory for each item by whether over age, they say it never, always, start and then continue, start and then stop, stop and then restart, stop, or something else. For each item, look at the proportions of children showing each of these patterns.
 
-```{r ovreg_traj_props, eval=FALSE}
+```{r ovreg-traj_props, eval=FALSE}
 overreg_long_kids <- overreg_longs %>%
   select(language, type, definition, sex, original_id, age, value) %>%
   group_by(language, type, definition, sex, original_id) %>%
@@ -122,7 +122,7 @@ overreg_long_words <- overreg_long_kids_coded %>%
 write_feather(overreg_long_words, "data/grammar/overreg_long_words.feather")
 ```
 
-```{r ovreg_plt_props}
+```{r ovreg-plt_props}
 overreg_long_words <- read_feather("data/grammar/overreg_long_words.feather")
 
 plot_type_props <- function(typ) {
@@ -140,12 +140,12 @@ plot_type_props <- function(typ) {
 ```
 
 __Nouns__
-```{r ovreg_plt_props_nouns, dependson="ovreg_plt_props", fig.height=5.5}
+```{r ovreg-plt_props_nouns, dependson="ovreg_plt_props", fig.height=5.5}
 plot_type_props("nouns")
 ```
 
 __Verbs__
-```{r ovreg_plt_props_verbs, dependson="ovreg_plt_props", fig.height=11}
+```{r ovreg-plt_props_verbs, dependson="ovreg_plt_props", fig.height=11}
 plot_type_props("verbs")
 ```
 
@@ -156,7 +156,7 @@ The trajectory types above give a course idea of developmental change. Next, let
 
 There are too many children overall to actually look at thei individual curves, so let's find ways of categorizing them. In English, there are only two ages in the longitudinal data, so we can each trajectory value (as in number of items produced at each age) and count how many children fall into each one.
 
-```{r ovreg_bykid, eval=FALSE}
+```{r ovreg-bykid, eval=FALSE}
 overreg_kid_summary <- overreg_longs %>%
   group_by(language, sex, original_id, type, definition) %>%
   filter(n() > 1) %>%
@@ -194,7 +194,7 @@ overreg_traj_bin <- overreg_traj %>%
 write_feather(overreg_traj_bin, "data/grammar/overreg_traj_bin.feather")
 ```
 
-```{r ovreg_plt_bins_eng, fig.height=6}
+```{r ovreg-plt_bins_eng, fig.height=6}
 overreg_traj_bin <- read_feather("data/grammar/overreg_traj_bin.feather")
 
 ggplot(filter(overreg_traj_bin, language == "English (American)"),
@@ -209,7 +209,7 @@ ggplot(filter(overreg_traj_bin, language == "English (American)"),
   theme(legend.position = "top")
 ```
 
-```{r ovreg_models, eval=FALSE}
+```{r ovreg-models, eval=FALSE}
 kid_model <- function(kid_data) {
   glm(cbind(num_produces, num_no) ~ age + I(age ^ 2), data = kid_data,
       family = "binomial")
@@ -255,7 +255,7 @@ overreg_joined <- overreg_kid_summary %>%
 write_feather(overreg_joined, "data/grammar/overreg_joined.feather")
 ```
 
-```{r ovreg_joined}
+```{r ovreg-joined}
 overreg_joined <- read_feather("data/grammar/overreg_joined.feather")
 
 overreg_switch <- filter(overreg_joined, switch)
@@ -270,7 +270,7 @@ In Norwegian, there are many more ages measured, so this sort of unique trajecto
 
 First, what are the trajectories of the most densely sampled Norwegian children, i.e. ones with CDI administrations at least `r min_age_n` different ages?
 
-```{r ovreg_plt_dense_emp, dependson="ovreg_joined", fig.height=6}
+```{r ovreg-plt_dense_emp, dependson="ovreg_joined", fig.height=6}
 ggplot(dense_kids, aes(x = age, y = prop, colour = original_id)) +
   facet_grid(type ~ sex) +
   geom_line(aes(group = original_id)) +
@@ -282,7 +282,7 @@ ggplot(dense_kids, aes(x = age, y = prop, colour = original_id)) +
 Some of these are fairly clearly a U-shaped trajectory, i.e. they have a period of increasing overregularization followed by a period of decreasing overregularization. The discover which children show a U-shape, let's fit a logistic regression model for each child predicting whether they produce each word from a linear and quadratic effect of their age. U-shaped children are taken to be those for whom the quadratic term is negative and statistically significant.
 
 __U-shaped children's empirical proportions__
-```{r ovreg_plt_switch_emp, dependson="ovreg_joined", fig.height=6}
+```{r ovreg-plt_switch_emp, dependson="ovreg_joined", fig.height=6}
 ggplot(overreg_switch, aes(x = age, y = prop, colour = original_id)) +
   facet_grid(type ~ sex) +
   geom_line(aes(group = original_id)) +
@@ -293,7 +293,7 @@ ggplot(overreg_switch, aes(x = age, y = prop, colour = original_id)) +
 ```
 
 __U-shaped children's model fits__
-```{r ovreg_plt_switch_fit, dependson="ovreg_joined", fig.height=6}
+```{r ovreg-plt_switch_fit, dependson="ovreg_joined", fig.height=6}
 ggplot(overreg_switch, aes(x = age, y = .fitted, colour = original_id)) +
   facet_grid(type ~ sex) +
   geom_line(aes(group = original_id)) +

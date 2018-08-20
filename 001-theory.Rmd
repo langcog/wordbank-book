@@ -1,13 +1,12 @@
-# Theoretical Foundations {#theory-intro}
+# Theoretical Foundations {#intro_theory}
 
 The ability to use language in its lexical and combinatorial richness -- with hundreds of thousands of words, and an infinity of possible meanings -- is uniquely human. The study of language acquisition has been a traditional locus of our search to understand the nature of this ability. As such, the nature of the abilities that allow human children to acquire a language is one of the historical "great debates," in which different proposals about the architecture of the human mind and the nature of human uniqueness have been discussed. Does language arise from domain-specific adaptations for syntactic structure [@chomsky1981;@chomsky2014]? Or does it arise from a combination of environmental input and sophisticated, general-purpose learning mechanisms [@elman1996]? Two poles have traditionally emerged in this discussion (Figure \@ref(fig:poles) ): from domain-general empiricist proposals to domain-specific, nativist proposals.  
 
 In this chapter, we begin by presenting the perspective from these poles but contend that they are rarely helpful in the practice of understanding the scope and course of early language learning. Instead, we argue for the development of theories that describe the scope and course of language learning as a whole, as well as its quantitative variation across children, languages, and cultures. These concerns lead us to frame our own study in terms of a set of distinct theoretical issues: capturing consistency and variability; drawing connections across timescales of learning; and the notion of process, rather than content, universals. We end by discussing the role of replication and larger datasets in building quantitative theories.  
 
-
 ## The Picture To Date
 
-```{r poles, out.width="70%"}
+```{r theory-poles, out.width="70%"}
 knitr::include_graphics("images/axis.jpeg")
 ```
 

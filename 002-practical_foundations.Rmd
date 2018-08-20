@@ -1,10 +1,4 @@
----
-output:
- pdf_document: default
- html_document: default
----
-
-# Practical Foundations^[Some material in this chapter comes from @frank2016 and @marchman2017.] {#intro}
+# Practical Foundations^[Some material in this chapter comes from @frank2016 and @marchman2017.] {#intro_practical}
 
 
 The emergence of children's early language is one of the most miraculous parts of human development. The ability to communicate using language arrives with incredible rapidity -- most parents judge that their child is producing words with the intent to communicate before his or her first birthday [@schneider2015] and the onset of comprehension is even earlier [e.g., @bergelson2012;@tincoff1999]. 

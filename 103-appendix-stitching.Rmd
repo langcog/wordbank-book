@@ -7,7 +7,7 @@ Because we use different forms for different ages, there are sometimes good reas
 
 For arbitrary items, stitching across English WS and WG tends to look pretty good. 
 
-```{r}
+```{r appstitch-example}
 target_items <- c("dog","table","run")
 
 eng_wg <- get_instrument_data(language = "English (American)",
@@ -48,14 +48,14 @@ ggplot(eng_items,
 We can "stitch" across WS and WG forms to get a fuller picture of production across ages. There are several ways to accomplish this. The simplest is to use proportions for each form. 
 This isn't particularly good.
 
-```{r}
+```{r appstitch-eng_prod}
 num_words <- items %>%
   filter(type == "word") %>%
   group_by(language, form) %>%
   summarise(n = n())
 
 vocab_data <- admins %>%
-  dplyr::select(data_id, language, form, age, sex, 
+  select(data_id, language, form, age, sex, 
          mom_ed, birth_order, production, comprehension) %>% 
   left_join(num_words) %>%
   mutate(no_production = n - production)

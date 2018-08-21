@@ -1,5 +1,5 @@
 rm(list = ls())
-library(maps) # conflicts with purrr
+# library(maps) # conflicts with purrr
 library(MASS)
 library(wordbankr) # all
 library(langcog)

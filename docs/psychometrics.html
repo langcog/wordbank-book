@@ -64,43 +64,6 @@
 <script src="libs/selectize-0.12.0/selectize.min.js"></script>
 
 
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-</style>
 
 </head>
 
@@ -139,8 +102,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.3.1" data-path="intro-practical.html"><a href="intro-practical.html#adaptation-not-translation"><i class="fa fa-check"></i><b>2.3.1</b> Adaptation, not translation!</a></li>
 <li class="chapter" data-level="2.3.2" data-path="intro-practical.html"><a href="intro-practical.html#our-approach"><i class="fa fa-check"></i><b>2.3.2</b> Our approach</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="intro-practical.html"><a href="intro-practical.html#our-data-wordbank"><i class="fa fa-check"></i><b>2.4</b> Our data: Wordbank</a></li>
-<li class="chapter" data-level="2.5" data-path="intro-practical.html"><a href="intro-practical.html#whats-missing"><i class="fa fa-check"></i><b>2.5</b> What’s missing?</a></li>
+<li class="chapter" data-level="2.4" data-path="intro-practical.html"><a href="intro-practical.html#wordbank"><i class="fa fa-check"></i><b>2.4</b> Wordbank</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods and Data</a><ul>
 <li class="chapter" data-level="3.1" data-path="methods.html"><a href="methods.html#database"><i class="fa fa-check"></i><b>3.1</b> Database</a><ul>
@@ -199,7 +161,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3.4" data-path="demographics.html"><a href="demographics.html#reporting-biases"><i class="fa fa-check"></i><b>6.3.4</b> Reporting biases</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gestures.html"><a href="gestures.html"><i class="fa fa-check"></i><b>7</b> Gesture and Communication</a></li>
+<li class="chapter" data-level="7" data-path="gesture.html"><a href="gesture.html"><i class="fa fa-check"></i><b>7</b> Gesture and Communication</a></li>
 <li class="chapter" data-level="8" data-path="items.html"><a href="items.html"><i class="fa fa-check"></i><b>8</b> Consistency in Early Vocabulary</a></li>
 <li class="chapter" data-level="9" data-path="item-demographics.html"><a href="item-demographics.html"><i class="fa fa-check"></i><b>9</b> Demographic Variation in Individual Words</a><ul>
 <li class="chapter" data-level="9.1" data-path="methods.html"><a href="methods.html#methods"><i class="fa fa-check"></i><b>9.1</b> Methods</a><ul>
@@ -395,8 +357,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">4.7</span> Stability of the CDI</h2>
 <p>The first locus for individual differences in language acquisition is the rate of growth. As already discussed in Chapter <a href="vocab.html#vocab">5</a>, there is substantial variability between children in vocabulary size. As we showed there, across many languages there is a consistent – and high – rate of variability between children.</p>
 <p>Because these data were cross-sectional in nature rather than longitudinal, they cannot answer the question of whether the variability observed is <em>stable</em> as well as <em>substantial</em> (parphrasing Bates). In this and the next subsection, we make use of longitudinal data in the Wordbank dataset to investigate this idea.</p>
-<div id="htmlwidget-43063665433aa2727e41" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-43063665433aa2727e41">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],["Norwegian WS","English (American) WS","English (American) WG","English (British) Oxford CDI","Norwegian WG","French (French) WG","French (French) WS","British Sign Language WG","Spanish (Mexican) WS","Korean WS","Hebrew WS","Slovak WS","Korean WG","Greek (Cypriot) WS","Italian WG","Kigiriama WG","Kiswahili WG","Slovak WG"],[1578,1349,633,311,114,72,39,31,19,17,5,4,2,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>langform<\/th>\n      <th>nn<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-afc0509de7694579d03b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-afc0509de7694579d03b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],["Norwegian WS","English (American) WS","English (American) WG","English (British) Oxford CDI","Norwegian WG","French (French) WG","French (French) WS","British Sign Language WG","Spanish (Mexican) WS","Korean WS","Hebrew WS","Slovak WS","Korean WG","Greek (Cypriot) WS","Italian WG","Kigiriama WG","Kiswahili WG","Slovak WG"],[1578,1349,633,311,114,72,39,31,19,17,5,4,2,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>langform<\/th>\n      <th>nn<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>In our first investigation of the longitudinal data, we look at how stable individual children are. There are only a small number of deeply longitudinal corpora in Wordbank, so we will limit our investigation to two languages: Norwegian and English. Furthermore, the largest group of longitudinal data cover the WS form so we restrict to these data for simplicity. Within each of these datasets, the modal number of observations is two, but there are some children with more than 10 CDIs on record.</p>
 <p><img src="wordbank-book_files/figure-html/psycho-style_long_data_spaghetti-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The figure above shows the trajectories of children who were measured a large number of times (&gt;10), and includes Norwegian data only due to data sparsity issues in English. Thes trajectories appear quite stable; the ranking of individuals does not appear to change much over the course of several years. This conclusion is ratified by other studies using different datasets, for example <span class="citation">Bornstein and Putnick (<a href="references.html#ref-bornstein2012">2012</a>)</span>, who found substantial stability (<span class="math inline">\(r = .84\)</span>) between latent constructs inferred from early language at 20 months and later language measured at 48 months.</p>

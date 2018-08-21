@@ -9,11 +9,11 @@ overreg_data <- grammar_data_coded %>%
          type = fct_recode(type, "nouns" = "word_endings_nouns",
                            "verbs" = "word_endings_verbs"))
 
-write_feather(overreg_data, "data/overreg_data.feather")
+write_feather(overreg_data, "data/overregularization/overreg_data.feather")
 ```
 
 ```{r ovreg-load_data}
-overreg_data <- read_feather("data/grammar/overreg_data.feather")
+overreg_data <- read_feather("data/overregularization/overreg_data.feather")
 
 overreg_longs <- overreg_data %>%
   left_join(admins) %>%
@@ -119,11 +119,11 @@ overreg_long_words <- overreg_long_kids_coded %>%
   mutate(measure = fct_inorder(measure),
          definition = fct_inorder(definition))
 
-write_feather(overreg_long_words, "data/grammar/overreg_long_words.feather")
+write_feather(overreg_long_words, "data/overregularization/overreg_long_words.feather")
 ```
 
 ```{r ovreg-plt_props}
-overreg_long_words <- read_feather("data/grammar/overreg_long_words.feather")
+overreg_long_words <- read_feather("data/overregularization/overreg_long_words.feather")
 
 plot_type_props <- function(typ) {
   overreg_long_words %>% filter(type == typ) %>%
@@ -191,11 +191,11 @@ overreg_traj_bin <- overreg_traj %>%
          n_bin = n_bin_str %>% as.numeric(),
          n_bin_str = map_chr(n_bin, ~paste(.x, .x * 10, sep = " – ")))
 
-write_feather(overreg_traj_bin, "data/grammar/overreg_traj_bin.feather")
+write_feather(overreg_traj_bin, "data/overregularization/overreg_traj_bin.feather")
 ```
 
 ```{r ovreg-plt_bins_eng, fig.height=6}
-overreg_traj_bin <- read_feather("data/grammar/overreg_traj_bin.feather")
+overreg_traj_bin <- read_feather("data/overregularization/overreg_traj_bin.feather")
 
 ggplot(filter(overreg_traj_bin, language == "English (American)"),
        aes(x = age, y = prop, colour = n_bin_str)) +
@@ -252,11 +252,11 @@ overreg_joined <- overreg_kid_summary %>%
   left_join(overreg_fits) %>%
   mutate(prop = num_produces / num_total)
 
-write_feather(overreg_joined, "data/grammar/overreg_joined.feather")
+write_feather(overreg_joined, "data/overregularization/overreg_joined.feather")
 ```
 
 ```{r ovreg-joined}
-overreg_joined <- read_feather("data/grammar/overreg_joined.feather")
+overreg_joined <- read_feather("data/overregularization/overreg_joined.feather")
 
 overreg_switch <- filter(overreg_joined, switch)
 

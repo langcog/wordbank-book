@@ -51,7 +51,7 @@ get_demo_models <- function (data, demo = ~sex, measure = ~production) {
     split(.$langform) %>%
     map(possibly(function(x) {
       # print(x$langform[1])
-      robustbase::glmrob(cbind(measure, no_measure) ~ age * demo - demo,
+      glmrob(cbind(measure, no_measure) ~ age * demo - demo,
                          family = "binomial",
                          data = x)
     }, otherwise = NULL))
@@ -190,11 +190,11 @@ analyses <- analysis_combos %>%
       otherwise = tibble())) # otherwise for possibly call
   })
 
-save(file = "data/3b-demo-analyses.Rds", analyses)
+save(file = "data/demographics/demo-analyses.Rds", analyses)
 ```
 
 ```{r demo-load}
-load(file = "data/3b-demo-analyses.Rds")
+load(file = "data/demographics/demo-analyses.Rds")
 ```
 
 ## Sex
@@ -381,7 +381,7 @@ For external validation, we turn to two other studies that provide more objectiv
 
 
 ```{r demo-bornstein}
-b2012 <- read_csv("data/bornstein2012/bornstein2012_combined.csv")
+b2012 <- read_csv("data/demographics/bornstein2012_combined.csv")
 nrow(b2012)
 
 qplot(z_20, z_48, col = gender, pch = gender, data = b2012) +

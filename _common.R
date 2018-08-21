@@ -1,8 +1,7 @@
 rm(list = ls())
-library(maps) # conflicts with purrr
+
 library(MASS)
-library(wordbankr) # all
-library(langcog)
+library(wordbankr)
 library(directlabels)
 library(forcats)
 library(DT)
@@ -28,25 +27,50 @@ library(parallel) # for item demographics
 library(viridis) # for style
 library(mirtCAT) # style, psychometrics, vocab
 library(ggthemes)
+library(maps) # methods
+library(boot)
+
+# to deal with font issue perhaps?
+library(extrafont)
+loadfonts()
+
+library(robustbase) # appendix-aoa
+library(arm) # appendix-aoa
+library(rstan) # appendix-aoa
+
+library(knitr)
+library(langcog)
 library(tidyverse) # keep tidyverse last to prevent conflicts
+
+
+opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = "#>",
+  collapse = TRUE,
+  cache = TRUE,
+  echo = FALSE,
+  cache.lazy = FALSE,
+  fig.align = "center",
+  fig.show = "hold"
+)
+
+theme_set(theme_mikabr())
+.font <- theme_mikabr()$text$family
 
 source("helper/predictQR.R")
 source("helper/stats_funs.R")
 
-local_data <- TRUE
+instruments <- read_feather("data/_common/instruments.feather")
+admins <- read_feather("data/_common/admins.feather")
+items <- read_feather("data/_common/items.feather")
 
-if (local_data) {
-  instruments <- feather::read_feather("data/instruments.feather")
-  admins <- feather::read_feather("data/admins.feather")
-  items <- feather::read_feather("data/items.feather")
-} else {
-  instruments <- wordbankr::get_instruments()
-  feather::write_feather(instruments, "data/instruments.feather")
-  admins <- wordbankr::get_administration_data(original_ids = TRUE)
-  feather::write_feather(admins, "data/admins.feather")
-  items <- wordbankr::get_item_data()
-  feather::write_feather(items, "data/items.feather")
-}
+# instruments <- get_instruments()
+# write_feather(instruments, "data/_common/instruments.feather")
+# admins <- get_administration_data(original_ids = TRUE)
+# write_feather(admins, "data/_common/admins.feather")
+# items <- get_item_data()
+# write_feather(items, "data/_common/items.feather")
 
 
 ### FORM VARIANTS

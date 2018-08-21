@@ -8,11 +8,6 @@ biblio-style: apalike
 link-citations: true
 ---
 
-```{r setup}
-source("_setup.R")
-```
-
-
 # Preface {-}
 
 ## Overview {-}
@@ -42,7 +37,7 @@ Although our goal is a full exploration of the phenomena of child language acqui
 <!-- (shown in Figure \@ref(1_outline_diagram)), -->
 
 ```{r preface-outline, fig.cap="A graphical outline of the book.", eval=FALSE}
-knitr::include_graphics("images/outline.png")
+include_graphics("images/outline.png")
 ```
 
 For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocab) considers this view of the data, examining predictors of individual children's vocabulary. Of course, chief among these is age, and developmental growth patterns as well as variability in development is considered in the first part of this chapter. But beyond age, even the limited demographic data available in Wordbank can be used to explore the data. In Chapter \@ref{demographics}, we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-cultually valid proxy for socioeconomic status). These demographic predictors reveal both consistent and variable patterns across languages: while gender and birth-order effects are relatively more constant, socio-economic effects vary widely in magnitude. 

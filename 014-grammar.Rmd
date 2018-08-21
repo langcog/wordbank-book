@@ -7,7 +7,6 @@ How does abstract structure emerge during language learning? On some accounts, c
 
 ```{r gram-load_data}
 grammar_summary <- read_feather("data/grammar/grammar_summary.feather")
-grammar_data_coded <- read_feather("data/grammar/grammar_data_coded.feather")
 
 grammar_combine <- grammar_summary %>%
   filter(coded_type == "combine")
@@ -51,17 +50,24 @@ An additional contribution of work is that, due to the size of our dataset, we a
 
 ## Methods
 
-In all `r num_langs` languages included in these analyses, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from Words & Sentences type forms, administered to children ages `r min(grammar_data_coded$age)`-- `r max(grammar_data_coded$age)` months (most in the 16--30 month range). In addition to the vocabulary checklist items, these forms typically contain a single item asking whether the child is combining words yet at all; Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). 
+In all `r num_langs` languages included in these analyses, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from Words & Sentences type forms, administered to children ages `r min(grammar_summary$age)`-- `r max(grammar_summary$age)` months (most in the 16--30 month range). In addition to the vocabulary checklist items, these forms typically contain a single item asking whether the child is combining words yet at all; Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). 
 
 Importantly, each instrument for languages other than English is not just a translation of the English form, but rather was constructed and normed to reflect the lexicon and grammar of that language. Thus, there are substantial differences in the content of these items and their coverage of different morphological and grammatical phenomena. The major commonality is that the form developers believed that they provided a good survey of important developmental phenomena in their language. 
 
 Word Form items can be browsed in the table below:
 
-```{r gram-item_tables}
+```{r gram-items, eval=FALSE}
+grammar_data_coded <- read_feather("data/grammar/grammar_data_coded.feather")
+
 grammar_items <- grammar_data_coded %>%
   ungroup() %>%
   distinct(language, form, coded_type, definition)
+
+write_feather(grammar_items, "data/grammar/grammar_items.feather")
+```
   
+```{r gram-item_tables}
+grammar_items <- read_feather("data/grammar/grammar_items.feather")
 grammar_items %>%
   filter(coded_type == "word_forms") %>%
   datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
@@ -121,7 +127,7 @@ save(file = "data/grammar/grammar_combines_model.Rds", mod)
 ```{r gram-coef_table}
 load("data/grammar/grammar_combines_model.Rds")
 
-knitr::kable(summary(mod)$coefficients, digits = 3)
+kable(summary(mod)$coefficients, digits = 3)
 ```
 
 

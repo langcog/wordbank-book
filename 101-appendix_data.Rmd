@@ -1,0 +1,25 @@
+# Individual Datasets {#appendix-data}
+
+This appendix give the specifics of the data represented in each of the languages of the book.  
+
+```{r appdata-load}
+datasets <- fromJSON("misc/datasets.json")
+```
+
+```{r appdata-print, results="asis"}
+language <- ""
+
+for (i in 1:nrow(datasets)) {
+  dataset <- datasets[i,]
+  
+  if (language != dataset$instrument_language) {
+    language <- dataset$instrument_language
+    cat(sprintf("**%s** \n\n", language))
+  }
+  
+  cat(sprintf("Dataset name: *%s* \n\n* Instrument: %s \n* Contributor: %s\n* Citation: %s\n\n",
+              dataset$name, 
+              dataset$instrument_form, dataset$contributor, dataset$citation))
+}
+```
+

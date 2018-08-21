@@ -7,7 +7,7 @@ In this chapter, we begin by presenting the perspective from these poles but con
 ## The Picture To Date
 
 ```{r theory-poles, out.width="70%"}
-knitr::include_graphics("images/axis.jpeg")
+include_graphics("images/axis.jpeg")
 ```
 
 Empiricist proposals emphasize the ability of children to learn structure across domains, the richness of the distributional input that children are exposed to, and their ability to create appropriate abstractions from structured linguistic input. The components of these proposals are children's general statistical learning abilities [@saffran1996;@aslin2002]. When applied to linguistic input, even general statistical tools can recover some aspects of linguistic structure across a variety of domains [@redington1998,@frank2012,@elman1996]. While promising, these proposals have as their primary challenges the ability of children to create fast abstractions that encode key aspects of linguistic competence, for example, create systematic word orders even in the absence of input [@goldin-meadow1981], interpret the arguments of novel verbs [@gertner2006], or show evidence of abstract category structure for syntactic categories such as determiners [@yang2013] or structures such as the dative [@conwell2007], even at a very young age.

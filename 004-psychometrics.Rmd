@@ -7,11 +7,11 @@ Although the standardization of parent reports using the CDI contributes to the 
 <!-- The figure below uses graphical model notation to depict the multiple sources of information that could be reflected in parent report [@jordan2004]. -->
 
 ```{r psycho-parent_model, fig.cap="The statistical structure of parent report.", eval=FALSE}
-knitr::include_graphics("tex/parent_model.png", auto_pdf = FALSE)
+include_graphics("tex/parent_model.png", auto_pdf = FALSE)
 ```
 
 ```{r psycho-parent_sketch, fig.cap="The intuitive structure of parent report."}
-knitr::include_graphics("images/parent_report_sketch.png")
+include_graphics("images/parent_report_sketch.png")
 ```
 
 <!-- The nodes in this model reflect variables of interest -- shaded gray if they are observed, and hollow if they are latent variables that the parent does not have direct access. The edges in this graph represent statistical dependencies among these variables. For each word on the CDI, the parent is asked to report $O_{c}$: have they observed their child producing the word? This observed variable depends on a latent variable $K_{c}$: whether their child knows the meaning of this word. This knowledge in turn depends in three other variables: $O_{p}$, the parent's productions of this word in the past; $d$, the difficulty of learning this word; and $\mu_{c}$, the child's general linguistic ability. This general ability in turn depends on the parent's linguistic ability $\mu_{p}$ and age-related factors $\alpha_{c}$. In addition, the CDI does not ask about every word in the child's vocabulary, only items on the form $i$. Because all of these other variables are statistically related to the child's observed productions, parents could be be bringing any or all of them to bear in their responses. -->
@@ -58,13 +58,27 @@ Overall, the conclusions of our analysis are that:
 
 ## Preliminary Estimation 
 
+```{r psycho-get_data_ws, eval=FALSE}
+eng_ws <- get_instrument_data(language = "English (American)",
+                              form = "WS", 
+                              iteminfo = TRUE,
+                              administrations = TRUE)
+
+eng_ws <- eng_ws %>%
+  select(data_id, value, age, production, sex, definition, category)
+
+# write_feather(eng_ws, "data/psychometrics/eng_ws_raw_data.feather")
+save(eng_ws, file = "data/psychometrics/eng_ws_raw_data.Rds")
+```
+
 ```{r psycho-irt_prelims_ws}
-eng_ws <- read_feather("data/eng_ws_raw_data.feather")
+load("data/psychometrics/eng_ws_raw_data.Rds")
+# eng_ws <- read_feather("data/psychometrics/eng_ws_raw_data.feather")
 
 d_ws <- eng_ws %>%
   mutate(produces = value == "produces") %>%
   filter(!is.na(category)) %>%
-  select(data_id, produces, age, production, sex, definition) 
+  select(data_id, produces, age, production, sex, definition)
 
 d_wide_ws <- d_ws %>%
   mutate(produces = as.numeric(produces)) %>%
@@ -94,11 +108,11 @@ coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
 fscores_4pl <- data_frame(data_id = rownames(d_mat_ws), 
                              ability = fscores(mod_4pl, method = "MAP")[,1])
 
-save(file = "data/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
+save(file = "data/psychometrics/eng_ws_mods_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
 ```
 
 ```{r psycho-load_irt_data_ws}
-load("data/eng_ws_mod_4pl.Rds")
+load("data/psychometrics/eng_ws_mods_4pl.Rds")
 ```
 
 ```{r psycho-irt_summary}
@@ -217,9 +231,22 @@ Finally, we see items like *grrr*, *woof woof*, *moo*, and *yum yum*. These item
 
 ## Production and comprehension
 
+```{r psycho-get_data_wg, eval=FALSE}
+eng_wg <- get_instrument_data(instrument_language = "English (American)",
+                           instrument_form = "WG", 
+                           iteminfo = TRUE,
+                           administrations = TRUE)
+
+eng_wg <- eng_wg %>%
+  select(data_id, value, age, production, sex, definition, category)
+
+# write_feather(eng_wg, "data/psychometrics/eng_wg_raw_data.feather")
+save(eng_wg, file = "data/psychometrics/eng_wg_raw_data.Rds")
+```
 
 ```{r psycho-prod_comp}
-eng_wg <- read_feather("data/eng_wg_data.feather")
+# eng_wg <- read_feather("data/psychometrics/eng_wg_raw_data.feather")
+load("data/psychometrics/eng_wg_raw_data.Rds")
 
 d_wg <- eng_wg %>%
   mutate(produces = value == "produces", 
@@ -270,7 +297,7 @@ coefs_4pl_wg_understands <- as_data_frame(coef(mod_4pl_wg_understands,
                                             simplify = TRUE)$items) %>%
   mutate(definition = rownames(coef(mod_4pl_wg_understands, simplify = TRUE)$items))
 
-save(file = "data/eng_wg_mods_4pl.Rds", 
+save(file = "data/psychometrics/eng_wg_mods_4pl.Rds", 
      "mod_4pl_wg_produces",
      "mod_4pl_wg_understands",
      "coefs_4pl_wg_produces",
@@ -278,7 +305,7 @@ save(file = "data/eng_wg_mods_4pl.Rds",
 ```
 
 ```{r psycho-load_irt_data_wg}
-load("data/eng_wg_mods_4pl.Rds")
+load("data/psychometrics/eng_wg_mods_4pl.Rds")
 
 coefs_4pl_wg <- bind_rows(coefs_4pl_wg_produces %>%
                             mutate(measure = "produces"),
@@ -603,12 +630,12 @@ mirt_params <- instruments %>%
   split(.$idx) %>%
   map_df(possibly(mirt_params, otherwise = data_frame()))
 
-write_feather(mirt_params, "data/long_mirt_params.feather")
+write_feather(mirt_params, "data/psychometrics/long_mirt_params.feather")
 ```
 
 
 ```{r psycho-style_long_mirt_stability}
-mirt_params <- read_feather("data/long_mirt_params.feather")
+mirt_params <- read_feather("data/psychometrics/long_mirt_params.feather")
 
 long_cors_mirt <- n_long_ws %>%
   left_join(select(mirt_params, data_id, ability, language, form)) %>%

@@ -116,7 +116,7 @@ The number of administrations available is highly variable across instruments an
 ```{r methods_map}
 # write_csv(data.frame(unique(instruments$language)), "data/languages_countries.csv")
 
-languages_countries <- read_csv("data/languages_countries.csv")
+languages_countries <- read_csv("data/methods/languages_countries.csv")
 # country_coords <- read_csv("data/country_coords.csv") # from https://developers.google.com/public-data/docs/canonical/countries_csv
 # 
 # lang_coords <- left_join(languages_countries, country_coords)

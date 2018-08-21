@@ -64,43 +64,6 @@
 <script src="libs/selectize-0.12.0/selectize.min.js"></script>
 
 
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-</style>
 
 </head>
 
@@ -139,8 +102,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.3.1" data-path="intro-practical.html"><a href="intro-practical.html#adaptation-not-translation"><i class="fa fa-check"></i><b>2.3.1</b> Adaptation, not translation!</a></li>
 <li class="chapter" data-level="2.3.2" data-path="intro-practical.html"><a href="intro-practical.html#our-approach"><i class="fa fa-check"></i><b>2.3.2</b> Our approach</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="intro-practical.html"><a href="intro-practical.html#our-data-wordbank"><i class="fa fa-check"></i><b>2.4</b> Our data: Wordbank</a></li>
-<li class="chapter" data-level="2.5" data-path="intro-practical.html"><a href="intro-practical.html#whats-missing"><i class="fa fa-check"></i><b>2.5</b> What’s missing?</a></li>
+<li class="chapter" data-level="2.4" data-path="intro-practical.html"><a href="intro-practical.html#wordbank"><i class="fa fa-check"></i><b>2.4</b> Wordbank</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods and Data</a><ul>
 <li class="chapter" data-level="3.1" data-path="methods.html"><a href="methods.html#database"><i class="fa fa-check"></i><b>3.1</b> Database</a><ul>
@@ -199,7 +161,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3.4" data-path="demographics.html"><a href="demographics.html#reporting-biases"><i class="fa fa-check"></i><b>6.3.4</b> Reporting biases</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gestures.html"><a href="gestures.html"><i class="fa fa-check"></i><b>7</b> Gesture and Communication</a></li>
+<li class="chapter" data-level="7" data-path="gesture.html"><a href="gesture.html"><i class="fa fa-check"></i><b>7</b> Gesture and Communication</a></li>
 <li class="chapter" data-level="8" data-path="items.html"><a href="items.html"><i class="fa fa-check"></i><b>8</b> Consistency in Early Vocabulary</a></li>
 <li class="chapter" data-level="9" data-path="item-demographics.html"><a href="item-demographics.html"><i class="fa fa-check"></i><b>9</b> Demographic Variation in Individual Words</a><ul>
 <li class="chapter" data-level="9.1" data-path="methods.html"><a href="methods.html#methods"><i class="fa fa-check"></i><b>9.1</b> Methods</a><ul>
@@ -335,8 +297,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The main core of the CDIs is the vocabulary checklist. This list is essentially a “bag of words” which represents the set of words that best capture variation in lexical development across the full spectrum of child ages and abilities. Parents choose the words they believe that their child can currently “understand” (comprehension, measured for younger children) or “understand and say” (production, measured for both younger and older children). A child’s score on a vocabulary checklist represents their comprehension or production “vocabulary size,” indexing that child’s relative status against other children assessed with the same list. In their English and Spanish instantiations, the vocabulary checklists come in two versions: Words &amp; Gestures (W&amp;G) (8–18 months) which contains about 400 words, and the Words &amp; Sentences (W&amp;S) (16–30 months), which contains about 700 words. This structure has often been replicated across cross-linguistic adaptations, though there is some variation in form construction (see below), and some forms include substantially different numbers of words or include/exclude other measures.</p>
 <p>The vocabulary checklists contain words from many different semantic (e.g., animal names, household items) and syntactic (e.g., action words, connectives) categories, resulting in broader samples of lexical knowledge than are available from other methods. Importantly, however, these words are not chosen to create a complete list of all words understood or produced by a child. Instead, CDI word lists are constructed to include a set of words that most children will know as well as a sampling of intermediate and more difficult words that will be useful in assessing variability between children. (We discuss the issue of “total vocabulary” further in Appendix <a href="appendix-vocab-estimation.html#appendix-vocab-estimation">E</a>.)</p>
 <p>Thus, an additional advantage of the parent-report method is that parents can report on many different sub-components and correlates of early vocabulary development. In particular, the CDI instruments ask about use of communicative gestures, grammar, and symbolic play, as well as vocabulary comprehension and production. Information about what early vocabulary development correlates with, and what it does not, can yield important theoretical information about the common mechanisms underlying learning. As <span class="citation">Bates, Bretherton, and Snyder (<a href="references.html#ref-bates1991">1991</a>)</span> note, studies which have the power and scope to examine what “hangs together” across early language development can provide critical clues to how the system is put together in the first place (p. 7).</p>
-<p>Of course, parent report has substantial limitations …</p>
-<p>We discuss these extensively in Chapter <a href="psychometrics.html#psychometrics">4</a>.</p>
+<p>Of course, parent report has substantial limitations that can lead to both measurement error and bias. These are addressed to some extent by design features of the CDI, and further addressed by evidence for the reliability and validity of the instrument. Because these concerns are so central to our enterprise here, we discuss these issues at length in Chapter <a href="psychometrics.html#psychometrics">4</a> both from theoretical and analytic points of view.</p>
 </div>
 <div id="cross-linguistic-comparison" class="section level2">
 <h2><span class="header-section-number">2.3</span> Cross-linguistic comparison</h2>
@@ -359,20 +320,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Even with the care we used here to construct a robust set translation equivalents, individual items are likely to only be roughly equivalent cross-linguistically, and may have significantly different referential scopes for children learning the different languages. That is, if a parent indicates that a child can produce the word <em>dog</em> in English and another parent indicates the translation equivalent in, for example, Spanish (<em>perro</em>), it may nevertheless be the case that these words are heard more or less frequently and in different contexts in the two languages. An important empirical question is the degree to which translation equivalents across languages have consistent developmental profiles.</p>
 </div>
 </div>
-<div id="our-data-wordbank" class="section level2">
-<h2><span class="header-section-number">2.4</span> Our data: Wordbank</h2>
+<div id="wordbank" class="section level2">
+<h2><span class="header-section-number">2.4</span> Wordbank</h2>
 <p>To take advantage of the opportunity posed by the broad use of CDI instruments in the child language community, in 2014 we began constructing Wordbank, an open repository for CDI data that allows for interactive analysis and visualization. Our inspiration for Wordbank came from two successful projects for sharing data on children’s language acquisition. The first is the Child Language Data Exchange System <span class="citation">(CHILDES; B. MacWhinney <a href="references.html#ref-macwhinney2000">2000</a>)</span>. A database of transcripts of children’s speech and speech to children, CHILDES has grown into a robust and important tool for the community, with many contributors and affiliated projects. The second is the Cross-Linguistic Lexical Norms site <span class="citation">(<a href="www.cdi-clex.org">CLEX</a>; R. N. Jørgensen et al. <a href="references.html#ref-jorgensen2010">2010</a>)</span>, which is closer in content to Wordbank, and effectively our precursor. CLEX archived normative data from a range of CDI adaptations across languages, allowing browsing of acquisition trajectories for individual items or age groups.</p>
 <p>Wordbank initially built on CLEX, offering the same functionality but allowing flexible and interactive visualization and analysis, as well as direct database access and data download. In addition, Wordbank’s goal was always to extend beyond normative data by dynamically incorporating data from many different researchers and projects of varying sizes and scopes. While the resulting datasets in Wordbank are much more heterogeneous than if they were just based on norming samples alone, they are also larger and more representative than the individual norming datasets (in some cases), and available in languages where no norms exist (for others).</p>
+<p>From the perspective of the study of child language, there are a number of notable omissions from the datasets represented in Wordbank and the analyses reported in this book. We discuss three of these below: our focus on typical development, monolinguals, and (for the most part) WEIRD populations.</p>
+<p>First, our analyses here focus exclusively on typical development. The study of atypical language development is an important part of characterizing the mechansims of acquisition; further, characterizing language development in these circumstances can have important applied benefits. Studies of language in developmental disorders <span class="citation">(Tager-Flusberg et al. <a href="references.html#ref-tager-flusberg2009">2009</a>; Eigsti et al. <a href="references.html#ref-eigsti2011">2011</a>)</span>, in cases of sensory deficits <span class="citation">(Landau, Gleitman, and Landau <a href="references.html#ref-landau2009">2009</a>)</span>, and in cases of abnormal input <span class="citation">(Curtiss <a href="references.html#ref-curtiss1977">1977</a>)</span>, among others. Many of these studies have made use of dense observations of individual children, however, an approach that is fundamentally different than our large-scale, statistical approach here. While CDI-type instruments are increasinly being used with atypical populations <span class="citation">(e.g., Charman et al. <a href="references.html#ref-charman2003">2003</a>; Luyster, Lopez, and Lord <a href="references.html#ref-luyster2007">2007</a>)</span>, in practice these datasets still tend to be smaller, concentrated in on English-speaking children, and difficult to access publicly. Thus, Wordbank does not currently archive stufficient data from atypical populations to justify inclusion of these analyses in the current book.</p>
+<p>Second, the Wordbank dataset focuses on monolingual acqusition. CDI instruments were initially developed to provide normative measurements of variation within a single language. Since then, however, they have increasingly been used for comparison between monolingual and bilingual groups based on the administration of CDIs in both languages <span class="citation">(e.g., Pearson, Fernandez, and Oller <a href="references.html#ref-pearson1993">1993</a>; Hoff et al. <a href="references.html#ref-hoff2012">2012</a>)</span>. These studies initially focused on specific bilingual populations (e.g., Spanish/English bilinguals). Recent studies have moved beyond this strategy and have begun to examine general trends aross multiple bilingual pairings <span class="citation">(e.g., <span class="citeproc-not-found" data-reference-id="bilson2015"><strong>???</strong></span>; Floccia et al. <a href="references.html#ref-floccia2018">2018</a>)</span>. Questions of bilingual acquisition are fascinating and important from both a theoretical and practical perspective. But there are practical obstacles to applying our approach to bilingual data that mean that this book does not consider the bilingual acquisition situation. First, because most of the largest CDI datasets were generated from monolingual norming studies, the vast majority of our data are not bilingual. Second, the combinatorics of bilingualism mean that data on nearly all language pairs will be non-existant. For these reasons, our book focuses on monolingual acquisition, though we recognize this as a limitation that must be addressed by future work.</p>
+<p>Finally, the sample of languages we include is limited by our access to data. We have made efforts to include any large CDI datasets whose existence we are aware of – including extensive outreach to CDI authors, professional networking through the CDI board. Despite these efforts, our dataset is limited by both the sample of languages in which such studies have been conducted and international attitudes towards datasharing. Thus, although we do cover many languages around the world (see <a href="methods.html#methods">3</a> for a map), these languages are skewed towards Europe and the United States, as well as towards WEIRD – western, educated, rich, industrialized, and democratic – populations <span class="citation">(Henrich, Heine, and Norenzayan <a href="references.html#ref-henrich2010">2010</a>)</span>.</p>
 <p>While there are inherent limitations in comparing different instruments across languages – limitations that we return to again and again throughout the book – our dataset is the first that allows the exploration of both child- and item-level data within- and across such a large and diverse set of languages. As such, the availability of these adaptations remain at the core of the analyses that we offer within Wordbank.</p>
 <p>We began the Wordbank project – our first large-scale, data-aggregation project – with a relatively naive attitude. We thought “if you build it, they will come”: that contributors would flock to the opportunity to share their data with the world. We were unprepared for the challenges of contacting academics around the world, asking them to volunteer their time and hard-won data to an unknown cause, and then understanding the myriad formats and conventions represented in the data we eventually received. For the first couple of years, our data were largely co-extensive with those gathered by CLEX.</p>
 <p>Fortunately, in the years since the Wordbank project began, attitudes towards data sharing have been shifting rapidly <span class="citation">(in part as a result of work on replication and reproducibility, e.g. Collaboration and others <a href="references.html#ref-osc2015">2015</a>)</span>. In addition, the credibility of the Wordbank project has gradually grown, in part due to the support of the MacArthur-Bates CDI advisory board. And as we received successively more data, our expertise in dealing with heterogeneous datasets has grown. Thus, the dataset has grown quickly in recent years. We hope that in future, authors see contribution to Wordbank as an aspirational endpoint for future studies using CDI instruments.</p>
-</div>
-<div id="whats-missing" class="section level2">
-<h2><span class="header-section-number">2.5</span> What’s missing?</h2>
-<p>From the perspective of the study of child language, there are a number of notable omissions from the analyses reported in this book. We discuss each of these below.</p>
-<p>First, our analyses here focus exclusively on typical development. The study of atypical language development is an important part of characterizing the mechansims of acquisition; further, characterizing language development in these circumstances can have important applied benefits. Studies of language in developmental disorders <span class="citation">(Tager-Flusberg et al. <a href="references.html#ref-tager-flusberg2009">2009</a>; Eigsti et al. <a href="references.html#ref-eigsti2011">2011</a>)</span>, in cases of sensory deficits <span class="citation">(Landau, Gleitman, and Landau <a href="references.html#ref-landau2009">2009</a>)</span>, and in cases of abnormal input <span class="citation">(Curtiss <a href="references.html#ref-curtiss1977">1977</a>)</span>, among others. Many of these studies have made use of dense observations of individual children, however, an approach that is fundamentally different than our large-scale, statistical approach here. While CDI-type instruments are increasinly being used with atypical populations <span class="citation">(e.g., Charman et al. <a href="references.html#ref-charman2003">2003</a>; Luyster, Lopez, and Lord <a href="references.html#ref-luyster2007">2007</a>)</span>, in practice these datasets still tend to be smaller, concentrated in on English-speaking children, and difficult to access publicly.</p>
-<p>Second, the Wordbank dataset focuses on monolingual acqusition. CDI instruments were initially developed to provide normative measurements of variation within a single language. Since then, however, they have increasingly been used for comparison between monolingual and bilingual groups based on the administration of CDIs in both languages <span class="citation">(e.g., Pearson, Fernandez, and Oller <a href="references.html#ref-pearson1993">1993</a>; Hoff et al. <a href="references.html#ref-hoff2012">2012</a>)</span>. These studies initially but <span class="citation">(<span class="citeproc-not-found" data-reference-id="bilson2015"><strong>???</strong></span>; Floccia et al. <a href="references.html#ref-floccia2018">2018</a>)</span></p>
-<p>Third, the sample of languages we include is limited by our access to data. We have made efforts to include any CDI datasets whose existence we are aware of.</p>
 
 </div>
 </div>

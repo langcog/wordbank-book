@@ -50,8 +50,9 @@ source("_categories_semantics.R")
 
 
 ```{r catsem-sample_sizes}
-cat_comp_data <- read_feather("data/cat_comp_data.feather")
-areas <- read_feather("data/sem_vocab_comp_areas.feather")
+# cat_comp_data <- read_feather("data/categories_semantics/cat_comp_data.feather")
+load("data/categories_semantics/cat_comp_data.Rds")
+areas <- read_feather("data/categories_semantics/sem_vocab_comp_areas.feather")
 
 area_summary <- areas %>%
   group_by(language, form, measure, category) %>%
@@ -288,7 +289,7 @@ plot_unis <- function(uni_data) {
 
 
 ```{r catsem-time}
-time_words <- read_feather("data/time_words.feather")
+time_words <- read_feather("data/categories_semantics/time_words.feather")
 time_unis <- unique(time_words$uni_lemma)
 ```
 
@@ -307,7 +308,7 @@ Color word acquisition has been a focus of interest at least since early work by
 
 
 ```{r catsem-color}
-color_words <- read_feather("data/color_words.feather")
+color_words <- read_feather("data/categories_semantics/color_words.feather")
 color_unis <- unique(color_words$uni_lemma)
 ```
 
@@ -346,7 +347,7 @@ As in other analyses (see Chapter \@ref(vocab)), Mandarin WS has the highest lev
 ### Body parts
 
 ```{r catsem-body_words}
-body_words <- read_feather("data/body_words.feather")
+body_words <- read_feather("data/categories_semantics/body_words.feather")
 plot_unis(body_words)
 ```
 
@@ -355,7 +356,7 @@ Words for body parts are produced very early by most children, and variance is q
 ### Logic
 
 ```{r catsem-logic_words}
-logic_words <- read_feather("data/logic_words.feather")
+logic_words <- read_feather("data/categories_semantics/logic_words.feather")
 plot_unis(logic_words)
 logic_unis <- unique(logic_words$uni_lemma)
 ```
@@ -369,7 +370,7 @@ Finally, we quantify the variability across languages for each of these restrict
 
 
 ```{r catsem-cat_var}
-animal_words <- read_feather("data/animal_words.feather")
+animal_words <- read_feather("data/categories_semantics/animal_words.feather")
 cat_var <- bind_rows(time_words %>% mutate(category = "time"),
           body_words %>% mutate(category = "body"),
           color_words %>% mutate(category = "color"), 

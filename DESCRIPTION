@@ -34,6 +34,6 @@ Imports:
   widyr,
   viridis
 Remotes:
-  langcog/langcog
+  langcog/langcog,
   langcog/wordbankr
 License: GPL-3

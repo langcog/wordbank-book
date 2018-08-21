@@ -11,3 +11,6 @@ before_script:
   - chmod +x ./_build.sh
 script:
   - ./_build.sh
+
+notifications:
+  slack: langcog:j5TPbfkkaOQG44zuK7wXeUkz

@@ -24,7 +24,6 @@ Imports:
   lme4,
   maps,
   mirt,
-  multidplyr,
   parallel,
   quantregGrowth,
   rmarkdown,
@@ -36,4 +35,6 @@ Imports:
 Remotes:
   langcog/langcog,
   langcog/wordbankr
+Suggests:
+  multidplyr
 License: GPL-3

@@ -1,47 +1,12 @@
 rm(list = ls())
 
-library(MASS)
 library(wordbankr)
-library(directlabels)
-library(forcats)
-library(DT)
-library(quantregGrowth)
-library(feather)
-library(ggrepel)
-library(ggdendro) # item consistency
-library(rms)
-library(metafor)
-library(broom)
-library(gridExtra)
-library(modelr) # ch 7b
-library(binom) # data
-library(lme4)
-library(ggfortify)
-library(rlang)
-library(glue)
-library(jsonlite) # appendix data
-library(widyr) # gesture
-library(knitr)
-library(multidplyr) # for item demographics
-library(parallel) # for item demographics
-library(viridis) # for style
-library(mirtCAT) # style, psychometrics, vocab
-library(ggthemes)
-library(maps) # methods
-library(boot)
-
-# to deal with font issue perhaps?
-library(extrafont)
-loadfonts()
-
-library(robustbase) # appendix-aoa
-library(arm) # appendix-aoa
-library(rstan) # appendix-aoa
-
-library(knitr)
 library(langcog)
-library(tidyverse) # keep tidyverse last to prevent conflicts
+library(knitr)
+library(feather)
+library(tidyverse)
 
+extrafont::loadfonts()
 
 opts_chunk$set(
   message = FALSE,

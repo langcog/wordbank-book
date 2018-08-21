@@ -237,7 +237,7 @@ vc_pred <- left_join(ws_vc_all, admins) %>%
 coefs <- vc_pred %>%
   filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
   group_by(language, form) %>%
-  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * noun_prop, 
+  do(broom::tidy(glm(cbind(produces, doesnt_produce) ~ age * noun_prop, 
               data = ., family = "binomial"))) %>%
   mutate(langform = paste(language, form)) %>%
   filter(term %in% c("age", "noun_prop","age:noun_prop")) %>%
@@ -298,7 +298,7 @@ resid_vc_pred <- vc_pred %>%
 
 resid_coefs <- resid_vc_pred %>%
   group_by(language, form) %>%
-  do(tidy(glm(cbind(produces, doesnt_produce) ~ age * resid_noun_prop, 
+  do(broom::tidy(glm(cbind(produces, doesnt_produce) ~ age * resid_noun_prop, 
               family = "binomial", data = .)))  %>%
   filter(term %in% c("age", "resid_noun_prop","age:resid_noun_prop")) %>%
   mutate(term = factor(term, 
@@ -510,7 +510,7 @@ We can see this pattern even better by plotting the best-fit lines across langua
 ```{r style-productivity_coefs}
 productivity_coefs <- wg %>%
   group_by(language, form) %>%
-  do(tidy(lm(productivity ~ age, data = .))) %>%
+  do(broom::tidy(lm(productivity ~ age, data = .))) %>%
   filter(term == "age") %>%
   ungroup %>%
   mutate(langform = fct_reorder(paste(language, form), estimate, fun = mean))
@@ -529,7 +529,7 @@ wg %>%
   group_by(langform)%>%
   summarise(no_comprehension = signif(mean(productivity > .95, na.rm=TRUE), 2)) %>%
   arrange(desc(no_comprehension)) %>%
-  datatable()
+  DT::datatable()
 ```
 In this table, we see that a number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages. 
 

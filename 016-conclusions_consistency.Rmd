@@ -102,7 +102,7 @@ ggplot(cvs_plot, aes(x = measure_name, y = cv)) +
 ```{r cons-cvs_plot_3, fig.height =1.25, fig.width = 3}
 ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
   geom_point() + 
-  geom_label_repel() + 
+  ggrepel::geom_label_repel() + 
   ylim(c(-.1,.1)) + 
   # xlim(c(0, 1)) + 
   scale_y_continuous(labels =  NULL) + 
@@ -127,7 +127,7 @@ ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) +
 ```{r cons-cvs_continuum}
 ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
   geom_point() + 
-  geom_label_repel(segment.alpha = .5, force = 5) + 
+  ggrepel::geom_label_repel(segment.alpha = .5, force = 5) + 
   ylim(c(-.2, .5)) + 
   # scale_y_continuous(labels =  NULL) + 
   ylab("") + 

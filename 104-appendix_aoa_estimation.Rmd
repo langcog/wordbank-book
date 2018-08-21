@@ -84,7 +84,7 @@ aoas %>%
 
 ```{r appaoa-rglm}
 fit_rglm <- function(data) {
-  model <- glmrob(cbind(num_true, num_false) ~ age, family = "binomial", 
+  model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, family = "binomial", 
                data = data)
   fit <- predict(model, newdata = data.frame(age = 0:36), se.fit = TRUE)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
@@ -127,7 +127,7 @@ do.fits <- function(data) {
   glm_model <- glm(cbind(num_true, num_false) ~ age, 
                    family = "binomial", 
                    data = data)
-  bayes_model <- bayesglm(cbind(num_true, num_false) ~ age, 
+  bayes_model <- arm::bayesglm(cbind(num_true, num_false) ~ age, 
                           family = binomial(link="logit"),
                           prior.mean = .25, 
                           prior.scale = c(.01), 
@@ -135,7 +135,7 @@ do.fits <- function(data) {
                           prior.scale.for.intercept = 2.5,
                           prior.df=Inf, 
                           data = data)
-  rob_model <- glmrob(cbind(num_true, num_false) ~ age, 
+  rob_model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, 
                       family = binomial(link="logit"), data = data)
   
   
@@ -177,7 +177,7 @@ Now apply this more broadly. Note that the 50% point for logistic regression = $
 
 ```{r appaoa-bayes_all}
 fit_bglm <- function(data) {
-  model <- bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
+  model <- arm::bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
                     prior.mean = .25, 
                           prior.scale = c(.01), 
                           prior.mean.for.intercept = 0, 
@@ -203,7 +203,7 @@ bglm_aoas <- ms %>%
 aoas <- left_join(bglm_aoas, glm_aoas)
 ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) + 
   geom_point() + 
-  geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa) > 1.5), 
+  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa) > 1.5), 
                    aes(label = definition)) +
   xlab("Bayes GLM") + 
   ylab("Standard GLM") + 
@@ -223,7 +223,7 @@ ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) +
 Set some stan settings. 
 
 ```{r appaoa-stan_setup}
-rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
+rstan::rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
 # ms <- read_csv("engdata.csv")
 ```
 
@@ -304,7 +304,7 @@ dat <- list(age = ages,
 ```
 
 ```{r appaoa-stan_fit, eval=FALSE}
-samps <- stan(model_code = hierarchical_logit, 
+samps <- rstan::stan(model_code = hierarchical_logit, 
               cores = 4, 
               data = dat, iter = 200, warmup=100, chains = 4, 
               pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
@@ -315,7 +315,7 @@ Diagnostics.
 
 ```{r appaoa-stan-diagnostics, eval=FALSE}
 load("data/appendix_aoa_estimation/aoa-samps.Rds")
-traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
+rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
                  inc_warmup = TRUE)
 ```
 
@@ -479,7 +479,7 @@ glm_aoas_sparse <- ms_sparse %>%
 aoas <- left_join(bglm_aoas_sparse, glm_aoas_sparse)
 ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) + 
   geom_point() + 
-  geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa) > 1.5), 
+  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa) > 1.5), 
                    aes(label = definition)) +
   xlab("Bayes GLM") + 
   ylab("Standard GLM") + 

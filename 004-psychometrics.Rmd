@@ -104,7 +104,7 @@ d_mat_ws <- d_mat_ws[complete.cases(d_mat_ws),]
 Practically, we use the `mirt` package [@chalmer2012,@chalmers2016] to estimate the parameters of a four-parameter IRT model. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds. Our goal in this first analysis is simply to examine parameter estimates across individuals and items. 
 
 ```{r psycho-fit_irt_ws, eval = FALSE}
-mod_4pl <- mirt(d_mat_ws, 1, itemtype='4PL', verbose=TRUE)
+mod_4pl <- mirt::mirt(d_mat_ws, 1, itemtype='4PL', verbose=TRUE)
 
 coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
   mutate(definition = rownames(coef(mod_4pl, simplify = TRUE)$items))
@@ -179,7 +179,7 @@ Second, there are other negatives associated with swapping an imperfect but stra
 ggplot(coefs_4pl,  
        aes(x = a1, y = d)) + 
   geom_point(alpha = .3) + 
-  geom_text_repel(data = filter(coefs_4pl, 
+  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(a1) > 3.3 | abs(d) > 4), 
                   aes(label = definition), size = 3) + 
   xlab("Discrimination") + 
@@ -204,7 +204,7 @@ We can follow up on the question of word inclusion by examining the distribution
 ggplot(coefs_4pl,  
        aes(x = g, y = u)) + 
   geom_point() + 
-  geom_text_repel(data = filter(coefs_4pl, 
+  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(g) > .4 | u < .75), 
                   aes(label = definition), size = 3) + 
   xlab("Lower bound (high base rate)") + 
@@ -289,8 +289,8 @@ d_mat_wg_understands <- d_mat_wg_understands[complete.cases(d_mat_wg_understands
 ```
 
 ```{r psycho-fit_irt_wg, eval = FALSE}
-mod_4pl_wg_produces <- mirt(d_mat_wg_produces, 1, itemtype='4PL', verbose=TRUE)
-mod_4pl_wg_understands <- mirt(d_mat_wg_understands, 1, itemtype='4PL', verbose=TRUE)
+mod_4pl_wg_produces <- mirt::mirt(d_mat_wg_produces, 1, itemtype='4PL', verbose=TRUE)
+mod_4pl_wg_understands <- mirt::mirt(d_mat_wg_understands, 1, itemtype='4PL', verbose=TRUE)
 
 coefs_4pl_wg_produces <- as_data_frame(coef(mod_4pl_wg_produces, 
                                             simplify = TRUE)$items) %>%
@@ -359,7 +359,7 @@ class_summary <- coefs_4pl %>%
 a <- ggplot(coefs_4pl, 
        aes(x = a1, y = d, col = lexical_class)) + 
   geom_point(alpha = .3) + 
-  geom_text_repel(data = filter(coefs_4pl, 
+  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(a1) > 3.3 | abs(d) > 4), 
                   aes(label = definition), size = 2) + 
   xlab("Discrimination") + 
@@ -371,7 +371,7 @@ b <- ggplot(coefs_4pl,
   xlab("Discrimination") +
   xlim(0,4)
 
-grid.arrange(a, b)
+gridExtra::grid.arrange(a, b)
 ```
 
 
@@ -466,7 +466,7 @@ The first locus for individual differences in language acquisition is the rate o
 Because these data were cross-sectional in nature rather than longitudinal, they cannot answer the question of whether the variability observed is *stable* as well as *substantial* (parphrasing Bates). In this and the next subsection, we make use of longitudinal data in the Wordbank dataset to investigate this idea. 
 
 ```{r psycho-style_long_data_table}
-datatable(longitudinal_admins %>% 
+DT::datatable(longitudinal_admins %>% 
             group_by(langform) %>%
             count %>% 
             arrange(desc(nn)))
@@ -543,7 +543,7 @@ long_cor_ns <- long_cors %>%
     language <- df$language[1] 
     df %>% 
       select(-language) %>%
-      pairwise_count(age, id) %>%
+      widyr::pairwise_count(age, id) %>%
       mutate(language = language) %>%
       rename(age1 = item1, 
              age2 = item2)
@@ -575,7 +575,7 @@ ggplot(filter(long_cor_pairs, n >= 50),
   facet_wrap(~language) + 
   ylab("Correlation") + 
   xlab("Measurement Gap (Months)") + 
-  scale_color_viridis(name = "Starting Age") + 
+  viridis::scale_color_viridis(name = "Starting Age") + 
   scale_size_continuous(name = "N")  + 
   ylim(0,1)
     
@@ -612,7 +612,7 @@ mirt_params <- function(dx) {
   rownames(d_lang_mat) <- d_lang_wide$data_id
   
   d_lang_mat <- d_lang_mat[complete.cases(d_lang_mat),]
-  mod_4pl <- mirt(d_lang_mat, 1, itemtype='4PL', verbose=TRUE)
+  mod_4pl <- mirt::mirt(d_lang_mat, 1, itemtype='4PL', verbose=TRUE)
 
   fscores <- data_frame(data_id = rownames(d_lang_mat), 
                         ability = fscores(mod_4pl, method = "MAP")[,1])
@@ -722,7 +722,7 @@ ggplot(all_cors, aes(x = dist, y = value, col = measure)) +
   ylim(0,1) + 
   ylab("Correlation") + 
   xlab("Measurement Gap (Months)") + 
-  scale_color_ptol(name = "Measure")
+  ggthemes::scale_color_ptol(name = "Measure")
 ```
 
 To test this last hypothesis, we evaluated the longitudinal stability of correlations using the same analysis as above. We varied whether we used latent abilities derived from a 4-parameter IRT model as in Appendix \@ref(psychometrics), raw scores, or the percentiles used above. While the IRT model abilities realized a consistent improvement over the use of raw scores, percentiles realized a further gain over IRT ability scores. 

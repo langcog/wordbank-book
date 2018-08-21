@@ -73,7 +73,7 @@ items %>%
             categories = length(unique(category))) %>%
   filter(form %in% c("WS","WG")) %>%
   left_join(instruments) %>%
-  datatable
+  DT::datatable()
 ```
 
 This table gives an overview of the available instruments in the dataset.
@@ -85,7 +85,7 @@ items %>%
             words = sum(type=="word"),
             categories = length(unique(category))) %>%
   filter(!(form %in% c("WS","WG"))) %>%
-  datatable
+  DT::datatable()
 ```
 
 Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
@@ -122,8 +122,13 @@ languages_countries <- read_csv("data/methods/languages_countries.csv")
 # lang_coords <- left_join(languages_countries, country_coords)
 # 
 
-map_world <- map_data(map="world") %>%
-  rename(country= region) 
+# map_world <- map_data(map="world") %>%
+#   rename(country= region)
+
+map_obj <- maps::map("world", ".", exact = FALSE, plot = FALSE, fill = TRUE)
+map_world <- ggfortify::fortify_map(map_obj) %>%
+  rename(country = region)
+
 ggplot() + 
   geom_polygon(data = right_join(map_world, languages_countries), 
                aes(x=long, y = lat, group = group), 
@@ -161,8 +166,10 @@ gender_counts <- admins_grouped %>%
   count %>%
   group_by(language, form) %>%
   mutate(prop = n / sum(n), 
-         ci_low = binom.confint(x = n, n = sum(n), methods = "bayes")$lower, 
-         ci_high = binom.confint(x = n, n = sum(n), methods = "bayes")$upper, 
+         ci_low = binom::binom.confint(x = n, n = sum(n),
+                                       methods = "bayes")$lower, 
+         ci_high = binom::binom.confint(x = n, n = sum(n),
+                                        methods = "bayes")$upper, 
          n = sum(n))
            
 ggplot(filter(gender_counts, sex == "Female"), 

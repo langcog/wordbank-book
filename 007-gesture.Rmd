@@ -82,7 +82,8 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
   facet_wrap(~ definition) + 
   geom_point() + 
   geom_smooth(method = "loess", se = FALSE) +
-  geom_dl(method = list(dl.trans(x=x +.2), "last.qp", cex=1)) +
+  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x +.2),
+                                      "last.qp", cex=1)) +
   scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(7.5, 21),
                     breaks = seq(8, 18)) + 
@@ -129,7 +130,8 @@ ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition,
   facet_wrap(~ type) + 
   geom_point() + 
   geom_smooth(method = "loess", se = FALSE) +
-  geom_dl(method = list(dl.trans(x=x -.2), "first.qp", cex=1)) +
+  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x -.2),
+                                      "first.qp", cex=1)) +
   #scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
                     breaks = seq(8, 18)) + 
@@ -152,7 +154,8 @@ ggplot(first_gestures_binary, aes(x = age, y = known, color = definition,
                                   label = definition)) + 
   geom_point() + 
   geom_smooth(method = "loess", se = FALSE) +
-  geom_dl(method = list(dl.trans(x=x -.2), "first.qp", cex=1)) +
+  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x -.2),
+                                      "first.qp", cex=1)) +
   scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
                     breaks = seq(8, 18)) + 
@@ -175,7 +178,7 @@ kid_type_data <- binary_data %>%
 
 intercor_data <- kid_type_data %>%
   split(.$language) %>%
-  map(~ pairwise_cor(.x, type, data_id, prop, use = "pairwise.complete")) %>%
+  map(~ widyr::pairwise_cor(.x, type, data_id, prop, use = "pairwise.complete")) %>%
   bind_rows(.id = "language") %>%
   group_by(language) %>%
   summarise(mean = mean(correlation), sd = sd(correlation))
@@ -213,7 +216,7 @@ binary_data %>%
              group = language, label = language)) + 
   geom_jitter(alpha = .1, size = .1) + 
   geom_smooth(method = "loess", se = F) + 
-  geom_dl(method = "smart.grid", cex=1) +
+  directlabels::geom_dl(method = "smart.grid", cex=1) +
   theme_classic() + 
   theme(legend.position = "none")
 ```
@@ -255,14 +258,15 @@ age_cor_data %>%
   geom_smooth(se = T) + 
   geom_jitter(alpha = .5, size = .5) + 
   theme_classic() + 
-  geom_dl(method = list(dl.trans(x=x +.2), "last.qp", cex=1)) +
+  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x +.2),
+                                      "last.qp", cex=1)) +
   theme(legend.position = "none") + 
   scale_x_continuous(limits = c(6, 30))
 
-age_cor_model <- lmer(gesture ~ value * measure  * age + 
+age_cor_model <- lme4::lmer(gesture ~ value * measure  * age + 
                         (measure|language), data = age_cor_data)
 
-tidy(age_cor_model, "fixed") %>%
+broom::tidy(age_cor_model, "fixed") %>%
   kable()
 
 ```
@@ -284,7 +288,7 @@ ggplot(sex_type_data, aes(x = age, y = gesture, color = sex, label = sex)) +
   geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
   geom_smooth(se = F) +
   theme_classic() + 
-  geom_dl(method = list("smart.grid", cex=1)) + 
+  directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
   theme(legend.position = "none")
 ```
 
@@ -299,10 +303,10 @@ sex_type_model_data <- binary_data %>%
   summarise(gesture = mean(value, na.rm = T))
 
 sex_type_model <- sex_type_model_data %>%
-  lmer(gesture ~ age * sex * type + (1 | data_id) +
+  lme4::lmer(gesture ~ age * sex * type + (1 | data_id) +
                 (1 | language), data = .)
 
-tidy(sex_type_model, "fixed") %>%
+broom::tidy(sex_type_model, "fixed") %>%
   kable()
 ```
 
@@ -325,18 +329,18 @@ ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) +
   geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
   geom_smooth(se = F) +
   theme_classic() + 
-  geom_dl(method = list("smart.grid", cex=1)) + 
+  directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
   theme(legend.position = "none")
 ```
 
 
 ```{r gesture-ses_type_model}
 ses_type_kid_model <- ses_type_kid_data %>%
-  lmer(gesture ~ age * type + ses * type + 
+  lme4::lmer(gesture ~ age * type + ses * type + 
          age * ses + (1 | data_id) +
                 (1 | language), data = .)
 
-tidy(ses_type_kid_model, "fixed") %>%
+broom::tidy(ses_type_kid_model, "fixed") %>%
   kable()
 ```
 
@@ -380,7 +384,7 @@ type_cor_data <- bind_rows(word_type_data, gesture_type_data)
 comp_cor_bylang<- type_cor_data %>%
   filter(measure != "produces") %>%
   split(.$language) %>%
-  map(~ pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
+  map(~ widyr::pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
   bind_rows(.id = "language") %>%
   filter(item1 %in% binary_data$type & !item2 %in% binary_data$type) %>%
   filter(!item2 %in% c("connecting_words", "helping_verbs", "other"))
@@ -403,7 +407,7 @@ comp_cor_bylang %>%
 prod_cor_bylang <- type_cor_data %>%
   filter(measure != "comprehends") %>%
   split(.$language) %>%
-  map(~ pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
+  map(~ widyr::pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
   bind_rows(.id = "language") %>%
   filter(item1 %in% binary_data$type & !item2 %in% binary_data$type) %>%
   filter(!item2 %in% c("connecting_words", "helping_verbs", "other"))
@@ -428,10 +432,10 @@ gesture_word_cord_model_data <- comp_cor_bylang %>%
   bind_rows(mutate(prod_cor_bylang, measure = "produces")) %>%
   mutate(item1 = factor(item1, levels = c("gestures_first", "gestures_games", "gestures_objects", "gestures_parent", "gestures_adult")))
 
-gesture_word_cord_model <- lmer(correlation ~ item1 * item2 * measure + (1|language),
+gesture_word_cord_model <- lme4::lmer(correlation ~ item1 * item2 * measure + (1|language),
                                 data = gesture_word_cord_model_data)
 
-tidy(gesture_word_cord_model, "fixed") %>%
+broom::tidy(gesture_word_cord_model, "fixed") %>%
   arrange(desc(abs(statistic))) %>%
   kable()
 

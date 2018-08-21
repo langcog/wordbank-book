@@ -51,7 +51,7 @@ get_demo_models <- function (data, demo = ~sex, measure = ~production) {
     split(.$langform) %>%
     map(possibly(function(x) {
       # print(x$langform[1])
-      glmrob(cbind(measure, no_measure) ~ age * demo - demo,
+      robustbase::glmrob(cbind(measure, no_measure) ~ age * demo - demo,
                          family = "binomial",
                          data = x)
     }, otherwise = NULL))
@@ -231,7 +231,7 @@ Our first plot shows comprehension on Words and Gestures. Visual inspection of t
 
 ```{r demo-sex_wg_comp}
 analyses$WG.comprehension$sex$model_summary %>%
-  datatable
+  DT::datatable()
 ```
 We can examine the statistical models to get a clearer picture. For each language, we fit a robust generalized linear model predicting vocabulary size (number of words understood out of the total) predicted by age, and the interaction of age and gender. We specified this simple model so that the coefficient estimate on the age by gender interaction provides a convenient summary of the difference in vocabulary growth across groups. Despite the small magnitudes of the coefficients, `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta < 0))` of `r nrow(analyses$WG.comprehension$sex$model_summary)` languages had a female advantage. In contrast, `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta > 0))` showed a male advantage and the remainder did not show a significant gender by age interaction. 
 
@@ -290,7 +290,7 @@ ggplot(analyses$WG.production$sex$means,
 
 ```{r demo-sex_prod_table}
 analyses$WG.production$sex$model_summary %>%
-  datatable
+  DT::datatable()
 ```
 We next turn to production data. As in many of our subsequent analyses, data on production from Words and Gestures forms tend to be at floor, so they are of limited utility and the failure to find differences may reflect floor effects rather than any true differences. Visual inspection confirms differences at the edge of the age range covered by Words and Gestures forms, however, so for completeness we give the comparable statistical analyses as above. Here `r nrow(filter(analyses$WG.production$sex$model_summary, p < .05, beta < 0))` of `r nrow(analyses$WG.production$sex$model_summary)` languages show a statistically significant female advantage.
 
@@ -314,7 +314,7 @@ b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(languag
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 Examining the MMAD effect size measures, it is clear that there is limited signal in early production but the overall trend appears to be for a slight developmental increase from around 12 - 20 months.  In addition, overall effect sizes are larger than in comprehension, with a median effect of `r round(median(analyses$WG.production$sex$mmad_summary$mmad_mean),2)`, though in this analysis, averaging across age may be less warranted.
@@ -341,7 +341,7 @@ ggplot(analyses$WS.production$sex$means,
 
 ```{r demo-ws_prod_table}
 analyses$WS.production$sex$model_summary %>%
-  datatable
+  DT::datatable()
 ```
 
 We next turn to production data on the Words and Sentences instrument, which we expect to be much more informative regarding production.  Visual inspection confirms differences in almost every case, and an analysis of the fitted models shows that `r nrow(filter(analyses$WS.production$sex$model_summary, p < .05, beta < 0))` of `r nrow(analyses$WS.production$sex$model_summary)` languages show a statistically significant female advantage!
@@ -368,7 +368,7 @@ b <- ggplot(analyses$WS.production$sex$mmad_summary,
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 We next turn to the MMAD effect size measure. Here we see a relatively consistent difference across ages with perhaps a slight downward trend in effect size. This downward trend might be a function of ceiling effects on the form, however, as seen in the model-fit curves above for, e.g., Danish. When variability is limited by the form ceiling, effect size estimates will necessarily be depressed. The median female advantage is `r round(median(analyses$WS.production$sex$mmad_summary$mmad_mean),2)`, substantially larger than that seen in early comprehension and somewhat larger than that seen in early production (perhaps due to floor effects early on). 
@@ -392,7 +392,7 @@ qplot(z_20, z_48, col = gender, pch = gender, data = b2012) +
 
 b2012_summary <- b2012 %>%
   group_by(gender) %>%
-  do(data.frame(rbind(smean.cl.boot(.$z_20))))
+  do(data.frame(rbind(Hmisc::smean.cl.boot(.$z_20))))
 ```
 
 Second, @bornstein2012 use a particularly powerful study design to examine stability in early language estimates across different measures. They gathererd longitudinal data at 20 and 48 months using a wide range of standardized and parent-report measures, and then use structural equation modeling to model shared variance due to parent report as well as standardized latent language ability at each age. We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered.^[These data are not perfect, I have double-digitized one point.] As these scores are standardized, we can examine the difference in means and recover the standardized effect size for gender in the data, which is `r round(-diff(b2012_summary$Mean), 2)` standard deviations. Since this measurement is *greater* than that found using the CDIs (the comparable American English measurement was `r round(filter(analyses$WS.production$sex$mmad_summary, language == "English (American)") %>% pull(mmad_mean), 2)`), we doubt that our observed effect is due solely to reporting bias. 
@@ -428,7 +428,7 @@ ggplot(analyses$WG.comprehension$birth_order$means,
   scale_size(guide = FALSE)
 
 analyses$WG.comprehension$birth_order$model_summary %>%
-  datatable
+  DT::datatable()
 
 a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
             aes(x = age, y = mmad, col = interaction(language, form))) +
@@ -450,7 +450,7 @@ b <- ggplot(analyses$WG.comprehension$birth_order$mmad_summary,
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 
@@ -473,7 +473,7 @@ ggplot(analyses$WG.production$birth_order$means,
   theme(legend.position = "bottom")
 
 analyses$WG.production$birth_order$model_summary %>%
-  datatable
+  DT::datatable()
 
 a <- ggplot(analyses$WG.production$birth_order$mmad_ratio,
             aes(x = age, y = mmad, col = interaction(language, form))) +
@@ -494,7 +494,7 @@ b <- ggplot(analyses$WG.production$birth_order$mmad_summary, aes(x = language, y
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 ### Production (WS)
@@ -515,7 +515,7 @@ ggplot(analyses$WS.production$birth_order$means,
   theme(legend.position = "bottom")
 
 analyses$WS.production$birth_order$model_summary %>%
-  datatable
+  DT::datatable()
 
 a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
             aes(x = age, y = mmad, col = interaction(language, form))) +
@@ -537,7 +537,7 @@ b <- ggplot(analyses$WS.production$birth_order$mmad_summary,
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 
@@ -571,7 +571,7 @@ ggplot(analyses$WG.comprehension$mom_ed$means,
   scale_size(guide = FALSE)
 
 analyses$WG.comprehension$mom_ed$model_summary %>%
-  datatable
+  DT::datatable()
 
 a <- ggplot(analyses$WG.comprehension$mom_ed$mmad_ratio,
             aes(x = age, y = mmad, col = language)) +
@@ -592,7 +592,7 @@ b <- ggplot(analyses$WG.comprehension$mom_ed$mmad_summary, aes(x = language, y =
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 
@@ -615,7 +615,7 @@ ggplot(analyses$WG.production$mom_ed$means,
   theme(legend.position = "bottom")
 
 analyses$WG.production$mom_ed$model_summary %>%
-  datatable
+  DT::datatable()
 
 a <- ggplot(analyses$WG.production$mom_ed$mmad_ratio,
             aes(x = age, y = mmad, col = language)) +
@@ -636,7 +636,7 @@ b <- ggplot(analyses$WG.production$mom_ed$mmad_summary, aes(x = language, y = mm
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 ### Production (WS)
@@ -656,7 +656,7 @@ ggplot(analyses$WS.production$mom_ed$means,
   theme(legend.position = "bottom")
 
 analyses$WS.production$mom_ed$model_summary %>%
-  datatable
+  DT::datatable()
 
 a <- ggplot(analyses$WS.production$mom_ed$mmad_ratio,
             aes(x = age, y = mmad, col = language)) +
@@ -677,7 +677,7 @@ b <- ggplot(analyses$WS.production$mom_ed$mmad_summary, aes(x = language, y = mm
   xlab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
-grid.arrange(a, b, ncol=2)
+gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 ### Explanations

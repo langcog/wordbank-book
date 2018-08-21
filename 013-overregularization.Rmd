@@ -131,7 +131,7 @@ plot_type_props <- function(typ) {
       facet_grid(language ~ ., scales = "free") +
       coord_flip() +
       geom_col(position = "stack") +
-      scale_fill_ptol(name = "") +
+      ggthemes::scale_fill_ptol(name = "") +
       scale_y_continuous(expand = c(0, 0)) +
       labs(x = "", y = "Proportion of children") +
       theme(legend.position = "top") +
@@ -202,7 +202,7 @@ ggplot(filter(overreg_traj_bin, language == "English (American)"),
   facet_grid(type ~ sex) +
   geom_line(aes(group = traj, size = n)) +
   geom_point() +
-  scale_colour_ptol(name = "Number of children") +
+  ggthemes::scale_colour_ptol(name = "Number of children") +
   scale_size(guide = FALSE, range = c(0.2, 3)) +
   scale_x_continuous(name = "Age (months)", breaks = c(16, 28)) +
   scale_y_continuous(name = "Proportion of overregularization items") +
@@ -220,7 +220,7 @@ overreg_models <- overreg_kid_summary %>%
   group_by(language, sex, original_id, type) %>%
   nest() %>%
   mutate(model = map(data, kid_model),
-         coefs = map(model, tidy))
+         coefs = map(model, broom::tidy))
 
 overreg_coefs <- overreg_models %>%
   mutate(switch = map_lgl(coefs, function(coef) {
@@ -233,7 +233,7 @@ overreg_coefs <- overreg_models %>%
 
 overreg_predictions <- overreg_models %>%
   mutate(augmented = map(model, function(m) {
-    m_aug <- m %>% augment(type.predict = "response")
+    m_aug <- m %>% broom::augment(type.predict = "response")
     m_y <- m_aug$cbind.num_produces..num_no. %>% as_data_frame()
     m_aug %>%
       select(-cbind.num_produces..num_no.) %>%
@@ -274,7 +274,7 @@ First, what are the trajectories of the most densely sampled Norwegian children,
 ggplot(dense_kids, aes(x = age, y = prop, colour = original_id)) +
   facet_grid(type ~ sex) +
   geom_line(aes(group = original_id)) +
-  scale_colour_ptol(guide = FALSE) +
+  ggthemes::scale_colour_ptol(guide = FALSE) +
   scale_x_continuous(name = "Age (months)") +
   scale_y_continuous(name = "Proportion of overregularization items")
 ```
@@ -286,7 +286,7 @@ __U-shaped children's empirical proportions__
 ggplot(overreg_switch, aes(x = age, y = prop, colour = original_id)) +
   facet_grid(type ~ sex) +
   geom_line(aes(group = original_id)) +
-  scale_colour_pander(guide = FALSE) +
+  ggthemes::scale_colour_pander(guide = FALSE) +
   scale_x_continuous(name = "Age (months)") +
   scale_y_continuous(name = "Proportion of overregularization items",
                      limits = c(0, 1))
@@ -297,7 +297,7 @@ __U-shaped children's model fits__
 ggplot(overreg_switch, aes(x = age, y = .fitted, colour = original_id)) +
   facet_grid(type ~ sex) +
   geom_line(aes(group = original_id)) +
-  scale_colour_pander(guide = FALSE) +
+  ggthemes::scale_colour_pander(guide = FALSE) +
   scale_x_continuous(name = "Age (months)") +
   scale_y_continuous(name = "Proportion of overregularization items",
                      limits = c(0, 1))

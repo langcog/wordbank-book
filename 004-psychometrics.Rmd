@@ -1,4 +1,7 @@
-# Psychometric Properties of the CDI {#psychometrics}
+# Measurement Properties of the CDI {#psychometrics}
+
+Many researchers are initially shocked to hear that one of the most important methods for studying child language is parent report. Yet, as we argued in Chapter \@ref(intro_practical), alternative methods like naturalistic observation or lab experiments can be biased, and are quite costly to revisit at scale. Thus, the goal of this chapter is to revisit the strengths and weaknesses of parent report in depth, since the remainder of our manuscript depends on the use of CDI data. 
+
 
 ## Limitations of parent report
 

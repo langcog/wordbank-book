@@ -24,17 +24,17 @@ Imports:
   lme4,
   maps,
   mirt,
-  parallel,
   quantregGrowth,
   rmarkdown,
   robustbase,
-  rstan,
   tidyverse,
   widyr,
+  wordbankr,
   viridis
 Remotes:
-  langcog/langcog,
-  langcog/wordbankr
+  langcog/langcog
 Suggests:
-  multidplyr
+  multidplyr,
+  parallel,
+  rstan
 License: GPL-3

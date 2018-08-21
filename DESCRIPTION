@@ -21,6 +21,7 @@ Imports:
   gridExtra,
   Hmisc,
   knitr,
+  langcog,
   lme4,
   maps,
   mirt,
@@ -33,8 +34,4 @@ Imports:
   viridis
 Remotes:
   langcog/langcog
-Suggests:
-  multidplyr,
-  parallel,
-  rstan
 License: GPL-3

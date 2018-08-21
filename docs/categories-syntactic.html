@@ -64,43 +64,6 @@
 <script src="libs/selectize-0.12.0/selectize.min.js"></script>
 
 
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-</style>
 
 </head>
 
@@ -139,8 +102,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.3.1" data-path="intro-practical.html"><a href="intro-practical.html#adaptation-not-translation"><i class="fa fa-check"></i><b>2.3.1</b> Adaptation, not translation!</a></li>
 <li class="chapter" data-level="2.3.2" data-path="intro-practical.html"><a href="intro-practical.html#our-approach"><i class="fa fa-check"></i><b>2.3.2</b> Our approach</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="intro-practical.html"><a href="intro-practical.html#our-data-wordbank"><i class="fa fa-check"></i><b>2.4</b> Our data: Wordbank</a></li>
-<li class="chapter" data-level="2.5" data-path="intro-practical.html"><a href="intro-practical.html#whats-missing"><i class="fa fa-check"></i><b>2.5</b> What’s missing?</a></li>
+<li class="chapter" data-level="2.4" data-path="intro-practical.html"><a href="intro-practical.html#wordbank"><i class="fa fa-check"></i><b>2.4</b> Wordbank</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods and Data</a><ul>
 <li class="chapter" data-level="3.1" data-path="methods.html"><a href="methods.html#database"><i class="fa fa-check"></i><b>3.1</b> Database</a><ul>
@@ -199,7 +161,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3.4" data-path="demographics.html"><a href="demographics.html#reporting-biases"><i class="fa fa-check"></i><b>6.3.4</b> Reporting biases</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gestures.html"><a href="gestures.html"><i class="fa fa-check"></i><b>7</b> Gesture and Communication</a></li>
+<li class="chapter" data-level="7" data-path="gesture.html"><a href="gesture.html"><i class="fa fa-check"></i><b>7</b> Gesture and Communication</a></li>
 <li class="chapter" data-level="8" data-path="items.html"><a href="items.html"><i class="fa fa-check"></i><b>8</b> Consistency in Early Vocabulary</a></li>
 <li class="chapter" data-level="9" data-path="item-demographics.html"><a href="item-demographics.html"><i class="fa fa-check"></i><b>9</b> Demographic Variation in Individual Words</a><ul>
 <li class="chapter" data-level="9.1" data-path="methods.html"><a href="methods.html#methods"><i class="fa fa-check"></i><b>9.1</b> Methods</a><ul>
@@ -341,8 +303,8 @@ Figure 11.1: Figure from Bates et al. (1994), showing developmental trends in th
 <div id="methods-and-data" class="section level2">
 <h2><span class="header-section-number">11.2</span> Methods and Data</h2>
 <p>Each CDI form contains a mixture of words in different classes. We adopt the categorization of <span class="citation">Bates et al. (<a href="references.html#ref-bates1994">1994</a>)</span>, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as “closed class” words), and other words. For each child’s vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by <span class="citation">Bates et al. (<a href="references.html#ref-bates1994">1994</a>)</span>, for each of the languages in our sample, we plot these proportions against total vocabulary. Each dot represents a child’s knowledge of a particular class, while curves show the relationship between a class and the whole vocabulary. If categories grow independently of one another, these curves should approximate the diagonal.</p>
-<div id="htmlwidget-88cc33eefd9602408599" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-88cc33eefd9602408599">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50"],["British Sign Language","Cantonese","Croatian","Croatian","Czech","Danish","Danish","English (American)","English (American)","English (Australian)","English (British)","French (French)","French (French)","French (Quebecois)","French (Quebecois)","German","Greek (Cypriot)","Hebrew","Hebrew","Italian","Italian","Kigiriama","Kigiriama","Kiswahili","Kiswahili","Korean","Korean","Latvian","Latvian","Mandarin (Beijing)","Mandarin (Beijing)","Mandarin (Beijing)","Mandarin (Taiwanese)","Mandarin (Taiwanese)","Norwegian","Norwegian","Portuguese (European)","Portuguese (European)","Russian","Russian","Slovak","Slovak","Spanish (European)","Spanish (European)","Spanish (Mexican)","Spanish (Mexican)","Swedish","Swedish","Turkish","Turkish"],["WG","WS","WG","WS","WS","WG","WS","WG","WS","WS","Oxford CDI","WG","WS","WG","WS","WS","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","IC","TC","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS"],[161,987,250,377,493,2398,3714,2454,5846,1520,1515,222,665,537,827,1181,176,62,480,648,752,132,100,51,90,618,1375,183,500,230,652,1056,757,1897,2926,9304,1314,3012,768,1037,657,1065,412,593,833,1174,474,900,1115,2422]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language<\/th>\n      <th>form<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-2088410a4470b15b49d6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2088410a4470b15b49d6">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50"],["British Sign Language","Cantonese","Croatian","Croatian","Czech","Danish","Danish","English (American)","English (American)","English (Australian)","English (British)","French (French)","French (French)","French (Quebecois)","French (Quebecois)","German","Greek (Cypriot)","Hebrew","Hebrew","Italian","Italian","Kigiriama","Kigiriama","Kiswahili","Kiswahili","Korean","Korean","Latvian","Latvian","Mandarin (Beijing)","Mandarin (Beijing)","Mandarin (Beijing)","Mandarin (Taiwanese)","Mandarin (Taiwanese)","Norwegian","Norwegian","Portuguese (European)","Portuguese (European)","Russian","Russian","Slovak","Slovak","Spanish (European)","Spanish (European)","Spanish (Mexican)","Spanish (Mexican)","Swedish","Swedish","Turkish","Turkish"],["WG","WS","WG","WS","WS","WG","WS","WG","WS","WS","Oxford CDI","WG","WS","WG","WS","WS","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","IC","TC","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS","WG","WS"],[161,987,250,377,493,2398,3714,2454,5846,1520,1515,222,665,537,827,1181,176,62,480,648,752,132,100,51,90,618,1375,183,500,230,652,1056,757,1897,2926,9304,1314,3012,768,1037,657,1065,412,593,833,1174,474,900,1115,2422]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language<\/th>\n      <th>form<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms like the British English TEDS don’t typically include category information. The sample sizes included in this analysis are given above.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsyn-schematic"></span>
 <img src="images/vocab_comp_schematic.png" alt="Schematic of our vocabulary composition analysis." width="318" />
@@ -460,7 +422,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/langcog/wordbank-book/edit/master/011-categories-syntax.Rmd",
+"link": "https://github.com/langcog/wordbank-book/edit/master/011-categories_syntax.Rmd",
 "text": "Edit"
 },
 "download": ["wordbank-book.pdf"],

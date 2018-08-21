@@ -35,7 +35,7 @@ ages <- 8:18
 One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown below.
 
 ```{r vocab-schematic, fig.cap="Schematic true vocabulary growth and vocbaulary growth as measured by the CDI."}
-knitr::include_graphics("images/vocab_growth_schematic.png")
+include_graphics("images/vocab_growth_schematic.png")
 ```
 
 
@@ -133,7 +133,7 @@ ordering_raw <- filter(medians, form %in% WSs,
                      age <=30,
                      !(language == "Mandarin" & form == "WS"),
                    !(language == "Hebrew")) %>%
-  do(broom::tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
+  do(tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
   filter(term == "(Intercept)") %>% 
   mutate(measure = "raw")
 
@@ -143,7 +143,7 @@ ordering_props <- filter(medians, form %in% WSs,
                      age <=30,
                      !(language == "Mandarin" & form == "WS"),
                    !(language == "Hebrew")) %>%
-  do(broom::tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
+  do(tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
   filter(term == "(Intercept)") %>%
   mutate(measure = "proportion")
   
@@ -535,12 +535,12 @@ mirt_params <- instruments %>%
   split(.$idx) %>%
   map_df(possibly(mirt_params, otherwise = data_frame()))
 
-write_feather(mirt_params, "data/mirt_params.feather")
+write_feather(mirt_params, "data/vocabulary/mirt_params.feather")
 ```
 
 
 ```{r vocab-variability_IRT_slopes}
-mirt_params <- read_feather("data/mirt_params.feather")
+mirt_params <- read_feather("data/vocabulary/mirt_params.feather")
 
 mirt_sd <- mirt_params %>%
   left_join(mirt_params %>% group_by(language, form) %>%
@@ -612,7 +612,7 @@ p100 %>%
             range = `75th percentile` - `25th percentile`, 
             `range (proportion of age)` = range / min(age[prob >=.5])) %>%
   arrange(range) %>%
-  knitr::kable(digits = 2)
+  kable(digits = 2)
 ```
 
 The 25th and 75th percentiles for a variety of behaviors are summarized in the table above. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 

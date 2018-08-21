@@ -1,4 +1,4 @@
-# Gesture and Communication {#gestures}
+# Gesture and Communication {#gesture}
 
 While a child's use of their first words is an exciting accomplishment indeed, it is clear that children communicate with their caregivers much earlier through the use of gestures.  For example, a child who extends their hands and opens and closes their fist likely wants something.  A child who points to a bird up in a tree likely wants to get their caregiver's attention so that they can share in the delight together.  Sometimes, children's early vocalizations are accompanied by gestures, for example, a child might raise both of their hands in the air and says "up!" All of these examples show that gestures are an important early aspect of children's communicative development.
 
@@ -42,13 +42,17 @@ gesture_data <- wg_data %>%
   filter(type != "gestures_play") %>%
   left_join(hebrew_mappings) %>%
   mutate(type = if_else(is.na(new_type), type, new_type)) %>%
-  select(-new_type)
+  #select(-new_type)
+  select(type, language, value, age, definition, category, data_id,
+         comprehension, production, sex, mom_ed)
 
-write_feather(gesture_data, "data/gesture_data.feather")
+# write_feather(gesture_data, "data/gesture/gesture_data.feather")
+save(gesture_data, file = "data/gesture/gesture_data.Rds")
 ```
 
 ```{r gesture-load_data_local}
-gesture_data <- read_feather("data/gesture_data.feather")
+# gesture_data <- read_feather("data/gesture/gesture_data.feather")
+load("data/gesture/gesture_data.Rds")
 ```
 
 I can't tell if sometimes/often really carries very much signal. It looks like it's all over the place for the earliest gestures and almost overlapping for the latest ones. Let's try compressing to a binary

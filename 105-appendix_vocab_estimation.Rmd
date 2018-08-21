@@ -1,0 +1,155 @@
+# Estimating Total Vocabulary {#appendix-vocab-estimation}
+
+First, connect to the Wordbank database and pull out the English WS and WG data.
+
+```{r vocabest-load, eval=FALSE}
+# ws <- read_feather("data/psychometrics/eng_ws_raw_data.feather")
+load("data/psychometrics/eng_ws_raw_data.Rds")
+```
+
+Now aggregate by item.
+
+```{r vocabest-by_item, eval=FALSE}
+by_item <- eng_ws %>%
+  filter(!is.na(category)) %>%
+  group_by(definition, age) %>%
+  summarise(produces = mean(value=="produces", na.rm=TRUE))
+
+write_feather(by_item, "data/appendix_vocab_estimation/by_item.feather")
+```
+
+```{r vocabest-item_load}
+by_item <- read_feather("data/appendix_vocab_estimation/by_item.feather")
+```
+
+Now arrange.
+
+```{r vocabest-order}
+ordered <- by_item %>%
+  group_by() %>%
+  arrange(age, desc(produces)) %>%
+  group_by(age) %>%
+  mutate(index = 1:n()) 
+```
+
+Plot this with a glm sinusoid like in the Mayor & Plunkett (2011) paper.
+
+```{r vocabest-plot}
+ggplot(ordered,
+       aes(x = index, y = produces)) + 
+  facet_wrap(~age) + 
+  geom_line() + 
+  ylim(c(0,1)) + 
+  geom_smooth(method = "glm", 
+              method.args = list(family = "binomial"),
+              formula = y ~ x) 
+```
+
+Try a polynomial fit.
+
+```{r vocabest-poly}
+ggplot(ordered,
+       aes(x = index, y = produces)) + 
+  facet_wrap(~age) + 
+  geom_line() + 
+  ylim(c(0,1)) + 
+  geom_smooth(method = "lm", 
+              col = "red", 
+              formula = y ~ poly(x, 3)) 
+```
+
+Doesn't work that well for the younger ages, though looks fine later.
+
+Note age interactions in the stats.
+
+```{r vocabest-glm}
+mp.glm <- glm(produces ~ index * age, family = "binomial", data = ordered)
+summary(mp.glm)
+```
+
+## Further thoughts on Mayor & Plunkett model
+
+The Mayor & Plunkett (2011) model has two corrections. The first uses the parametric form of the logistic to fill in low-frequency words that are not on the CDI, the second uses the difference between diary study counts and CDI counts to find a multiplier for higher-frequency words that are omitted. 
+
+I think there's a bit of a conceptual issue here, as these two corrections should essentially be the same thing - there are some words that are not on the CDI, and more of these are the low frequency/hard words. So really, it all is a correction for missing words. 
+
+Also - the first correction, which depends on the parametric form of the logistic, is much much smaller than the second. Take a look at this. 
+
+Equation 3:
+
+$$
+p(w_i) = 1 - \frac{1}{1 + e^{\frac{-(i-a)}{b}}}
+$$
+
+```{r vocabest-ranks}
+a <- 600 # from figure 6c for a 30mo
+b <- 180 # from figure 6c
+ranks <- 0:3000
+age <- 20
+ys <- (1 - (1 / (1 + exp((-(ranks - a ))/b))))
+
+qplot(ranks, ys, 
+      geom = "line") + 
+  geom_vline(xintercept = 680, lty = 2) +
+  geom_polygon(aes(x = c(ranks[ranks > 680], 
+                         rev(ranks[ranks > 680])),
+                   y = c(ys[ranks > 680], 
+                         rep(0, length(ranks[ranks > 680])))), 
+               fill = "blue", alpha = .5) + 
+  ylim(c(0,1))
+```
+
+So adding the gray area gives us
+
+$$
+V_{corr_1} = b \log (1 + e^(a / b))
+$$
+
+but then adding the second correction is just a multiplier on this:
+
+$$
+V_{corr_2} = \alpha * V_{corr_1}
+$$
+
+Note that (strikingly), M&P2011 never give their value of $\alpha$ in the text. I estimate it below so that I can make an estimate of what correction 2 actually looks like... 
+
+```{r vocabest-corrected}
+a <- 600 
+b <- 180 
+ranks <- 1:3000
+age <- 20
+ys <- (1 - (1 / (1 + exp((-(ranks - a ))/b))))
+
+area.uncorrected <- sum(ys[1:680])
+area.c1 <- b * log(1 + exp(a / b))
+area.c2 <- 1142 # from lookup table A1
+alpha = area.c2 / area.c1
+
+ys2 <- (1 - (1 / (1 + exp((-(ranks - (a*alpha) ))/(alpha * b)))))
+area.corrected <- sum(ys2)
+
+qplot(ranks, ys, 
+      geom = "line") + 
+  geom_vline(xintercept = 680, lty = 2) +
+  geom_polygon(aes(x = c(ranks[ranks > 680], 
+                         rev(ranks[ranks > 680])),
+                   y = c(ys[ranks > 680], 
+                         rep(0, length(ranks[ranks > 680])))), 
+               fill = "blue", alpha = .5) + 
+  geom_line(aes(y = ys2), lty = 3) + 
+  geom_polygon(aes(x = c(ranks, rev(ranks)), 
+                y = c(ys2, rev(ys))), 
+            fill = "red", 
+            alpha = .5) + 
+  ylim(c(0,1)) 
+```
+
+So you can see that the second correction dwarfs the first correction in size, and is really based on a few small diary studies. 
+
+In sum, I'm worried about this model for a few reasons:
+
+* The distributional form (logit) is clearly not correct, so using this distributional form for extrapolation may have bad consequences.
+* The first and second corrections aren't conceptually distinct: they both concern missing words. Both have to do with the sampling of words on the CDI from the broader vocabulary. 
+* The second correction, which does most of the work, is - for reasonable reasons of data etc.- assumed to be a strict multiplier, which makes it do a ton of work at the higher end of vocabulary.
+
+

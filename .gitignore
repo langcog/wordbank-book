@@ -1,17 +1,13 @@
 .Rproj.user
 .Rhistory
 .RData
-_publish.R
-_book
-_bookdown_files
 rsconnect
 libs/
 wordbank-book.Rmd
+_bookdown_files/
 _cache/
 _files/
-
-data/eng_ws_data.feather
-data/eng_wg_data.feather
+data/*/_*
 
 .DS_Store
 

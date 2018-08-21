@@ -8,31 +8,30 @@ Which words do children learn first? In spite of tremendous individual variation
 
 Because the CDIs are adaptations and not translations, the individual item inventories  vary significantly across languages. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
 
-```{r items-load_consistency_data}
-if(!local_data) {
-  wg_langs <- instruments %>%
-    filter(form == "WG") %>%
-    distinct(language) %>%
-    pull(language)
-  
-  ws_langs <- instruments %>%
-    filter(form == "WS") %>%
-    distinct(language) %>%
-    pull(language)
-  
-  ws_sub_langs <- intersect(wg_langs, ws_langs)
-  
-  wg_data <- map( wg_langs, function(lang) {
-    get_instrument_data(lang, "WG") %>%
-      mutate(language = lang)
-    }) %>%
-    bind_rows
-  
-  ws_sub_data <-  map(ws_sub_langs, function(lang) {
-    get_instrument_data(lang, "WS") %>%
-      mutate(language = lang)
-    }) %>%
-    bind_rows
+```{r items-load_consistency_data, eval=FALSE}
+wg_langs <- instruments %>%
+  filter(form == "WG") %>%
+  distinct(language) %>%
+  pull(language)
+
+ws_langs <- instruments %>%
+  filter(form == "WS") %>%
+  distinct(language) %>%
+  pull(language)
+
+ws_sub_langs <- intersect(wg_langs, ws_langs)
+
+wg_data <- map( wg_langs, function(lang) {
+  get_instrument_data(lang, "WG") %>%
+    mutate(language = lang)
+}) %>%
+  bind_rows
+
+ws_sub_data <-  map(ws_sub_langs, function(lang) {
+  get_instrument_data(lang, "WS") %>%
+    mutate(language = lang)
+}) %>%
+  bind_rows
 
 
 # Get words and gestures data
@@ -62,22 +61,20 @@ stitched_data <- ws_sub_data %>%
   bind_rows(kid_wg_data %>%
               filter(language %in% unique(ws_sub_data$language)) %>%
               mutate(form = "WG"))
-
-}
 ```
 
 Some words about AOA estimation--OR MAYBE NOT?
 
-```{r items-compute_aoa}
+```{r items-get_aoas, eval=FALSE}
 # Fit robust regressions to comprehension or production data
 fit_rglm <- function(data) {
   
   if(any(str_detect(names(data), "produces")))
-    model <- robustbase::glmrob(cbind(produces, total - produces) ~ age,
+    model <- glmrob(cbind(produces, total - produces) ~ age,
                family = "binomial",
                data = data)
   else
-    model <- robustbase::glmrob(cbind(understands, total - understands) ~ age,
+    model <- glmrob(cbind(understands, total - understands) ~ age,
                family = "binomial",
                data = data)
   
@@ -89,9 +86,6 @@ fit_rglm <- function(data) {
              rglm_aoa = aoa)
 
 }
-
-if(!local_data) {
-  
 
 # Compute number of kids who produce each word at each age
 production_data <- stitched_data %>%
@@ -133,10 +127,11 @@ understanding_aoas <- understanding_data %>%
   mutate(measure = "understands")
 
 all_aoas <- bind_rows(production_aoas, understanding_aoas)
-#write_feather(all_aoas,"data/aoas.feather")
+write_feather(all_aoas,"data/items/aoas.feather")
+```
 
-} else {all_aoas <- read_feather("data/aoas.feather")}
-  
+```{r items-load_aoas}
+all_aoas <- read_feather("data/items/aoas.feather")
 ```
 
 Looking at unilemma completeness
@@ -364,26 +359,26 @@ step_corr <- function (max_order, meas) {
   data_frame(language = names(empirical_sub_aoas), n = max_order, corr = unlist(corr),
              measure = meas)
 }
+```
 
-if(!local_data) {
-  
-  understands_step_corrs <- map(5:max(filter(median_common_aoas, 
-                                             measure == "understands")$order), 
-                                function(x) step_corr(x,"understands")) %>%
-    bind_rows()
-  
-  produces_step_corrs <- map(5:max(filter(median_common_aoas, 
-                                             measure == "produces")$order), 
-                                function(x) step_corr(x,"produces")) %>%
-    bind_rows()
-  
-  write_feather(understands_step_corrs, "data/understands_step_corrs.feather")
-  write_feather(produces_step_corrs, "data/produces_step_corrs.feather")
+```{r items-compute_corrs, eval=FALSE}
+understands_step_corrs <- map(5:max(filter(median_common_aoas, 
+                                           measure == "understands")$order), 
+                              function(x) step_corr(x,"understands")) %>%
+  bind_rows()
 
-} else{
-  understands_step_corrs <- read_feather("data/understands_step_corrs.feather")
-  produces_step_corrs <- read_feather("data/produces_step_corrs.feather")
-}
+produces_step_corrs <- map(5:max(filter(median_common_aoas, 
+                                        measure == "produces")$order), 
+                           function(x) step_corr(x,"produces")) %>%
+  bind_rows()
+
+write_feather(understands_step_corrs, "data/items/understands_step_corrs.feather")
+write_feather(produces_step_corrs, "data/items/produces_step_corrs.feather")
+```
+
+```{r items-plot_corrs}
+understands_step_corrs <- read_feather("data/items/understands_step_corrs.feather")
+produces_step_corrs <- read_feather("data/items/produces_step_corrs.feather")
 
 ggplot(bind_rows(understands_step_corrs, produces_step_corrs), 
        aes(x = n, y = corr, color = language, fill = language,
@@ -395,5 +390,3 @@ ggplot(bind_rows(understands_step_corrs, produces_step_corrs),
   scale_x_continuous(name = "Median Acquisition Order Number", limits = c(0, 450)) +
   theme(legend.position = "none")
 ```
-
-

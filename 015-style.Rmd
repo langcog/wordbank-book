@@ -1,190 +1,40 @@
 # Individual Variation in Vocabulary {#style}
 
-<!-- new order:    -->
-<!-- - overall stability -->
-<!-- - spurts -->
-<!-- - referential expressive -->
-<!-- - comprehension production -->
-
-
 > Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development, If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994]
 
+Preceeding chapters have dealt with the degree of variability between individuals (Chapter \@ref(vocab)) and the stability of individuals' learning (\@ref(psychometrics)). Then Chapters \@ref(demographics) and \@ref(itemsdemo) used demographic factors to explain variability. In general, our treatment of variability has focused on issues of learning rate in the sense discussed by Bates et al. in the quote above (or, to be more precise, vocabulary size). With the exception of Chapter \@ref(itemsdemo), which examined the rate of learning individual words, we have not dealt yet with issues of *style*. 
 
+What does it mean for two children to show differences in language learning style? Intuitively, some aspect of the learning process should differ. Unfortunately, from the data that we use here, we cannot observe process -- we can only observe the outcome of learning: knowledge. Thus, children must exhibit some differences in the way their vocabulary grows. This difference could be distributional and inferred indirectly from cross-sectional data or it could be shown directly through longitudinal data (though this move limits the number of datasets we can use from Wordbank). 
 
-In an early report on individual differences in vocabulary acquisition, @nelson1973 noticed that there was substantial variation in how many nouns 
+One prominent candidate for a stylistic difference in language acquisition is the distinction between "referential" and "expressive" children. In an early report on individual differences in vocabulary acquisition, @nelson1973 noticed that there was substantial variation in how many nouns children had in thir vocabulary. She called children who had more than half of their vocabulary devoted to nouns "referential" children. They tended to have speech that was less syntactically complex and showed faster vocabulary growth. In contrast, "expressive" children had speech that was more syntactically complex and had fewer nouns. @dore1973 proposed a related version of this distinction, focusing on speech acts from two children in the middle of the second year and labeling them as "code oriented" (focused on labeling, similar to "referential") vs. "message oriented" (instrumental, social requests, similar to "expressive").
 
-"referential" (more than 50% nouns) - more object-focused, found to be less syntactically complex - faster vocabulary growth
-"expressive" (less than 50% nouns) - more self-focused, more syntactically complex
+Since this seminal work, the referential/expressive distinction has become enshrined in the literature as a canonical aspect of variation in children's style. Yet further debate about the consequences of this stylistic distinction continued in the literature. For example, @bates1988 observed a correlation between the proportion of nouns in the children's vocabulary and their vocabulary size and suggested the possibility that a referential style might be more effective for learning. Reacting to this claim, @pine1990 argued that the direction of causality might be reversed, however: perhaps having a bigger vocabulary (at least at a certain point) would lead to a greater representation for nouns.^[Caught up in this discussion is the question of whether there is a route into language via the memorization of "frozen phrases." This is an independent theoretical question that is difficult to address with CDI data as it is a question about the repetitive use of chunks of language in production. One observation is that, due to evidence of early verb generalization [e.g., @gertner2006], the original discussion about limited generalization in children's early syntax has been somewhat subsumed into a discussion about differences between general comprehension and conservative production.]
 
-@dore1973 proposed a related version of this distinction, focusing on speech acts from two children in the middle of the second year and labeling them as "code oriented" (focused on labeling) vs. "message oriented" (instrumental, social requests).
+While exploring the referential/expressive phenomenon more rigorously, @bates1994 presented analyses largely supporting that view: much systematic variation in the "referentiality" (proportion nouns) in children's vocabularies was due to the size of their vocabulary. As children's vocabularies grow, they tends to increase in their over-representation of nouns (as shown also in Chapter \@ref(categories-syntactic)). Thus, two children of the same age who have different proportions of nouns may also have different overall vocabulary sizes. After controlling for this factor, @bates1994 found only more limited evidence for stylistic variation. In the first subsection of this chapter, we pick up these analyses and apply them broadly to our dataset. 
 
+A second area of stylistic variation that has been much discussed is whether some children go through a vocabulary "spurt," defined as a change in the rate of vocabulary growth. The idea of a "spurt" or "explosion" occurs in a wide variety of discussions of early vocabulary [e.g., @nelson1973;@kamhi1986;@bates1988, see e.g., @dapretto2000 for review]. Clearly, from the average growth rates observed in Chapter \@ref(vocab), children's vocabulary growth accelerates dramatically during the period following first birthday and the emergence of production. Investigations of this acceleration have focused on two distinct features: its variation across children and its explanation. 
 
+Although there has been a tremendous amount of discussion of explanations for accelerations in vocabulary growth, we will not investigate this topic further here. Our data not allow us to investigate issues of mechanistic process directly. In addition, a short but convincing analysis by @mcmurray2007 suggests that such acceleration is over-determined in the sense that it will likely emerge from almost any plausible mechanism acquisition mechanisms. Assuming that words vary in difficulty as a normal distribution, vocabulary growth will naturally accelerate with increases in a child's ability. Thus, making reverse inferences from the presence of acceleration to a particular mechanism is unwarranted. 
 
-@bates1994
+The second issue -- variation in acceleration -- is related our aim here, however. Does every child's vocabulary acceleration follow the same general pattern, or is there substantial variation in the type of growth that is followed, for example in the point at which acceleration begins, or the specific shape of the growth curve? @ganger2004 report a systematic study of a subpart of this issue: whether there is a discontinuity in growth rate for individual children. Definining a spurt specifically as a change in the rate of acceleration, they conduct a quantitative analysis of whether such a change occurs. Our second set of analyses follows up on this general issue.  
 
-Further, idiosyncrasy in children's vocabulary is an interesting measure suggested by @mayor2014.
+The final area of stylistic variation that we address in our third subsection is the question of whether there are some children who are more fluent producers vs. others who have a large vocabulary in comprehension but more limited production. At the clinical extreme significant variation in this respect must be present, because there are some children with various apraxias of speech that have strong comprehension but serious production difficulties. The question is whether, in a typically developing population, we can detect systematic variation on this dimension. 
 
-The general issue of this chapter is that there are many measures we can define regarding individual variability, and the trick will be telling signal from noise (and from artifact). We typically rely on three strategies. The first is to ask whether a particular measure is valid in the sense that it is related to some other aspect of the data. We are in the position of not having independent validation measures to apply to, but we can still reasonably ask whether one measure (e.g., proportion of nouns) is related to another (e.g., vocabulary for age). The second strategy is -- as throughout -- to look for consistency across samples in a particular pattern. Such consistency suggests some signal, though in each case we will try to be cautious about differentiating this signal from statistical artifact. The third strategy is to look for consistency in a particular measure throughout development (e.g., evaluating "test-retest" reliability of a measure). 
+<!-- VIRGINIA, ARE THERE SOME REFERENCES HERE? CLARK 1983? -->
+
+In general, the methodological issue of this chapter is that there are many measures we can define regarding individual variability, and the trick will be telling signal from noise (and from artifact). We typically rely on three strategies. The first is to ask whether a particular measure is valid in the sense that it is related to some other aspect of the data. We are in the position of not having independent validation measures to apply to, but we can still reasonably ask whether one measure (e.g., proportion of nouns) is related to another (e.g., vocabulary for age). The second strategy is -- as throughout -- to look for consistency across samples in a particular pattern. Such consistency suggests some signal, though in each case we will try to be cautious about differentiating this signal from statistical artifact. The third strategy is to look for consistency in a particular measure throughout development (e.g., evaluating "test-retest" reliability of a measure). 
 
 Summarizing the conclusions from our various different sub-analyses:
 
-* Variation between individuals appears extremely stable from a longitudinal perspective, at least as far as we can ascertain given the measurement properties of the CDI. 
+* Referential vs. expressive variation is present but is over-estimated by analyses that do not correct for vocabulary size, since smaller vocabularies tend to be more noun-heavy. 
 
 * The apparent phenomenon of the "vocabulary spurt" is not reliably observed across participants. 
 
-* Referential vs. expressive variation is present but is over-estimated by analyses that do not correct for vocabulary size, since smaller vocabularies tend to be more noun-heavy. 
-
 * It is tricky to use comprehension data to estimate variability between individuals in how much they produce vs. comprehend, due to likely cross-linguistic differences in the uptake of instructions regarding comprehension. 
 
+* Finally, recalling the conclusions of Chapter \@ref(psychometrics), variations in rate -- though perhaps least interesting from a Batesian perspective -- nevertheless are the most detectable first order signal in our data. 
 
-## "Spurts" in Vocabulary
-
-```{r style-median_production}
-admins %>%
-  filter(language == "English (American)", form == "WG") %>%
-  group_by(age) %>%
-  summarise(production = median(production, na.rm=TRUE)) %>%
-  ggplot(aes(x = age, y = production)) +
- geom_point() + 
-  geom_smooth(span = 1, se=FALSE) +
-  xlab("Age (months)") + 
-  ylab("Median Productive Vocabulary") 
-```
-
-
-One of the most obvious aspects of early vocabulary is that it picks up speed over the second year after birth. First words are hard-won but soon children's language appears to "explode." This acceleration is easily visible in the plot above, which shows the median productive vocabulary from 8 - 18 months (English (American) Words and Gestures data). (We could measure the rate of learning by taking the derivative of this curve; but this rate calculation is slightly misleading for cross-sectional data and so we postpone this analysis until below). This increase in the rate of vocabulary learning has been much remarked on in the literature. 
-
-Many early authors discussed this rate change in terms of a "referential insight" [e.g., @kamhi1986], which allows for faster and more accurate word learning [@dore1974, @mcshane1980]. 
-
-For example, @goldfield1990
-
-More recent computational work by @mcmurray2007 proposed that.... But this work does not answer the question of whether the rate does change.
-
-@ganger2004 provides an analysis of this question, using longitudinal data to examine changes in children's growth rate via a curve fitting procedure. 
-
-
-```{r style-wg_spaghetti}
-longitudinal_admins <- admins %>% 
-  mutate(langform = paste(language, form)) %>%
-  group_by(langform, original_id) %>% 
-  count() %>% 
-  filter(n > 1) 
-
-n_long_ws <- admins %>%
-  filter(original_id %in% longitudinal_admins$original_id, 
-         language %in% c("Norwegian", "English (American)"),
-         form == "WS") %>%
-  group_by(original_id, language, source_name) %>%
-  mutate(n_admins = n()) %>%
-  filter(n_admins > 1)
-
-n_long_wg <- admins %>%
-  filter(original_id %in% longitudinal_admins$original_id,
-         language %in% c("Norwegian", "English (American)"),
-         form == "WG") %>%
-  group_by(original_id, language) %>%
-  mutate(n_admins = n()) %>%
-  filter(n_admins > 3)
-
-ggplot(n_long_wg, aes(x = age, y = production)) +
-  geom_line(aes(group = original_id), alpha = .1) +
-  facet_wrap(~language) + 
-  ylab("Production") + 
-  xlab(" Age (months)")
-```
-We use the dense longitudinal data available through the Norwegian dataset to examine this question. Because we are interested in computing changes in rate, we minimally need three datapoints from each child as a minimum. And the @ganger2004 model actually requires at least four points to distinguish between a logistic model and a quadratic model. This winnowing leaves us with data from `r length(unique(n_long_wg$original_id))` children, whose growth curves are shown in the figure above.  
-
-```{r style-wg_rates}
-wg_rates <- n_long_wg %>%
-  select(original_id, age, production, n_admins) %>%
-  group_by(original_id) %>%
-  arrange(age) %>%
-  mutate(initial_vocab = production[1],
-         dv = c(0, diff(production)), 
-         dt = c(0, diff(age)), 
-         rate = dv/dt) %>%
-  filter(is.finite(rate))
-
-ggplot(filter(wg_rates, n_admins > 6, initial_vocab < 30), 
-       aes(x = production, y = rate)) + 
-  geom_point() + 
-  geom_line() + 
-  # geom_smooth(method = "lm", formula = y ~ x + I(x^2), se=FALSE, span = 1) +   
-  facet_wrap(~original_id) + 
-  scale_y_continuous(lim = c(0, 50), 
-                     breaks = c(0, 50)) + 
-  scale_x_continuous(lim = c(0, 100), 
-                   breaks = c(0, 100))+
-  xlab("Total Words Produced") + 
-  ylab("Growth Rate (words/month)")
-```
-The figure above shows data for those children with a starting vocabulary of less than 30 words and at least 6 datapoints measured. Each subplot shows the rate of growth (words/month) plotted by total vocabulary. The question of vocabulary spurts, as posed by @ganger2004, is whether rate continues to increase (indicating constant acceleration) or whether it moves from one equilibrium point to another. The visual impression from the current data is certainly not clear. 
-
-```{r style-wg_rates_plot}
-ggplot(wg_rates, 
-       aes(x = production, y = rate)) + 
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
-
-  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
-  xlab("Total Words Produced") + 
-  ylab("Growth Rate (words/month)")
-```
-To calibrate our expectations regarding the function linking growth rate to total production, the figure below shows this relation for the full dataset. First, we should look beyond a few outliers that do not afect the overall fit much. Overall, we see a linear function (shown in red), with some deceleration towards the end. Intuitively, we should expect deceleration due to the measurement properties of the CDI form: as children learn more words, the form should tend to be less complete due both to ceiling effects (hard words not included) and omissions (easier words not included). (See \@ref(appendix-vocab-estimation) for more details on this issue). 
-
-```{r style-wg_rates_lm}
-ggplot(wg_rates, 
-       aes(x = production, y = rate)) + 
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
-
-  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
-  xlab("Total Words Produced") + 
-  ylab("Growth Rate (words/month)") + 
-  xlim(0, 100) + ylim(-25, 80)
-```
-Attempting to avoid this issue, we can zoom in on the first 100 words (the focus of previous inquiries), where we see an extremely consistent linear function with essentially no quadratic elements. 
-
-Is this linear function consistent with a vocabulary spurt? In the case where children move between a lower rate of vocabulary acquisition and a second, higher rate of vocabulary acquisition, there will tend to be some deceleration as more and more children reach their higher equilibrium. It is not impossible to produce a linear function in this scenario, but it will only happen if children who experience a later spurt *also* have a higher rete 
-
-```{r style-ws_rates}
-ws_rates <- n_long_ws %>%
-  select(original_id, age, production, n_admins) %>%
-  group_by(original_id) %>%
-  arrange(age) %>%
-  mutate(initial_vocab = production[1],
-         dv = c(0, diff(production)), 
-         dt = c(0, diff(age)), 
-         rate = dv/dt) %>%
-  filter(is.finite(rate))
-
-ggplot(filter(ws_rates, n_admins > 8, initial_vocab < 30), 
-       aes(x = production, y = rate)) + 
-  geom_point() + 
-  geom_line() + 
-  # geom_smooth(method = "lm", formula = y ~ x + I(x^2), se=FALSE, span = 1) + 
-  facet_wrap(~original_id) + 
-  scale_y_continuous(breaks = c(0, 100), lim = c(-10, 100)) + 
-  scale_x_continuous(breaks = c(0, 300))+ 
-  xlab("Total Words Produced") + 
-  ylab("Growth Rate (words/month)")
-```
-Examining Words and Sentences data for convergent evidence, we see the same general pattern of deceleration. In this case it is very clearly due to measurement issues as many children in this dataset are reaching ceiling. 
-
-```{r style-ws_rates_lm}
-ggplot(ws_rates, 
-       aes(x = production, y = rate)) + 
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
-
-  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
-  xlab("Total Words Produced") + 
-  ylab("Growth Rate (words/month)") + 
-  xlim(0, 100) + ylim(-25, 80)
-```
-Again we can zoom in on the first 100 words, recognizing that this selects children who are likely later learners (because they are above 16 months due to the use of the WS form). And again we see a very linear relationship between vocabulary size and rate. 
-
-Overall, 
+<!-- Further, idiosyncrasy in children's vocabulary is an interesting measure suggested by @mayor2014. -->
 
 ## Variation in Vocabulary Composition
 
@@ -423,6 +273,156 @@ ggplot(ws_vc_all,
   xlab("Total Vocabulary Size (proportion)") + 
   ylab("Proportion Function Words") 
 ```
+
+
+## "Spurts" in Vocabulary
+
+```{r style-median_production}
+admins %>%
+  filter(language == "English (American)", form == "WG") %>%
+  group_by(age) %>%
+  summarise(production = median(production, na.rm=TRUE)) %>%
+  ggplot(aes(x = age, y = production)) +
+ geom_point() + 
+  geom_smooth(span = 1, se=FALSE) +
+  xlab("Age (months)") + 
+  ylab("Median Productive Vocabulary") 
+```
+
+
+One of the most obvious aspects of early vocabulary is that it picks up speed over the second year after birth. First words are hard-won but soon children's language appears to "explode." This acceleration is easily visible in the plot above, which shows the median productive vocabulary from 8 - 18 months (English (American) Words and Gestures data). (We could measure the rate of learning by taking the derivative of this curve; but this rate calculation is slightly misleading for cross-sectional data and so we postpone this analysis until below). This increase in the rate of vocabulary learning has been much remarked on in the literature. 
+
+Many early authors discussed this rate change in terms of a "referential insight" [e.g., @kamhi1986], which allows for faster and more accurate word learning [@dore1974, @mcshane1980]. 
+
+For example, @goldfield1990
+
+More recent computational work by @mcmurray2007 proposed that.... But this work does not answer the question of whether the rate does change.
+
+@ganger2004 provides an analysis of this question, using longitudinal data to examine changes in children's growth rate via a curve fitting procedure. 
+
+
+```{r style-wg_spaghetti}
+longitudinal_admins <- admins %>% 
+  mutate(langform = paste(language, form)) %>%
+  group_by(langform, original_id) %>% 
+  count() %>% 
+  filter(n > 1) 
+
+n_long_ws <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% c("Norwegian", "English (American)"),
+         form == "WS") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1)
+
+n_long_wg <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id,
+         language %in% c("Norwegian", "English (American)"),
+         form == "WG") %>%
+  group_by(original_id, language) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 3)
+
+ggplot(n_long_wg, aes(x = age, y = production)) +
+  geom_line(aes(group = original_id), alpha = .1) +
+  facet_wrap(~language) + 
+  ylab("Production") + 
+  xlab(" Age (months)")
+```
+We use the dense longitudinal data available through the Norwegian dataset to examine this question. Because we are interested in computing changes in rate, we minimally need three datapoints from each child as a minimum. And the @ganger2004 model actually requires at least four points to distinguish between a logistic model and a quadratic model. This winnowing leaves us with data from `r length(unique(n_long_wg$original_id))` children, whose growth curves are shown in the figure above.  
+
+```{r style-wg_rates}
+wg_rates <- n_long_wg %>%
+  select(original_id, age, production, n_admins) %>%
+  group_by(original_id) %>%
+  arrange(age) %>%
+  mutate(initial_vocab = production[1],
+         dv = c(0, diff(production)), 
+         dt = c(0, diff(age)), 
+         rate = dv/dt) %>%
+  filter(is.finite(rate))
+
+ggplot(filter(wg_rates, n_admins > 6, initial_vocab < 30), 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_line() + 
+  # geom_smooth(method = "lm", formula = y ~ x + I(x^2), se=FALSE, span = 1) +   
+  facet_wrap(~original_id) + 
+  scale_y_continuous(lim = c(0, 50), 
+                     breaks = c(0, 50)) + 
+  scale_x_continuous(lim = c(0, 100), 
+                   breaks = c(0, 100))+
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)")
+```
+The figure above shows data for those children with a starting vocabulary of less than 30 words and at least 6 datapoints measured. Each subplot shows the rate of growth (words/month) plotted by total vocabulary. The question of vocabulary spurts, as posed by @ganger2004, is whether rate continues to increase (indicating constant acceleration) or whether it moves from one equilibrium point to another. The visual impression from the current data is certainly not clear. 
+
+```{r style-wg_rates_plot}
+ggplot(wg_rates, 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
+
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)")
+```
+To calibrate our expectations regarding the function linking growth rate to total production, the figure below shows this relation for the full dataset. First, we should look beyond a few outliers that do not afect the overall fit much. Overall, we see a linear function (shown in red), with some deceleration towards the end. Intuitively, we should expect deceleration due to the measurement properties of the CDI form: as children learn more words, the form should tend to be less complete due both to ceiling effects (hard words not included) and omissions (easier words not included). (See \@ref(appendix-vocab-estimation) for more details on this issue). 
+
+```{r style-wg_rates_lm}
+ggplot(wg_rates, 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
+
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)") + 
+  xlim(0, 100) + ylim(-25, 80)
+```
+Attempting to avoid this issue, we can zoom in on the first 100 words (the focus of previous inquiries), where we see an extremely consistent linear function with essentially no quadratic elements. 
+
+Is this linear function consistent with a vocabulary spurt? In the case where children move between a lower rate of vocabulary acquisition and a second, higher rate of vocabulary acquisition, there will tend to be some deceleration as more and more children reach their higher equilibrium. It is not impossible to produce a linear function in this scenario, but it will only happen if children who experience a later spurt *also* have a higher rete 
+
+```{r style-ws_rates}
+ws_rates <- n_long_ws %>%
+  select(original_id, age, production, n_admins) %>%
+  group_by(original_id) %>%
+  arrange(age) %>%
+  mutate(initial_vocab = production[1],
+         dv = c(0, diff(production)), 
+         dt = c(0, diff(age)), 
+         rate = dv/dt) %>%
+  filter(is.finite(rate))
+
+ggplot(filter(ws_rates, n_admins > 8, initial_vocab < 30), 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_line() + 
+  # geom_smooth(method = "lm", formula = y ~ x + I(x^2), se=FALSE, span = 1) + 
+  facet_wrap(~original_id) + 
+  scale_y_continuous(breaks = c(0, 100), lim = c(-10, 100)) + 
+  scale_x_continuous(breaks = c(0, 300))+ 
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)")
+```
+Examining Words and Sentences data for convergent evidence, we see the same general pattern of deceleration. In this case it is very clearly due to measurement issues as many children in this dataset are reaching ceiling. 
+
+```{r style-ws_rates_lm}
+ggplot(ws_rates, 
+       aes(x = production, y = rate)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x, col = "red") +
+
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2)) +
+  xlab("Total Words Produced") + 
+  ylab("Growth Rate (words/month)") + 
+  xlim(0, 100) + ylim(-25, 80)
+```
+Again we can zoom in on the first 100 words, recognizing that this selects children who are likely later learners (because they are above 16 months due to the use of the WS form). And again we see a very linear relationship between vocabulary size and rate. 
+
+Overall, 
 
 
 

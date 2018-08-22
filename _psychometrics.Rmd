@@ -1,0 +1,248 @@
+<!-- THESE CHUNKS DO STUFF THAT IS USED IN PSYCHOMETRICS -->
+
+```{r psycho-fit_irt_ws}
+d_wide_ws <- d_ws %>%
+  mutate(produces = as.numeric(produces)) %>%
+  select(definition, produces, data_id) %>%
+  spread(definition, produces)
+  
+d_mat_ws <- d_wide_ws %>%
+  select(-data_id) %>% 
+  data.frame %>%
+  data.matrix
+
+colnames(d_mat_ws) <- sort(unique(d_ws$definition))
+rownames(d_mat_ws) <- d_wide_ws$data_id
+
+# Requires no empty rows - `personfit` doesn't work with `removeEmptyRows=TRUE` even though the model fit will work that way. 
+d_mat_ws <- d_mat_ws[complete.cases(d_mat_ws),]
+
+mod_4pl <- mirt(d_mat_ws, 1, itemtype='4PL', verbose=TRUE)
+
+coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl, simplify = TRUE)$items))
+fscores_4pl <- data_frame(data_id = rownames(d_mat_ws), 
+                             ability = fscores(mod_4pl, method = "MAP")[,1])
+
+save(file = "data/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
+```
+
+
+```{r psycho-prod_comp_wg}
+eng_wg <- read_feather("data/eng_wg_data.feather")
+
+d_wg <- eng_wg %>%
+  mutate(produces = value == "produces", 
+         understands = value == "understands") %>%
+  filter(!is.na(category)) %>%
+  select(data_id, produces, understands, age, production, sex, definition) 
+
+d_wide_wg_produces <- d_wg %>%
+  mutate(produces = as.numeric(produces)) %>%
+  select(definition, produces, data_id) %>%
+  spread(definition, produces)
+
+d_wide_wg_understands <- d_wg %>%
+  mutate(understands = as.numeric(understands)) %>%
+  select(definition, understands, data_id) %>%
+  spread(definition, understands)
+
+d_mat_wg_produces <- d_wide_wg_produces %>%
+  select(-data_id) %>% 
+  data.frame %>%
+  data.matrix
+
+d_mat_wg_understands <- d_wide_wg_understands %>%
+  select(-data_id) %>% 
+  data.frame %>%
+  data.matrix
+
+colnames(d_mat_wg_produces) <- sort(unique(d_wg$definition))
+rownames(d_mat_wg_produces) <- d_wide_wg_produces$data_id
+colnames(d_mat_wg_understands) <- sort(unique(d_wg$definition))
+rownames(d_mat_wg_understands) <- d_wide_wg_understands$data_id
+
+# Requires no empty rows - `personfit` doesn't work with `removeEmptyRows=TRUE` even though the model fit will work that way. 
+
+d_mat_wg_produces <- d_mat_wg_produces[complete.cases(d_mat_wg_produces) & rowSums(d_mat_wg_produces) > 0,]
+d_mat_wg_understands <- d_mat_wg_understands[complete.cases(d_mat_wg_understands) & rowSums(d_mat_wg_understands) > 0,]
+
+mod_4pl_wg_produces <- mirt(d_mat_wg_produces, 1, itemtype='4PL', verbose=TRUE)
+mod_4pl_wg_understands <- mirt(d_mat_wg_understands, 1, itemtype='4PL', verbose=TRUE)
+
+coefs_4pl_wg_produces <- as_data_frame(coef(mod_4pl_wg_produces, 
+                                            simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl_wg_produces, simplify = TRUE)$items))
+
+coefs_4pl_wg_understands <- as_data_frame(coef(mod_4pl_wg_understands, 
+                                            simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl_wg_understands, simplify = TRUE)$items))
+
+save(file = "data/eng_wg_mods_4pl.Rds", 
+     "mod_4pl_wg_produces",
+     "mod_4pl_wg_understands",
+     "coefs_4pl_wg_produces",
+     "coefs_4pl_wg_understands")
+```
+
+<!-- PSYCHOMETRICS PLOTS NOT INCLUDED  -->
+
+
+```{r psycho-irt_summary_plot, eval=FALSE}
+d_ws_summary %>%
+  gather(measure, value, production, ability, age) %>%
+  mutate(measure = fct_recode(measure, 
+                              Production = "production", 
+                              `Latent Ability` = "ability", 
+                              `Age (months)` = "age") %>%
+           fct_relevel("Age (months)", "Production")) %>%
+  ggplot(aes(x = value)) + 
+  geom_histogram(bins = 15) + 
+  facet_wrap(~measure, scales="free_x")
+```
+
+<!-- CHUNKS BELOW BELONG TO PSYCHOMETRIC STABILITY ANALYSIS AND WERE NOT INCLUDED -->
+
+```{r psycho-mirt, eval=FALSE}
+mirt_params <- function(dx) {
+  language <- dx$language
+  form <- dx$form
+  print(paste(language, form))
+
+  lang_data <- get_instrument_data(language = language, form = form,
+                                   administrations = TRUE, iteminfo = TRUE)
+
+  d_lang <- lang_data %>%
+    filter(!is.na(lexical_class)) %>%
+    mutate(produces = value == "produces") %>%
+    select(data_id, item_id, produces, age, production)
+
+  d_lang_wide <- d_lang %>%
+    mutate(produces = ifelse(is.na(produces), 0, as.numeric(produces))) %>%
+    select(item_id, produces, data_id) %>%
+    spread(item_id, produces)
+
+  d_lang_mat <- d_lang_wide %>%
+    select(-data_id) %>%
+    data.frame %>%
+    data.matrix
+
+  colnames(d_lang_mat) <- sort(unique(d_lang$item_id))
+  rownames(d_lang_mat) <- d_lang_wide$data_id
+
+  d_lang_mat <- d_lang_mat[complete.cases(d_lang_mat),]
+  mod_4pl <- mirt(d_lang_mat, 1, itemtype='4PL', verbose=TRUE)
+
+  fscores <- data_frame(data_id = rownames(d_lang_mat),
+                        ability = fscores(mod_4pl, method = "MAP")[,1])
+  fscores$language <- language
+  fscores$form <- form
+
+  fscores <- fscores %>%
+    mutate(data_id = as.numeric(data_id)) %>%
+    left_join(get_administration_data(language = language,
+                                      form = form))
+
+  return(fscores)
+}
+
+mirt_params <- instruments %>%
+  filter(form %in% WSs, language %in% c("Norwegian", "English (American)")) %>%
+  mutate(idx = 1:n()) %>%
+  split(.$idx) %>%
+  map_df(possibly(mirt_params, otherwise = data_frame()))
+
+write_feather(mirt_params, "data/long_mirt_params.feather")
+```
+
+
+```{r psycho-style_long_mirt_stability, eval=FALSE}
+mirt_params <- read_feather("data/long_mirt_params.feather")
+
+long_cors_mirt <- n_long_ws %>%
+  left_join(select(mirt_params, data_id, ability, language, form)) %>%
+  unite("id", c("original_id", "source_name")) %>%
+  mutate(age = round(age/age_binsize) * age_binsize) %>% # round age into two-month bins
+  select(id, language, age, ability) %>%
+  group_by(id, age) %>%
+  sample_n(size = 1) %>% # if there are multiple measurements from one age, remove
+  ungroup 
+  
+long_cor_pairs_mirt <-  long_cors_mirt %>% 
+  spread(age, ability) %>%
+  split(.$language) %>%
+  map_df(function (df) {
+    language <- df$language[1]
+    cor_mat <- select(df, -language, -id) %>%
+      cor(use='pairwise.complete.obs') 
+    
+    as_data_frame(cor_mat) %>%
+      mutate(age2 = rownames(cor_mat)) %>%
+      gather(age1, cor, -age2) %>%
+      mutate(language = language,
+             age1 = as.numeric(age1), 
+             age2 = as.numeric(age2), 
+             dist = age2 - age1) %>%
+      filter(dist > 0)
+  }) %>%
+  left_join(long_cor_ns)
+```
+
+```{r psycho-style_long_raw_stability, eval=FALSE}
+long_cors_raw <- n_long_ws %>%
+  unite("id", c("original_id", "source_name")) %>%
+  mutate(age = round(age/age_binsize) * age_binsize) %>% # round age into two-month bins
+  select(id, language, age, production) %>%
+  group_by(id, age) %>%
+  sample_n(size = 1) %>% # if there are multiple measurements from one age, remove
+  ungroup 
+  
+long_cor_pairs_raw <-  long_cors_raw %>% 
+  spread(age, production) %>%
+  split(.$language) %>%
+  map_df(function (df) {
+    language <- df$language[1]
+    cor_mat <- select(df, -language, -id) %>%
+      cor(use='pairwise.complete.obs') 
+    
+    as_data_frame(cor_mat) %>%
+      mutate(age2 = rownames(cor_mat)) %>%
+      gather(age1, cor, -age2) %>%
+      mutate(language = language,
+             age1 = as.numeric(age1), 
+             age2 = as.numeric(age2), 
+             dist = age2 - age1) %>%
+      filter(dist > 0)
+  }) %>%
+  left_join(long_cor_ns)
+```
+
+
+```{r psycho-style_cor_methods_comparisons, eval=FALSE}
+min_n <- 50
+all_cors <- left_join(long_cor_pairs_mirt %>% 
+                        filter(n >= min_n) %>%
+                      group_by(language, dist) %>% 
+                      summarise(`IRT ability` = mean(cor, na.rm=TRUE)), 
+                    long_cor_pairs %>% 
+                      filter(n >= min_n) %>%
+                      group_by(language, dist) %>% 
+                      summarise(Percentile = mean(cor, na.rm=TRUE))) %>%
+  left_join(long_cor_pairs_raw %>% 
+              filter(n >= min_n) %>%
+            group_by(language, dist) %>% 
+            summarise(`Raw score` = mean(cor, na.rm=TRUE))) %>%
+  filter(is.finite(`Raw score`)) %>%
+  gather(measure, value, `IRT ability`, Percentile, `Raw score`)
+
+ggplot(all_cors, aes(x = dist, y = value, col = measure)) +
+  geom_line() + 
+  facet_wrap(~language) + 
+  ylim(0,1) + 
+  ylab("Correlation") + 
+  xlab("Measurement Gap (Months)") + 
+  scale_color_ptol(name = "Measure")
+```
+
+
+

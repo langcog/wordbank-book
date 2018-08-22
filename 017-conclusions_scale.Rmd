@@ -4,7 +4,7 @@ This chapter synthesizes knowledge gained from the broader enterprise, in the se
 
 ## Content themes
 
-What did we learn in each chapter? 
+<!-- Cheat sheet: What did we learn in each chapter?  -->
 
 * Across children, variability is a constant in early language. 
 
@@ -22,6 +22,8 @@ What did we learn in each chapter?
 
 * Style???
 
+
+
 <!-- Are the chapters in the right order? -->
 
 
@@ -32,6 +34,12 @@ Wordbank embodies our belief that scale is in itself transformative. The existen
 More ABOUT POWER TO MEASURE MEAN AND VARIANCE
 
 REPRODUCIBILITY
+
+
+## Theoretical Themes
+
+
+## Conclusions
 
 Developmental psychology often appears to be divided between two groups that do not communicate with one another. On the one hand, there are researchers interested in the ontogenetic and phylogenetic origins of knowledge -- the epistemological project of understanding how we reason about objects, communicate using language, or learn from other people [@carey2009, @spelke2007, @tomasellooriginoflanguage]. On the other hand, there are researchers interested in growth, change, and variation across individuals in psychometric constructs like executive function, working memory, and personality [@zelazo?, other cites]. The first type of research has led to a productive union of philosophical and psychological ideas, addressing many of the most exciting questions in the history of philosophy using empirical methods [@gopnik, @carey]. The second type has had success in its connections to educational policy [@nelson2007,@diamond2011, others?]. In many areas of research, these two traditions have little interchange with one another. They read different journals, record different measures, use different research designs and statisical models, and often appear to be pursuing entirely different goals. 
 

@@ -133,7 +133,7 @@ ordering_raw <- filter(medians, form %in% WSs,
                      age <=30,
                      !(language == "Mandarin" & form == "WS"),
                    !(language == "Hebrew")) %>%
-  do(tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
+  do(broom::tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
   filter(term == "(Intercept)") %>% 
   mutate(measure = "raw")
 
@@ -143,7 +143,7 @@ ordering_props <- filter(medians, form %in% WSs,
                      age <=30,
                      !(language == "Mandarin" & form == "WS"),
                    !(language == "Hebrew")) %>%
-  do(tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
+  do(broom::tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
   filter(term == "(Intercept)") %>%
   mutate(measure = "proportion")
   
@@ -514,7 +514,7 @@ mirt_params <- function(dx) {
   rownames(d_mat) <- d_wide$data_id
   
   d_mat <- d_mat[complete.cases(d_mat),]
-  mod_4pl <- mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
+  mod_4pl <- mirt::mirt(d_mat, 1, itemtype='4PL', verbose=TRUE)
 
   fscores <- data_frame(data_id = rownames(d_mat), 
                         ability = fscores(mod_4pl, method = "MAP")[,1])

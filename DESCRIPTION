@@ -4,7 +4,34 @@ Description: Does not matter.
 Author: placeholder
 Maintainer: Mika Braginsky <mika.br@gmail.com>
 Version: 0.0.1
-Imports: bookdown
-Remotes: rstudio/bookdown
+Imports:
+  arm,
+  binom,
+  bookdown,
+  boot,
+  directlabels,
+  DT,
+  extrafont,
+  feather,
+  ggdendro,
+  ggfortify,
+  ggrepel,
+  ggthemes,
+  glue,
+  gridExtra,
+  Hmisc,
+  knitr,
+  langcog,
+  lme4,
+  maps,
+  mirt,
+  quantregGrowth,
+  rmarkdown,
+  robustbase,
+  tidyverse,
+  widyr,
+  wordbankr,
+  viridis
+Remotes:
+  langcog/langcog
 License: GPL-3
-Suggests: testthat, rmarkdown

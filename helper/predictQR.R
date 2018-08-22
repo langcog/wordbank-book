@@ -16,7 +16,7 @@ predictQR_fixed <- function (object, newdata, xreg)
       dx <- (xr - xl)/ndx
       knots <- seq(xl - deg * dx, xr + deg * dx, by = dx)
     }
-    B <- splineDesign(knots, x, ord = deg + 1, derivs = rep(deriv,
+    B <- splines::splineDesign(knots, x, ord = deg + 1, derivs = rep(deriv,
                                                             length(x)), outer.ok = outer.ok)
     B
   }
@@ -60,10 +60,11 @@ predictQR_fixed <- function (object, newdata, xreg)
 }
 
 fit_gcrq <- function(x) {
-  mod <- try(gcrq(formula = mean ~ ps(age, monotone = 1,
-                                      lambda = 1000),
-                  tau = taus, data = x))
-
+  ps <- quantregGrowth::ps
+  mod <- try(
+    quantregGrowth::gcrq(formula = mean ~ ps(age, monotone = 1, lambda = 1000),
+                         tau = taus, data = x)
+  )
   if (inherits(mod, "try-error"))
   {
     return(NA)
@@ -81,8 +82,7 @@ pred_gcrq <- function(x, mods) {
                        percentile = as.character(taus*100),
                        pred = NA))
   } else {
-    preds <- predictQR_fixed(mod,
-                             newdata = x) %>%
+    preds <- predictQR_fixed(mod, newdata = x) %>%
       data.frame %>%
       mutate(age = x$age,
              language = x$language) %>%

@@ -70,7 +70,7 @@ write_feather(grammar_items, "data/grammar/grammar_items.feather")
 grammar_items <- read_feather("data/grammar/grammar_items.feather")
 grammar_items %>%
   filter(coded_type == "word_forms") %>%
-  datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
+  DT::datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
             options = list(pageLenth = 20))
 ```
 
@@ -79,7 +79,7 @@ Complexity items are shown in the table below:
 ```{r gram-complexity_table}
 grammar_items %>%
   filter(coded_type == "complexity") %>%
-  datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
+  DT::datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
             options = list(pageLenth = 20))
 ```
 
@@ -116,7 +116,7 @@ Vocabulary-related trajectories were more variable, however. In general, childre
 To investigate the quantitative relationship between word combination (as measured with this item), age, and vocabulary, we fit a linear mixed effects model predicting combination as a function of vocabulary (proportion), age, and their interaction. We also included random intercepts by language and random slopes for both vocabulary and age. Coefficient estimates are shown below:
 
 ```{r gram-combines_lmer, eval=FALSE}
-mod <- glmer(positive ~ production_prop * age +
+mod <- lme4::glmer(positive ~ production_prop * age +
                (production_prop + age | language), 
              family = "binomial", 
              data = filter(grammar_combine,  language != "Slovak"))
@@ -206,7 +206,7 @@ inst_model <- function(inst_data) {
 inst_predictions <- function(inst_data, inst_model) {
   data_shape <- cross_df(list(age = seq(min(inst_data$age), max(inst_data$age)),
                               production_prop = seq(0, 1, vocab_step)))
-  augment(inst_model, newdata = data_shape, type.predict = "response")
+  broom::augment(inst_model, newdata = data_shape, type.predict = "response")
 }
 
 grammar_models <- grammar_morphosyntax %>%
@@ -276,8 +276,8 @@ ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
   facet_wrap(~coded_type) +
   geom_point() +
   geom_line(aes(group = language)) +
-  geom_dl(aes(label = language),
-          method = list(first.qp, dl.trans(x = x - 0.2),
+  directlabels::geom_dl(aes(label = language),
+          method = list("first.qp", directlabels::dl.trans(x = x - 0.2),
                         cex = 0.7, fontfamily = .font)) +
   scale_colour_solarized(guide = FALSE) +
   labs(x = "", y = "Area of grammar score\n across vocabulary size") +
@@ -311,7 +311,7 @@ item_models <- grammar_data_coded %>%
 
 item_effects <- item_models %>%
   gather(model_predictors, model, age_model, vocab_model, age_vocab_model) %>%
-  mutate(coefs = map(model, tidy),
+  mutate(coefs = map(model, broom::tidy),
          AIC = map_dbl(model, AIC),
          converged = map_lgl(model, ~.x$converged)) %>%
   select(-data, -model) %>%

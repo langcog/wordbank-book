@@ -160,7 +160,7 @@ long_cor_ns <- long_cors %>%
     language <- df$language[1] 
     df %>% 
       select(-language) %>%
-      pairwise_count(age, id) %>%
+      widyr::pairwise_count(age, id) %>%
       mutate(language = language) %>%
       rename(age1 = item1, 
              age2 = item2)
@@ -192,7 +192,7 @@ ggplot(filter(long_cor_pairs, n >= 50),
   facet_wrap(~language) + 
   ylab("Correlation") + 
   xlab("Measurement Gap (Months)") + 
-  scale_color_viridis(name = "Starting Age") + 
+  viridis::scale_color_viridis(name = "Starting Age") + 
   scale_size_continuous(name = "N")  + 
   ylim(0,1)
     
@@ -221,14 +221,15 @@ Overall, the conclusions of our analysis are that:
 These analyses generally ratify the conclusion that the measurement properties of the CDI are good, even for function words and for comprehension measures. These questions may carry slightly less signal about the specifics of a child's vocabulary and load more heavily on a parents' general estimation of the child's linguistic ability, but they do carry some signal that relates to other responses. Further, when the English CDI departs from good measurement practice it generally does so for completeness (e.g., including "mom" and "dad" words because these are important to parents, even though they do not show good measurement properties). 
 
 ```{r psycho-load_irt_data_summary_ws}
-eng_ws <- read_feather("data/eng_ws_raw_data.feather")
+# eng_ws <- read_feather("data/eng_ws_raw_data.feather")
+load("data/psychometrics/eng_ws_raw_data.Rds")
 
 d_ws <- eng_ws %>%
   mutate(produces = value == "produces") %>%
   filter(!is.na(category)) %>%
   select(data_id, produces, age, production, sex, definition) 
 
-load("data/eng_ws_mod_4pl.Rds")
+load("data/psychometrics/eng_ws_mods_4pl.Rds")
 
 d_ws_summary <- d_ws %>%
   group_by(data_id, sex, age) %>%
@@ -248,7 +249,7 @@ A first question that we can ask using a fitted IRT model is how well individual
 ggplot(coefs_4pl,  
        aes(x = a1, y = d)) + 
   geom_point(alpha = .3) + 
-  geom_text_repel(data = filter(coefs_4pl, 
+  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(a1) > 3.3 | abs(d) > 4), 
                   aes(label = definition), size = 3) + 
   xlab("Discrimination") + 
@@ -265,7 +266,7 @@ On the lower right hand side of the plot, the remainder of items are clumped, wi
 ggplot(coefs_4pl,  
        aes(x = g, y = u)) + 
   geom_point() + 
-  geom_text_repel(data = filter(coefs_4pl, 
+  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(g) > .4 | u < .75), 
                   aes(label = definition), size = 3) + 
   xlab("Lower bound (high base rate)") + 
@@ -280,7 +281,7 @@ One way to think about these analyses is that they show that the CDI has not onl
 ### Production and comprehension
 
 ```{r psycho-load_irt_data_wg}
-load("data/eng_wg_mods_4pl.Rds")
+load("data/psychometrics/eng_wg_mods_4pl.Rds")
 
 coefs_4pl_wg <- bind_rows(coefs_4pl_wg_produces %>%
                             mutate(measure = "produces"),
@@ -333,22 +334,22 @@ class_summary <- coefs_4pl %>%
 a <- ggplot(coefs_4pl, 
        aes(x = a1, y = d, col = lexical_class)) + 
   geom_point(alpha = .3) + 
-  geom_text_repel(data = filter(coefs_4pl, 
+  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(a1) > 3.3 | abs(d) > 4), 
                   aes(label = definition), size = 2) + 
-  scale_color_ptol(name = "Lexical Class") + 
+  ggthemes::scale_color_ptol(name = "Lexical Class") + 
   xlab("Discrimination") + 
   ylab("Difficulty")
 
 b <- ggplot(coefs_4pl, 
        aes(x = a1, fill = lexical_class)) + 
   geom_histogram() + 
-  scale_fill_ptol(name = "Lexical Class") + 
+  ggthemes::scale_fill_ptol(name = "Lexical Class") + 
   xlab("Discrimination") +
   ylab("Number of Words") +
   xlim(0,4)
 
-grid.arrange(a, b)
+gridExtra::grid.arrange(a, b)
 ```
 
 The plots above show WS item difficulty and discrimination (as above) and the histogram of discrimination, but broken down by lexical class (color). Many of the easy, non-discriminating items are found in the "other" section. In contrast, the hardest items tend to be function words. These items tend to have lower discrimination on average (`r signif(class_summary$a1[class_summary$lexical_class == "function_words"],2)`) compared with nouns (`r signif(class_summary$a1[class_summary$lexical_class == "nouns"],2)`), adjectives (`r signif(class_summary$a1[class_summary$lexical_class == "adjectives"],2)`), and especially verbs (`r signif(class_summary$a1[class_summary$lexical_class == "verbs"],2)`). Nevertheless, the situation is not dire: most have a discrimination parameter above one. Thus, although function words are not the most discriminative items on the CDI WS, these items still appear to encode valid signal about children's abilities.

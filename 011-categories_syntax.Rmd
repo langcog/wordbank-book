@@ -103,7 +103,7 @@ sample_sizes <- vocab_comp_data %>%
   distinct() 
 
 sample_sizes %>%
-  datatable
+  DT::datatable()
 ```
 
 
@@ -320,7 +320,7 @@ ggplot(area_scatter_data,
   geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
   geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
   geom_smooth(method = "lm") + 
-  geom_label_repel(aes(label=langform), force = 4, alpha = .8, size = 3) +
+  ggrepel::geom_label_repel(aes(label=langform), force = 4, alpha = .8, size = 3) +
   xlab("Noun bias") +
   ylab("Predicate bias") + 
   xlim(-.05,.15) + 
@@ -397,7 +397,7 @@ ggplot(area_scatter_data,
   geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
   geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
   geom_smooth(method = "lm") + 
-  geom_label_repel(aes(label=langform), force = 4, alpha = .8, size = 3) +
+  ggrepel::geom_label_repel(aes(label=langform), force = 4, alpha = .8, size = 3) +
   xlab("Noun bias") +
   ylab("Predicate bias")
 ```
@@ -507,7 +507,7 @@ ggplot(pred_prod,
   ylab("Predicate Bias") + 
   xlab("Proportion Predicates on Form") + 
   scale_color_discrete(guide = FALSE) + 
-  geom_label_repel(data = filter(pred_prod, prop_pred > .25), 
+  ggrepel::geom_label_repel(data = filter(pred_prod, prop_pred > .25), 
                    aes(label = langform))
 ```
 

@@ -74,7 +74,7 @@ sample_sizes <- cat_comp_data %>%
   distinct() 
 
 sample_sizes %>%
-  datatable
+  DT::datatable()
 ```
 
 
@@ -250,9 +250,11 @@ Standard PCA requires no missing data, thus we removed languages with missing ca
 
 ```{r catsem-pca_autoplot}
 
-autoplot(pcs,  label.repel = TRUE, loadings.label.repel = TRUE)
-autoplot(pcs,  loadings = TRUE, loadings.label=TRUE, 
-         shape=FALSE, label=FALSE, loadings.label.repel=TRUE)
+ggfortify:::autoplot.pca_common(pcs,  label.repel = TRUE,
+                                loadings.label.repel = TRUE)
+ggfortify:::autoplot.pca_common(pcs,  loadings = TRUE, loadings.label=TRUE, 
+                                shape=FALSE, label=FALSE,
+                                loadings.label.repel=TRUE)
 ```
 
 The figures above show the data projected into the space of the first two principal components and the loadings of semantic categories on these two components, respectively. 
@@ -330,7 +332,7 @@ color_langs <- color_words %>%
 ggplot(color_langs, 
        aes(x = age, y = mean, col = langform)) +
   geom_smooth(se = FALSE, span = 1) + 
-  geom_label_repel(data = color_langs %>%
+  ggrepel::geom_label_repel(data = color_langs %>%
                      group_by(langform) %>%
                      filter(age == max(age)),
                    aes(label = langform), 
@@ -383,7 +385,7 @@ cat_var <- bind_rows(time_words %>% mutate(category = "time"),
   
 cat_var %>%
   summarise(cv = round(mean(cv), 2)) %>%
-  datatable(colnames = c("Category","Coefficient of Variation"))
+  DT::datatable(colnames = c("Category","Coefficient of Variation"))
 ```
 
 Body words as well as animal words are highly consistent across languages. In contrast, color, logic words, and time words are far less consistent. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
@@ -391,7 +393,7 @@ Body words as well as animal words are highly consistent across languages. In co
 ```{r catsem-cat_var2}
 cat_var %>%
   mutate(cv = round(cv,2)) %>%
-    datatable(colnames = c("Category","Word", "Coefficient of Variation"))
+    DT::datatable(colnames = c("Category","Word", "Coefficient of Variation"))
 ```
 
 

@@ -70,11 +70,11 @@ Some words about AOA estimation--OR MAYBE NOT?
 fit_rglm <- function(data) {
   
   if(any(str_detect(names(data), "produces")))
-    model <- glmrob(cbind(produces, total - produces) ~ age,
+    model <- robustbase::glmrob(cbind(produces, total - produces) ~ age,
                family = "binomial",
                data = data)
   else
-    model <- glmrob(cbind(understands, total - understands) ~ age,
+    model <- robustbase::glmrob(cbind(understands, total - understands) ~ age,
                family = "binomial",
                data = data)
   
@@ -155,7 +155,7 @@ lemma_completeness %>%
   ungroup() %>%
   filter(measure == "produces") %>%
   select(-measure) %>%
-  datatable(options = list(scrollX='400px'))
+  DT::datatable(options = list(scrollX='400px'))
 ```
 
 Comprehension
@@ -165,7 +165,7 @@ lemma_completeness %>%
   ungroup() %>%
   filter(measure == "understands") %>%
   select(-measure) %>%
-  datatable(options = list(scrollX='400px'))
+  DT::datatable(options = list(scrollX='400px'))
 ```
 
 To begin, we ask about the earliest words. Following @tardif2008, we present the first 10 words acquired by children across langauges
@@ -189,7 +189,7 @@ top10 %>%
   ungroup() %>%
   filter(measure == "produces") %>%
   select(-measure, -order) %>%
-  datatable(options = list(scrollX='400px'))
+  DT::datatable(options = list(scrollX='400px'))
 ```
 
 Production
@@ -199,7 +199,7 @@ top10 %>%
   ungroup() %>%
   filter(measure == "understands") %>%
   select(-measure, -order) %>%
-  datatable(options = list(scrollX='400px'))
+  DT::datatable(options = list(scrollX='400px'))
 ```
 
 Acquisition order in production vs comprehension across languages
@@ -313,7 +313,7 @@ production_wide <- production_corrs_full %>%
 rownames(production_wide) <- production_wide$lang1
 
 production_hc <- hclust(dist(select(production_wide, -lang1)))
-ggdendrogram(production_hc) +
+ggdendro::ggdendrogram(production_hc) +
   theme_bw()
 ```
 
@@ -326,7 +326,7 @@ understanding_wide <- understanding_corrs_full %>%
 rownames(understanding_wide) <- understanding_wide$lang1
 
 understanding_hc <- hclust(dist(select(understanding_wide, -lang1)))
-ggdendrogram(understanding_hc) +
+ggdendro::ggdendrogram(understanding_hc) +
   theme_bw()
 ```
 
@@ -386,7 +386,7 @@ ggplot(bind_rows(understands_step_corrs, produces_step_corrs),
   facet_wrap(~ measure) + 
   geom_smooth() + 
   theme_bw() + 
-  geom_dl(method = list(dl.trans(x=x + .2), "last.points", cex=1)) + 
+  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x + .2), "last.points", cex=1)) + 
   scale_x_continuous(name = "Median Acquisition Order Number", limits = c(0, 450)) +
   theme(legend.position = "none")
 ```

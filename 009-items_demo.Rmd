@@ -171,7 +171,7 @@ plot_props <- function(plot_demo, plot_measure, ncol = NULL) {
       geom_smooth(method = "glm", method.args = list(family = "binomial"),
                   se = FALSE, size = 0.8) +
       scale_colour_solarized() +
-      labs(x = "Age (months)", y = glue("Proportion {plot_measure}"),
+      labs(x = "Age (months)", y = glue::glue("Proportion {plot_measure}"),
            colour = demo_labels[[plot_demo]]) +
       lims(y = c(0, 1)) +
       theme(legend.position = "top")
@@ -185,7 +185,7 @@ plot_item_props <- function(plot_demo, plot_measure, plot_items, ncol = NULL) {
       geom_smooth(method = "glm", method.args = list(family = "binomial"),
                   se = FALSE, size = 0.8) +
       scale_colour_solarized() +
-      labs(x = "Age (months)", y = glue("Proportion {plot_measure}"),
+      labs(x = "Age (months)", y = glue::glue("Proportion {plot_measure}"),
            colour = demo_labels[[plot_demo]]) +
       lims(y = c(0, 1)) +
       theme(legend.position = "top")
@@ -223,33 +223,33 @@ fit_demo_model <- function(language, measure, demo, demo_data) {
   demo_contrasts <- contr_back_diff(length(levels(demo_data[[demo]])))
   contrasts(demo_data[[demo]]) <- demo_contrasts
   
-  group_formula <- as.formula(glue(
+  group_formula <- as.formula(glue::glue(
     "cbind(num_true, num_false) ~
       (age + {demo} | definition) + {demo} + age"
   ))
   
   safe_model <- possibly(function() {
-    model <- glmer(group_formula, family = binomial, data = demo_data)
-    save(model, file = glue("data/items_demo/models/{language}_{measure}_{demo}.Rds"))
+    model <- lme4::glmer(group_formula, family = binomial, data = demo_data)
+    save(model, file = glue::glue("data/items_demo/models/{language}_{measure}_{demo}.Rds"))
     return(model)
   }, otherwise = NULL)
   safe_model()
 
 }
 
-cores <- detectCores()
-cluster <- create_cluster(cores = cores)
+cores <- parallel::detectCores()
+cluster <- multidplyr::create_cluster(cores = cores)
 
 demo_groups <- demo_props %>%
   mutate(group = rep(1:cores, length.out = n())) %>%
   partition(group, cluster = cluster)
 
 demo_groups %>%
-  cluster_library("tidyverse") %>%
-  cluster_library("glue") %>%
-  cluster_library("lme4") %>%
-  cluster_assign_value("fit_demo_model", fit_demo_model) %>%
-  cluster_assign_value("contr_back_diff", contr_back_diff)
+  multidplyr::cluster_library("tidyverse") %>%
+  multidplyr::cluster_library("glue::glue") %>%
+  multidplyr::cluster_library("lme4") %>%
+  multidplyr::cluster_assign_value("fit_demo_model", fit_demo_model) %>%
+  multidplyr::cluster_assign_value("contr_back_diff", contr_back_diff)
 
 demo_model_setup <- demo_groups %>%
   mutate(model = pmap(list(language, measure, demo, data), fit_demo_model))
@@ -261,7 +261,7 @@ demo_models <- demo_model_setup %>%
 
 ```{r itemsdemo-demo_fits, eval=FALSE}
 get_coef <- function(model) {
-  model %>% tidy() %>% filter(group == "fixed") %>% select(-group)
+  model %>% broom::tidy() %>% filter(group == "fixed") %>% select(-group)
 }
 
 get_ranef <- function(model) {
@@ -385,7 +385,7 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
   ggplot(demo_data, aes(x = estimate, fill = term)) +
     facet_wrap(~language, ncol = 4) +
     geom_density(alpha = .5) +
-    geom_label_repel(aes(label = definition, y = 0, col = term),
+    ggrepel::geom_label_repel(aes(label = definition, y = 0, col = term),
                      data = demo_labelled,
                      segment.size = 0.3,
                      label.padding = 0.15,
@@ -397,7 +397,7 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
     scale_color_solarized() + 
     theme(legend.position = "bottom") + 
     labs(x = "Coefficient estimate", y = "Number of words") 
-         # title = glue("{demo_labels[[plot_demo]]} ({plot_measure})")
+         # title = glue::glue("{demo_labels[[plot_demo]]} ({plot_measure})")
 }
 ```
 
@@ -432,7 +432,7 @@ demo_ranef %>%
   mutate(male_advantage = signif(sexMale, 2)) %>%
   select(language, definition, male_advantage) %>%
   arrange(language, desc(male_advantage)) %>%
-  datatable()
+  DT::datatable()
 ```
 
 The figure above gives the full distribution for comprehension, and the table gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items -- for English, for example, the words with a substantial male advantage are vehicle-related and "hammer", while the female advantage words are "purse" and "necklace." Thus, our first impression is that these tend to be specific content items assocciated with gendered play. 
@@ -449,7 +449,7 @@ demo_ranef %>%
   mutate(male_advantage = signif(sexMale, 2)) %>%
   select(language, definition, male_advantage) %>%
   arrange(language, desc(male_advantage)) %>%
-  datatable()
+  DT::datatable()
 ```
 
 ```{r itemsdemo-sex_summary}
@@ -483,7 +483,7 @@ demo_ranef %>%
          laterborn_advantage = signif(birth_order2, 2)) %>%
   select(language, definition, secondborn_advantage, laterborn_advantage) %>%
   arrange(language, desc(secondborn_advantage)) %>%
-  datatable()
+  DT::datatable()
 ```
 
 The figure and table above again represent random effects coefficients for particular items in comprehension. In general there are few surprises here: the words for "brother" and "sister" are much more likely for second-born children to understand, and even more likely for later-born children. The Norwegian data additionally show a few other words that second- and later-born children might be more likely to be exposed to via their siblings, including "skole" (school) and "sukkertøy" (sweets, hard candy).
@@ -501,7 +501,7 @@ demo_ranef %>%
          laterborn_advantage = signif(birth_order2, 2)) %>%
   select(language, definition, secondborn_advantage, laterborn_advantage) %>%
   arrange(language, desc(secondborn_advantage)) %>%
-  datatable()
+  DT::datatable()
 ```
 
 The same general patterns are present in the production data, with further evidence that having elder siblings appears to be related exposure to sweets, at least in some cultures: "popsicle," "donut," and "candy" all appear now in the English data, and "tyggegummi" (gum) and several soda- and candy-related words appear in the Nowegian data. ("Hate" also appears in the English data, suggesting some emotional expressions due to having a sibling). We interpret this pattern with caution, however, as birth order is likely partially confounded with socio-economic status, and so later-born children might also be from low-SES families who have more environmental exposure to "junk foods" like soda and candy.
@@ -523,7 +523,7 @@ demo_ranef %>%
          college_advantage = signif(mom_ed2, 2)) %>%
   select(language, definition, secondary_advantage, college_advantage) %>%
   arrange(language, desc(secondary_advantage)) %>%
-  datatable()
+  DT::datatable()
 ```
 
 The figure and table above show comprehension results. The majority of words that exceed our (somewhat arbitrary) .5 bound come from the English (American) data. This finding is consistent with the idea that there may be more substantial maternal education effects in this dataset more generally. The words that are more likely to be understood by children of college- and secondary- educated mothers are often animal-related and may speculatively be related to reading books about animals (since these farm animals might not be prominent in all children's experience). "Read" is also on this list, perhaps related to reading practices (or the perception of the importance of these practices). Negatively linked words include "cake" (supporting the speculation above) and a number of other items that are perhaps harder to interpret as being SES-linked. 
@@ -541,7 +541,7 @@ demo_ranef %>%
          college_advantage = signif(mom_ed2, 2)) %>%
   select(language, definition, secondary_advantage, college_advantage) %>%
   arrange(language, desc(secondary_advantage)) %>%
-  datatable()
+  DT::datatable()
 ```
 
 Production data show a similar but more extreme picture, with a larger number of words linked to maternal education. Examination of the English data suggests that animal vocaulary is again more prevalent for the children of more educated parents (as are babysitters). Again supporting the birth-order/maternal education link, "brother" is less common for the children of more highly educated moms, as are "candy," "gum," and "soda." Again, the most extreme linkage to maternal education was found in the English (American) sample.  

@@ -579,20 +579,21 @@ Stepping back, in this subsection we examined the growth rate of children's voca
 
 ## Variation in Production vs. Comprehension
 
+
+<!-- RELEVANT FOR CLINICAL -->
+
+<!-- CDI DATA HAS AN ARTIFACT - NEED OTHER SOURCES -->
+
+<!-- MANY REASONS FOR PRODUCTION VARIATION -->
+
+<!-- STABLE ACROSS LANGUAGES THOUGH -->
+
 Our next investigation concerns the question of how tightly comprehension and production are yoked within CDI data. Our assumption is that there is variability between children on this dimension -- while some children produce a large amount of language, others appear to produce less but still understand substantial amounts. How does the ratio of production to comprehension vary across ages, and across cultures? 
 
-Before we begin the analysis it is important to be clear that some of the pattern in this variable could be due to variation between parents in under- or over-reporting comprehension (or for that matter, production, but we assume -- and Appendix \@ref(appendix-psychometrics) confirms that production reports likely carries more signal). For example, we might be detecting variation in the threshold at which parents assume that a response indicates comprehension. Some parents might be very liberal and recall a generally-understood story that included a particular word, while others might be searching for a specific anecdote that clearly illustrates comprehension of that word. 
+It is important to be clear that some of the pattern in this variable could be due to variation between parents in under- or over-reporting comprehension (or for that matter, production, but we assume -- and Chapter \@ref(psychometrics) confirms -- that production reports likely carries more signal). For example, we might be detecting variation in the threshold at which parents assume that a response indicates comprehension. Some parents might be very liberal and recall a generally-understood story that included a particular word, while others might be searching for a specific anecdote that clearly illustrates comprehension of that word. 
 
 Of course this type of analysis can only be conducted on WG-type forms, because of the presence of comprehension information. We begin by investigating the American English WG data as an example. 
 
-
-RELEVANT FOR CLINICAL
-
-CDI DATA HAS AN ARTIFACT - NEED OTHER SOURCES
-
-MANY REASONS FOR PRODUCTION VARIATION
-
-STABLE ACROSS LANGUAGES THOUGH
 
 ```{r style-eng_wg}
 eng_wg <- filter(admins, language == "English (American)", form == "WG")
@@ -672,8 +673,7 @@ ggplot(productivity_coefs,
   coord_flip()
 ```
 
-
-Going back to the scatter plots, however, in nearly every language to one degree or another, we see ratios > .95, indicating that parents are essentially not using "understands" as a separate option. 
+Going back to the scatter plots, however, in nearly every language to one degree or another, we see some number ratios > .95, indicating that parents are essentially not using "understands" as a separate option. 
 
 ```{r style-wg_table}
 wg %>%
@@ -682,7 +682,8 @@ wg %>%
   arrange(desc(no_comprehension)) %>%
   DT::datatable()
 ```
-In this table, we see that a number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages. 
+
+The table above shows the proportion of children showing more than 95% productivity. A number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages. 
 
 In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of instructions regarding comprehension in CDI administration. 
 
@@ -760,5 +761,3 @@ Summarizing the conclusions from our various different sub-analyses:
 * Vocabulary growth is approximately linear for the first 250 words, and a "vocabulary spurt" is not reliably observed across most children [ratifying earlier work by @ganger2004]. 
 
 * It is tricky to use comprehension data to estimate variability between individuals in how much they produce vs. comprehend, due to likely cross-linguistic differences in the uptake of instructions regarding comprehension. 
-
-* Finally, recalling the conclusions of Chapter \@ref(psychometrics), variations in rate -- though perhaps least interesting from a Batesian perspective -- nevertheless are the most detectable first order signal in our data. 

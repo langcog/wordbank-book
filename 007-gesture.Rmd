@@ -2,7 +2,9 @@
 
 Children's most recognizable early linguistic accomplishments are surely their first words--a topic we turn to in the next chapter. However, even before infants approach this important milestone, they are already communicating with their through another modality: gesture. For example, a child who extends their hands and opens and closes their fist likely wants something.  A child who points to a bird up in a tree likely wants to get their caregiver's attention so that they can share in the delight together.  Sometimes, children's early vocalizations are accompanied by gestures, for example, a child might raise both of their hands in the air and says "up!" Indeed, the social and communicative routines that these gestures allow children to establish with their caregivers may form the supportive context in which early language learning happens [@bruner1985]. Gestures thus are an important aspect of children's communicative development.
 
-Early gestures have long been thought to have a common mental status with later-developing linguistic accomplishments because both may reflect the child's understanding of symbols, i.e., that a name or gesture can "stand in" for things in the world. The classic theories of @piaget1962 and @werner1963 proposed that all symbols have their origins in actions carried out on objects and moreover, such symbols can be manifested in either the vocal or the gestural domain. These proposals suggest a common underlying mental function that is critical to the development of all symbolic skills, both language and in certain types of gestures.  In addition, these theories predict a developmental continuity between early gesture use and children's later lexical and syntactic development [e.g., @bates1975; @thal1988]. For example, children's ability to point to distant objects is linked to the onset of the production of first words [@fenson2007], children with delayed onset of pointing are likely to also be delayed in first word production (ref), children's early gesture use is correlated with their later comprehension abilities [@bates1991], and children's use of gestures in combinations with words is linked to the later production of multiword combinations [e.g., @goldin-meadow1998, @iverson1994]. These early correlational findings could simply reflect that children who use gestures are simply better at learning words.  However, more recent studies have demonstrated specific links between early gesture use and later lexical and syntactic development [@rowe2009].  For example, the particular lexical items that enter a child’s vocabulary are likely to be names for objects that are labeled using a gesture several months earlier [@iverson2005]. Moreover, early gesture vocabulary is specifically linked to later word vocabulary, whereas early gesture plus word combinations are linked specifically to children's later word combination skills [@rowe2009]. These findings suggest that children's early gestures provide an important social, communicative, and linguistic foundation for later language development.
+Early gestures have long been thought to have a common mental status with later-developing linguistic accomplishments because both may reflect the child's understanding of symbols, i.e., that a name or gesture can "stand in" for things in the world. The classic theories of @piaget1962 and @werner1963 proposed that all symbols have their origins in actions carried out on objects and moreover, such symbols can be manifested in either the vocal or the gestural domain. These proposals suggest a common underlying mental function that is critical to the development of all symbolic skills, both language and in certain types of gestures.  In addition, these theories predict a developmental continuity between early gesture use and children's later lexical and syntactic development [e.g., @bates1975; @thal1988]. For example, children's ability to point to distant objects is linked to the onset of the production of first words [@fenson2007], children with delayed onset of pointing are likely to also be delayed in first word production (ref), children's early gesture use is correlated with their later comprehension abilities [@bates1991], and children's use of gestures in combinations with words is linked to the later production of multiword combinations [e.g., @goldin-meadow1998, @iverson1994]. 
+
+These early correlational findings could simply reflect that children who use gestures are simply better at learning words. However, more recent studies have demonstrated specific links between early gesture use and later lexical and syntactic development [@rowe2009].  For example, the particular lexical items that enter a child’s vocabulary are likely to be names for objects that are labeled using a gesture several months earlier [@iverson2005]. Moreover, early gesture vocabulary is specifically linked to later word vocabulary, whereas early gesture plus word combinations are linked specifically to children's later word combination skills [@rowe2009]. Thus, taken together, the pattern of data suggests that children's early gestures provide an important social, communicative, and linguistic foundation for later language development.
 
 Early gestures serve many different functions. Children typically first begin to use "deictic gestures," for example, giving, pointing, or showing [e.g., @volterra1985].  Such deictic gestures are clear precursors to important linguistic and communicative functions, including establishing reference and promoting shared attention [@carpenter1998].  However, these deictic gestures do not necessarily have symbolic content per se [i.e., they do not stand for objects in the world, @bates1980]. Early on, pointing gestures generally first serve an imperative function, e.g., to request something from an adult, whereas, later, pointing is more likely to direct a caregiver's attention to another object or person [@bates1975; @masur1990]. Children might also use gestures as part of a social activity, for example, waving "bye bye" or signaling "all done."  At first, these might occur simply as imitations, but then later, a child may be able to produce these social gestures spontaneously in certain communicative contexts.  Children's social gestures also reflect children's ability to engage in certain activities during pretend play, e.g., talking on a pretend phone or pretending to stir a soup. Such social gestures reflect children's ability to tune into contextual cues, mentally reconstruct activities, and engage in sequences of events.  Later, children's gestures might take on a "true" symbolic meaning, as a child might use a conventional gesture to recognize or classify objects as an instance of a category (e.g., pretend to drink from a cup or sniff a flower).  Studies have shown that children's ability to use gestures in this symbolic way may reflect a common underlying "vocabulary" in both the verbal and gestural domain [e.g., @acredolo1985; @bates1980].  
 
@@ -12,7 +14,7 @@ This chapter contains analysis of the “early gesture” items from the CDI. Ou
 options(scipen=1, digits=2)
 ```
 
-```{r gesture-load_data, eval = F}
+```{r gesture-load_data, eval = FALSE}
 wgs <- get_instruments() %>%
   filter(form == "WG")
 
@@ -101,7 +103,6 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
   scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(7.5, 21),
                     breaks = seq(8, 18)) +
-  theme_classic() +
   theme(legend.position = "none")
 ```
 
@@ -131,8 +132,7 @@ ggplot(first_gestures_binary_ordered, aes(x = age, y = n, color = definition,
   #scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
                     breaks = seq(8, 18)) + 
-  theme_classic() + 
-  #scale_color_ptol() +
+  ggthemes::scale_color_ptol() +
   theme(legend.position = "none")
 ```
 
@@ -173,7 +173,7 @@ other_gestures_ordered <- other %>%
 
 While some are clearly learned later than the early gestures, a number of these appear to be learned quite early as well--peekaboo, and pretend play with cups and spoons for instance. They all also appear to have generally smooth and increasing trajectories with the exception of "so big" from the games gestures which, like "smack lips" from the first gestures appears to be either less stereotyped, or more difficult to identify, or more variable across children.
 
-```{r gesture-other-figure, fig.width = 10, fig.height = 5, fig.cap="Production of first gestures by American-English learning children over development"}
+```{r gesture-other-figure, fig.cap="Production of first gestures by American-English learning children over development"}
 ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition, 
                                   label = definition)) +
   facet_wrap(~ type) + 
@@ -184,7 +184,6 @@ ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition,
   #scale_color_brewer(palette = "Set1") + 
   scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
                     breaks = seq(8, 18)) + 
-  theme_classic() + 
   theme(legend.position = "none") 
 ```
 
@@ -238,7 +237,7 @@ Given both the similarity and the variability in these developmental trajectorie
 This cross-category intercorrelation is quite similar cross-linguistically, ranging from `r min(intercor_data$mean)` in `r intercor_data %>% filter(mean == min(mean)) %>% pull(language)` to `r max(intercor_data$mean)` in `r intercor_data %>% filter(mean == max(mean)) %>% pull(language)`. The full table of intercorrelations can be found below.
 
 ```{r intercor_table}
-kable(intercor_data)
+kable(intercor_data, digits = 3)
 ```
 
 ### The relationship between language and gesture
@@ -260,11 +259,11 @@ age_cors <- binary_data %>%
   spread(measure, cor) %>%
   select(language, gesture, comprehension, production)
 
-kable(age_cors)
+kable(age_cors, digits=3)
 ``` 
 
 
-```{r gesture-growths, fig.width = 10, fig.height = 6, eval = F, include = F}
+```{r gesture-growths, eval = F, include = F}
 #The Figure below shows the proportion of gesture items produced by children in each of these 3 languages across development. 
 
 binary_data %>%
@@ -275,7 +274,6 @@ binary_data %>%
   geom_jitter(alpha = .1, size = .1) + 
   geom_smooth(method = "loess", se = F) + 
   directlabels::geom_dl(method = "smart.grid", cex=1) +
-  theme_classic() + 
   theme(legend.position = "none")
 ```
 
@@ -295,7 +293,7 @@ gest_lang_data <- binary_data %>%
   separate(id, into = c("language", "measure"), "_") %>%
   spread(measure, cor) 
 
-kable(gest_lang_data)
+kable(gest_lang_data, digits = 3)
 ```
 
 ```{r gesture-correlation_over_age, eval = F, include = F}
@@ -315,7 +313,6 @@ age_cor_data %>%
              label = measure)) +
   geom_smooth(se = T) + 
   geom_jitter(alpha = .5, size = .5) + 
-  theme_classic() + 
   directlabels::geom_dl(method = list(directlabels::dl.trans(x=x +.2),
                                       "last.qp", cex=1)) +
   theme(legend.position = "none") + 
@@ -328,7 +325,7 @@ age_cor_data %>%
 ```
 
 Type and sex. Small female advantage overall, but big interaction in gestures_parent
-```{r gesture-sex_type_plot, fig.width = 8, fig.height = 6}
+```{r gesture-sex_type_plot}
 sex_type_kid_data <- binary_data %>%
   filter(!is.na(sex), !is.na(value)) %>%
   group_by(language, age, sex, type, data_id) %>%
@@ -343,7 +340,6 @@ ggplot(sex_type_data, aes(x = age, y = gesture, color = sex, label = sex)) +
   facet_grid(language ~ type) +
   geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
   geom_smooth(se = F) +
-  theme_classic() + 
   directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
   theme(legend.position = "none")
 ```
@@ -363,11 +359,12 @@ sex_type_model <- sex_type_model_data %>%
                 (1 | language), data = .)
 
 broom::tidy(sex_type_model, "fixed") %>%
-  kable()
+  kable(digits = 3)
 ```
 
 Type and ses. Very small low-ses advantage?
-```{r gesture-ses_type_plot, fig.width = 8, fig.height = 6}
+
+```{r gesture-ses_type_plot}
 ses_type_kid_data <- binary_data %>%
   filter(!is.na(mom_ed), !is.na(value)) %>%
   mutate(ses = if_else(mom_ed %in% c("College", "Some Graduate",
@@ -384,7 +381,6 @@ ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) +
   facet_grid(language ~ type) +
   geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
   geom_smooth(se = F) +
-  theme_classic() + 
   directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
   theme(legend.position = "none")
 ```
@@ -397,7 +393,7 @@ ses_type_kid_model <- ses_type_kid_data %>%
                 (1 | language), data = .)
 
 broom::tidy(ses_type_kid_model, "fixed") %>%
-  kable()
+  kable(digits = 3)
 ```
 
 ```{r gesture-gesture_word_type_cor_plot, include = F, eval = F}
@@ -455,7 +451,6 @@ comp_cor_bylang %>%
   bind_rows(.id = "language") %>%
   ggplot(aes(x = item1, y = item2)) + 
   geom_tile(aes(fill = correlation)) +
-  theme_classic() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
 
 
@@ -478,7 +473,6 @@ prod_cor_bylang %>%
   bind_rows(.id = "language") %>%
   ggplot(aes(x = item1, y = item2)) + 
   geom_tile(aes(fill = correlation)) +
-  theme_classic() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
 ```
 
@@ -493,7 +487,7 @@ gesture_word_cord_model <- lme4::lmer(correlation ~ item1 * item2 * measure + (1
 
 broom::tidy(gesture_word_cord_model, "fixed") %>%
   arrange(desc(abs(statistic))) %>%
-  kable()
+  kable(digits = 3)
 
 ```
 

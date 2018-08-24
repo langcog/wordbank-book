@@ -25,6 +25,7 @@ Imports:
   kableExtra,
   langcog,
   lme4,
+  lmerTest,
   maps,
   mirt,
   pander,

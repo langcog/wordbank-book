@@ -623,6 +623,17 @@ ggplot(eng_wg, aes(x = age, y = productivity)) +
 ```
 The resulting scatterplot is quite interpretable. It contains a few outliers at the very top of the range for very young children (whose parents report them producing and comprehending the same number of words). But for most others, the ratio is low, increasing from about 10% to 30% by the top of the form. 
 
+```{r style-wg_productivity-comprehension}
+ggplot(eng_wg, aes(x = comprehension, y = productivity)) + 
+  geom_jitter(alpha = .2) + 
+  geom_smooth() + 
+  xlab("Total Comprehension Vocabulary") + 
+  ylab("Productivity Ratio")
+```
+
+
+
+
 ```{r style-wg_productivity_subset}
 wg <- filter(admins, form %in% WGs) %>%
   mutate(productivity = production / comprehension) %>%
@@ -686,69 +697,6 @@ wg %>%
 The table above shows the proportion of children showing more than 95% productivity. A number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages. 
 
 In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of instructions regarding comprehension in CDI administration. 
-
-
-
-<!-- ## Overlap in vocabulary -->
-
-<!-- @mayor2014 create several procedures for examining idiosyncrasy of vocabulary. We are able to use the most direct one because of the accessibility of full item-wise data.  -->
-
-<!-- > This direct measure is computed by calculating the mean Euclidean distance between individual vocabularies and the mean vocabulary, where each word is either understood/produced (coded as 1 in a vector containing all words on the CDI) or not understood/not produced (coded as 0). As this metric is heavily dependent on the total number of words known on the CDI, these mean Euclidean distances are then normalized by the underlying binomial distribution, produced by measuring the Euclidean distance when vector values are drawn at random. The Normalized Euclidean Distance (NED hereafter) is computed according to the following equation: -->
-
-<!-- $$NED = \frac{\sum_{i \in N} \sum_{j \in W} (x_{ij} - p_i)^2}{\sum_{i \in N} \sum_{j \in W} (y_{ij} - q_i)^2}$$ -->
-
-<!-- > where $W$ refers to the number of words on the CDI, $N$ the number of infants, $x_{ij}$ is equal to 1 if the word $i$ is understood/produced by infant $j$ and 0 otherwise. $p_i$ corresponds to the fraction of infants that understand/ produce word $i$. $y_{ij}$ corresponds to the random assignment to word $i$ in run $j$, where 1 and 0 are assigned randomly so that mean vocabularies match and $q_i$ corresponds to the fraction of runs for which word $i$ is understood/produced.  -->
-
-<!-- I take $y_{ij}$ to be a permutation of words within vocabularies.  -->
-
-<!-- ```{r} -->
-<!-- eng_wg <- read_feather("data/eng_wg_data.feather") %>% -->
-<!--   filter(type == "word") %>% -->
-<!--   filter(!is.na(value)) %>% -->
-<!--   select(data_id, value, age, language, form, item_id, definition) %>% -->
-<!--   mutate(understands = value == "produces" | value == "understands",  -->
-<!--          produces = value == "produces") %>% -->
-<!--   select(-value) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- get_ED <- function (x) { -->
-<!--   mean_vocab <- as.data.frame(x) %>%  -->
-<!--     group_by(item_id, definition) %>% -->
-<!--     summarise(mean_understands = mean(understands),  -->
-<!--               mean_produces = mean(produces)) -->
-
-<!--   y <- left_join(as.data.frame(x), mean_vocab) -->
-
-<!--   y %>% -->
-<!--     group_by(age, item_id) %>% -->
-<!--     summarise(understands_ed = sum((understands - mean_understands)^2),  -->
-<!--               produces_ed = sum((produces - mean_produces)^2)) %>% -->
-<!--     summarise(understands_ed = sum(understands_ed),  -->
-<!--               produces_ed = sum(produces_ed))  -->
-<!-- } -->
-<!-- ``` -->
-
-<!-- ```{r eval=FALSE} -->
-<!-- real_ed <- get_ED(eng_wg) -->
-
-<!-- perms <- eng_wg %>%  -->
-<!--   split(.$age) %>% -->
-<!--   map(function(x) {modelr::permute(x, col="understands",2)}) -->
-
-<!-- perm_ed <- map_df(perms,  -->
-<!--                function (x) { -->
-<!--                  map_df(x$perm, get_ED, .id = "id") %>% -->
-<!--                    summarise(understands_red = mean(understands_ed), -->
-<!--                              produces_red = mean(produces_ed)) -->
-<!--                  }) -->
-
-<!-- left_join(real_ed, perm_ed) %>% -->
-<!--   mutate(understands_ned = understands_ed / understands_red,  -->
-<!--          produces_ned = produces_ed / produces_red) -->
-<!-- ``` -->
-
-
 
 
 

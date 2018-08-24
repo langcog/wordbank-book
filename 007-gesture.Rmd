@@ -93,7 +93,7 @@ first_gestures_ordered <- eng_first_gestures %>%
 ```
 
 
-```{r gesture-first_gesture_figure, fig.cap="Proportion of children who produce each of the first gestures \"often\", \"sometimes\", and \"not yet\" over development."}
+```{r gesture-first-gesture-figure, fig.cap="Proportion of children who produce each of the first gestures \"often\", \"sometimes\", and \"not yet\" over development."}
 ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)) + 
   facet_wrap(~ definition) + 
   geom_point() + 

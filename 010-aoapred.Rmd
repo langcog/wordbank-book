@@ -108,7 +108,7 @@ For each word that appears on the forms in each of our `r num_langs` languages, 
 
 To capture meaning-based factors in acquisition, we included ratings of each word's concreteness, valence, arousal, and relatedness to babies. All of these ratings were compiled based on previous studies using adult raters. In addition, since existing datasets for all of these ratings are primarily available for English, we mapped all the words in our datasets onto translation equivalents across CDI forms, verified by native speaker judgement, allowing us to use the ratings for English words across languages. Of the resulting translation equivalent meanings, `r in_range(1, 1)`% occur only in one language, `r in_range(2, 9)`% occur in more than one but not all languages, and `r in_range(10, 10)`% occur in all languages. While necessarily imperfect, this method allows us to examine languages for which limited resources exist. Example words for these predictors in English are shown in Table \ref{tab:extremes}.
 
-```{r extremes_table}
+```{r aoapred-extremes-table}
 
 num_extremes <- 3
 extremes <- uni_model_data %>%
@@ -140,7 +140,7 @@ extremes <- uni_model_data %>%
     })
   })
 
-extremes_display <- extremes %>%
+extremesdisplay <- extremes %>%
   filter(language == "English (American)") %>%
   select(-language) %>%
   rename(Lowest = lowest, Highest = highest) %>%
@@ -150,7 +150,7 @@ extremes_display <- extremes %>%
   arrange(Predictor)
   #arrange(desc(row_number()))
 
-kable(extremes_display, escape = FALSE, booktabs = TRUE,
+kable(extremesdisplay, escape = FALSE, booktabs = TRUE,
       linesep = "",
       caption = "Items with the highest and lowest values for each predictor in English."
 ) %>%

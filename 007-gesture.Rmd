@@ -6,9 +6,11 @@ Early gestures have long been thought to have a common mental status with later-
 
 These early correlational findings could simply reflect that children who use gestures are simply better at learning words. However, more recent studies have demonstrated specific links between early gesture use and later lexical and syntactic development [@rowe2009].  For example, the particular lexical items that enter a child’s vocabulary are likely to be names for objects that are labeled using a gesture several months earlier [@iverson2005]. Moreover, early gesture vocabulary is specifically linked to later word vocabulary, whereas early gesture plus word combinations are linked specifically to children's later word combination skills [@rowe2009]. Thus, taken together, the pattern of data suggests that children's early gestures provide an important social, communicative, and linguistic foundation for later language development.
 
-Early gestures serve many different functions. Children typically first begin to use "deictic gestures," for example, giving, pointing, or showing [e.g., @volterra1985].  Such deictic gestures are clear precursors to important linguistic and communicative functions, including establishing reference and promoting shared attention [@carpenter1998].  However, these deictic gestures do not necessarily have symbolic content per se [i.e., they do not stand for objects in the world, @bates1980]. Early on, pointing gestures generally first serve an imperative function, e.g., to request something from an adult, whereas, later, pointing is more likely to direct a caregiver's attention to another object or person [@bates1975; @masur1990]. Children might also use gestures as part of a social activity, for example, waving "bye bye" or signaling "all done."  At first, these might occur simply as imitations, but then later, a child may be able to produce these social gestures spontaneously in certain communicative contexts.  Children's social gestures also reflect children's ability to engage in certain activities during pretend play, e.g., talking on a pretend phone or pretending to stir a soup. Such social gestures reflect children's ability to tune into contextual cues, mentally reconstruct activities, and engage in sequences of events.  Later, children's gestures might take on a "true" symbolic meaning, as a child might use a conventional gesture to recognize or classify objects as an instance of a category (e.g., pretend to drink from a cup or sniff a flower).  Studies have shown that children's ability to use gestures in this symbolic way may reflect a common underlying "vocabulary" in both the verbal and gestural domain [e.g., @acredolo1985; @bates1980].  
+Early gestures serve many different functions. Children typically first begin to use "deictic gestures," for example, giving, pointing, or showing [e.g., @volterra1985].  Such deictic gestures are clear precursors to important linguistic and communicative functions, including establishing reference and promoting shared attention [@carpenter1998].  However, these deictic gestures do not necessarily have symbolic content per se [i.e., they do not stand for objects in the world, @bates1980]. Early on, pointing gestures generally first serve an imperative function, e.g., to request something from an adult, whereas, later, pointing is more likely to direct a caregiver's attention to another object or person [@bates1975; @masur1990]. Children might also use gestures as part of a social activity, for example, waving "bye bye" or signaling "all done."  
 
-This chapter contains analysis of the “early gesture” items from the CDI. Our goals here are to examine (1) The robustnesses of the measurement properties of these non-verbal parent-report measures, (2) The degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo, (3) The relationships between gestural development and linguistic development, and (4) The relationship between gestural development and two demographic variables: sex and socio-economnic status. 
+At first, social gestures might occur simply as imitations, but then later, a child may be able to produce these social gestures spontaneously in certain communicative contexts. Children's social gestures also reflect children's ability to engage in certain activities during pretend play, e.g., talking on a pretend phone or pretending to stir a soup. Such social gestures reflect children's ability to tune into contextual cues, mentally reconstruct activities, and engage in sequences of events.  Later, children's gestures might take on a "true" symbolic meaning, as a child might use a conventional gesture to recognize or classify objects as an instance of a category (e.g., pretend to drink from a cup or sniff a flower).  Children's ability to use gestures in this symbolic way may reflect a common underlying "vocabulary" in both the verbal and gestural domain [e.g., @acredolo1985; @bates1980].  
+
+This chapter contains analysis of the “early gesture” items from the CDI. Our goals here are to examine (1) the robustnesses of the measurement properties of these non-verbal parent-report measures, (2) the degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo, (3) the relationships between gestural development and linguistic development, and (4) the relationship between gestural development and two demographic variables: sex and socio-economnic status. 
 
 ```{r gesture-digits}
 options(scipen=1, digits=2)
@@ -240,7 +242,7 @@ This cross-category intercorrelation is quite similar cross-linguistically, rang
 kable(intercor_data, digits = 3)
 ```
 
-### The relationship between language and gesture
+## The relationship between language and gesture
 
 A critical theoretical question in early communicative development concerns the relationship between language and gesture. As alluded to above, a number of early influential theories [e.g., @piaget1962, @werner1963] held that gesture and language should be intimately related becuase of their reliance on a shared system of symbolic reasoning. To the extent that they are underpinned by the same system, words and gestures should have related developmental trajectories--children who gesture early should also speak early and vice versa [@bates1991]. Following in the footsteps of @fenson2007, we ask this question at larger scale, and cross-linguistically. To assess this relationship, we will look at the correlations between children's gestural and linguistic vocabularies. 
 To first provide a baseline, however, we compute the correlation between children's language and gesture development and their age. As the table below shows, gesture shows as mnuch or more development than comprehhension and production over the ages measured by the CDI Words and Gestures forms, and the variability in the correlation with age in all three measures hangs together within-language: Languages where there is more developmental change in linguistic developmnet also tend to have more gestural development. 
@@ -324,6 +326,8 @@ age_cor_data %>%
 #   kable()
 ```
 
+## Gesture and Demographic Variables
+
 Type and sex. Small female advantage overall, but big interaction in gestures_parent
 ```{r gesture-sex_type_plot}
 sex_type_kid_data <- binary_data %>%
@@ -388,7 +392,7 @@ ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) +
 
 ```{r gesture-ses_type_model}
 ses_type_kid_model <- ses_type_kid_data %>%
-  lmerTest::lmer(gesture ~ age * type + ses * type + 
+  lme4::lmer(gesture ~ age * type + ses * type + 
          age * ses + (1 | data_id) +
                 (1 | language), data = .)
 
@@ -488,6 +492,4 @@ gesture_word_cord_model <- lme4::lmer(correlation ~ item1 * item2 * measure + (1
 broom::tidy(gesture_word_cord_model, "fixed") %>%
   arrange(desc(abs(statistic))) %>%
   kable(digits = 3)
-
 ```
-

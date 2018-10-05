@@ -566,3 +566,19 @@ broom::tidy(gesture_word_cord_model, "fixed") %>%
   arrange(desc(abs(statistic))) %>%
   kable(digits = 3)
 ```
+
+
+
+```{r gesture-cvs}
+cvs <- gest_lang_data %>%
+  gather(measure, correlation, comprehension, production) %>%
+  group_by(measure) %>%
+  summarise(cv = cv(correlation), 
+            sem = cv_sem(correlation), 
+            n = n(), 
+            category = "Relations") %>%
+  mutate(signature = "gesture/vocab correlation")
+
+write_feather(cvs, "data/cvs/gesture_cvs.feather")
+```
+

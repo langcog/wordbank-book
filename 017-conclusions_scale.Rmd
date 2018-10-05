@@ -1,5 +1,7 @@
 # Language Development at Scale {#scale}
 
+What have we learned about language development through the analyses presented in this book? Are there empirical generalizations that we can make fo 
+
 This chapter synthesizes knowledge gained from the broader enterprise, in the sense of attempting to make generalizations about early language development that hold true across the different datasets in our sample. 
 
 ## Content themes

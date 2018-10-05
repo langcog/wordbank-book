@@ -316,3 +316,26 @@ In addition to these new insights, several findings emerged that confirm and exp
 <!-- Finally, our data are observations gleaned from parent report. CDI instruments are both reliable and valid, and the cross-linguistic adaptations we used contain the original researchers' best attempts to create culturally-appropriate word lists. Nevertheless, this observational design introduces many sources of uncertainty and bias. First, the open data format of Wordbank reflects the sampling and administration methods of many groups around the world; these introduce many unknown biases that we cannot control (though they would likely not contribute to observed consistencies). Second, language and culture co-vary completely in our sample and so variability that we observe cannot be attributed to one or the other. Finally, some observed consistencies could arise from consistency in parental reporting biases. For example, across languages, parents might be generally biased to under-report comprehension of function words. Despite the quantity of data analyzed here, our conclusions will require further testing through converging evidence from both laboratory experiments and direct observation. -->
 
 <!-- In sum, by examining predictors of early word learning across languages, we identified substantial cross-linguistic consistency in the factors contributing to the ease or difficulty of learning individual words. These findings testify to the importance of building open, shared resources in the study of language learning -- without the efforts of many research groups across many language communities, such studies would be impossible. In addition, we hope that our work here provides a baseline for the building of future predictive models that allow theories of language learning to be tested at scale. -->
+
+
+```{r aoapred-cvs}
+cvs <- plt_lang_coefs  %>%
+  filter(interaction == "main effect") %>% # only main effects for now
+  group_by(measure, term) %>%
+  summarise(cv = cv(estimate), 
+            sem = cv_sem(estimate), 
+            n = n(), 
+            category = "Predictors") %>%
+  mutate(signature = term) %>%
+  select(-term)
+
+write_feather(cvs, "data/cvs/aoapred_cvs.feather")
+```
+
+
+
+
+```{r}
+
+```
+

@@ -368,32 +368,42 @@ Finally, we examine words for logical operators. The only items that are availab
 ### Category variability
 
 
-Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 20-30 month-olds (chosen somewhat arbitrarily as the age range of highest coverage across forms), we compute the coefficient of variation for children at each age on each lexical item. We additionally add animal words for the sake of comparison. The table below gives the coefficient of variation for each category above, averaging across lexical items. 
-
+Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22-26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add animal words for the sake of comparison. The table below gives the coefficient of variation for each category.
 
 ```{r catsem-cat_var}
 animal_words <- read_feather("data/categories_semantics/animal_words.feather")
+
 cat_var <- bind_rows(time_words %>% mutate(category = "time"),
           body_words %>% mutate(category = "body"),
           color_words %>% mutate(category = "color"), 
           logic_words %>% mutate(category = "logic"), 
           animal_words %>% mutate(category = "animals")) %>%
-  filter(age > 19, age < 31) %>%
-  group_by(category, uni_lemma, age) %>%
-  summarise(cv = sd(mean, na.rm = TRUE) / mean(mean, na.rm=TRUE)) %>%
-  summarise(cv = mean(cv)) 
+  filter(age > 21, age < 27) %>%
+  group_by(category, uni_lemma, language) %>%
+  summarise(mean = mean(mean)) %>% # average across ages
+  group_by(category, uni_lemma) %>%
+  summarise(cv = cv(mean), 
+            sem = cv_sem(mean), 
+            n = n()) %>%
+  group_by(category) %>%
+  summarise(cv = mean(cv), 
+           sem = mean(sem), 
+           n = mean(n)) 
   
 cat_var %>%
-  summarise(cv = round(mean(cv), 2)) %>%
-  DT::datatable(colnames = c("Category","Coefficient of Variation"))
+  DT::datatable
 ```
 
 Body words as well as animal words are highly consistent across languages. In contrast, color, logic words, and time words are far less consistent. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
 
-```{r catsem-cat_var2}
-cat_var %>%
-  mutate(cv = round(cv,2)) %>%
-    DT::datatable(colnames = c("Category","Word", "Coefficient of Variation"))
+```{r catsem-cvs}
+cvs <- cat_var %>%
+  mutate(signature = paste("Bias for",category), 
+         measure = "produces") %>%
+  ungroup() %>%
+  mutate(category = "Composition")
+
+write_feather(cvs,"data/cvs/semantic_comp.feather")
 ```
 
 

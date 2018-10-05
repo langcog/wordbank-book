@@ -6,7 +6,7 @@ library(knitr)
 library(feather)
 library(tidyverse)
 
-extrafont::loadfonts()
+# extrafont::loadfonts()
 
 opts_chunk$set(
   message = FALSE,

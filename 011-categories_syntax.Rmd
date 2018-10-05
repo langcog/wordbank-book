@@ -526,9 +526,9 @@ tc_items <- filter(mandarin_both_forms_items, form == "TC")
 ws_items <- filter(mandarin_both_forms_items, form == "WS")
   
 tc_vocab_data <- get_instrument_data(language = "Mandarin (Beijing)",
-                                       form = "TC",
-                                       items = tc_items$item_id, 
-                                       iteminfo = tc_items) %>%
+                                     form = "TC",
+                                     items = tc_items$item_id, 
+                                     iteminfo = tc_items) %>%
   mutate(value = ifelse(is.na(value), "", value),
          produces = value == "produces",
          understands = value == "produces" | value == "understands") %>%
@@ -669,9 +669,10 @@ In sum, we did not find strong support for effects of form composition or age on
 
 This chapter presented a comprehensive examination of the issue of biases for and against particular syntactic categories in acquisition. Building on earlier work by @bates1994, we created a quantitative measure of noun, predicate, and function word bias and examined variability in these measures across languages. Overall, a number of generalizations emerged. 
 
-+ Nearly every language showed a positive bias for nouns, though the degree of this bias varied. + Every language showed a substantial bias against function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency (see \@ref(aoa-pred)). This bias was larger on average than biases in type of content words. 
-+ In comprehension there was variability in the degree of predicate representation; in production, as has previously been reported, languasges were mostly biased against predicates. There were a few notable exceptions among the East-Asian languages. 
-+ Measures of bias in production and comprehension were not highly correlated with one another, especially for predicates and function words. There are likely many causes of these, but greater predicate comprehension compared with production appears to be one likely culprit. 
+* Nearly every language showed a positive bias for nouns, though the degree of this bias varied. 
+* Every language showed a substantial bias against function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency (see \@ref(aoa-pred)). This bias was larger on average than biases in type of content words. 
+* In comprehension there was variability in the degree of predicate representation; in production, as has previously been reported, languasges were mostly biased against predicates. There were a few notable exceptions among the East-Asian languages. 
+* Measures of bias in production and comprehension were not highly correlated with one another, especially for predicates and function words. There are likely many causes of these, but greater predicate comprehension compared with production appears to be one likely culprit. 
 
 
 
@@ -681,9 +682,12 @@ cvs <- area_summary %>%
   filter((form %in% WGs & measure == "understands") |
            (form %in% WSs & measure == "produces")) %>%
   group_by(measure, lexical_category) %>%
-  summarise(cv = abs(sd(mean) / mean(mean))) %>%
-  ungroup %>%
-  unite(measure, lexical_category, measure, sep = " bias, ")
+  summarise(cv = cv(mean), 
+            sem = cv_sem(mean), 
+            n = n(), 
+            category = "Composition") %>%
+  mutate(signature = paste("Bias for", lexical_category)) %>%
+  select(-lexical_category)
 
 write_feather(cvs,"data/cvs/vocab_comp.feather")
 ```

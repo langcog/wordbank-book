@@ -1,6 +1,61 @@
 # Variability and Consistency {#consistency}
 
-In the preceding chapters, we have have presented evidence from a wide range of analyses of the Wordbank dataset. These analyses have revealed both striking variability across our units of sampling -- children, primarily, but also words and even languages -- but they have also revealed substantial consistency. In this conclusion we discuss the interplay and tension between these two ideas, variability and consistency, and how they interact with and inform theoretical conceptions of language acquisition more broadly.
+In the preceding chapters, we have have presented evidence from a wide range of analyses of the Wordbank dataset. These analyses have revealed both striking variability across our units of sampling -- children, primarily, but also words and even languages -- but they have also revealed substantial consistency. In this synthetic chapter we begin by presenting a set of analyses of the empirical consistency and variability of specific phenomena. We then discuss the interplay and tension between these two ideas, variability and consistency, and how they interact with and inform theoretical conceptions of language acquisition more broadly.
+
+## Consistency in Variability
+
+```{r cons-min}
+MIN_LANGS <- 6
+```
+
+In each of the substantive chapters of this book (roughly speaking from Chapter \@ref(vocab) to \@ref(style)), we have presented analyses of specific phenomena of theoretical interest. Wherever possible, we have generalized these analyses across languages so that their relative consistency can be examimined and discussed. The goal of the current analysis is to bring together these analyses into a single meta-analysis (in the general sense, not the specific statistical sense). 
+
+To do so, we identify a small number of measures computed in each chapter. For each measure, we compute its cross-linguistic variability using a standardized measure of variance, the coefficient of variation (CV, the standard deviation divided by the mean). This measure can range from 0 (with a phenomenon completely invariant across languages) to infinity (with higher numbers indicating greater variation). 
+
+Each measure for which we compute the CV will have both a different base unit and a different number of languages contributing. For example, when considering the correlation between grammar and the lexicon (Chapter \@ref(grammar)), we will be looking at the CV of a set of correlations with one specific set of languages contributing. When we look at the size of the noun bias (Chapter \@ref(vocab-comp)) we will be looking at a group of bias estimates that have different units and a different set of languages. Thus, caution is warranted in interpreting these variability estimates, even as we believe that they are informative. To assist in interpretation, we exclude measures that can be computed in fewer than `r MIN_LANGS` languages; provide the N contributing languages for all analyses; and compute an estimate of the standard error of the CV ($$SEM \approx CV / \sqrt{2N}$$).
+
+
+```{r cons-cvs_load}
+files <- dir("data/cvs/", pattern = "*.feather")
+
+cvs <- data_frame(name = files) %>%
+  split(.$name) %>%
+  map_df(function (x) { 
+    read_feather(paste0("data/cvs/", x$name))
+  }) %>%
+  mutate(y = 0, 
+         signature = fct_reorder(signature, cv), 
+         measure = fct_recode(measure, 
+                               production = "produces", 
+                               comprehension = "understands")) %>%
+  filter(n > MIN_LANGS)
+```
+
+For the sake of our analysis, we have broken phenomena from the preceding chapters into four categories. These are 
+
+```{r cons-cvs_plot_1}
+ggplot(cvs, aes(x = signature, y = cv, col = measure)) + 
+  geom_point(aes(size = n)) + 
+  geom_linerange(aes(ymin = cv - sem, ymax = cv + sem)) + 
+  ylab("Coefficient of variation across languages") + 
+  geom_hline(yintercept = 0, lty =2) + 
+  xlab("") + 
+  coord_flip() + 
+  facet_wrap(category ~ ., drop = TRUE, scales = "free_y") + 
+  theme(legend.position = "bottom") + 
+  ggthemes::scale_color_ptol(name = "Measure") + 
+  scale_size_continuous(name = "N languages")
+```
+
+
+
+
+
+
+
+
+
+
 
 ## Summary Observations
 
@@ -29,6 +84,12 @@ How can we describe and explain this variability? While much of the variance in 
 
 ### Limitations
 
+
+
+
+
+Claims of universals should always be taken with a grain of salt. In our case, a variety of caveats apply, from the relatively limited sample size N = `r length(unique(instruments$language))` [see @piantadosi2014 for guidance on claims about strict universals] to the strong Indo-European bias amongst the languages in the database. At best our claim is of a statistical universal rather than an absolute universal. In addition, nearly all of our data come from populations in relatively industrialized nations [cf. @henrich2010]. FURTHER CAVEATS
+
 So what *do* these data tell us? 
 
 ### Ruling out methodological alternatives
@@ -53,93 +114,6 @@ To rule out these explanations, we need to rely on the existence of converging e
 
 In sum, for many of our proposed consistencies, we can begin to muster evidence against them from convergent sources. Nevertheless, much more work is needed to measure the size (not just the direction) of these effects and compare effect size across different measurements. For example, if the same size gender effect were found in the same population with both parent report and pointing-based methods, this finding would provide evidence against a parent-reporting bias account of gender differences. This high standard has yet to be met for most of the findings we report. 
 
-## Consistency in Variability
-
-
-```{r cons-cvs_load}
-files <- dir("data/cvs/", pattern = "*.feather")
-
-cvs <- data_frame(name = files) %>%
-  split(.$name) %>%
-  map_df(function (x) { 
-    read_feather(paste0("data/cvs/", x$name))
-  }) %>%
-  mutate(y = 0, 
-         measure = fct_reorder(measure, cv))
-```
-
-```{r cons-cvs_plot_1}
-ggplot(cvs, aes(x = measure, y = cv)) + 
-  geom_point() + 
-  # ylim(c(0,1)) + 
-  ylab("Coefficient of variation across languages") + 
-  geom_hline(yintercept = 0, lty =2) + 
-  coord_flip() 
-```
-
-```{r cons-cvs_plot_2}
-cvs_plot <- cvs %>%
-  filter(!str_detect(measure, "understands"), 
-         !str_detect(measure, "comprehension")) %>%
-  mutate(measure_name = fct_recode(measure,
-                                   "Noun bias" = "Nouns bias, produces", 
-                                   "Predicate bias" = "Predicates bias, produces", 
-                        "Function word bias" = "Function Words bias, produces", 
-                        "Toddler variability" = "MADM 12-24mo production", 
-                        "Morphology/vocab relation" = "Word Forms and Productive Vocabulary (r²)", 
-                        "Grammar/vocab relation" = "Complexity and Productive Vocabulary (r²)"))
-                                   
-
-ggplot(cvs_plot, aes(x = measure_name, y = cv)) + 
-  geom_point() + 
-  # ylim(c(0,1)) + 
-  xlab("") + 
-  ylab("Coefficient of variation across languages") + 
-  geom_hline(yintercept = 0, lty =2) + 
-  coord_flip() 
-```
-
-```{r cons-cvs_plot_3, fig.height =1.25, fig.width = 3}
-ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
-  geom_point() + 
-  ggrepel::geom_label_repel() + 
-  ylim(c(-.1,.1)) + 
-  # xlim(c(0, 1)) + 
-  scale_y_continuous(labels =  NULL) + 
-  ylab("") + 
-  xlab("Coefficient of variation across languages") + 
-  theme(axis.line.y=element_blank(),
-      # axis.text.x=element_blank(),
-      axis.text.y=element_blank(),
-      axis.ticks.y=element_blank(),
-      # axis.title.x=element_blank(),
-      axis.title.y=element_blank(),
-      legend.position="none",
-      panel.background=element_blank(),
-      panel.border=element_blank(),
-      panel.grid.major=element_blank(),
-      panel.grid.minor=element_blank(),
-      plot.background=element_blank())
-
-```
-
-
-```{r cons-cvs_continuum}
-ggplot(cvs_plot, aes(x = cv, y = y, label = measure_name)) + 
-  geom_point() + 
-  ggrepel::geom_label_repel(segment.alpha = .5, force = 5) + 
-  ylim(c(-.2, .5)) + 
-  # scale_y_continuous(labels =  NULL) + 
-  ylab("") + 
-  xlab("Coefficient of variation across languages") 
-```
-
-
-Assuming that we can rule out reporting biases,
-
-
-
-Claims of universals should always be taken with a grain of salt. In our case, a variety of caveats apply, from the relatively limited sample size N = `r length(unique(instruments$language))` [see @piantadosi2014 for guidance on claims about strict universals] to the strong Indo-European bias amongst the languages in the database. At best our claim is of a statistical universal rather than an absolute universal. In addition, nearly all of our data come from populations in relatively industrialized nations [cf. @henrich2010]. FURTHER CAVEATS
 
 ## Limitations
 

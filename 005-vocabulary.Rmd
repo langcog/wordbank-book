@@ -623,15 +623,23 @@ In sum, these results echo the conclusions of @bornstein2005 based their compara
 ```{r vocab-save_covs}
 prod <- madm_summary_prod %>%
   ungroup %>%
-  summarise(prod_madm =  sd(madm_mean, na.rm=TRUE) / mean(madm_mean, na.rm=TRUE))
+  summarise(prod_madm =  cv(madm_mean), 
+            prod_madm_sem = cv_sem(madm_mean), 
+            n = n())
 
 comp <- madm_summary_comp %>%
   ungroup %>%
-  summarise(comp_madm =  sd(madm_mean, na.rm=TRUE) / mean(madm_mean, na.rm=TRUE))
+  summarise(comp_madm =  cv(madm_mean), 
+            comp_madm_sem = cv_sem(madm_mean),
+            n = n())
 
-cvs <- data_frame(measure = c("MADM 12-24mo production", 
-                       "MADM 8-18mo comprehension"), 
-           cv = c(prod$prod_madm, comp$comp_madm))
+cvs <- data_frame(signature = c("MADM 12-24mo", 
+                       "MADM 8-18mo"), 
+                  measure = c("production","comprehension"), 
+                  cv = c(prod$prod_madm, comp$comp_madm), 
+                  sem = c(prod$prod_madm_sem, comp$comp_madm_sem),
+                  n = c(prod$n, comp$n), 
+                  category = "Vocabulary")
 
 write_feather(cvs, "data/cvs/madm_cvs.feather")
 ```

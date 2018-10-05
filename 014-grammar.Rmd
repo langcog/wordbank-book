@@ -151,12 +151,21 @@ vocab_models <- grammar_morphosyntax %>%
     rsq = map_dbl(model, ~summary(.x)$r.squared),
     rsq_print = sprintf("r² = %.2f", rsq)
   )
+```
 
+```{r gram-cvs}
 cvs <- vocab_models %>%
   group_by(coded_type) %>%
-  summarise(cv = sd(rsq) / mean(rsq)) %>%
-  mutate(foo = "and Productive Vocabulary (r²)") %>%
-  unite(measure, coded_type, foo, sep = " ")
+  summarise(cv = cv(rsq), 
+            sem = cv_sem(rsq), 
+            n = n(), 
+            measure = "production",
+            signature = paste0(coded_type[1], "/vocab correlation"), 
+            category = "Relations") %>%
+  ungroup %>%
+  select(-coded_type)
+  
+  
 
 write_feather(cvs, "data/cvs/grammar_lex.feather")
 ```

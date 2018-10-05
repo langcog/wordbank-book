@@ -589,7 +589,7 @@ b <- ggplot(analyses$WG.comprehension$mom_ed$mmad_summary, aes(x = language, y =
   # ylim(0,1.5) + 
   coord_flip() + 
   ylab("Language") + 
-  xlab("MMAD (Production)") +
+  xlab("MMAD (Comprehension)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -688,6 +688,32 @@ Our findings show that the relations between maternal education and children’s
 
 While lower scores on the vocabulary checklists can reflect authentic differences across children from different SES groups, it is also possible that some of these SES effects are the result of differential reporting biases [for discussion, see @fenson2007].  For example, in @feldman2000's study of more than 2000 children, vocabulary comprehension scores on the Words and Gestures form were higher for caregivers with lower education than for caregivers with higher education, whereas, the opposite relation was found for vocabulary production and later grammar skills from the Words and Sentences form.  Thus, parents with low educational and income levels seem to overestimate their child’s comprehension abilities in comparison with parents with more education and income, especially early in development. Parents, in general, are likely to have difficulty making judgments about early comprehension.  Overreporting may occur for those subscales of the CDI that require inference on the part of the parent, for example, when they have to separate evidence of comprehension of a word in isolation from that word taken together with the non-linguistic cues that are likely to support a child's appropriate behavior in a highly constrained context. In addition, some parents may recall times when the words were used in the child’s presence and may confuse exposure with understanding. These difficulties may explain why parental reports of verbal comprehension in this age range are higher than results of direct testing [@tomasello1994] and why correlations between parental reports and comprehension scores from other methods are extremely low [@goldfield1990].
 
+
+
+```{r}
+cvs <- expand.grid(measures = c("WS.production","WG.production","WG.comprehension"),
+           demos = c("birth_order","sex","mom_ed")) %>%
+  mutate(index = 1:n()) %>%
+  split(.$index) %>%
+  map_df(function(x) {
+    analyses[[as.character(x$measures)]][[as.character(x$demos)]]$mmad_summary %>%
+      summarise(cv = cv(mmad_mean), 
+                sem = cv_sem(mmad_mean), 
+                n = n()) %>%
+      mutate(category = "Vocabulary",
+             signature = x$demos, 
+             measure = x$measures) 
+  }) %>%
+  filter(measure %in% c("WG.comprehension","WS.production")) %>%
+  mutate(measure = fct_recode(measure, 
+                              comprehension = "WG.comprehension", 
+                              production = "WS.production"))
+
+write_feather(cvs, "data/cvs/demographic_cvs.feather")
+```
+
+
+
 <!-- After we get the data finalized, we can see if there is evidence for reporting bias in these data.
 
 ```{r}
@@ -706,23 +732,5 @@ ggplot(early_comprehension,
 # geom_smooth(method = "lm", se = FALSE, formula = y ~ x)
 ```
 
-
-
-<!-- ```{r} -->
-<!-- gender <- gender_mmad_summary %>% -->
-<!--   summarise(cv =  sd(mmad_mean) / mean(mmad_mean)) -->
-
-<!-- ses <- ses_mmad_summary %>% -->
-<!--   summarise(cv =  sd(mmad_mean) / mean(mmad_mean)) -->
-
-<!-- bo <- bo_mmad_summary %>% -->
-<!--   summarise(cv =  sd(mmad_mean) / mean(mmad_mean)) -->
-
-<!-- cvs <- data_frame(measure = c("Female advantage",  -->
-<!--                               "College advantage",  -->
-<!--                               "First-born advantage"),  -->
-<!--                   cv = c(gender$cv, ses$cv, bo$cv)) -->
-
-<!-- write_feather(cvs, "data/cvs/demographic_cvs.feather") -->
-<!-- ``` -->
+--->
 

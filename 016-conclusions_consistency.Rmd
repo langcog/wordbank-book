@@ -10,9 +10,13 @@ MIN_LANGS <- 6
 
 In each of the substantive chapters of this book (roughly speaking from Chapter \@ref(vocab) to \@ref(style)), we have presented analyses of specific phenomena of theoretical interest. Wherever possible, we have generalized these analyses across languages so that their relative consistency can be examimined and discussed. The goal of the current analysis is to bring together these analyses into a single meta-analysis (in the general sense, not the specific statistical sense). 
 
-To do so, we identify a small number of measures computed in each chapter. For each measure, we compute its cross-linguistic variability using a standardized measure of variance, the coefficient of variation (CV, the standard deviation divided by the mean). This measure can range from 0 (with a phenomenon completely invariant across languages) to infinity (with higher numbers indicating greater variation). 
+To do so, we identify a small number of measures computed in each chapter. For each measure, we compute its cross-linguistic variability using a standardized measure of variance, the coefficient of variation (CV, the standard deviation divided by the mean). This measure can range from 0 (with a phenomenon completely invariant across languages) to infinity (with higher numbers indicating greater variation). These CV values provide a single common measure to allow comparability of otherwise very different quantities, allowing inferences across analyses and datasets -- albeit with some cautions that we describe below. 
 
-Each measure for which we compute the CV will have both a different base unit and a different number of languages contributing. For example, when considering the correlation between grammar and the lexicon (Chapter \@ref(grammar)), we will be looking at the CV of a set of correlations with one specific set of languages contributing. When we look at the size of the noun bias (Chapter \@ref(vocab-comp)) we will be looking at a group of bias estimates that have different units and a different set of languages. Thus, caution is warranted in interpreting these variability estimates, even as we believe that they are informative. To assist in interpretation, we exclude measures that can be computed in fewer than `r MIN_LANGS` languages; provide the N contributing languages for all analyses; and compute an estimate of the standard error of the CV ($$SEM \approx CV / \sqrt{2N}$$).
+Each measure for which we compute the CV will have both a different base unit and a different number of languages contributing. For example, when considering the correlation between grammar and the lexicon (Chapter \@ref(grammar)), we will be looking at the CV of a set of correlations with one specific set of languages contributing. When we look at the size of the noun bias (Chapter \@ref(vocab-comp)) we will be looking at a group of bias estimates that have different units and a different set of languages. Thus, caution is warranted in interpreting these variability estimates, even as we believe that they are informative. To assist in interpretation, we exclude measures that can be computed in fewer than `r MIN_LANGS+1` languages; provide the N contributing languages for all analyses; and compute an estimate of the standard error of the CV ($$SEM \approx CV / \sqrt{2N}$$).
+
+The measures we include in this analysis are necessarily a subjectively-determined subset of the possible measures we have examined in the boo. And of course those in turn are a subset of the measures we could have computed. Wherever possible we have attepted to make reasonable decisions, but some of these are by necessity somewhat arbitrary. An example of such a decision comes from the summary of Chapter \@ref(vocab). In that chapter we noted that population variability appears quite consistent across languages. We summarised population variability in production via a statistic, MMAD -- but what is the appropriate range of ages to include in a single estiamte? We noted that there appears to be a ceiling effect in the later ages, and so include variability in production from 12 -- 24 months. But this decision is data-dependent and so of course there is a risk of circularity. We point this out not to undermine this particular analysis; we believe the ceiling effect is quite clear and other aspects of the age choice do not lead to much change in the CV estimate. Rather we intend to highlight that the summary we give is not a theory-neutral estimate but rather a "best guess" -- an attempt to navigate the myriad choices involved in our analysis in a reasonable way. 
+
+
 
 
 ```{r cons-cvs_load}
@@ -24,29 +28,48 @@ cvs <- data_frame(name = files) %>%
     read_feather(paste0("data/cvs/", x$name))
   }) %>%
   mutate(y = 0, 
-         signature = fct_reorder(signature, cv), 
+         signature = fct_reorder(signature, cv, .desc = TRUE), 
          measure = fct_recode(measure, 
                                production = "produces", 
                                comprehension = "understands")) %>%
   filter(n > MIN_LANGS)
 ```
 
-For the sake of our analysis, we have broken phenomena from the preceding chapters into four categories. These are 
+For the sake of our analysis, we have broken measures from the preceding chapters into four categories. These are:
+
+1. Measures of the composition of vocabulary, from Chapters \@ref(categories-syntax) and \@ref(categories-semantic). These measures describe the over- and under-representation of various word categories in vocabulary. The units over which CV is computed are bias scores that are bounded from -.5 to .5 (deviation from unbiased acquisition of a particular category). 
+
+2. Predictors of word difficulty, from Chapter \@ref(aoa-pred). The consistency of different regression predictors of age of acquisition are here represented by their cross-linguistic consistency, for comparison with other measures. The units over which  CV is computed are standardized regression coefficients. 
+
+3. Relational measures. These measures are from Chapters \@ref(gesture) and \@ref(grammar). These measures are originally correlations between vocabulary size and other measures.
+
+4. Vocabulary measures. These measures document patterns in the overall size of vocabulary across individuals and demographic groups. They are extracted from Chapters \@ref(vocab) and \@ref(demographics) and the original units are themselves variability-based (MMAD scores). 
 
 ```{r cons-cvs_plot_1}
-ggplot(cvs, aes(x = signature, y = cv, col = measure)) + 
-  geom_point(aes(size = n)) + 
+ggplot(cvs, 
+       aes(x = signature, y = cv, col = measure)) + 
+  geom_point(aes(size = n), alpha = .5) + 
   geom_linerange(aes(ymin = cv - sem, ymax = cv + sem)) + 
   ylab("Coefficient of variation across languages") + 
   geom_hline(yintercept = 0, lty =2) + 
   xlab("") + 
   coord_flip() + 
-  facet_wrap(category ~ ., drop = TRUE, scales = "free_y") + 
+  facet_wrap(~category, 
+             drop = TRUE, scales = "free_y") + 
   theme(legend.position = "bottom") + 
   ggthemes::scale_color_ptol(name = "Measure") + 
-  scale_size_continuous(name = "N languages")
+  scale_size_continuous(name = "N languages") + 
+  ylim(0,2)
 ```
+The figure above shows the coefficient of variation across languages for all measures in each of these categories. Error bars show standard error of the CV. Dot size shows the number of languages included in the analysis. Color shows whether the measure was computed on comprehension or production. Points are ordered from lowest CV to highest. A number of patterns are immediately apparent, providing a synthesis across the different parts of our broader enterprise. 
 
+First, comprehension is almost always more variable than production, even when an even number of languages are included. The only obvious exception to this regularity is for coefficient weights on arousal in the Predictors category -- and we can discount this example because overall arousal was not meaningfully related to order of acquisition (being on average one of the weakest predictors). Why would comprehension be more variable across languages than production, especially given evidence that comprehension vocabulary tends to be *less* idiosyncratic than production [@mayor2014]? One strong possibility is psychometric. 
+
+As described in Chapter \@ref(psychometrics), while comprehension scores still appear to be a reliable and valid index of children's abilities in the aggregate, individual comprehension questions tend to carry less information. Thus, there may simply be more noise in these measurements, leading to less cross-linguistic stability. This regularity illustrates a point we have made earlier and will return to below: the inferences from consistency and variability are asymmetric. In the case of consistency, we can make relatively strong inferences about some kind of shared process or mechanism. In contrast, in the case of variability, there are many sources of variance (including measurement error) that can account for a specific pattern of performance. 
+
+Second, relational measures are highly invariant across languages. These relations include correlations between the size of children's lexicon (in production or comprehension) and their gesture, morphology, and grammatical complexity. In Chapter \@ref(psychometrics) ...
+
+Third, 
 
 
 

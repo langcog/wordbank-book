@@ -32,6 +32,9 @@ vocab_data <- admins %>%
 ```
 
 ```{r demo-funs}
+N_MAIN_GROUPS <- 5
+N_AGE_POINTS <- 4
+
 # get means split by demographic features
 get_demo_means <- function (data, demo = ~sex, measure = ~production) {
   data %>%
@@ -60,7 +63,7 @@ get_demo_models <- function (data, demo = ~sex, measure = ~production) {
 # predict from models in the given age range so that you can plot
 get_demo_preds <- function (models, data, demo = ~sex) {
   
-  demo_name <- quo_text(demo) # fixme - how do I coerce this more nicely?
+  demo_name <- rlang::quo_text(demo) # fixme - how do I coerce this more nicely?
   
   data %>%
     unite(langform, language, form, sep = ".") %>%
@@ -100,19 +103,22 @@ get_demo_model_summary <- function (models, level = "Male") {
 }
 
 # compute MMAD effect size measure by the demographic and particular levels
+# tricky to filter outliers but important, the current policy is to filter cases 
+# where there are fewer than N_MAIN_GROUPS in each of the two main groups that are being used for MMAD comparison. 
+
 get_mmad_ratio <- function(data, measure = quo(production), demo = quo(sex), 
                            high_level = "Female", low_level = "Male") {
   
   data %>%
     group_by(language, form, age, !!demo) %>%
-    filter(n() > 5) %>%
+    filter(n() > N_MAIN_GROUPS | !(!!demo %in% c(high_level,low_level))) %>%
     mutate(measure = !!measure) %>%
     summarise(median = median(measure),
               mad = mad(measure),
               n = n()) %>%
     group_by(language, form, age) %>%
-    filter(any(!! get_expr(demo) == high_level), 
-           any(!! get_expr(demo) == low_level)) %>% # one of each necessary level
+    filter(any(!! rlang::get_expr(demo) == high_level), 
+           any(!! rlang::get_expr(demo) == low_level)) %>% # one of each necessary level
     summarise(mmad = (median[!!(demo) == high_level] - median[!!(demo) == low_level]) / 
                 mean(mad[!!(demo) %in% c(high_level, low_level)]),
               n = sum(n)) %>%
@@ -125,7 +131,7 @@ get_mmad_summary <- function(data) {
     group_by(language, form) %>%
     summarise(mmad_mean = weighted.mean(mmad, w = n),
               n = n()) %>%
-    filter(n > 4) %>% # more than four age points - FIXME, arbitrary
+    filter(n > N_AGE_POINTS) %>% # more than four age points - FIXME, arbitrary
     ungroup %>%
     mutate(language = fct_reorder(language, mmad_mean)) 
 }
@@ -149,7 +155,7 @@ analysis_combos <- left_join(tibble(form = c("WG","WG","WS"),
          high_level =  case_when(demo == quo(sex) ~ "Female", 
                                  demo == quo(birth_order) ~ "First",
                                  demo == quo(mom_ed) ~ "College and Above"), 
-         demo_name = map_chr(demo, quo_text))
+         demo_name = map_chr(demo, rlang::quo_text))
 
 # run all the analyses above on all those combos
 analyses <- analysis_combos %>%
@@ -437,7 +443,7 @@ a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
+  ylab("MMAD (First-Born Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WG.comprehension$birth_order$mmad_summary, 
@@ -482,7 +488,7 @@ a <- ggplot(analyses$WG.production$birth_order$mmad_ratio,
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
+  ylab("MMAD (First Born Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WG.production$birth_order$mmad_summary, aes(x = language, y = mmad_mean)) + 
@@ -524,7 +530,7 @@ a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
+  ylab("MMAD (First-Born Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WS.production$birth_order$mmad_summary, 
@@ -560,7 +566,7 @@ ggplot(analyses$WG.comprehension$mom_ed$means,
   facet_wrap( ~interaction(language, form)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.comprehension$mom_ed$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Birth Order") +
+  scale_colour_solarized(name="Maternal Education") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
@@ -580,7 +586,7 @@ a <- ggplot(analyses$WG.comprehension$mom_ed$mmad_ratio,
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
+  ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WG.comprehension$mom_ed$mmad_summary, aes(x = language, y = mmad_mean)) + 
@@ -665,7 +671,7 @@ a <- ggplot(analyses$WS.production$mom_ed$mmad_ratio,
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   scale_color_solarized() + 
   xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
+  ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WS.production$mom_ed$mmad_summary, aes(x = language, y = mmad_mean)) + 

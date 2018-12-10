@@ -263,7 +263,6 @@ In summary, differences between languages in the sheer number of words reported 
 
 <!-- ### The reliability of early parent reports -->
 
-<!-- Are these first reported instances of production and comprehension reliable? @schneider2016 -->
 
 <!-- ```{r 3_production_wg_early} -->
 <!-- ggplot(filter(medians, form == "WG", n_admins > 200),  -->

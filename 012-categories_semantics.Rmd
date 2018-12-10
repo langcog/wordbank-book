@@ -296,7 +296,7 @@ time_words <- read_feather("data/categories_semantics/time_words.feather")
 time_unis <- unique(time_words$uni_lemma)
 ```
 
-As discussed above, the semantics of time words are very challenging for children through middle childhood [@tillman2014;@tillman2016]. Despite this, parents report that children do produce them by age 2.5. The set of words with sufficient translation equivalents for inclusion was `r Reduce(paste0,sprintf("%s, ", time_unis[1:length(time_unis)-1]))` and `r time_unis[length(time_unis)]`. 
+As discussed above, the semantics of time words are very challenging for children through middle childhood [@tillman2015;@tillman2017]. Despite this, parents report that children do produce them by age 2.5. The set of words with sufficient translation equivalents for inclusion was `r Reduce(paste0,sprintf("%s, ", time_unis[1:length(time_unis)-1]))` and `r time_unis[length(time_unis)]`. 
 
 ```{r catsem-time_words}
 plot_unis(time_words)

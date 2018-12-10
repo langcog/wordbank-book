@@ -119,7 +119,7 @@ grammar_summary <- grammar_data_coded %>%
             positive = sum(value),
             negative = num_items - positive,
             prop = positive / num_items) %>%
-  mutate(instrument = paste(language, form))
+  mutate(instrument = paste(language, form, sep = .inst_sep))
 
 write_feather(grammar_summary, "data/grammar/grammar_summary.feather")
 ```

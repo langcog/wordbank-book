@@ -13,7 +13,7 @@ items <- items %>%
 
 category_freqs <- items %>%
   filter(form %in% WSs) %>%
-  unite(langform, language, form) %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
   filter(!is.na(category)) %>%
   group_by(category, lexical_category, langform) %>%
   summarise(items = n()) %>%
@@ -61,7 +61,7 @@ area_summary <- areas %>%
             ci_upper = ci_upper(area)) %>%
   ungroup() %>%
   mutate(language = factor(language),
-         instrument = paste(language, form))
+         instrument = paste(language, form, sep = .inst_sep))
 
 area_summary_ordered <- area_summary %>%
   mutate(category = fct_reorder(category, mean))
@@ -154,7 +154,7 @@ We next turn to how this pattern varies across languages.
 plot_data <- cat_comp_data %>%
     filter(form %in% WSs, 
            category %in% included_cats) %>%
-    mutate(langform = interaction(language, form), 
+    mutate(langform = interaction(language, form, sep = .inst_sep), 
            category = fct_reorder2(category, vocab, prop, function(x, y) {
            sum(x - y)
            }, .desc=FALSE))
@@ -189,13 +189,13 @@ cat_order <- area_summary %>%
 ggplot(filter(area_summary, 
               form %in% WSs, 
               category %in% c("sounds","games_routines","vehicles","body_parts")) %>%
-         unite(langform, language, form),
+         unite(langform, language, form, sep = .inst_sep),
        aes(x = langform, y = mean, colour = langform)) +
   facet_grid(.~category) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) + 
   coord_flip() +
   geom_hline(yintercept = 0, linetype = "dashed") + 
-  scale_colour_solarized(name = "", guide = FALSE) + 
+  scale_colour_manual(values = inst_colours, guide = FALSE) +
   ylab("Relative representation in early vocabulary") + 
   xlab("")
 ```
@@ -206,13 +206,13 @@ We can zoom in on the most highly over-represented categories. The highest mean 
 ggplot(filter(area_summary, 
               form %in% WSs, 
               category %in% c("people","places","time_words")) %>%
-         unite(langform, language, form),
+         unite(langform, language, form, sep = .inst_sep),
        aes(x = langform, y = mean, colour = langform)) +
   facet_grid(.~category) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) + 
   coord_flip() +
   geom_hline(yintercept = 0, linetype = "dashed") + 
-  scale_colour_solarized(name = "", guide = FALSE) + 
+  scale_colour_manual(values = inst_colours, guide = FALSE) +
   ylab("Relative representation in early vocabulary") + 
   xlab("")
 ```
@@ -228,7 +228,7 @@ areas <- filter(area_summary_ordered,
               form %in% WSs, 
               measure == "produces", 
               category %in% included_cats) %>%
-  unite(langform, language, form) %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
   filter(category != "sounds")
 
 areas <- areas %>%
@@ -270,7 +270,7 @@ In this section, we isolate individual items from specific domains of interest. 
 plot_unis <- function(uni_data) {
   uni_data <- uni_data %>%
     mutate(uni_lemma = fct_reorder(uni_lemma, mean, .desc=TRUE)) %>%
-    unite(langform, language, form)
+    unite(langform, language, form, sep = .inst_sep)
   
   ggplot(uni_data, 
          aes(x = age, y = mean, col = langform)) + 
@@ -279,7 +279,8 @@ plot_unis <- function(uni_data) {
     facet_wrap(~uni_lemma) + 
     theme(legend.position = "bottom", 
           legend.text=element_text(size=6)) + 
-    scale_color_discrete(guide = guide_legend(ncol = 6)) + 
+    scale_colour_manual(values = inst_colours, name = "",
+                        guide = guide_legend(ncol = 6)) +
     ylim(0,1) + 
     ylab("Proportion Production") + 
     xlab("Age (Months)") + 
@@ -325,7 +326,7 @@ In this set of words, we see that *red* is typically the first learned, although
 
 ```{r catsem-color_langs_words}
 color_langs <- color_words %>%
-  unite(langform, language, form) %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
   group_by(langform, age) %>%
   summarise(mean = mean(mean))
  
@@ -337,7 +338,7 @@ ggplot(color_langs,
                      filter(age == max(age)),
                    aes(label = langform), 
                    size = 3) +
-  scale_color_discrete(guide = FALSE) + 
+  scale_colour_manual(values = inst_colours, guide = FALSE) +
   ylim(0,1) + 
   ylab("Proportion Production") + 
   xlab("Age (Months)") + 
@@ -391,7 +392,7 @@ cat_var <- bind_rows(time_words %>% mutate(category = "time"),
            n = mean(n)) 
   
 cat_var %>%
-  DT::datatable
+  DT::datatable()
 ```
 
 Body words as well as animal words are highly consistent across languages. In contrast, color, logic words, and time words are far less consistent. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.

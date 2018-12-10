@@ -50,7 +50,7 @@ get_demo_models <- function (data, demo = ~sex, measure = ~production) {
     mutate(measure = !!measure, 
            no_measure = n - .data$measure, 
            demo = !!demo) %>%
-    unite(langform, language, form, sep = ".") %>%
+    unite(langform, language, form, sep = .inst_sep) %>%
     split(.$langform) %>%
     map(possibly(function(x) {
       # print(x$langform[1])
@@ -66,7 +66,7 @@ get_demo_preds <- function (models, data, demo = ~sex) {
   demo_name <- rlang::quo_text(demo) # fixme - how do I coerce this more nicely?
   
   data %>%
-    unite(langform, language, form, sep = ".") %>%
+    unite(langform, language, form, sep = .inst_sep) %>%
     split(.$langform) %>%
     map_df(possibly(function(x) {
       print(x$langform[1])
@@ -81,7 +81,7 @@ get_demo_preds <- function (models, data, demo = ~sex) {
       return(new_data)
     }, otherwise = tibble())) %>%
     rename(!!demo_name := demo) %>%
-    separate(langform, into = c("language","form"), sep = "\\.") 
+    separate(langform, into = c("language","form"), sep = .inst_sep) 
 }
 
 # get the appropriate coefficient from the model and corresponding p value
@@ -97,7 +97,7 @@ get_demo_model_summary <- function (models, level = "Male") {
                         p = round(p, 4)))
     }, otherwise = tibble(p = NA, beta = NA))) %>%
     mutate(langforms = names(models)) %>% # ugly 
-    separate(langforms, into = c("language","form"), sep = "\\.") %>%
+    separate(langforms, into = c("language","form"), sep = .inst_sep) %>%
     select(language, form, beta, p) %>%
     arrange(beta)
 }
@@ -218,7 +218,7 @@ We begin by examining Words and Gestures data on comprehension.
 ```{r demo-gender_plot_wg_comp}
 ggplot(analyses$WG.comprehension$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form)) +
+  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(aes(size = n),  alpha = .2) +
   geom_line(data = analyses$WG.comprehension$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
@@ -249,13 +249,13 @@ But as in the previous chapter, we have the problem of non-normal distributions.
 
 ```{r demo-gender_mmad_wg_comp}
 ggplot(analyses$WG.comprehension$sex$mmad_ratio,
-       aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+       aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   xlab("Age (months)")  + 
   ylab("MMAD (Female Advantage)") +
-  scale_color_discrete(name="") + 
+  scale_color_manual(values = inst_colours, name = "") + 
   theme(legend.position = "bottom",
         legend.text = element_text(size = 7)) 
 ```
@@ -278,7 +278,7 @@ Applying this measure to the data on comprehension, we see a quite small average
 ```{r demo-gender_plot_wg_prod}
 ggplot(analyses$WG.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form)) +
+  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.production$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
@@ -302,16 +302,16 @@ We next turn to production data. As in many of our subsequent analyses, data on 
 
 ```{r demo-gender_mmad_wg_prod}
 a <- ggplot(analyses$WG.production$sex$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(language, form), y = mmad_mean)) + 
+b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(language, form, sep = .inst_sep), y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -330,7 +330,7 @@ Examining the MMAD effect size measures, it is clear that there is limited signa
 ```{r demo-gender_plot_ws_prod}
 ggplot(analyses$WS.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form)) +
+  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size=n)) +
   geom_line(data = analyses$WS.production$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
@@ -354,24 +354,23 @@ We next turn to production data on the Words and Sentences instrument, which we 
 
 ```{r demo-gender_mmad_ws_prod}
 a <- ggplot(analyses$WS.production$sex$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WS.production$sex$mmad_summary, 
-            aes(x = interaction(language, form),
+            aes(x = interaction(language, form, sep = .inst_sep),
                 y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -420,7 +419,7 @@ Here, we can examine birth order effects in early vocabulary comprehension and p
 ggplot(analyses$WG.comprehension$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.comprehension$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
@@ -437,11 +436,11 @@ analyses$WG.comprehension$birth_order$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (First-Born Advantage)") + 
   theme(legend.position = "bottom") 
@@ -452,8 +451,7 @@ b <- ggplot(analyses$WG.comprehension$birth_order$mmad_summary,
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -467,7 +465,7 @@ gridExtra::grid.arrange(a, b, ncol=2)
 ggplot(analyses$WG.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.production$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
@@ -482,11 +480,11 @@ analyses$WG.production$birth_order$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (First Born Advantage)") + 
   theme(legend.position = "bottom") 
@@ -496,8 +494,7 @@ b <- ggplot(analyses$WG.production$birth_order$mmad_summary, aes(x = language, y
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -509,7 +506,7 @@ gridExtra::grid.arrange(a, b, ncol=2)
 ggplot(analyses$WS.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WS.production$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
@@ -524,23 +521,23 @@ analyses$WS.production$birth_order$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (First-Born Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WS.production$birth_order$mmad_summary, 
-            aes(x = interaction(language, form), y = mmad_mean)) + 
+            aes(x = interaction(language, form, sep = .inst_sep),
+                y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -563,7 +560,7 @@ In the current dataset, we have the opportunity to explore the extent of these e
 ggplot(analyses$WG.comprehension$mom_ed$means,
        aes(x = age, y = median, colour = mom_ed,
            label = mom_ed)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.comprehension$mom_ed$preds, aes(y = pred)) +
   scale_colour_solarized(name="Maternal Education") +
@@ -584,7 +581,7 @@ a <- ggplot(analyses$WG.comprehension$mom_ed$mmad_ratio,
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
@@ -594,8 +591,7 @@ b <- ggplot(analyses$WG.comprehension$mom_ed$mmad_summary, aes(x = language, y =
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Comprehension)") +
+  ylab("MMAD (Comprehension)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -624,11 +620,11 @@ analyses$WG.production$mom_ed$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.production$mom_ed$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = language)) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
@@ -638,8 +634,7 @@ b <- ggplot(analyses$WG.production$mom_ed$mmad_summary, aes(x = language, y = mm
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -665,11 +660,11 @@ analyses$WS.production$mom_ed$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WS.production$mom_ed$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = language)) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
@@ -679,8 +674,7 @@ b <- ggplot(analyses$WS.production$mom_ed$mmad_summary, aes(x = language, y = mm
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -722,7 +716,7 @@ write_feather(cvs, "data/cvs/demographic_cvs.feather")
 
 <!-- After we get the data finalized, we can see if there is evidence for reporting bias in these data.
 
-```{r}
+```{r demo-early_comp}
 early_comprehension <- vocab_data %>%
   filter(form == "WG", age < 13, !is.na(mom_ed)) %>%
   group_by(language, mom_ed, age) %>%

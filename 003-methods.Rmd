@@ -254,7 +254,7 @@ ggplot(filter(longitudinal, n_admins != "1") %>%
   geom_bar(stat="identity") + 
   facet_wrap(~n_admins) + 
   coord_flip() + 
-  scale_fill_discrete(guide = FALSE) + 
+  scale_fill_manual(values = lang_colours, guide = FALSE) +
   ylab("Number of Children") + 
   xlab("Number of Administrations")
 ```

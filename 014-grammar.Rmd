@@ -105,7 +105,7 @@ ggplot(filter(combine_compare, language != "Slovak"),
   facet_wrap(~predictor, scales = "free_x") +
   geom_smooth(method = "glm", method.args = list(family = "binomial"),
               se = FALSE) +
-  scale_colour_solarized(name = "") +
+  scale_colour_manual(values = lang_colours, name = "") +
   labs(x = "", y = "Combines Words (Probability)") +
   theme(legend.position = "bottom")
 ```
@@ -288,7 +288,7 @@ ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
   directlabels::geom_dl(aes(label = language),
           method = list("first.qp", directlabels::dl.trans(x = x - 0.2),
                         cex = 0.7, fontfamily = .font)) +
-  scale_colour_solarized(guide = FALSE) +
+  scale_colour_manual(values = lang_colours, guide = FALSE) +
   labs(x = "", y = "Area of grammar score\n across vocabulary size") +
   expand_limits(x = 0)
 ```

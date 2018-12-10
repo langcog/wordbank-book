@@ -9,6 +9,12 @@ num_langs <- n_distinct(lang_coefs$language)
 predictors <- levels(lang_coefs$term)
 num_coefs <- length(predictors)
 
+langs_aoa <- unique(lang_coefs$language) %>% str_replace("Quebec", "Quebecois")
+# hack for aoapred having cached data with old lang label
+
+lang_colours_aoa <- lang_colours[names(lang_colours) %in% langs_aoa] %>%
+  set_names(str_remove(names(.), " \\(.*\\)"))
+
 label_caps <- function(value) {
   if_else(toupper(value) == value, value,
           paste0(toupper(substr(value, 1, 1)),

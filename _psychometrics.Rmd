@@ -107,7 +107,7 @@ d_ws_summary %>%
 mirt_params <- function(dx) {
   language <- dx$language
   form <- dx$form
-  print(paste(language, form))
+  print(paste(language, form, sep = .inst_sep))
 
   lang_data <- get_instrument_data(language = language, form = form,
                                    administrations = TRUE, iteminfo = TRUE)

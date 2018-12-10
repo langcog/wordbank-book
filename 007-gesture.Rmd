@@ -257,6 +257,7 @@ crossling_aoas %>%
   ggplot(aes(x = Unilemma, y = aoa, group = Unilemma)) +
   geom_violin(fill = NA, color = "gray") +
   geom_point(aes(color = language), position = position_jitter(width = .25, height = 0)) +
+  scale_colour_manual(values = lang_colours) +
   ylab("Age of Acquisition") + 
   theme(legend.position = c(.2, .8), legend.title = element_blank())
 ```

@@ -30,6 +30,23 @@ instruments <- read_feather("data/_common/instruments.feather")
 admins <- read_feather("data/_common/admins.feather")
 items <- read_feather("data/_common/items.feather")
 
+.inst_sep = " "
+pal <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,
+                       direction = 1)
+
+langs <- instruments %>%
+  select(language) %>%
+  distinct() %>%
+  arrange(language) %>%
+  mutate(colour = pal(n()))
+lang_colours <- langs$colour %>% set_names(langs$language)
+
+insts <- instruments %>%
+  select(language, form) %>%
+  unite(instrument, language, form, sep = .inst_sep, remove = FALSE) %>%
+  left_join(langs)
+inst_colours <- insts$colour %>% set_names(insts$instrument)
+
 # instruments <- get_instruments()
 # write_feather(instruments, "data/_common/instruments.feather")
 # admins <- get_administration_data(original_ids = TRUE)

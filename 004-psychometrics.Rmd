@@ -56,7 +56,7 @@ It turns out that this is the case: The first locus for individual differences i
 
 ```{r psycho-style_long_data}
 longitudinal_admins <- admins %>% 
-  mutate(langform = paste(language, form)) %>%
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   group_by(langform, original_id) %>% 
   count() %>% 
   filter(n > 1) 

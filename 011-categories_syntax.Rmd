@@ -224,7 +224,7 @@ area_summary <- areas %>%
             ci_upper = ci_upper(area)) %>%
   ungroup() %>%
   mutate(language = factor(language),
-         instrument = paste(language, form), 
+         instrument = paste(language, form, sep = .inst_sep), 
          lexical_category = factor(lexical_category,
                                    levels = c("nouns", "predicates", 
                                               "function_words"),
@@ -251,7 +251,7 @@ base_plot <- function(input_forms, input_measure) {
                                                 "function_words"),
                                      labels = c("Nouns ", "Predicates ", 
                                                 "Function Words")), 
-           langform = interaction(language, form)) %>%
+           langform = interaction(language, form, sep = .inst_sep)) %>%
     ggplot(aes(x = vocab, y = prop, colour = lexical_category)) +
     facet_wrap(~langform) +
     scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
@@ -282,7 +282,7 @@ Comprehension results are shown above. Overall, the largest trend that is visibl
 
 ```{r catsyn-plot_areas_WG}
 plot_areas_wg <- filter(area_summary, form %in% WGs, measure == "understands") %>%
-         unite(langform, language, form, sep = " ") %>%
+         unite(langform, language, form, sep = .inst_sep) %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
                                         .fun = function (x, y) {
                                           x[y=="Nouns"]}, .desc=FALSE))
@@ -309,7 +309,7 @@ area_scatter_data <- area_summary %>%
   filter(form %in% WGs, 
          lexical_category %in% c("Nouns","Predicates"), 
          measure == "produces") %>%
-  unite(langform, language, form, sep = " ") %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
   gather(variable, value, mean, ci_lower, ci_upper) %>%
   mutate(lex_var = str_c(lexical_category, variable, sep = "_")) %>%
   select(-lexical_category, -variable) %>%
@@ -360,7 +360,7 @@ We next turn to production data from WS-type forms. We can immediately see the s
 
 ```{r catsyn-plot_areas_ws}
 plot_areas_ws <- filter(area_summary, form %in% WSs, measure == "produces") %>%
-         unite(langform, language, form, sep = " ") %>%
+         unite(langform, language, form, sep = .inst_sep) %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
                                         .fun = function(x, y) {
                                           x[y=="Nouns"]}, .desc=FALSE))
@@ -386,7 +386,7 @@ area_scatter_data <- area_summary %>%
   filter(form %in% WSs, 
          lexical_category %in% c("Nouns","Predicates"), 
          measure == "produces") %>%
-  unite(langform, language, form, sep = " ") %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
   gather(variable, value, mean, ci_lower, ci_upper) %>%
   mutate(lex_var = str_c(lexical_category, variable, sep = "_")) %>%
   select(-lexical_category, -variable) %>%
@@ -498,7 +498,7 @@ pred_prod <- filter(area_summary, form %in% WSs, measure == "produces",
   left_join(filter(items, form %in% WSs) %>% 
               group_by(language, form) %>% 
               summarise(prop_pred = mean(lexical_category == "predicates", na.rm=TRUE))) %>%
-  mutate(langform =  paste(language, form)) 
+  mutate(langform =  paste(language, form, sep = .inst_sep)) 
 
 ggplot(pred_prod,
        aes(x = prop_pred, y = mean, col = langform)) + 
@@ -506,7 +506,7 @@ ggplot(pred_prod,
   geom_smooth(method = "lm", aes(group = 1)) + 
   ylab("Predicate Bias") + 
   xlab("Proportion Predicates on Form") + 
-  scale_color_discrete(guide = FALSE) + 
+  scale_colour_manual(values = inst_colours, guide = FALSE) +
   ggrepel::geom_label_repel(data = filter(pred_prod, prop_pred > .25), 
                    aes(label = langform))
 ```
@@ -639,7 +639,7 @@ age_areas <- vocab_comp_data %>%
   filter(form %in% WSs, measure == "produces") %>%
   left_join(select(admins, data_id, age)) %>%
   filter(!is.na(age)) %>%
-  mutate(langform = paste(language, form)) %>%
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   group_by(langform) %>%
   mutate(age_group = ifelse(age > median(age), "older","younger")) %>%
   group_by(langform, lexical_category, age_group) %>%

@@ -65,14 +65,15 @@ medians <- vocab_data %>%
   left_join(lang_ns) 
 
 ggplot(filter(medians, form %in% WGs, n_admins > 200), 
-       aes(x = age, y = production, col = interaction(language, form))) + 
+       aes(x = age, y = production,
+           col = interaction(language, form, sep = .inst_sep))) + 
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  
   xlab("Age (months)") + 
   ylab("Median Production") +
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) + 
-  scale_color_discrete(name = "") + 
+        legend.text=element_text(size=6)) +
+  scale_colour_manual(values = inst_colours, name = "") +
   scale_size(guide = FALSE)
 ```
 
@@ -80,7 +81,8 @@ Plotted above are the median patterns of growth for early production. Rather tha
 
 ```{r vocab-medians_production_ws}
 ggplot(filter(medians, form %in% WSs , n_admins > 200), 
-       aes(x = age, y = production, col = interaction(language,form))) + 
+       aes(x = age, y = production,
+           col = interaction(language, form, sep = .inst_sep))) + 
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  
   xlab("Age (months)") + 
@@ -88,9 +90,8 @@ ggplot(filter(medians, form %in% WSs , n_admins > 200),
   geom_hline(yintercept = 50, lty = 2) +
   theme(legend.position = "bottom",
         legend.text=element_text(size=6)) + 
-  scale_color_discrete(name = "") + 
+  scale_colour_manual(values = inst_colours, name = "") +
   scale_size(guide = FALSE)
-
 ```
 
 This acceleration is even clearer when looking at production reports from older children using Words and Sentences. In every language, we see the median child is reported to produce 50 words between 16 and 20 months. As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We discuss Mandarin in particular, which is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies between languages. 
@@ -99,7 +100,8 @@ During the period 24-30 months, we see children beginning to produce a large eno
 
 ```{r vocab-medians_comprehension_wg}
 ggplot(filter(medians, form %in% WGs, n_admins > 200), 
-       aes(x = age, y = comprehension, col = interaction(language, form))) + 
+       aes(x = age, y = comprehension,
+           col = interaction(language, form, sep = .inst_sep))) + 
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  
   theme(legend.position = "bottom") + 
@@ -108,7 +110,7 @@ ggplot(filter(medians, form %in% WGs, n_admins > 200),
   # geom_hline(yintercept = 50, lty = 2) + 
   theme(legend.position = "bottom",
         legend.text=element_text(size=6)) + 
-  scale_color_discrete(name = "") + 
+  scale_colour_manual(values = inst_colours, name = "") +
   scale_size(guide = FALSE)
 
 mins <- medians %>% 
@@ -201,7 +203,7 @@ ggplot(highlight_data,
   ylab("Production Proportion") + 
   theme(legend.position = "bottom",
         legend.text=element_text(size=6)) + 
-  scale_color_discrete(name = "") + 
+  scale_colour_manual(values = lang_colours, name = "") +
   scale_size(guide = FALSE) +
   ylim(0,1) + 
   xlim(18,30)
@@ -225,6 +227,7 @@ ggplot(select_medians,
   geom_smooth(se=FALSE, span = 1) +
   theme(legend.position = "bottom") + 
   scale_alpha_continuous(guide=FALSE) + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)") + 
   ylab("Median Production Proportion") + 
   ylim(0,1) + 
@@ -406,15 +409,15 @@ In American English production, this ratio is actually close to 1 from age one u
 Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
 
 ```{r vocab-madm2}
-ggplot(madm_data, aes(x = age, y = madm_p, col = language)) + 
-  geom_jitter(aes(size = n), alpha = .5) + 
-  geom_smooth(aes(group  = 1)) + 
+ggplot(madm_data, aes(x = age, y = madm_p)) + 
+  geom_jitter(aes(size = n, col = language), alpha = .5) + 
+  geom_smooth(aes(group = 1)) + 
   ylim(0,2) + 
   ylab("MADM (Production)") + 
   xlab("Age (months)") + 
   theme(legend.position = "bottom",
         legend.text=element_text(size=6)) + 
-  scale_color_discrete(name = "") + 
+  scale_colour_manual(values = lang_colours, name = "") +
   scale_size(guide = FALSE)
 ```
 
@@ -446,15 +449,15 @@ ggplot(madm_summary_prod, aes(x = language, y = madm_mean, col = form)) +
 
 ```{r vocab-madm_comprehension}
 ggplot(filter(madm_data, form %in% WGs), 
-       aes(x = age, y = madm_c, col = language)) + 
-  geom_jitter(aes(size = n), alpha = .5) + 
+       aes(x = age, y = madm_c)) + 
+  geom_jitter(aes(size = n, col = language), alpha = .5) + 
   geom_smooth(aes(group  = 1)) + 
   ylim(0,2) + 
   ylab("MADM (Comprehension)") + 
   xlab("Age (months)") + 
   theme(legend.position = "bottom",
         legend.text=element_text(size=6)) + 
-  scale_color_discrete(name = "") + 
+  scale_color_manual(values = lang_colours, name = "") + 
   scale_size(guide = FALSE)
 ```
 
@@ -490,7 +493,7 @@ Chapter \@ref(psychometrics) provides a summary of our approach to using item re
 mirt_params <- function(dx) {
   language <- dx$language
   form <- dx$form
-  print(paste(language, form))
+  print(paste(language, form, sep = .inst_sep))
   
   lang_data <- get_instrument_data(language = language, form = form, 
                                    administrations = TRUE, iteminfo = TRUE)
@@ -545,7 +548,7 @@ mirt_params <- read_feather("data/vocabulary/mirt_params.feather")
 mirt_sd <- mirt_params %>%
   left_join(mirt_params %>% group_by(language, form) %>%
               summarise(langform_sd = sd(ability))) %>%
-  mutate(langform = interaction(language,form)) %>%
+  mutate(langform = interaction(language, form, sep = .inst_sep)) %>%
   group_by(langform, age) %>%
   summarise(mean = mean(ability), 
             sd = sd(ability), 
@@ -566,7 +569,7 @@ ggplot(mirt_sd,
   #                  aes(label = langform), size = 3, segment.color = "grey") +
   # # geom_dl(aes(label = langform, col = langform),
   #         method = "last.points", ) + 
-  scale_color_discrete(guide = FALSE) + 
+  scale_colour_manual(values = inst_colours, guide = FALSE) +
   ylab("Latent Ability SD") + xlab("Age (Months)") +
   xlim(12,40)
 ```

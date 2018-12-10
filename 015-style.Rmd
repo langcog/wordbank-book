@@ -37,7 +37,7 @@ vocab_comp_data <- read_feather("data/categories_syntax/vocab_comp_data.feather"
 
 ws_vc <- vocab_comp_data %>%
   filter(form %in% WSs)  %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 ws_vc_all <- ws_vc %>%
   filter(measure == "produces", 
@@ -81,7 +81,7 @@ coefs <- vc_pred %>%
   group_by(language, form) %>%
   do(broom::tidy(glm(cbind(produces, doesnt_produce) ~ age + noun_prop, 
                      data = ., family = "binomial"))) %>%
-  mutate(langform = paste(language, form)) %>%
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   filter(term %in% c("age", "noun_prop","age:noun_prop")) %>%
   mutate(term = factor(term, 
                        labels = c("Age", "Prop Nouns","Age x Prop Nouns"), 
@@ -153,7 +153,7 @@ resid_coefs <- resid_vc_pred %>%
   mutate(term = factor(term, 
                        labels = c("Age"), 
                        levels = c("age")), 
-         langform = paste(language, form)) 
+         langform = paste(language, form, sep = .inst_sep)) 
 
 
 ggplot(resid_coefs, 
@@ -186,7 +186,7 @@ grammar_coefs <- grammar_summary %>%
   do(broom::tidy(glm(cbind(positive, negative) ~ resid_noun_prop, 
                      family = "binomial", data = .)))  %>%
   filter(term %in% c("resid_noun_prop")) %>%
-  mutate(langform = paste(language, form)) 
+  mutate(langform = paste(language, form, sep = .inst_sep)) 
 
 
 ggplot(grammar_coefs, 
@@ -212,7 +212,7 @@ grammar_age_coefs <- grammar_summary %>%
   mutate(term = factor(term,
                        labels = c("Age", "Production", "Resid Prop Nouns"),
                        levels = c("age", "production", "resid_noun_prop")),
-         langform = paste(language, form))
+         langform = paste(language, form, sep = .inst_sep))
 
 
 ggplot(grammar_age_coefs, 
@@ -259,7 +259,7 @@ Our starting point here is a study by @ganger2004, who provide a detailed, curve
 admins_cutoff <- 4
 
 longitudinal_admins <- admins %>% 
-  mutate(langform = paste(language, form)) %>%
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   group_by(langform, original_id) %>% 
   count() %>% 
   filter(n > 1) 
@@ -273,7 +273,7 @@ n_long_ws <- admins %>%
          min_age = min(age),
          first_vocab = production[age == min_age][1]) %>%
   filter(n_admins > admins_cutoff) %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 n_long_wg <- admins %>%
   filter(original_id %in% longitudinal_admins$original_id,
@@ -284,7 +284,7 @@ n_long_wg <- admins %>%
          min_age = min(age),
          first_vocab = production[age == min_age][1]) %>%
   filter(n_admins > admins_cutoff) %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 n_long <- bind_rows(n_long_ws, n_long_wg)
 ```
@@ -637,7 +637,7 @@ ggplot(eng_wg, aes(x = comprehension, y = productivity)) +
 ```{r style-wg_productivity_subset}
 wg <- filter(admins, form %in% WGs) %>%
   mutate(productivity = production / comprehension) %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 wg$langform <- fct_reorder(factor(wg$langform), wg$productivity, 
                            fun = function(x) {mean(x, na.rm=TRUE)}, .desc = FALSE)
@@ -661,6 +661,7 @@ ggplot(filter(wg, !(langform %in% c("British Sign Language WG"))),
   # geom_jitter(alpha = .2) + 
   # geom_smooth(method = "loess", se = FALSE, span = 1, alpha = .5) + 
   geom_smooth(method = "lm", se = FALSE) + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (Months)") + 
   ylab("Productivity Ratio") + 
   theme(legend.position = "bottom") + 
@@ -676,7 +677,8 @@ productivity_coefs <- wg %>%
   do(broom::tidy(lm(productivity ~ age, data = .))) %>%
   filter(term == "age") %>%
   ungroup %>%
-  mutate(langform = fct_reorder(paste(language, form), estimate, fun = mean))
+  mutate(langform = fct_reorder(paste(language, form, sep = .inst_sep),
+                                estimate, fun = mean))
 
 ggplot(productivity_coefs, 
        aes(x = langform, y = estimate)) + 

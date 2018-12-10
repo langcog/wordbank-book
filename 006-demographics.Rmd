@@ -381,7 +381,7 @@ We next turn to the MMAD effect size measure. Here we see a relatively consisten
 
 ### Reporting Bias?
 
-Do these differences reflect differences in measurement that are unique to the CDI? One way of addressing this question is to examine other studies of gender differences that have been found in other studies. Unfortunately, many of the studies reporting differences themselves rely on the CDI, likely for the reasons reviewed in Chapter \@ref(intro), e.g. [@bauer2002,@fenson1994,@feldman2000]. For example, @feldman2000 collected CDIs with a large dataset of low-income American English speakers at 12 and 24 months. In those data, early comprehension showed no significant gender differences, but production at 24 months showed a difference comparable to what we observed here ($N = 2156$, $d = .35$, recomputed from provided summary statistics). These data, while providing replication in an independent dataset, do not speak to whether reporting biases contributed to or created the observed sex effects. 
+Do these differences reflect differences in measurement that are unique to the CDI? One way of addressing this question is to examine other studies of gender differences that have been found in other studies. Unfortunately, many of the studies reporting differences themselves rely on the CDI, likely for the reasons reviewed in Chapter \@ref(intro-practical), e.g. [@bauer2002,@fenson1994,@feldman2000]. For example, @feldman2000 collected CDIs with a large dataset of low-income American English speakers at 12 and 24 months. In those data, early comprehension showed no significant gender differences, but production at 24 months showed a difference comparable to what we observed here ($N = 2156$, $d = .35$, recomputed from provided summary statistics). These data, while providing replication in an independent dataset, do not speak to whether reporting biases contributed to or created the observed sex effects. 
 
 For external validation, we turn to two other studies that provide more objective (non parent-report) measurements of early language. First, a seminal study by @huttenlocher1991 measured gender effects in vocabulary production as estimated from a naturalistic language sample, finding substantial differences in vocabulary growth favoring girls. Although the measures from this study are not comparable to the current data, the effects are quite large (and are relatively unaffected by controlling for maternal language exposure). 
 
@@ -405,7 +405,7 @@ Second, @bornstein2012 use a particularly powerful study design to examine stabi
 
 ### Discussion
 
-In summary, we found a considerable and strikingly consistent cross-linguistic female advantage in early language production [replicating and extennding @eriksson2012]. A much smaller but still relatively consistent female advantage was reported in comprehension. We suspect that neither of these effects are due to parental reporting bias. First, our review of the literature suggests that studies using direct assessments yield similar effects to the extent that we were able to compare. Second, comprehension is very likely to be the measure *more* affected by reporting biases as it is likely to be more subjective [@feldman2000;@fenson2000]. In contrast, we find a much smaller gender effect in comprehension. As noted above, we remain agnostic about the causes of these differences, but in Chapter \@ref(conclusion) we discuss inferences from consistency across languages in much more detail.
+In summary, we found a considerable and strikingly consistent cross-linguistic female advantage in early language production [replicating and extennding @eriksson2012]. A much smaller but still relatively consistent female advantage was reported in comprehension. We suspect that neither of these effects are due to parental reporting bias. First, our review of the literature suggests that studies using direct assessments yield similar effects to the extent that we were able to compare. Second, comprehension is very likely to be the measure *more* affected by reporting biases as it is likely to be more subjective [@feldman2000;@fenson2000]. In contrast, we find a much smaller gender effect in comprehension. As noted above, we remain agnostic about the causes of these differences, but in Chapter \@ref(consistency) we discuss inferences from consistency across languages in much more detail.
 
 
 ## Birth order
@@ -696,7 +696,7 @@ While lower scores on the vocabulary checklists can reflect authentic difference
 
 
 
-```{r}
+```{r demo-cvs}
 cvs <- expand.grid(measures = c("WS.production","WG.production","WG.comprehension"),
            demos = c("birth_order","sex","mom_ed")) %>%
   mutate(index = 1:n()) %>%

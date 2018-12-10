@@ -5,8 +5,8 @@ rsconnect
 libs/
 wordbank-book.Rmd
 _bookdown_files/
-_cache/
-_files/
+*_cache/
+*_files/
 data/*/_*
 
 .DS_Store

@@ -13,6 +13,8 @@ In each of the substantive chapters of this book (roughly speaking from Chapter 
 This strategy executes the general idea discussed in Chapter \@ref(intro-theory). Our analyses identify "signatures" of language development that have been central to theoretical discussion. We then quantify these signatures numerically and measure their variation across languages. The resulting quantities are an empirically-derived measure of which aspects of language development appear more similar across different languages and contexts. We discuss the types of inferences licensed and not licensed by these analyses below. 
 
 ### Methods
+Each measur
+e for which we compute the CV will have both a different base unit and a different number of languages contributing. For example, when considering the correlation between grammar and the lexicon (Chapter \@ref(grammar)), we will be looking at the CV of a set of correlations with one specific set of languages contributing. When we look at the size of the noun bias (Chapter \@ref(categories-syntactic)) we will be looking at a group of bias estimates that have different units and a different set of languages. Thus, caution is warranted in interpreting these variability estimates, even as we believe that they are informative. To assist in interpretation, we exclude measures that can be computed in fewer than `r MIN_LANGS+1` languages; provide the N contributing languages for all analyses; and compute an estimate of the standard error of the CV ($$SEM \approx CV / \sqrt{2N}$$).
 
 We begin by identifing a small number of measures computed in each chapter to serve as the "signatures" to be promoted into this analysis. For each measure, we compute its cross-linguistic variability using a standardized measure of variance, the coefficient of variation (CV, the standard deviation divided by the mean). This measure can range from 0 (with a phenomenon completely invariant across languages) to infinity (with higher numbers indicating greater variation). These CV values provide a single common measure to allow comparability of otherwise very different quantities, allowing inferences across analyses and datasets -- albeit with some cautions that we describe below. 
 
@@ -146,7 +148,7 @@ How can we describe and explain this variability? While much of the variance in 
 
 **Coefficient of Variation** Variability across kids (size of the fan) FIXME
 
-**Category biases**. In Chapter \@ref(categories), we extend previous work [e.g., @bornstein2004] by quantifying the degree of bias for and against different word classes in early vocabulary. For example, with a handful of exceptions (discussed in depth in that chapter) we see a bias for the overrepresentation of nouns in early vocabulary, at the expense of predicates and, even more so, function words. 
+**Category biases**. In Chapter \@ref(categories-syntactic), we extend previous work [e.g., @bornstein2004] by quantifying the degree of bias for and against different word classes in early vocabulary. For example, with a handful of exceptions (discussed in depth in that chapter) we see a bias for the overrepresentation of nouns in early vocabulary, at the expense of predicates and, even more so, function words. 
 
 **Individual words**. Following @tardif2008, we show that there are large similarities in the most common early words. Further, we show that the predictors of what words are easier and harder across langauges are extremely consistent. 
 

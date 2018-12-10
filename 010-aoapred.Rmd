@@ -331,11 +331,3 @@ cvs <- plt_lang_coefs  %>%
 
 write_feather(cvs, "data/cvs/aoapred_cvs.feather")
 ```
-
-
-
-
-```{r}
-
-```
-

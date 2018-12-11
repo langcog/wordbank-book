@@ -95,7 +95,7 @@ ggplot(filter(n_long_ws, n_admins > 10,
        aes(x = age, y = production, col = fct_reorder(original_id, production))) + 
   geom_line() + 
   # facet_wrap(~language) + 
-  scale_colour_discrete(guide = FALSE) + 
+  .scale_colour_numerous(guide = FALSE) + 
   ylab("Words Produced") + 
   xlab("Age (Months)")
 ```
@@ -138,7 +138,7 @@ ggplot(filter(n_long_ws, n_admins > 10,
               language == "Norwegian"), 
        aes(x = age, y = percentile, col = fct_reorder(original_id, production))) + 
   geom_line() + 
-  scale_colour_discrete(guide = FALSE) + 
+  .scale_colour_numerous(guide = FALSE) + 
   xlab("Age (months)") + 
   ylab("Empirical Percentile")
 ```
@@ -194,10 +194,9 @@ ggplot(filter(long_cor_pairs, n >= 50),
   facet_wrap(~language) + 
   ylab("Correlation") + 
   xlab("Measurement Gap (Months)") + 
-  viridis::scale_color_viridis(name = "Starting Age") + 
+  .scale_colour_continuous(name = "Starting Age") + 
   scale_size_continuous(name = "N")  + 
   ylim(0,1)
-    
 ```  
 
 The transformation to percentile ranks allows us to assess the correlation between a child's percentile rank at time 1 and their rank at time 2, depending on the gap between these two. Because of sparsity, we bin children into two-month age bins and eliminate age bins with fewer than 50 children, then calculate between-bin correlations in percentiles. The figure above shows this analysis, which reveals that percentile ranks are quite stable; across a 2-4 month age gap they are correlated at better than .8. This stability declines to around .5 at 16 months, but this decline should be taken with a grain of salt. First, this range is a doubling of the child's age, so stability might be expected to be lower. But second, many children who are measured longitudinally across a 16-month gap will be expected to move from the floor of the form to the ceiling, compromising measurement accuracy. To test this last hypothesis, we evaluated the longitudinal stability of correlations using the same analysis as above, but varying whether we used raw scores or percentiles. The percentile method substantially increased correlations.^[We also used latent abilities derived from a 4-parameter IRT model as below. While the IRT-derived ability parameters showed a consistent improvement in longitudinal correlations over the use of raw scores, percentiles realized a further gain over the IRT parameters.]
@@ -339,14 +338,14 @@ a <- ggplot(coefs_4pl,
   ggrepel::geom_text_repel(data = filter(coefs_4pl, 
                                 abs(a1) > 3.3 | abs(d) > 4), 
                   aes(label = definition), size = 2) + 
-  ggthemes::scale_color_ptol(name = "Lexical Class") + 
+  .scale_colour_discrete(name = "Lexical Class") + 
   xlab("Discrimination") + 
   ylab("Difficulty")
 
 b <- ggplot(coefs_4pl, 
        aes(x = a1, fill = lexical_class)) + 
   geom_histogram() + 
-  ggthemes::scale_fill_ptol(name = "Lexical Class") + 
+  .scale_fill_discrete(name = "Lexical Class") + 
   xlab("Discrimination") +
   ylab("Number of Words") +
   xlim(0,4)

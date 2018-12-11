@@ -168,8 +168,8 @@ ggplot(predictions,
                      name = "") +
   scale_x_continuous(limits = c(0, 1), breaks = c(),
                      name = "") +
-  scale_colour_solarized(guide = FALSE) +
-  scale_fill_solarized(guide = FALSE) 
+  .scale_colour_discrete(guide = FALSE) +
+  .scale_fill_discrete(guide = FALSE) 
 ```
 
 The figure above shows this analysis, carried out with English (American) WS data. Each point shows an individual child's vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). We capture the overall trend in this plot by estimating a linear model over the data, predicting category proportion as a function of total production. This model is fit with third-order polynomials (so as to allow both concave/convex functions and also changes in convexity). We fit these 
@@ -258,7 +258,7 @@ base_plot <- function(input_forms, input_measure) {
                        name = "Proportion of Category\n") +
     scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "\nVocabulary Size") +
-    scale_colour_solarized(name = "") +
+    .scale_colour_discrete(name = "") +
     theme(legend.position = "top",
           legend.key = element_blank(),
           legend.background = element_rect(fill = "transparent"), 
@@ -292,7 +292,7 @@ ggplot(filter(plot_areas_wg, lexical_category != "Function Words"),
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   facet_wrap(~lexical_category) +
   geom_hline(yintercept = 0, linetype = "dashed") + 
-  scale_colour_solarized(name = "", guide = FALSE) +
+  .scale_colour_discrete(name = "", guide = FALSE) +
   coord_flip() + 
   ylab("Relative representation (Comprehension)") +
   xlab("") + 
@@ -336,7 +336,7 @@ ggplot(filter(plot_areas_wg, lexical_category == "Function Words"),
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   facet_wrap(~lexical_category) +
   geom_hline(yintercept = 0, linetype = "dashed") + 
-  scale_colour_solarized(name = "", guide = FALSE) +
+  .scale_colour_discrete(name = "", guide = FALSE) +
   coord_flip() + 
   ylab("Relative representation (Comprehension)") +
   xlab("") + 
@@ -370,7 +370,7 @@ ggplot(filter(plot_areas_ws, lexical_category != "Function Words"),
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   facet_wrap(~lexical_category ) +
   geom_hline(yintercept = 0, linetype = "dashed") + 
-  scale_colour_solarized(name = "", guide = FALSE) +
+  .scale_colour_discrete(name = "", guide = FALSE) +
   coord_flip() + 
   ylab("Relative representation (Production)") +
   xlab("") + 
@@ -410,7 +410,7 @@ ggplot(filter(plot_areas_ws, lexical_category == "Function Words"),
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   facet_wrap(~lexical_category ) +
   geom_hline(yintercept = 0, linetype = "dashed") + 
-  scale_colour_solarized(name = "", guide = FALSE) +
+  .scale_colour_discrete(name = "", guide = FALSE) +
   coord_flip() + 
   ylab("Relative representation (Production)") +
   xlab("") + 
@@ -438,7 +438,7 @@ consistency <- area_summary %>%
   geom_smooth(method = "lm") + 
   xlab("Relative Production") + 
   ylab("Relative Comprehension") + 
-  scale_color_solarized(name = "Lexical Category") +
+  .scale_colour_discrete(name = "Lexical Category") +
   theme(legend.position = "bottom")
 
 cors <- consistency %>% 
@@ -473,7 +473,7 @@ vocab_comp_data %>%
                        name = "Proportion of Category\n") +
     scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "\nVocabulary Size") +
-    scale_colour_solarized(name = "") +
+    .scale_colour_discrete(name = "") +
     theme(legend.position = "top",
           legend.key = element_blank(),
           legend.background = element_rect(fill = "transparent")) + 
@@ -625,8 +625,8 @@ ggplot(predictions,
                      name = "") +
   scale_x_continuous(limits = c(0, 1), breaks = c(),
                      name = "") +
-  scale_colour_solarized(guide = FALSE) +
-  scale_fill_solarized(guide = FALSE) 
+  .scale_colour_discrete(guide = FALSE) +
+  .scale_fill_discrete(guide = FALSE) 
 ```
 
 

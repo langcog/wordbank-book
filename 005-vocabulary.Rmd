@@ -315,7 +315,7 @@ ggplot(ws_prod_data,
   geom_jitter(width = .4, size = 1, alpha = .02) +
   geom_line(data = ws_prod_preds, 
             aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
+  .scale_colour_discrete(name="Percentile") +
   scale_x_continuous(name = "Age (months)", 
                      breaks = seq(16, 36, 4),
                      limits = c(16, 36)) +
@@ -349,7 +349,7 @@ ggplot(eng_prod_data,
   geom_jitter(width = .4, size = 1, alpha = .1) +
   geom_line(data = eng_prod_preds, 
             aes(y = pred, col = percentile, group = percentile)) + 
-  scale_colour_solarized(name="Percentile") +
+  .scale_colour_discrete(name="Percentile") +
   scale_x_continuous(breaks = seq(16, 30, 4),
                      limits = c(16, 30),
                      name = "Age (months)") +
@@ -398,7 +398,7 @@ ggplot(filter(madm_data, language == "English (American)"),
   xlim(8,30) + 
   ylab("MADM (MAD / median)") + 
   xlab("Age (months)") + 
-  scale_color_solarized(name = "Form")
+  .scale_colour_discrete(name = "Form")
 ```
 
 In American English production, this ratio is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! The decline begins before variability is substantially truncated by the ceiling of the form, suggesting that variability between kids is really highest before the second birthday. 
@@ -440,7 +440,7 @@ ggplot(madm_summary_prod, aes(x = language, y = madm_mean, col = form)) +
   xlab("MADM (Production 12-24 mo)") +
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
-  scale_colour_solarized()
+  .scale_colour_discrete()
 ```
 
 
@@ -599,7 +599,7 @@ ggplot(p100, aes(x = age, y = prob, col = response)) +
   geom_line(data = filter(p100, response == "walking"), 
                           aes(group = interaction(response, form)), size = 2) + 
   ylim(0,1) + 
-  scale_color_solarized() + 
+  .scale_colour_discrete() + 
   theme(legend.position = "bottom") + 
   ylab("Probability") + xlab("Age (months)")
 ```

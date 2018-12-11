@@ -81,7 +81,7 @@ ggplot(cvs,
   facet_wrap(~category, 
              drop = TRUE, scales = "free_y") + 
   theme(legend.position = "bottom") + 
-  ggthemes::scale_color_ptol(name = "Measure") + 
+  .scale_colour_discrete(name = "Measure") + 
   scale_size_continuous(name = "N languages") + 
   ylim(0,2)
 ```

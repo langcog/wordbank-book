@@ -241,7 +241,7 @@ ggplot(all_cors, aes(x = dist, y = value, col = measure)) +
   ylim(0,1) + 
   ylab("Correlation") + 
   xlab("Measurement Gap (Months)") + 
-  scale_color_ptol(name = "Measure")
+  .scale_colour_discrete(name = "Measure")
 ```
 
 

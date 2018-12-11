@@ -21,7 +21,7 @@ ms <- eng_ws %>%
 ggplot(ms, aes(age, prop, col = definition)) + 
   geom_line() + 
   facet_wrap(~category) +
-  scale_colour_solarized(guide=FALSE)
+  .scale_colour_numerous(guide=FALSE)
 ```
 
 Let's compare methods. 
@@ -72,7 +72,7 @@ aoas <- full_join(empirical_aoas, glm_aoas)
 ggplot(aoas, aes(x = empirical_aoa, y = glm_aoa, col = category)) + 
   geom_point() + 
   geom_text(aes(label = definition), nudge_y = 3) +
-  scale_colour_solarized(guide=FALSE) 
+  .scale_colour_numerous(guide=FALSE) 
 
 aoas %>%
   gather(measure, aoa, empirical_aoa, glm_aoa) %>%
@@ -160,13 +160,14 @@ mms <- ms %>%
   group_by(definition) %>%
   do(do.fits(.)) 
 
+pal_3 <- .pal()(3)
 ggplot(mms, aes(x = age)) + 
-  geom_line(aes(y = glm), col = "red") + 
-  geom_line(aes(y = bayes), col = "blue") +
-  geom_line(aes(y = robust), col = "green") + 
-  scale_colour_manual(values = c("glm" = "red", 
-                                 "bayes" = "blue", 
-                                 "robustglm" = "green"), 
+  geom_line(aes(y = glm), col = pal_3[1]) + 
+  geom_line(aes(y = bayes), col = pal_3[2]) +
+  geom_line(aes(y = robust), col = pal_3[3]) + 
+  scale_colour_manual(values = c("glm" = pal_3[1], 
+                                 "bayes" = pal_3[2], 
+                                 "robustglm" = pal_3[3]), 
                       name = "model") +
   geom_point(aes(y = prop), col = "black") + 
   ylim(c(0,1)) + 
@@ -222,7 +223,7 @@ ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) +
 
 Set some stan settings. 
 
-```{r appaoa-stan_setup}
+```{r appaoa-stan_setup, eval=FALSE}
 rstan::rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
 # ms <- read_csv("engdata.csv")
 ```
@@ -234,7 +235,7 @@ The model. Constraints:
 * Much weaker prior on intercepts, though yoked their SDs (perhaps too tightly?
 
 
-```{r appaoa-stan_model}
+```{r appaoa-stan_model, eval=FALSE}
 hierarchical_logit <-'
 data {                            
   int<lower=1> W; // number of words
@@ -282,7 +283,7 @@ model {
 
 Now reformat the data to stan format and compute. 
 
-```{r appaoa-stan_prep}
+```{r appaoa-stan_prep, eval=FALSE}
 model.data <- ms %>%
   ungroup %>%
   mutate(word = definition, 

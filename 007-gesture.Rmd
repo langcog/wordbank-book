@@ -109,6 +109,7 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
   geom_smooth(method = "loess", se = FALSE, span = 1) +
   directlabels::geom_dl(method = list(directlabels::dl.trans(x=x +.2),
                                       "last.qp", cex=1)) +
+  .scale_colour_discrete() +
   scale_x_continuous(name = "age (months)", limits = c(7.5, 25),
                     breaks = seq(8, 18)) +
   scale_y_continuous(name = "Prop. Responses") +
@@ -137,7 +138,7 @@ ggplot(first_gestures_binary_ordered, aes(x = age, y = n, color = definition,
   geom_smooth(method = "loess", se = FALSE) +
   directlabels::geom_dl(method = list(directlabels::dl.trans(x=x -.2),
                                       "first.qp", cex=1)) +
-  #scale_color_brewer(palette = "Set1") + 
+  .scale_colour_discrete() +
   scale_x_continuous(name = "age (months)", limits = c(5.5, 18.5),
                     breaks = seq(8, 18)) + 
   scale_y_continuous(name = "Prop. producing") +
@@ -189,7 +190,7 @@ ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition,
   geom_smooth(method = "loess", se = FALSE) +
   directlabels::geom_dl(method = list(directlabels::dl.trans(x=x -.2),
                                       "first.qp", cex=1)) +
-  #scale_color_brewer(palette = "Set1") + 
+  .scale_colour_numerous() +
   scale_x_continuous(name = "age (months)", limits = c(4.5, 18.5),
                     breaks = seq(8, 18)) + 
   scale_y_continuous(name = "Prop. producing") +
@@ -419,6 +420,7 @@ ggplot(sex_type_data, aes(x = age, y = gesture, color = sex, label = sex)) +
   geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
   geom_smooth(se = F) +
   directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
+  .scale_colour_discrete() +
   theme(legend.position = "none")
 ```
 
@@ -460,6 +462,7 @@ ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) +
   geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
   geom_smooth(se = F) +
   directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
+  .scale_colour_discrete() +
   theme(legend.position = "none")
 ```
 

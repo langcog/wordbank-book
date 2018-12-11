@@ -96,7 +96,7 @@ ggplot(coefs,
   coord_flip() + 
   xlab("") +
   ylab("Coefficient Estimate") +
-  scale_color_solarized(name = "Term") + 
+  .scale_colour_discrete(name = "Term") + 
   theme(legend.position = "bottom")
 ```
 
@@ -166,7 +166,7 @@ ggplot(resid_coefs,
   coord_flip() +
   xlab("") +
   ylab("Coefficient Estimate") + 
-  scale_color_solarized(guide = FALSE) 
+  .scale_colour_discrete(guide = FALSE) 
 ```
 
 Our first analysis looks at the correlation between vocabulary-residualized noun bias and age. The plot above shows coefficient estimates on this analysis. Now most age coefficients are reliably negative, suggesting that a greater residual noun bias is associated with being *younger*. Two of the main outliers here are from Mandarin, which, as discussed in Chapter \@ref(categories-syntactic), has the smallest noun bias of any of the languages in our dataset.
@@ -198,7 +198,7 @@ ggplot(grammar_coefs,
   coord_flip() +
   xlab("") +
   ylab("Coefficient Estimate") + 
-  scale_color_solarized(guide = FALSE) 
+  .scale_colour_discrete(guide = FALSE) 
 ```
 For grammatical complexity scores, we see that vocabulary-residualized noun bias is reliably related to grammatical complexity. Because of the residualization procedure, this relationship is over and above the correlations between grammar and lexicon (as reported in Chapter \@ref(grammar)). Thus, those children with more nouns than expected for their vocabulary size produce *less* complex language. (Again, Mandarin is an exception). As seen above, they are also *younger* than expected. 
 
@@ -225,7 +225,7 @@ ggplot(grammar_age_coefs,
   facet_wrap(~term, scales = "free_x") + 
   xlab("") +
   ylab("Coefficient Estimate") + 
-  scale_color_solarized(guide = FALSE) 
+  .scale_colour_discrete(guide = FALSE) 
 ```
 
 We next repeat the analysis of complexity while controlling for age and total production. The coefficients are shown above. Production of course has a positive relationship to grammatical complexity, as does age (see Chapter \@ref(grammar)). Even controlling for these two factors, howver, we still observe a consistent negative relationship between residual noun bias and complexity. 
@@ -311,7 +311,7 @@ n_long <-  filter(n_long,
 ggplot(n_long,
        aes(x = age, y = production)) +
   geom_line(aes(col = original_id), alpha = .1) +
-  scale_color_discrete(guide = FALSE) + 
+  .scale_colour_numerous(guide = FALSE) + 
   facet_wrap(~langform, scales = "free_x") + 
   ylab("Production") + 
   xlab(" Age (months)")
@@ -342,7 +342,7 @@ ggplot(all_rates,
   geom_smooth(data = filter(all_rates, production < 250),
               method = "lm", formula = y ~ x , se=FALSE, span = 1, col = "red") +
   facet_wrap(~langform) +
-  scale_color_discrete(guide = FALSE) +
+  .scale_colour_discrete(guide = FALSE) +
   xlab("Total Words Produced") + 
   ylab("Growth Rate (words/month)")
 ```
@@ -381,7 +381,7 @@ ggplot(filter(rates,
   ylab("Growth Rate (words/month)") + 
   theme(strip.background = element_blank(),
         strip.text.x = element_blank()) +
-  ggthemes::scale_color_ptol(name = "Dataset") + 
+  .scale_colour_discrete(name = "Dataset") + 
   theme(legend.position = "bottom") + 
   ylim(0, 100)
 ```
@@ -434,19 +434,19 @@ model_preds <- rates %>%
 
 ```{r style-model_sample_plot}
 ADMIN_CUTOFF <- 7
-pal <- ggthemes::ptol_pal()(3)
 
 rates_admins <- filter(rates, n_admins > ADMIN_CUTOFF)
 models_admins <- filter(model_preds, original_id %in% rates_admins$original_id)
 
+pal_3 <- .pal()(3)
 ggplot(rates_admins, 
        aes(x = production, y = rate)) + 
   geom_line(data = models_admins, aes(x = production, y = linear), 
-            col = pal[1], lty = 2, size = 1) + 
+            col = pal_3[1], lty = 2, size = 1) + 
   geom_line(data = models_admins, aes(x = production, y = quadratic), 
-            col = pal[2], lty = 3, size = 1) + 
+            col = pal_3[2], lty = 3, size = 1) + 
   geom_line(data = models_admins, aes(x = production, y = logistic), 
-            col = pal[3], lty = 4, size = 1) + 
+            col = pal_3[3], lty = 4, size = 1) + 
   facet_wrap(~original_id) + 
   theme(strip.background = element_blank(),
         strip.text.x = element_blank()) + 
@@ -485,7 +485,7 @@ model_params %>%
   geom_jitter(alpha = .5) + 
   geom_smooth(method = "lm", se = FALSE) + 
   facet_wrap(~langform) + 
-  ggthemes::scale_color_ptol(name = "Model") + 
+  .scale_colour_discrete(name = "Model") + 
   xlab("Number of Observations") + 
   ylab("AIC") + 
   theme(legend.position = "bottom")
@@ -519,7 +519,7 @@ models_logit <- model_preds %>%
 ggplot(rates_logit,
        aes(x = production, y = rate)) + 
   geom_line(data = models_logit, aes(x = production, y = logistic), 
-            col = pal[3], lty = 4, size = 1) + 
+            col = pal_3[3], lty = 4, size = 1) + 
   facet_wrap(~original_id) + 
   theme(strip.background = element_blank(),
         strip.text.x = element_blank()) + 
@@ -557,11 +557,11 @@ preds <- data_frame(production = 1:MAXWORDS,
 ggplot(roy_rate, 
        aes(x = production, y = rate)) + 
   geom_line(data = preds, aes(x = production, y = linear), 
-            col = pal[1], lty = 4, size = 1) + 
+            col = pal_3[1], lty = 4, size = 1) + 
   geom_line(data = preds, aes(x = production, y = quadratic), 
-            col = pal[2], lty = 4, size = 1) + 
+            col = pal_3[2], lty = 4, size = 1) + 
   geom_line(data = preds, aes(x = production, y = logistic), 
-            col = pal[3], lty = 4, size = 1) + 
+            col = pal_3[3], lty = 4, size = 1) + 
   theme(strip.background = element_blank(),
         strip.text.x = element_blank()) + 
   geom_point() + 

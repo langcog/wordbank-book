@@ -221,7 +221,7 @@ ggplot(analyses$WG.comprehension$sex$means,
   facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(aes(size = n),  alpha = .2) +
   geom_line(data = analyses$WG.comprehension$sex$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Sex") +
+  .scale_colour_discrete(name="Sex") +
   scale_x_continuous(breaks = seq(8,
                                   20, 4),
                      limits = c(8, 20),
@@ -281,7 +281,7 @@ ggplot(analyses$WG.production$sex$means,
   facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.production$sex$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Sex") +
+  .scale_colour_discrete(name="Sex") +
   scale_x_continuous(breaks = seq(8,
                                   20, 4),
                      limits = c(8, 20),
@@ -333,7 +333,7 @@ ggplot(analyses$WS.production$sex$means,
   facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size=n)) +
   geom_line(data = analyses$WS.production$sex$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Sex") +
+  .scale_colour_discrete(name="Sex") +
   scale_x_continuous(breaks = seq(16,
                                   36, 8),
                      limits = c(16, 36),
@@ -390,7 +390,7 @@ b2012 <- read_csv("data/demographics/bornstein2012_combined.csv")
 nrow(b2012)
 
 qplot(z_20, z_48, col = gender, pch = gender, data = b2012) +
-  scale_color_solarized() + 
+  .scale_colour_discrete() + 
   xlab("Standardized Language at 20 Months") + 
   ylab("Standardized Language at 48 Months") + 
   geom_smooth(method = "lm")
@@ -422,7 +422,7 @@ ggplot(analyses$WG.comprehension$birth_order$means,
   facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.comprehension$birth_order$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Birth Order") +
+  .scale_colour_discrete(name="Birth Order") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
@@ -468,7 +468,7 @@ ggplot(analyses$WG.production$birth_order$means,
   facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.production$birth_order$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Birth Order") +
+  .scale_colour_discrete(name="Birth Order") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
@@ -509,7 +509,7 @@ ggplot(analyses$WS.production$birth_order$means,
   facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WS.production$birth_order$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Birth Order") +
+  .scale_colour_discrete(name="Birth Order") +
   scale_x_continuous(breaks = seq(16, 36, 8),
                      limits = c(16, 36),
                      name = "Age (months)") +
@@ -561,7 +561,7 @@ ggplot(analyses$WG.comprehension$mom_ed$means,
   facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.comprehension$mom_ed$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Maternal Education") +
+  .scale_colour_discrete(name="Maternal Education") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
@@ -606,7 +606,7 @@ ggplot(analyses$WG.production$mom_ed$means,
   facet_wrap( ~language) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.production$mom_ed$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Maternal Education") +
+  .scale_colour_discrete(name="Maternal Education") +
   scale_x_continuous(breaks = seq(8, 20, 4),
                      limits = c(8, 20),
                      name = "Age (months)") +
@@ -646,7 +646,7 @@ ggplot(analyses$WS.production$mom_ed$means,
   facet_wrap( ~language) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WS.production$mom_ed$preds, aes(y = pred)) +
-  scale_colour_solarized(name="Maternal Education") +
+  .scale_colour_discrete(name="Maternal Education") +
   scale_x_continuous(breaks = seq(16, 36, 8),
                      limits = c(16, 36),
                      name = "Age (months)") +
@@ -725,7 +725,7 @@ ggplot(early_comprehension,
        aes(x = age, y = median, col = mom_ed)) + 
   geom_point(aes(size = n), position = "dodge") + 
   facet_wrap(~language) + 
-  scale_color_solarized() +
+  .scale_colour_discrete() +
   geom_smooth(se=FALSE, span = 2)
 # geom_smooth(method = "lm", se = FALSE, formula = y ~ x)
 ```

@@ -259,7 +259,7 @@ grammar_age_plot <- function(type) {
     labs(x = "Productive vocabulary size (proportion of items)",
          y = "Grammar score (proportion of items)",
          title = type) +
-    scale_color_solarized(name = "") +
+    .scale_colour_discrete(name = "") +
     theme(legend.position = "top")
 }
 ```
@@ -370,7 +370,7 @@ ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
   facet_wrap(~language, scales = "free", ncol = 3) +
   geom_pointrange(aes(ymin = estimate - 1.96 * std.error,
                       ymax = estimate + 1.96 * std.error), fatten = 1.5) +
-  scale_colour_solarized(name = "", guide = guide_legend(ncol = 3)) +
+  .scale_colour_discrete(name = "", guide = guide_legend(ncol = 3)) +
   scale_x_discrete(name = "", breaks = NULL) +
   theme(legend.position = "bottom")
 ```

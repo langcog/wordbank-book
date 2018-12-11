@@ -97,7 +97,7 @@ ggplot(demo_data, aes(x = unscaled_age, y = prop, colour = uni_lemma)) +
   geom_label(aes(x = x, y = y, label = words), data = word_data, size = 3,
              label.padding = unit(0.15, "lines"),
              vjust = "inward", hjust = "inward") +
-  ggthemes::scale_colour_ptol(guide = FALSE) +
+  .scale_colour_discrete(guide = FALSE) +
   scale_y_continuous(name = "Proportion of children producing") +
   scale_x_continuous(name = "Age (months)", breaks = seq(10, 30, 10))
 ```
@@ -197,7 +197,7 @@ ggplot(ref_coefs, aes(x = estimate, y = term)) +
                       xmin = estimate - 1.96 * std_error,
                       xmax = estimate + 1.96 * std_error)) +
   geom_vline(xintercept = 0, color = "lightgrey", linetype = "dotted") +
-  ggthemes::scale_colour_ptol(guide = FALSE) +
+  .scale_colour_discrete(guide = FALSE) +
   scale_shape_manual(values = c(19, 21), guide = FALSE) +
   labs(y = "", x = "Coefficient estimate")
 ```
@@ -209,7 +209,7 @@ ggplot(plt_lang_coefs, aes(x = estimate, y = term, colour = term)) +
   geom_point(size = 1, alpha = 0.4) +
   geom_point(aes(x = mean_estimate), size = 3, data = mean_lang_coefs) +
   geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
-  ggthemes::scale_colour_ptol(guide = FALSE) +
+  .scale_colour_discrete(guide = FALSE) +
   labs(x = "Coefficient estimate", y = "")
 ```
 
@@ -241,8 +241,6 @@ ggplot(coef_summary, aes(x = mean_cor, y = language)) +
        y = "") +
   scale_colour_manual(values = lang_colours_aoa, guide = FALSE) +
   scale_fill_manual(values = lang_colours_aoa, guide = FALSE)
-  # ggthemes::scale_colour_ptol(guide = FALSE) +
-  # ggthemes::scale_fill_ptol(guide = FALSE)
 ```
 
 ```{r aoapred-clustering, fig.width=5, fig.height=3, fig.align='center', fig.cap="Dendrograms of the similarity structure among languages coefficients."}
@@ -285,7 +283,7 @@ ggplot(plt_lexcat_coefs, aes(x = estimate, y = term, colour = term)) +
   geom_point(size = 1, alpha = 0.4) +
   geom_point(aes(x = mean_estimate), size = 3, data = mean_lexcat_coefs) +
   geom_vline(xintercept = 0, color = "grey", linetype = "dotted") +
-  ggthemes::scale_colour_ptol(guide = FALSE) +
+  .scale_colour_discrete(guide = FALSE) +
   labs(x = "Coefficient estimate", y = "")
 ```
 

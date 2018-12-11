@@ -105,13 +105,13 @@ ggplot(filter(combine_compare, language != "Slovak"),
   facet_wrap(~predictor, scales = "free_x") +
   geom_smooth(method = "glm", method.args = list(family = "binomial"),
               se = FALSE) +
-  scale_colour_solarized(name = "") +
+  scale_colour_manual(values = lang_colours, name = "") +
   labs(x = "", y = "Combines Words (Probability)") +
   theme(legend.position = "bottom")
 ```
 The plot above shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))-1 #slovak` languages, there is some consistency in the chronological trajectories for this item. By 24 months, around 75% of children are reported to be combining words, though this estimate is substantially earlier in Quebec French. One possibility is that the phrasing of the "combines" item contributes -- some forms (including Quebec French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting.  
 
-Vocabulary-related trajectories were more variable, however. In general, children who were marked as combining had vocabularies larger than around 100 words. However, as noted in Chapter \@ref(vocab), raw Mandarin vocabulary in the WS form is unusually high, but the "combines" item does not appear to be comparably accelerated. Thus, Mandarin children appear to be producing words only after producing substantially more vocabulary items. On the opposite side, children learning Quebec French and Korean were reported to be combining with quite small vocabularies. 
+Vocabulary-related trajectories were more variable, however. In general, children who were marked as combining had vocabularies larger than around 100 words. However, as noted in Chapter \@ref(vocabulary), raw Mandarin vocabulary in the WS form is unusually high, but the "combines" item does not appear to be comparably accelerated. Thus, Mandarin children appear to be producing words only after producing substantially more vocabulary items. On the opposite side, children learning Quebec French and Korean were reported to be combining with quite small vocabularies. 
 
 To investigate the quantitative relationship between word combination (as measured with this item), age, and vocabulary, we fit a linear mixed effects model predicting combination as a function of vocabulary (proportion), age, and their interaction. We also included random intercepts by language and random slopes for both vocabulary and age. Coefficient estimates are shown below:
 
@@ -288,7 +288,7 @@ ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
   directlabels::geom_dl(aes(label = language),
           method = list("first.qp", directlabels::dl.trans(x = x - 0.2),
                         cex = 0.7, fontfamily = .font)) +
-  scale_colour_solarized(guide = FALSE) +
+  scale_colour_manual(values = lang_colours, guide = FALSE) +
   labs(x = "", y = "Area of grammar score\n across vocabulary size") +
   expand_limits(x = 0)
 ```

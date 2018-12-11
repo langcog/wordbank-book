@@ -1,8 +1,8 @@
 # Demographic Effects on Vocabulary Size {#demographics}
 
-Chapter \@ref(vocab) examined cross-linguistic consistency and variability in children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. Our goal is to develop a framework for comparing the magnitude of these effects.
+Chapter \@ref(vocabulary) examined cross-linguistic consistency and variability in children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. Our goal is to develop a framework for comparing the magnitude of these effects.
 
-One important tension in this chapter reflects many earlier discussions of variability in CDI scores [from @fenson1994, @feldman2000, and @eriksson2012, among others]. While some demographic differences in vocabulary are quite consistent -- substantially so, as it turns out -- the overall proportion of variance in vocabulary that they capture is still relatively limited. We will examine a number of different perspectives on how to quantify this relationship, moving back and forth between emphasizing consistency in differences in the central tendency and emphasizing the limited size of these effects relative to the variability documented in Chapter \@ref(vocab).
+One important tension in this chapter reflects many earlier discussions of variability in CDI scores [from @fenson1994, @feldman2000, and @eriksson2012, among others]. While some demographic differences in vocabulary are quite consistent -- substantially so, as it turns out -- the overall proportion of variance in vocabulary that they capture is still relatively limited. We will examine a number of different perspectives on how to quantify this relationship, moving back and forth between emphasizing consistency in differences in the central tendency and emphasizing the limited size of these effects relative to the variability documented in Chapter \@ref(vocabulary).
 
 Our analyses in this chapter are unfortunately limited to a subset of languages, as demographic data for many contributed datasets were not available. We begin with sex, the variable for which the most analysis has already been done and for which we have the most data, then move on to birth order and finally maternal education. 
 
@@ -50,7 +50,7 @@ get_demo_models <- function (data, demo = ~sex, measure = ~production) {
     mutate(measure = !!measure, 
            no_measure = n - .data$measure, 
            demo = !!demo) %>%
-    unite(langform, language, form, sep = ".") %>%
+    unite(langform, language, form, sep = .inst_sep) %>%
     split(.$langform) %>%
     map(possibly(function(x) {
       # print(x$langform[1])
@@ -66,7 +66,7 @@ get_demo_preds <- function (models, data, demo = ~sex) {
   demo_name <- rlang::quo_text(demo) # fixme - how do I coerce this more nicely?
   
   data %>%
-    unite(langform, language, form, sep = ".") %>%
+    unite(langform, language, form, sep = .inst_sep) %>%
     split(.$langform) %>%
     map_df(possibly(function(x) {
       print(x$langform[1])
@@ -81,7 +81,7 @@ get_demo_preds <- function (models, data, demo = ~sex) {
       return(new_data)
     }, otherwise = tibble())) %>%
     rename(!!demo_name := demo) %>%
-    separate(langform, into = c("language","form"), sep = "\\.") 
+    separate(langform, into = c("language","form"), sep = .inst_sep) 
 }
 
 # get the appropriate coefficient from the model and corresponding p value
@@ -97,7 +97,7 @@ get_demo_model_summary <- function (models, level = "Male") {
                         p = round(p, 4)))
     }, otherwise = tibble(p = NA, beta = NA))) %>%
     mutate(langforms = names(models)) %>% # ugly 
-    separate(langforms, into = c("language","form"), sep = "\\.") %>%
+    separate(langforms, into = c("language","form"), sep = .inst_sep) %>%
     select(language, form, beta, p) %>%
     arrange(beta)
 }
@@ -222,7 +222,7 @@ We begin by examining Words and Gestures data on comprehension.
 ```{r demo-gender_plot_wg_comp}
 ggplot(analyses$WG.comprehension$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form)) +
+  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(aes(size = n),  alpha = .2) +
   geom_line(data = analyses$WG.comprehension$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
@@ -253,13 +253,13 @@ But as in the previous chapter, we have the problem of non-normal distributions.
 
 ```{r demo-gender_mmad_wg_comp}
 ggplot(analyses$WG.comprehension$sex$mmad_ratio,
-       aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+       aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
   xlab("Age (months)")  + 
   ylab("MMAD (Female Advantage)") +
-  scale_color_discrete(name="") + 
+  scale_color_manual(values = inst_colours, name = "") + 
   theme(legend.position = "bottom",
         legend.text = element_text(size = 7)) 
 ```
@@ -282,7 +282,7 @@ Applying this measure to the data on comprehension, we see a quite small average
 ```{r demo-gender_plot_wg_prod}
 ggplot(analyses$WG.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form)) +
+  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.production$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
@@ -306,16 +306,16 @@ We next turn to production data. As in many of our subsequent analyses, data on 
 
 ```{r demo-gender_mmad_wg_prod}
 a <- ggplot(analyses$WG.production$sex$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
-b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(language, form), y = mmad_mean)) + 
+b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(language, form, sep = .inst_sep), y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
@@ -334,7 +334,7 @@ Examining the MMAD effect size measures, it is clear that there is limited signa
 ```{r demo-gender_plot_ws_prod}
 ggplot(analyses$WS.production$sex$means,
        aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form)) +
+  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size=n)) +
   geom_line(data = analyses$WS.production$sex$preds, aes(y = pred)) +
   scale_colour_solarized(name="Sex") +
@@ -358,24 +358,23 @@ We next turn to production data on the Words and Sentences instrument, which we 
 
 ```{r demo-gender_mmad_ws_prod}
 a <- ggplot(analyses$WS.production$sex$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (Female Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WS.production$sex$mmad_summary, 
-            aes(x = interaction(language, form),
+            aes(x = interaction(language, form, sep = .inst_sep),
                 y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -385,7 +384,7 @@ We next turn to the MMAD effect size measure. Here we see a relatively consisten
 
 ### Reporting Bias?
 
-Do these differences reflect differences in measurement that are unique to the CDI? One way of addressing this question is to examine other studies of gender differences that have been found in other studies. Unfortunately, many of the studies reporting differences themselves rely on the CDI, likely for the reasons reviewed in Chapter \@ref(intro-practical), e.g. [@bauer2002,@fenson1994,@feldman2000]. For example, @feldman2000 collected CDIs with a large dataset of low-income American English speakers at 12 and 24 months. In those data, early comprehension showed no significant gender differences, but production at 24 months showed a difference comparable to what we observed here ($N = 2156$, $d = .35$, recomputed from provided summary statistics). These data, while providing replication in an independent dataset, do not speak to whether reporting biases contributed to or created the observed sex effects. 
+Do these differences reflect differences in measurement that are unique to the CDI? One way of addressing this question is to examine other studies of gender differences that have been found in other studies. Unfortunately, many of the studies reporting differences themselves rely on the CDI, likely for the reasons reviewed in Chapter \@ref(intro-practical), e.g. [@bauer2002;@fenson1994;@feldman2000]. For example, @feldman2000 collected CDIs with a large dataset of low-income American English speakers at 12 and 24 months. In those data, early comprehension showed no significant gender differences, but production at 24 months showed a difference comparable to what we observed here ($N = 2156$, $d = .35$, recomputed from provided summary statistics). These data, while providing replication in an independent dataset, do not speak to whether reporting biases contributed to or created the observed sex effects. 
 
 For external validation, we turn to two other studies that provide more objective (non parent-report) measurements of early language. First, a seminal study by @huttenlocher1991 measured gender effects in vocabulary production as estimated from a naturalistic language sample, finding substantial differences in vocabulary growth favoring girls. Although the measures from this study are not comparable to the current data, the effects are quite large (and are relatively unaffected by controlling for maternal language exposure). 
 
@@ -409,7 +408,7 @@ Second, @bornstein2012 use a particularly powerful study design to examine stabi
 
 ### Discussion
 
-In summary, we found a considerable and strikingly consistent cross-linguistic female advantage in early language production [replicating and extennding @eriksson2012]. A much smaller but still relatively consistent female advantage was reported in comprehension. We suspect that neither of these effects are due to parental reporting bias. First, our review of the literature suggests that studies using direct assessments yield similar effects to the extent that we were able to compare. Second, comprehension is very likely to be the measure *more* affected by reporting biases as it is likely to be more subjective [@feldman2000;@fenson2000]. In contrast, we find a much smaller gender effect in comprehension. As noted above, we remain agnostic about the causes of these differences, but in Chapter \@ref(consistency) we discuss inferences from consistency across languages in much more detail.
+In summary, we found a considerable and strikingly consistent cross-linguistic female advantage in early language production [replicating and extennding @eriksson2012]. A much smaller but still relatively consistent female advantage was reported in comprehension. We suspect that neither of these effects are due to parental reporting bias. First, our review of the literature suggests that studies using direct assessments yield similar effects to the extent that we were able to compare. Second, comprehension is very likely to be the measure *more* affected by reporting biases as it is likely to be more subjective [@feldman2000;@fenson2000]. In contrast, we find a much smaller gender effect in comprehension. As noted above, we remain agnostic about the causes of these differences, but in Chapter \@ref(conclusion-consistency) we discuss inferences from consistency across languages in much more detail.
 
 
 ## Birth order
@@ -424,7 +423,7 @@ Here, we can examine birth order effects in early vocabulary comprehension and p
 ggplot(analyses$WG.comprehension$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2, aes(size = n)) +
   geom_line(data = analyses$WG.comprehension$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
@@ -441,11 +440,11 @@ analyses$WG.comprehension$birth_order$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (First-Born Advantage)") + 
   theme(legend.position = "bottom") 
@@ -456,8 +455,7 @@ b <- ggplot(analyses$WG.comprehension$birth_order$mmad_summary,
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -471,7 +469,7 @@ gridExtra::grid.arrange(a, b, ncol=2)
 ggplot(analyses$WG.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.production$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
@@ -486,11 +484,11 @@ analyses$WG.production$birth_order$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (First Born Advantage)") + 
   theme(legend.position = "bottom") 
@@ -500,8 +498,7 @@ b <- ggplot(analyses$WG.production$birth_order$mmad_summary, aes(x = language, y
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -513,7 +510,7 @@ gridExtra::grid.arrange(a, b, ncol=2)
 ggplot(analyses$WS.production$birth_order$means,
        aes(x = age, y = median, colour = birth_order,
            label = birth_order)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WS.production$birth_order$preds, aes(y = pred)) +
   scale_colour_solarized(name="Birth Order") +
@@ -528,23 +525,23 @@ analyses$WS.production$birth_order$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad, col = interaction(language, form))) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (First-Born Advantage)") + 
   theme(legend.position = "bottom") 
 
 b <- ggplot(analyses$WS.production$birth_order$mmad_summary, 
-            aes(x = interaction(language, form), y = mmad_mean)) + 
+            aes(x = interaction(language, form, sep = .inst_sep),
+                y = mmad_mean)) + 
   geom_point() + 
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -559,15 +556,13 @@ Environmental explanations of these SES effects are often given in terms of indi
 
 In the current dataset, we have the opportunity to explore the extent of these effects across several language communities.  Cross-language comparisons may shed light on the factors that lead to relations between SES and children’s vocabulary outcomes. On the one hand, relatively constant relations across language communities that vary widely in indirect and direct factors that shape learning would provide prima facie support for genetic explanations. In contrast, a greater degree of cross-language variability would point to the origins of SES effects in aspects of children’s early environments that vary with SES to differing degrees across countries [e.g., @lfernald2012.  We use maternal education as a proxy for SES, following previous work suggesting that maternal education is strongly related to SES variation [@bornstein2003; @hoff2003].
 
-<!-- @arriaga2000 -->
-
 <!-- We use maternal education as a proxy for socio-economic status. -->
 
 ```{r demo-momed_wg_comp}
 ggplot(analyses$WG.comprehension$mom_ed$means,
        aes(x = age, y = median, colour = mom_ed,
            label = mom_ed)) +
-  facet_wrap( ~interaction(language, form)) +
+  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
   geom_point(alpha=.2) +
   geom_line(data = analyses$WG.comprehension$mom_ed$preds, aes(y = pred)) +
   scale_colour_solarized(name="Maternal Education") +
@@ -588,7 +583,7 @@ a <- ggplot(analyses$WG.comprehension$mom_ed$mmad_ratio,
   geom_jitter() +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
@@ -598,8 +593,7 @@ b <- ggplot(analyses$WG.comprehension$mom_ed$mmad_summary, aes(x = language, y =
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Comprehension)") +
+  ylab("MMAD (Comprehension)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -628,11 +622,11 @@ analyses$WG.production$mom_ed$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.production$mom_ed$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = language)) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
@@ -642,8 +636,7 @@ b <- ggplot(analyses$WG.production$mom_ed$mmad_summary, aes(x = language, y = mm
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -669,11 +662,11 @@ analyses$WS.production$mom_ed$model_summary %>%
   DT::datatable()
 
 a <- ggplot(analyses$WS.production$mom_ed$mmad_ratio,
-            aes(x = age, y = mmad, col = language)) +
-  geom_jitter() +
+            aes(x = age, y = mmad)) +
+  geom_jitter(aes(col = language)) +
   geom_smooth(span = 1, aes(group = 1)) +
   geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_color_solarized() + 
+  scale_colour_manual(values = lang_colours, name = "") +
   xlab("Age (months)")  + 
   ylab("MMAD (College Advantage)") + 
   theme(legend.position = "bottom") 
@@ -683,8 +676,7 @@ b <- ggplot(analyses$WS.production$mom_ed$mmad_summary, aes(x = language, y = mm
   # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
   # ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
+  ylab("MMAD (Production)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 
 gridExtra::grid.arrange(a, b, ncol=2)
@@ -726,7 +718,7 @@ write_feather(cvs, "data/cvs/demographic_cvs.feather")
 
 <!-- After we get the data finalized, we can see if there is evidence for reporting bias in these data.
 
-```{r}
+```{r demo-early_comp}
 early_comprehension <- vocab_data %>%
   filter(form == "WG", age < 13, !is.na(mom_ed)) %>%
   group_by(language, mom_ed, age) %>%

@@ -24,12 +24,12 @@ coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
 fscores_4pl <- data_frame(data_id = rownames(d_mat_ws), 
                              ability = fscores(mod_4pl, method = "MAP")[,1])
 
-save(file = "data/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
+save(file = "data/psychometrics/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
 ```
 
 
 ```{r psycho-prod_comp_wg}
-eng_wg <- read_feather("data/eng_wg_data.feather")
+eng_wg <- read_feather("data/psychometrics/eng_wg_data.feather")
 
 d_wg <- eng_wg %>%
   mutate(produces = value == "produces", 
@@ -78,7 +78,7 @@ coefs_4pl_wg_understands <- as_data_frame(coef(mod_4pl_wg_understands,
                                             simplify = TRUE)$items) %>%
   mutate(definition = rownames(coef(mod_4pl_wg_understands, simplify = TRUE)$items))
 
-save(file = "data/eng_wg_mods_4pl.Rds", 
+save(file = "data/psychometrics/eng_wg_mods_4pl.Rds", 
      "mod_4pl_wg_produces",
      "mod_4pl_wg_understands",
      "coefs_4pl_wg_produces",
@@ -107,7 +107,7 @@ d_ws_summary %>%
 mirt_params <- function(dx) {
   language <- dx$language
   form <- dx$form
-  print(paste(language, form))
+  print(paste(language, form, sep = .inst_sep))
 
   lang_data <- get_instrument_data(language = language, form = form,
                                    administrations = TRUE, iteminfo = TRUE)
@@ -152,12 +152,12 @@ mirt_params <- instruments %>%
   split(.$idx) %>%
   map_df(possibly(mirt_params, otherwise = data_frame()))
 
-write_feather(mirt_params, "data/long_mirt_params.feather")
+write_feather(mirt_params, "data/psychometrics/long_mirt_params.feather")
 ```
 
 
 ```{r psycho-style_long_mirt_stability, eval=FALSE}
-mirt_params <- read_feather("data/long_mirt_params.feather")
+mirt_params <- read_feather("data/psychometrics/long_mirt_params.feather")
 
 long_cors_mirt <- n_long_ws %>%
   left_join(select(mirt_params, data_id, ability, language, form)) %>%

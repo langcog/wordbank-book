@@ -1,4 +1,4 @@
-# Predictive Models of Individual Words^[The contents of this chapter are lightly adapted from @braginsky2018.] {#aoapred}
+# Predictive Models of Individual Words^[The contents of this chapter are lightly adapted from @braginsky2018.] {#items-prediction}
 
 As discussed in Chapter \@ref(intro-theory), one classic approach to word learning focuses on the specific mechanisms that children bring to bear on the learning problem. For example, across many laboratory experiments, a variety of mechanisms have been identified as plausible drivers of early word learning, including co-occurrence based and cross-situational word learning [@schwartz1983;@yu2007]; social cue use [@baldwin1993]; and syntactic bootstrapping [@gleitman1990;@mintz2003]. The ability to identify which of these mechanisms is most explanatory has been challenging. 
 
@@ -19,7 +19,7 @@ Second, we ask which lexical categories are most influenced by linguistic enviro
 
 ## Methods
 
-```{r aoapred-prereqs, child = "_aoapred.Rmd"}
+```{r aoapred-prereqs, child = "_items-prediction.Rmd"}
 ```
 
 ### Acquisition trajectories

@@ -1,4 +1,4 @@
-# Estimating Total Vocabulary {#appendix-vocab-estimation}
+# Estimating Total Vocabulary {#appendix-vocabulary}
 
 First, connect to the Wordbank database and pull out the English WS and WG data.
 
@@ -15,11 +15,11 @@ by_item <- eng_ws %>%
   group_by(definition, age) %>%
   summarise(produces = mean(value=="produces", na.rm=TRUE))
 
-write_feather(by_item, "data/appendix_vocab_estimation/by_item.feather")
+write_feather(by_item, "data/appendix-vocabulary/by_item.feather")
 ```
 
 ```{r vocabest-item_load}
-by_item <- read_feather("data/appendix_vocab_estimation/by_item.feather")
+by_item <- read_feather("data/appendix-vocabulary/by_item.feather")
 ```
 
 Now arrange.

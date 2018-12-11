@@ -308,13 +308,13 @@ samps <- rstan::stan(model_code = hierarchical_logit,
               cores = 4, 
               data = dat, iter = 200, warmup=100, chains = 4, 
               pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
-save(samps, "data/appendix_aoa_estimation/aoa-samps.Rds")
+save(samps, "data/appendix_aoa/aoa-samps.Rds")
 ```
 
 Diagnostics.
 
 ```{r appaoa-stan-diagnostics, eval=FALSE}
-load("data/appendix_aoa_estimation/aoa-samps.Rds")
+load("data/appendix-aoa/aoa-samps.Rds")
 rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
                  inc_warmup = TRUE)
 ```

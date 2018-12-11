@@ -4,9 +4,9 @@ This chapter focuses on splitting vocabulary data into syntactic categories and 
 
 ## Introduction
 
-Over the first few years, young children are exposed to a "sea of words" across many different contexts and from many different people [p. 516, @goodman2008]. And despite the fact that children vary tremendously in the rate at which they learn, the first words that children utter are strikingly consistent [@tardif2008,@schneider2015]: They tend to talk about important people in their life (*mom*, *dad*), social routines (*hi*, *uh oh*), animals (*dog*, *duck*), and foods (*milk*, *banana*) [@goodman2008, @bates1995; @nelson1973; @clark1979b]. Soon thereafter, they begin to add verbs (*go*) and adjectives (*pretty*) in greater proportions than earlier in development and may even begin to use closed-class forms, such as determiners (*the*). These patterns seem to suggest a developmental course that follows distinct "waves" of learning for words from different classes. That is, along with early social routines, nouns tend to predominate early vocabularies, while other types of words, such as predicates and closed class forms, are learned later. This pattern may be further qualified by differences in the types of words learned in comprehension vs. production [@benedict1979].   
+Over the first few years, young children are exposed to a "sea of words" across many different contexts and from many different people [@goodman2008, p. 516]. And despite the fact that children vary tremendously in the rate at which they learn, the first words that children utter are strikingly consistent [@tardif2008;@schneider2015]: They tend to talk about important people in their life (*mom*, *dad*), social routines (*hi*, *uh oh*), animals (*dog*, *duck*), and foods (*milk*, *banana*) [@goodman2008, @bates1995; @nelson1973; @clark1979b]. Soon thereafter, they begin to add verbs (*go*) and adjectives (*pretty*) in greater proportions than earlier in development and may even begin to use closed-class forms, such as determiners (*the*). These patterns seem to suggest a developmental course that follows distinct "waves" of learning for words from different classes. That is, along with early social routines, nouns tend to predominate early vocabularies, while other types of words, such as predicates and closed class forms, are learned later. This pattern may be further qualified by differences in the types of words learned in comprehension vs. production [@benedict1979].   
 
-The composition of early vocabulary is complicated by the fact that we categorize words by their adult syntactic category. We do so in the discussion below without presupposing that children themselves do this categorization, however [@tomasello2000]. Children may be sensitive to these categories very early in development [@valian1986,@yang2013] or they may discover them either gradually [@pine1997] or more quickly [@meylan2017]. Importantly, though, we treat adult syntactic categories as an analytic convenience that describes certain regularities in how groups of words are distributed in language samples and how they function in different contexts, rather than as an ontological fact about children's knowledge. Chapter \@ref(aoapred) breaks down these categories further, asking what sorts of information predicts the order of acquisition for individual words, both within and across categories. 
+The composition of early vocabulary is complicated by the fact that we categorize words by their adult syntactic category. We do so in the discussion below without presupposing that children themselves do this categorization, however [@tomasello2000]. Children may be sensitive to these categories very early in development [@valian1986;@yang2013] or they may discover them either gradually [@pine1997] or more quickly [@meylan2017]. Importantly, though, we treat adult syntactic categories as an analytic convenience that describes certain regularities in how groups of words are distributed in language samples and how they function in different contexts, rather than as an ontological fact about children's knowledge. Chapter \@ref(items-prediction) breaks down these categories further, asking what sorts of information predicts the order of acquisition for individual words, both within and across categories. 
 
 ```{r catsyn-bates, fig.cap="Figure from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary"}
 include_graphics("images/bates1994.png")
@@ -88,12 +88,12 @@ vocab_comp_data <- map2(instruments$language,
                         instruments$form, get_vocab_comp) %>%
   bind_rows()
 
-write_feather(vocab_comp_data, "data/categories_syntax/vocab_comp_data.feather")
+write_feather(vocab_comp_data, "data/categories-syntactic/vocab_comp_data.feather")
 ```
 
 
 ```{r catsyn-sample_sizes}
-vocab_comp_data <- read_feather("data/categories_syntax/vocab_comp_data.feather")
+vocab_comp_data <- read_feather("data/categories-syntactic/vocab_comp_data.feather")
 
 sample_sizes <- vocab_comp_data %>%
   group_by(language, form, measure, lexical_category) %>%
@@ -208,12 +208,12 @@ sample_areas <- function(d, nboot = 1000) {
 
 ```{r catsyn-areas_compute, eval=FALSE}
 areas <- sample_areas(vocab_comp_data, 1000)
-write_feather(areas,"data/categories_syntax/vocab_comp_areas.feather")
+write_feather(areas,"data/categories-syntactic/vocab_comp_areas.feather")
 ```
 
 
 ```{r catsyn-areas_read}
-areas <- read_feather("data/categories_syntax/vocab_comp_areas.feather")
+areas <- read_feather("data/categories-syntactic/vocab_comp_areas.feather")
 ```
 
 ```{r catsyn-area_summary}
@@ -670,7 +670,7 @@ In sum, we did not find strong support for effects of form composition or age on
 This chapter presented a comprehensive examination of the issue of biases for and against particular syntactic categories in acquisition. Building on earlier work by @bates1994, we created a quantitative measure of noun, predicate, and function word bias and examined variability in these measures across languages. Overall, a number of generalizations emerged. 
 
 * Nearly every language showed a positive bias for nouns, though the degree of this bias varied. 
-* Every language showed a substantial bias against function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency (see \@ref(aoapred)). This bias was larger on average than biases in type of content words. 
+* Every language showed a substantial bias against function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency (see \@ref(items-prediction)). This bias was larger on average than biases in type of content words. 
 * In comprehension there was variability in the degree of predicate representation; in production, as has previously been reported, languasges were mostly biased against predicates. There were a few notable exceptions among the East-Asian languages. 
 * Measures of bias in production and comprehension were not highly correlated with one another, especially for predicates and function words. There are likely many causes of these, but greater predicate comprehension compared with production appears to be one likely culprit. 
 

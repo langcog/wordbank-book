@@ -1,4 +1,4 @@
-# Vocabulary Size {#vocab}
+# Vocabulary Size {#vocabulary}
 
 > Far from simply reflecting noise in our measuring instruments or variability in low-level aspects of physiological maturation, the variations that we will document (in vocabulary development) are *substantial,* *stable,* and have their own *developmental course.* Because this variation is substantial, it is critical for defining the boundary between normal and abnormal development; because it is stable, it provides a window onto the correlates and (by inference) the causes of developmental change; and because it has its own developmental course, it can be used to pinpoint critical developmental transitions that form the basis for theories of learning and change. (Bates et al., 1995)
 
@@ -45,7 +45,7 @@ include_graphics("images/vocab_growth_schematic.png")
 <!-- rasterImage(p, xleft=0, xright=1, ybottom=0, ytop=1) -->
 <!-- ``` -->
 
-This image reveals a number of patterns that are explored in this and subsequent chapters. The CDI necessarily captures a small fraction of any individual's true vocabulary, but even within this range there are specific questions that are usefully addressed. The question of the exact slope of children's growth, especially in the period immediately after the emergence of language, is treated in Chapter \@ref(style) -- this question is sometimes posed as whether children undergo a vocabulary "spurt" [@ganger2004]. On the other side of the CDI curve, the question of the divergence between CDI-measured vocabulary and true vocabulary (and whether true vocabulary can be recovered via a statistical correction) is treated in Appendix \@ref(appendix-vocab-estimation). In the current chapter, we focus on the middle section of the CDI curve, in which children's vocabulary is neither at the floor or the ceiling of the instrument. 
+This image reveals a number of patterns that are explored in this and subsequent chapters. The CDI necessarily captures a small fraction of any individual's true vocabulary, but even within this range there are specific questions that are usefully addressed. The question of the exact slope of children's growth, especially in the period immediately after the emergence of language, is treated in Chapter \@ref(style) -- this question is sometimes posed as whether children undergo a vocabulary "spurt" [@ganger2004]. On the other side of the CDI curve, the question of the divergence between CDI-measured vocabulary and true vocabulary (and whether true vocabulary can be recovered via a statistical correction) is treated in Appendix \@ref(appendix-vocabulary). In the current chapter, we focus on the middle section of the CDI curve, in which children's vocabulary is neither at the floor or the ceiling of the instrument. 
 
 
 ### Commonalities across languages
@@ -96,7 +96,7 @@ ggplot(filter(medians, form %in% WSs , n_admins > 200),
 
 This acceleration is even clearer when looking at production reports from older children using Words and Sentences. In every language, we see the median child is reported to produce 50 words between 16 and 20 months. As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We discuss Mandarin in particular, which is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies between languages. 
 
-During the period 24-30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which many authors assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form. (See Appendix \@ref{appendix-vocab-estimation) for estimates of how many words children actually might know.)
+During the period 24-30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which many authors assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form. (See Appendix \@ref{appendix-vocabulary) for estimates of how many words children actually might know.)
 
 ```{r vocab-medians_comprehension_wg}
 ggplot(filter(medians, form %in% WGs, n_admins > 200), 
@@ -257,8 +257,6 @@ In summary, differences between languages in the sheer number of words reported 
 
 <!-- Individual words -->
 
-
-<!-- @hidaka -->
 
 <!-- @mollica2017 -->
 

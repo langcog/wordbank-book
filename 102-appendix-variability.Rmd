@@ -1,6 +1,6 @@
 # Measures of Variability {#appendix-variability}
 
-In Chapter \@ref(vocab), we make use of non-parametric measures of variability. MADM and MMAD rather than the more standard coefficient of variation and Cohen's $d$. In this brief Appendix, we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
+In Chapter \@ref(vocabulary), we make use of non-parametric measures of variability. MADM and MMAD rather than the more standard coefficient of variation and Cohen's $d$. In this brief Appendix, we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
 
 
 ```{r appvar-vocab_data}

@@ -45,14 +45,14 @@ In these analyses, we take advantage of the fact that CDI forms are typically st
 
 ```{r catsem-script, eval=FALSE}
 # this code contains caching for the various feathers. 
-source("_categories_semantics.R")
+source("_categories-semantic.R")
 ```
 
 
 ```{r catsem-sample_sizes}
-# cat_comp_data <- read_feather("data/categories_semantics/cat_comp_data.feather")
-load("data/categories_semantics/cat_comp_data.Rds")
-areas <- read_feather("data/categories_semantics/sem_vocab_comp_areas.feather")
+# cat_comp_data <- read_feather("data/categories-semantic/cat_comp_data.feather")
+load("data/categories-semantic/cat_comp_data.Rds")
+areas <- read_feather("data/categories-semantic/sem_vocab_comp_areas.feather")
 
 area_summary <- areas %>%
   group_by(language, form, measure, category) %>%
@@ -142,9 +142,9 @@ ggplot(filter(predictions, language == "English (American)") %>%
 
 We first illustrate this approach using data from the English WS form alone. Analogous to the plots in \@ref(categories-syntactic), the plot above shows areas where the data deviate from the pattern of category acquisition predicted by random item sampling. The size of the shaded region above vs. below the diagonal gives evidence of over- vs. under-sampling for a particular semantic category. 
 
-Many of the results of this analysis for English are expected. Sounds items are heavily over-represented, as are Body Parts, Games and Routines, and to a slightly lesser extent, Toys, Animals, and Vehicles. These particular biases are likely related  particular parenting practices, cultural emphases (for example, on animal names), and young children's' idiosyncratic interests. For a more in-depth examination of the consistencies in very early vocabulary, see Chapter \@ref(items); for more detail on what makes particular words easier or harder to learn, see Chapter \@ref(aoapred). 
+Many of the results of this analysis for English are expected. Sounds items are heavily over-represented, as are Body Parts, Games and Routines, and to a slightly lesser extent, Toys, Animals, and Vehicles. These particular biases are likely related  particular parenting practices, cultural emphases (for example, on animal names), and young children's' idiosyncratic interests. For a more in-depth examination of the consistencies in very early vocabulary, see Chapter \@ref(items-consistency); for more detail on what makes particular words easier or harder to learn, see Chapter \@ref(items-prediction). 
 
-The largest *under*-representation across categories is Time Words. This pattern is consistent with a body of work on children's acquisition of the semantics of time words that suggests that children struggle with understanding these complex terms through age five [@tillman2015,@tillman2017]. 
+The largest *under*-representation across categories is Time Words. This pattern is consistent with a body of work on children's acquisition of the semantics of time words that suggests that children struggle with understanding these complex terms through age five [@tillman2015;@tillman2017]. 
 
 We next turn to how this pattern varies across languages. 
 
@@ -292,7 +292,7 @@ plot_unis <- function(uni_data) {
 
 
 ```{r catsem-time}
-time_words <- read_feather("data/categories_semantics/time_words.feather")
+time_words <- read_feather("data/categories-semantic/time_words.feather")
 time_unis <- unique(time_words$uni_lemma)
 ```
 
@@ -311,7 +311,7 @@ Color word acquisition has been a focus of interest at least since early work by
 
 
 ```{r catsem-color}
-color_words <- read_feather("data/categories_semantics/color_words.feather")
+color_words <- read_feather("data/categories-semantic/color_words.feather")
 color_unis <- unique(color_words$uni_lemma)
 ```
 
@@ -345,12 +345,12 @@ ggplot(color_langs,
   xlim(16,36) 
 ```
 
-As in other analyses (see Chapter \@ref(vocab)), Mandarin WS has the highest level of production. American and Australian English also tend to have high levels of color production. Interestingly, Kiswahili has by far the lowest level of color production, perhaps related to the availability of manufactured toys of contrastive colors [@bornstein1985]. 
+As in other analyses (see Chapter \@ref(vocabulary)), Mandarin WS has the highest level of production. American and Australian English also tend to have high levels of color production. Interestingly, Kiswahili has by far the lowest level of color production, perhaps related to the availability of manufactured toys of contrastive colors [@bornstein1985]. 
 
 ### Body parts
 
 ```{r catsem-body_words}
-body_words <- read_feather("data/categories_semantics/body_words.feather")
+body_words <- read_feather("data/categories-semantic/body_words.feather")
 plot_unis(body_words)
 ```
 
@@ -359,7 +359,7 @@ Words for body parts are produced very early by most children, and variance is q
 ### Logic
 
 ```{r catsem-logic_words}
-logic_words <- read_feather("data/categories_semantics/logic_words.feather")
+logic_words <- read_feather("data/categories-semantic/logic_words.feather")
 plot_unis(logic_words)
 logic_unis <- unique(logic_words$uni_lemma)
 ```
@@ -372,7 +372,7 @@ Finally, we examine words for logical operators. The only items that are availab
 Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22-26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add animal words for the sake of comparison. The table below gives the coefficient of variation for each category.
 
 ```{r catsem-cat_var}
-animal_words <- read_feather("data/categories_semantics/animal_words.feather")
+animal_words <- read_feather("data/categories-semantic/animal_words.feather")
 
 cat_var <- bind_rows(time_words %>% mutate(category = "time"),
           body_words %>% mutate(category = "body"),

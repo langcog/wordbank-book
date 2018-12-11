@@ -1,4 +1,4 @@
-# Demographic Variation in Individual Words^[An earlier version of the gender analyses below was presented to the Boston University Conference on Language Development in 2016] {#itemsdemo}
+# Demographic Variation in Individual Words^[An earlier version of the gender analyses below was presented to the Boston University Conference on Language Development in 2016] {#items-demographics}
 
 In Chapter \@ref(demographics), we documented demographic differences in total vocabulary. But where do these differences reside? Concretely, if girls say more words than boys, *which words* do they say? Is it the case that they simply produce each word more with some probability, or are there individual words that are more likely to be produced? Or are both true? In this chapter, we consider the possibility that individual words carry this demographic signal. We assess which words are learned differentially earlier or later by girls vs. boys, by first-born vs. later-born children, and by children with different levels of maternal education. 
 
@@ -51,11 +51,11 @@ raw_data <- demo_words %>%
   split(.$language) %>%
   map(get_lang_data)
 
-write_feather(bind_rows(raw_data), "data/items_demo/demo_data.feather")
+write_feather(bind_rows(raw_data), "data/items-demographics/demo_data.feather")
 ```
 
 ```{r itemsdemo-raw_data_coded, eval=FALSE}
-raw_data <- read_feather("data/items_demo/demo_data.feather") %>%
+raw_data <- read_feather("data/items-demographics/demo_data.feather") %>%
   split(.$language)
 
 raw_data_coded <- raw_data %>%
@@ -139,8 +139,8 @@ get_lang_props <- function(lang_data) {
 demo_props <- raw_data_coded %>%
   map_df(get_lang_props)
 
-save(demo_props, file = "data/items_demo/demo_props.Rds")
-#write_feather(unnest(demo_props), "data/items_demo/demo_props.feather")
+save(demo_props, file = "data/items-demographics/demo_props.Rds")
+#write_feather(unnest(demo_props), "data/items-demographics/demo_props.feather")
 ```
 
 ## Methods
@@ -152,8 +152,8 @@ Various subsets of the datasets in Wordbank are coded for one or more demographi
 This approach creates six different analyses, one for each combination of demographic variable and measure. We exclude a language from a given analysis if it has fewer than `r sample_cutoff` children for that demographic variable and measure. The demographic variables are coded into the values First / Second / Third+ for birth order, Below Secondary / Secondary / College and Above for maternal education, and Female / Male for sex.
 
 ```{r itemsdemo-plot_props}
-#demo_props <- read_feather("data/items_demo/demo_props.feather")
-load("data/items_demo/demo_props.Rds")
+#demo_props <- read_feather("data/items-demographics/demo_props.feather")
+load("data/items-demographics/demo_props.Rds")
 
 demo_labels <- list("sex" = "Sex",
                     "birth_order" = "Birth order",
@@ -230,7 +230,7 @@ fit_demo_model <- function(language, measure, demo, demo_data) {
   
   safe_model <- possibly(function() {
     model <- lme4::glmer(group_formula, family = binomial, data = demo_data)
-    save(model, file = glue::glue("data/items_demo/models/{language}_{measure}_{demo}.Rds"))
+    save(model, file = glue::glue("data/items-demographics/models/{language}_{measure}_{demo}.Rds"))
     return(model)
   }, otherwise = NULL)
   safe_model()
@@ -282,8 +282,8 @@ demo_ranef <- demo_fits %>%
   select(language, measure, demo, ranef) %>%
   unnest()
 
-write_feather(demo_coefs, "data/items_demo/demo_coefs.feather")
-write_feather(demo_ranef, "data/items_demo/demo_ranef.feather")
+write_feather(demo_coefs, "data/items-demographics/demo_coefs.feather")
+write_feather(demo_ranef, "data/items-demographics/demo_ranef.feather")
 ```
 
 ### Models
@@ -304,7 +304,7 @@ For each demographic variable, we specify the contrasts such that their coeffici
 <!-- The following are the main effects for each demographic variable and measure. -->
 
 ```{r itemsdemo-plot_coefs, eval=TRUE}
-demo_coefs <- read_feather("data/items_demo/demo_coefs.feather")
+demo_coefs <- read_feather("data/items-demographics/demo_coefs.feather")
 
 demo_levels <- function(demo) {
   demo_props %>% filter(demo == demo) %>% slice(1) %>% pull(data) %>% .[[1]] %>%
@@ -357,7 +357,7 @@ The plots below show the distribution of item random effects for each demographi
 
 
 ```{r itemsdemo-plot_ranef}
-demo_ranef <- read_feather("data/items_demo/demo_ranef.feather")
+demo_ranef <- read_feather("data/items-demographics/demo_ranef.feather")
 
 demo_ranef_coded <- demo_ranef %>%
   gather(term, estimate, -language, -measure, -demo, -definition) %>%

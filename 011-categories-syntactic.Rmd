@@ -17,7 +17,7 @@ include_graphics("images/bates1994.png")
 
 Why do children learn nouns before verbs and other types of words? This question has received a great deal of attention in the literature, and we can briefly summarize some of the major issues here. One reason for this "noun bias" could be that nouns are simply more frequent in the talk to young children. It is well-established that children learn the words that they hear more often [e.g., @hart1995]. Many observational studies of English-speaking caregivers have demonstrated that caregivers use more nouns than verbs (types or tokens) with their children [e.g., @fernald1993; @goldfield1993; @gopnik1996; @kim2000; @poulindubois1995; @tardif1997].
 
-Other researchers have framed the "noun bias" in terms of universals about what and how different words "partition" things in the world.For example, @gentner1978 has argued that children learn nouns before verbs because the meanings of nouns are easier to encode since they identify things that can be differentiated in the world (e.g., common everyday objects). Verbs and other predicates, in contrast, express *relations* among things in the world. Hence, the meanings of verbs are less accessible to children through common, everyday experiences and hence, are more difficult to map onto word forms without additional linguistic or social support. 
+Other researchers have framed the "noun bias" in terms of universals about what and how different words "partition" things in the world. For example, @gentner1978 has argued that children learn nouns before verbs because the meanings of nouns are easier to encode since they identify things that can be differentiated in the world (e.g., common everyday objects). Verbs and other predicates, in contrast, express *relations* among things in the world. Hence, the meanings of verbs are less accessible to children through common, everyday experiences and hence, are more difficult to map onto word forms without additional linguistic or social support. 
 
 Other reasons that nouns might be easier than verbs for young children is that nouns tend to be less morphologically complex than verbs [e.g., @tardif1997]. For example, in many languages, nouns are typically marked only for number, whereas, verbs carry both person and tense information. In English, at least, verbs might also be harder to learn because they tend to occur in sentence-medial position (rather than sentence final), which make verbs less salient in the input that children hear [@slobin1985; @caselli1995].
 
@@ -32,7 +32,13 @@ One notable exception in a literature where samples have been small -- in terms 
 
 ## Methods and Data
 
-Each CDI form contains a mixture of words in different classes. We adopt the categorization of @bates1994, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as "closed class" words), and other words. For each child's vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by @bates1994, for each of the languages in our sample, we plot these proportions against total vocabulary. Each dot represents a child's knowledge of a particular class, while curves show the relationship between a class and the whole vocabulary. If categories grow independently of one another, these curves should approximate the diagonal. 
+Each CDI form contains a mixture of words in different classes. We adopt the categorization of @bates1994, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as "closed class" words), and other words. For each child's vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by @bates1994, for each of the languages in our sample, we plot these proportions against total vocabulary. As shown in the schematic figure below, if every time a child learns a word, that word is sampled randomly from the different words available on the form, then the proportion of nouns in vocabulary should track perfectly with the proportion of total vocabulary (the diagonal).  In contrast, the extent to which each child's vocabulary has more words in a category than expected, the child's datapoint would be plotted above the diagonal; to the extent that a child's vocabulary contains words that are below the diagonal, they are reported to produce fewer words in that category than expected.
+
+```{r catsyn-schematic, fig.cap="Schematic of our vocabulary composition analysis."}
+include_graphics("images/vocab_comp_schematic.png")
+```
+
+We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms like the British English TEDS don't typically include category information. The sample sizes included in this analysis are given below. 
 
 ```{r catsyn-items}
 items <- items %>%
@@ -107,14 +113,6 @@ sample_sizes %>%
 ```
 
 
-We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms like the British English TEDS don't typically include category information. The sample sizes included in this analysis are given above. 
-
-```{r catsyn-schematic, fig.cap="Schematic of our vocabulary composition analysis."}
-include_graphics("images/vocab_comp_schematic.png")
-```
-
-Building on the method of @bates1994, our analyses relies on plotting the proportion of words known in a particular category (e.g., nouns) in a child's vocabulary by the proportion of all words in the child's vocabulary. This approach is shown schematically above. If every time a child learns a word, that word is sampled randomly from the different words available on the form, then the proportion of nouns in vocabulary should track perfectly with the proportion of total vocabulary (the diagonal). In contrast, if nouns are over-represented, the child will be represented by a point above the diagonal; if nouns are under-represented, they will be under the diagonal.
-
 ```{r catsyn-area_funs}
 get_lang_lexcat_predictions <- function(lang, lexcat) {
   model <- filter(models, language == lang, lexical_category == lexcat)$model[[1]]
@@ -172,8 +170,7 @@ ggplot(predictions,
   .scale_fill_discrete(guide = FALSE) 
 ```
 
-The figure above shows this analysis, carried out with English (American) WS data. Each point shows an individual child's vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). We capture the overall trend in this plot by estimating a linear model over the data, predicting category proportion as a function of total production. This model is fit with third-order polynomials (so as to allow both concave/convex functions and also changes in convexity). We fit these 
-models with the constraint that they must predict the point [1,1] so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked. These model fits are shown by the lines. 
+The figure above shows this analysis, carried out with English (American) WS data.  Each point shows an individual child's vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). The curves show the relationship between a class and the whole vocabulary. We capture the overall trend in this plot by estimating a linear model over the data, predicting category proportion as a function of total production. This model is fit with third-order polynomials (so as to allow both concave/convex functions and also changes in convexity). We fit these models with the constraint that they must predict the point [1,1] so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked. These model fits are shown by the lines. 
 
 ```{r catsyn-resample}
 poly_area <- function(group_data) {
@@ -239,7 +236,7 @@ Critically, this analysis controls for a number of confounds in previous analyse
 
 ## Results
 
-We present results of this analysis across languages, beginning with comprehension on WG-type forms and moving to production in WS-type forms. We do not analyze WG production data here. For the most part, production estimates on WG forms are quite low, and hence curves are relatively unconstrained (or determined by a small number of children who are reported to have very large early vocabulary). 
+We present results of this analysis across languages, beginning with comprehension on WG-type forms and moving to production in WS-type forms. We do not analyze WG production data here. For the most part, production estimates on WG forms are quite low, and hence curves are relatively unconstrained (or determined by a small number of children who are reported to have very large early vocabulary sizes). 
 
 ```{r catsyn-base_plot}
 base_plot <- function(input_forms, input_measure) {
@@ -302,7 +299,7 @@ npcor_wg <- cor.test(plot_areas_wg$mean[plot_areas_wg$lexical_category == "Nouns
                           plot_areas_wg$mean[plot_areas_wg$lexical_category == "Predicates"])
 ```
 
-Nouns are over-represented in many -- but not all -- languages. Portuguese, Turkish, Korean, and Slovak, a set of typologically- and culturally-distinct languages,  show slight under representation, with BSL and British English showing the largest over-representation of nouns. Predicates are under-represented in some languages and over-represented in others.
+Nouns are over-represented in many -- but not all -- languages. Portuguese, Turkish, Korean, and Slovak, a set of typologically- and culturally-distinct languages, show slight under representation, with BSL and British English showing the largest over-representation of nouns. Predicates are under-represented in some languages and over-represented in others.
 
 ```{r catsyn-prod_vs_comp_vocab_comp_wg}
 area_scatter_data <- area_summary %>%
@@ -327,7 +324,7 @@ ggplot(area_scatter_data,
   ylim(-.2,.1)
 ```
 
-As seen above, there is a strong anti-correlation between noun and predicate bias  measures ($r$(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure). 
+As seen above, there is a strong anti-correlation between noun and predicate bias measures ($r$(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure). 
 
 
 ```{r catsyn-function_words_comp}
@@ -343,7 +340,7 @@ ggplot(filter(plot_areas_wg, lexical_category == "Function Words"),
   ylim(-.5, .2)
 ```
 
-Function words are substantially under-represented across nearly every language in our sample (except Slovak). Note the scale difference -- the function-word values are far more extreme than the noun and predicate values. These results likely reflect some combination of true under-representation of function-words as well as the difficulty of reporting on function-word comprehension in very early language (see Chapter \@ref(psychometrics) for more details on this issue). Such issues may also vary across cultures, languages, and administration methods. Function-word representation might plausibility differ due to linguistic factors such as morphological complexity, pronoun dropping, agreement, etc. However, it is also notable that the two lowest function-word scores come from Kiswahili and Kigiriama [@alcock2015], a study in which the parents may have had substantially less meta-linguistic awareness as a result of many being illiterate. 
+Function words are substantially under-represented across nearly every language in our sample (except Slovak). Note the scale difference -- the function-word values are far more extreme than the noun and predicate values. These results likely reflect some combination of true under-representation of function-words as well as the difficulty of reporting on function-word comprehension in very early language (see Chapter \@ref(psychometrics) for more details on this issue). Such issues may also vary across cultures, languages, and administration methods. Function-word representation might plausibly differ due to linguistic factors such as morphological complexity, pronoun dropping, agreement, etc. However, it is also notable that the two lowest function-word scores come from Kiswahili and Kigiriama [@alcock2015], a study in which the parents may have had substantially less meta-linguistic awareness as a result of many being illiterate. 
 
 ### Production: Words and Sentences
 
@@ -379,7 +376,7 @@ ggplot(filter(plot_areas_ws, lexical_category != "Function Words"),
 npcor <- cor.test(plot_areas_ws$mean[plot_areas_ws$lexical_category == "Nouns"],
                           plot_areas_ws$mean[plot_areas_ws$lexical_category == "Predicates"])
 ```
-Turning to the language summaries, we see a larger pattern of variation in nouns and predicate representation. Every language has a relative over-representation of nouns, though the degree of this over-representation varies, with German and Korean especially high, and Mandarin and Cantonese especially low (we return to this trend below). Overall this trend is more extreme and more consistent in production data than comprehension. Predicate representation is both more variable and more negative than we observed for comprehension. Here we see Mandarin and Cantonese as the only two languages with substantial over-representation for predicates.
+Turning to the language summaries, we see a larger pattern of variation in nouns and predicate representation. Every language has a relative over-representation of nouns, though the degree of this over-representation varies, with German and Korean especially high, and Mandarin and Cantonese especially low (we return to this trend below). Overall this trend is more extreme and more consistent in production data than comprehension. Predicate representation is both more variable and more negative than we observed for comprehension. Here we see Mandarin and Cantonese are the only two languages with substantial over-representation for predicates.
 
 ```{r catsyn-prod_vs_comp_vocab_comp}
 area_scatter_data <- area_summary %>%
@@ -446,7 +443,7 @@ cors <- consistency %>%
   do(broom::tidy(cor.test(.$produces, .$understands)))
 ```
 
-One natural question is how consistent estimates of bias are across comprehension and production. The plot above shows -- for the sample of languages in which we have data from matched WG- and WS-type instruments -- the relative bias we recovered in the analysis above. Somewhat surprisingly, correlations between these different instruments are quite low. Function word bias is negatively correlated between production and comprehension ($r$(`r cors$parameter[3]`) = `r signif(cors$estimate[3],2)`, $p$ = `r signif(cors$p.value[3],2)`). This result is likely due to Kiswahili and Kigiriama, discussed above, the lowest points for function word comprehension. But predicate bias estimates are close to uncorrelated with one another ($r$(`r cors$parameter[2]`) = `r signif(cors$estimate[2],2)`, $p$ = `r signif(cors$p.value[2],2)`), and the correlation between noun bias estimates is modest though positive ($r$(`r cors$parameter[1]`) = `r signif(cors$estimate[1],2)`, $p$ = `r signif(cors$p.value[1],2)`). 
+One natural question is how consistent these estimates of bias are across comprehension and production. The plot above shows -- for the sample of languages in which we have data from matched WG- and WS-type instruments -- the relative bias we recovered in the analysis above. Somewhat surprisingly, correlations between these different instruments are quite low. Function word bias is negatively correlated between production and comprehension ($r$(`r cors$parameter[3]`) = `r signif(cors$estimate[3],2)`, $p$ = `r signif(cors$p.value[3],2)`). This result is likely due to Kiswahili and Kigiriama, discussed above, the lowest points for function word comprehension. But predicate bias estimates are close to uncorrelated with one another ($r$(`r cors$parameter[2]`) = `r signif(cors$estimate[2],2)`, $p$ = `r signif(cors$p.value[2],2)`), and the correlation between noun bias estimates is modest though positive ($r$(`r cors$parameter[1]`) = `r signif(cors$estimate[1],2)`, $p$ = `r signif(cors$p.value[1],2)`). 
 
 This analysis is relatively low power; it only conducted with `r cors$parameter[1]` languages and hence is relatively low power (despite the many thousands of children necessary to carry it out). Despite this, it raises some important questions. A number of explanations of the data are consistent:
 
@@ -484,7 +481,7 @@ vocab_comp_data %>%
 
 ```
 
-In order to assess comprehension/production differences as a source of bias, we examine the Oxford CDI, which is relatively unique in that it includes comprehension questions even later in development. Data on production from standard WG forms is simply too sparse to perform our bias assessment method; since most children do not produce half of the words on the form, the shape of the bias curves is driven primarily by older children. In contrast, for the Oxford CDI, it is possible to compare directly. The measured noun bias for comprehension is  `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Nouns", measure == "understands")$mean, digits = 2)`; for production it is `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Nouns", measure == "produces")$mean, digits = 2)`. These values for predicates are `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Predicates", measure == "understands")$mean, digits = 2)` and `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Predicates", measure == "produces")$mean, digits = 2)`, respectively. These values are somewhat similar to one another, but they do vary beyond the average confidence interval on each (+/- `r signif(mean(filter(area_summary, form=="Oxford CDI")$mean - filter(area_summary, form=="Oxford CDI")$ci_lower), digits = 2)`). Thus, there is some evidence for production/comprehension asymmetries. 
+In order to assess comprehension/production differences as a source of bias, we examine the Oxford CDI, which is relatively unique in that it includes comprehension questions even later in development. Data on production from standard WG forms is simply too sparse to perform our bias assessment method; since most children do not produce half of the words on the form, the shape of the bias curves is driven primarily by older children. In contrast, for the Oxford CDI, it is possible to compare directly across younger and older children. The measured noun bias for comprehension is  `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Nouns", measure == "understands")$mean, digits = 2)`; for production it is `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Nouns", measure == "produces")$mean, digits = 2)`. These values for predicates are `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Predicates", measure == "understands")$mean, digits = 2)` and `r signif(filter(area_summary, form == "Oxford CDI", lexical_category == "Predicates", measure == "produces")$mean, digits = 2)`, respectively. These values are somewhat similar to one another, but they do vary beyond the average confidence interval on each (+/- `r signif(mean(filter(area_summary, form=="Oxford CDI")$mean - filter(area_summary, form=="Oxford CDI")$ci_lower), digits = 2)`). Thus, there is some evidence for production/comprehension asymmetries. 
 
 <!-- ADD OTHER POTENTIAL SOURCES, including verb morphology (interacts with language), and reporting bias.  -->
 
@@ -511,7 +508,7 @@ ggplot(pred_prod,
                    aes(label = langform))
 ```
 
-As shown above, there is no reliable relationship between the proportion of predicates on a form and the predicate bias that is demonstrated ($r(`r cor.test(pred_prod$mean, pred_prod$prop_pred)$parameter`) = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$estimate, digits = 2)`$, $p = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$p.value, digits = 2)`$). Thus, a simple relationship between form composition and bias is not supported. On the other hand, it does appear that there is greater variance in this area for those languages with larger numbers of predicates on the form, and those languages with the highest predicate representation do have the highest number of predicates on the form as well. Perhaps the causality is reversed: Greater numbers of predicates have been included in forms for languages like Cantonese, Mandarin, and Korean where the predicate bias is an open theoretical question (or where the acquisition of predicates is of special interest). 
+As shown above, there is no reliable relation between the proportion of predicates on a form and the predicate bias that is demonstrated ($r(`r cor.test(pred_prod$mean, pred_prod$prop_pred)$parameter`) = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$estimate, digits = 2)`$, $p = `r round(cor.test(pred_prod$mean, pred_prod$prop_pred)$p.value, digits = 2)`$). Thus, a simple relation between form composition and bias is not supported. On the other hand, it does appear that there is greater variance in this area for those languages with larger numbers of predicates on the form, and those languages with the highest predicate representation do have the highest number of predicates on the form as well. Perhaps the causality is reversed: Greater numbers of predicates have been included in forms for languages like Cantonese, Mandarin, and Korean where the predicate bias is an open theoretical question (or where the acquisition of predicates is of special interest). 
 
 ```{r catsyn-mandarin_form_comparison_munging}
 
@@ -660,9 +657,9 @@ ggplot(age_areas, aes(x = langform, y = area, col = age_group)) +
 ```
 
 
-The final hypothesis that we examine is that there are development differences in bias. Such differences would help to explain the observed differences between bias in early comprehension and later production.  To address this question, we split data from each language and form into older and younger groups at the median of the data for that sample. We then recomputed our bias estimates, shown above. There was a developmental difference such that older children showed less of a negative function word bias, but differences in noun and predicate bias were very slight for most languages. Thus, overall we do not see evidence that bias estimates for nouns and verbs are globally different for older vs. younger children. 
+The final hypothesis that we examine is that there are developmental differences in bias. Such differences would help to explain the observed differences between bias in early comprehension and later production.  To address this question, we split data from each language and form into older and younger groups at the median of the data for that sample. We then recomputed our bias estimates, shown above. There was a developmental difference such that older children showed less of a negative function word bias, but differences in noun and predicate bias were very slight for most languages. Thus, overall we do not see evidence that bias estimates for nouns and verbs are globally different for older vs. younger children. 
 
-In sum, we did not find strong support for effects of form composition or age on bias estimates. Each of these factors of course could contribute in part to the mismatch between WG comprehension and WS production estimates, but neither one was particularly. On the other hand, data from the Oxford CDI suggested some differences in bias estimates between comprehension and production on the same form, with the bias against predicates and for nouns being substantially more pronounced for production than for comprehension. Further, data from two different Beijing Mandarin datasets suggest possible factors relating to population and administration. 
+In sum, we did not find strong support for effects of form composition or age on bias estimates. Each of these factors, of course, could contribute in part to the mismatch between WG comprehension and WS production estimates, but neither one was particularly strong. On the other hand, data from the Oxford CDI suggested some differences in bias estimates between comprehension and production on the same form, with the bias against predicates and for nouns being substantially more pronounced for production than for comprehension. Further, data from two different Beijing Mandarin datasets suggest possible factors relating to population and administration. 
 
 
 ## Discussion

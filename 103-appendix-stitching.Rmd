@@ -71,7 +71,7 @@ ggplot(eng_prod_data,
   geom_smooth() + 
   # geom_line(data = ws_prod_preds,
   #           aes(y = pred, col = percentile, group = percentile)) +
-  scale_colour_solarized(name="Percentile") +
+  .scale_colour_discrete(name="Percentile") +
   scale_x_continuous(name = "Age (months)",
                      breaks = seq(8, 30, 4),
                      limits = c(8, 30)) +

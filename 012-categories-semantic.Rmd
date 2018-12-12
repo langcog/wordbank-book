@@ -26,7 +26,7 @@ category_freqs <- items %>%
 ggplot(category_freqs,
        aes(x = category, y = langs, fill = lexical_category)) + 
   geom_bar(stat = "identity") + 
-  scale_fill_solarized(name = 
+  .scale_fill_discrete(name = 
                          "Lexical Category", 
                        guide = guide_legend(ncol = 3)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5), 
@@ -136,8 +136,8 @@ ggplot(filter(predictions, language == "English (American)") %>%
                      name = "") +
   scale_x_continuous(limits = c(0, 1), breaks = c(),
                      name = "") +
-  scale_colour_solarized(guide = FALSE) +
-  scale_fill_solarized(guide = FALSE) 
+  .scale_colour_numerous(guide = FALSE) +
+  .scale_fill_numerous(guide = FALSE) 
 ```
 
 We first illustrate this approach using data from the English WS form alone. Analogous to the plots in \@ref(categories-syntactic), the plot above shows areas where the data deviate from the pattern of category acquisition predicted by random item sampling. The size of the shaded region above vs. below the diagonal gives evidence of over- vs. under-sampling for a particular semantic category. 
@@ -166,7 +166,7 @@ ggplot(plot_data,
                        name = "Proportion of Category") +
     scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "Vocabulary Size") +
-    scale_colour_solarized(name = "", guide=FALSE) +
+    .scale_colour_numerous(name = "", guide=FALSE) +
     theme(legend.position = "top",
           legend.key = element_blank(),
           legend.background = element_rect(fill = "transparent"), 

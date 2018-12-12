@@ -105,7 +105,7 @@ admin_summary <- admins_grouped %>%
 ggplot(admin_summary, aes(x = language, y = n, col = form)) + 
   coord_flip() + 
   geom_point() + 
-  scale_color_solarized() + 
+  .scale_colour_discrete() + 
   xlab("Number of Administrations") + 
   ylab("Language") +
   scale_y_log10()
@@ -177,7 +177,7 @@ ggplot(filter(gender_counts, sex == "Female"),
   geom_point(aes(size = n)) +
   geom_linerange(aes(ymin = ci_low, ymax = ci_high)) + 
   facet_wrap(~form, scale = "free_x") + 
-  scale_color_solarized() + 
+  .scale_colour_discrete() +
   geom_hline(yintercept = .5, lty = 2) + 
   ylab("Proportion Female") + 
   xlab("") + 
@@ -204,7 +204,7 @@ ggplot(momed_counts,
   facet_grid(~form) + 
   ylab("Maternal Education Proportions") + 
   xlab("") +
-  scale_fill_solarized(name = "Maternal Education") 
+  .scale_fill_discrete(name = "Maternal Education") 
 ```
 Although we have maternal education data for far fewer datasets, there are also substantial differences between datasets on this variable (we will also return to this issue again in Chapter \@ref(demographics)). Analyses of this variable are complicated by different reporting formats, so for example the German and Mexican Spanish datasets have no separate categorization for graduate education. That said, even for datasets with the most fine-grained maternal education breakdown, we see substantial differences.
 
@@ -225,7 +225,7 @@ ggplot(ord_counts,
   facet_grid(~form) + 
   ylab("Birth Order Proportions") + 
   xlab("") +
-  scale_fill_solarized(name = "Birth Order") 
+  .scale_fill_discrete(name = "Birth Order") 
 ```
 
 Finally, when we examine birth order, we also see differences in the proportion of children who are first- vs. later-born. The majority of the German sample is first-born, while the Czech sample has many more second children, for example. 

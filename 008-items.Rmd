@@ -2,187 +2,145 @@
 
 <!-- How consistent are childen's first words? -->
 
-<!-- ## Baby's First Words are Consistent Across Languages -->
 
-Which words do children learn first? In spite of tremendous individual variation in rate of development (1), the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (“mom”, “dad”), social routines (“hi”, “uh oh”), animals (“dog”, “duck”), and foods (“milk”, “banana”). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (“go”) and other predicates (“hot”) to their production repertoires. In the latter part of this chapter, we ask *why* some words are learned before others. But first, we ask the prior question: How similar are the acquisition trajectories of children learning different languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. 
+Which words do children learn first? In spite of tremendous individual variation in rate of development [@fenson1994; @hart1995], the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (“mom”, “dad”), social routines (“hi”, “uh oh”), animals (“dog”, “duck”), and foods (“milk”, “banana”). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (“go”) and other predicates (“hot”) to their production repertoires. Indeed, variability in the difficulty of words--and presumably the consistent of this difficulty across children--is a key feature of models that attemtpt to characterize global features of language learning[ e.g @mcmurray2007; @mollica2017; @blythe2010]. 
 
-Because the CDIs are adaptations and not translations, the individual item inventories  vary significantly across languages. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
+In the latter part of this chapter, we ask *why* some words are learned before others. In future chapters, we will take up the question of *why* some words are learned before others. In this chapter, we as the prior question: Are words learned in the same order, and at the same rate, across languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. As detailed in the Chapter \@ref(intro-practical), the items on each language's form are adaptations and not translations: They are intended to capture the spirit of the items on the English form rather to replicate them exactly. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
 
 ```{r items-load_consistency_data, eval=FALSE}
-wg_langs <- instruments %>%
-  filter(form == "WG") %>%
-  distinct(language) %>%
-  pull(language)
-
-ws_langs <- instruments %>%
-  filter(form == "WS") %>%
-  distinct(language) %>%
-  pull(language)
-
-ws_sub_langs <- intersect(wg_langs, ws_langs)
-
-wg_data <- map( wg_langs, function(lang) {
-  get_instrument_data(lang, "WG") %>%
-    mutate(language = lang)
-}) %>%
-  bind_rows
-
-ws_sub_data <-  map(ws_sub_langs, function(lang) {
-  get_instrument_data(lang, "WS") %>%
-    mutate(language = lang)
-}) %>%
-  bind_rows
+langs <- get_instruments() %>%
+  select(language, form) %>%
+  filter(form %in% c("WS", "WG")) %>%
+  group_by(language) %>%
+  filter(n() == 2) 
 
 
-# Get words and gestures data
-kid_wg_data <- wg_data %>%
-  left_join(items) %>%
-  left_join(admins) %>%
-  filter(form == "WG", type == "word", !is.na(uni_lemma), !is.na(age)) %>%
-  select(data_id, value, age, language, uni_lemma, category, lexical_category, lexical_class)
+items <- map2(langs$language, langs$form, get_item_data) %>%
+  bind_rows() %>%
+  filter(!is.na(uni_lemma), type == "word")
 
-# Get the items from Words and Sentences also on Words and Gestures for each language
-stitch_items <- items %>%
-  filter(language %in% unique(ws_sub_data$language)) %>%
-  group_by(language, lexical_category, uni_lemma) %>%
-  summarise(n = n()) %>%
-  filter(n > 1) %>%
-  select(-n) %>%
-  mutate(form = "WS") %>%
-  left_join(items)
+items_nested <- items %>%
+  group_by(language, form) %>%
+  nest()
 
-# Stitch together words and gestures
-stitched_data <- ws_sub_data %>%
-  left_join(stitch_items) %>%
-  left_join(admins) %>%
-  filter(!is.na(age)) %>%
-  select(data_id, value, age, language, uni_lemma, category, 
-         lexical_category, form) %>%
-  bind_rows(kid_wg_data %>%
-              filter(language %in% unique(ws_sub_data$language)) %>%
-              mutate(form = "WG"))
+item_data <- map_dfr(1:nrow(items_nested), 
+                 ~get_instrument_data(language = items_nested[.x, "language"] %>% pull(), 
+                                      form = items_nested[.x, "form"] %>% pull(), 
+                                      items = items_nested[[.x, "data"]]$item_id, 
+                                      administrations = T))
 ```
 
-Some words about AOA estimation--OR MAYBE NOT?
+To estimate the similarlity of each item's trajectories, we use a single measure of it's difficulty: Age of acquisition (AOS)--The age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
 
-```{r items-get_aoas, eval=FALSE}
-# Fit robust regressions to comprehension or production data
-fit_rglm <- function(data) {
-  
-  if(any(str_detect(names(data), "produces")))
-    model <- robustbase::glmrob(cbind(produces, total - produces) ~ age,
-               family = "binomial",
-               data = data)
-  else
-    model <- robustbase::glmrob(cbind(understands, total - understands) ~ age,
-               family = "binomial",
-               data = data)
-  
-  aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
-  
-  data.frame(uni_lemma = data$uni_lemma[1],
-             language = data$language[1],
-             lexical_category = data$lexical_category[1],
-             rglm_aoa = aoa)
+```{r items-get_aoas, eval = FALSE}
+understand_items <- item_data %>%
+  filter(form == "WG") %>%
+  mutate(value = if_else(is.na(value), "", value)) %>%
+  left_join(items %>% filter(form == "WG"),
+            by = c("num_item_id", "language", "form")) %>%
+  mutate(value = nchar(value) > 0) %>%
+  group_by(language, uni_lemma, age, data_id) %>%
+  summarise(value = any(value))  %>% 
+  left_join(items %>% filter(form == "WG") %>% 
+              group_by(language, uni_lemma) %>% 
+              distinct(num_item_id) %>%
+              slice(1),  by = c("language", "uni_lemma")) %>%
+  mutate(value = if_else(value, "understands", ""))
 
-}
+understand_aoas <- understand_items %>%
+  group_by(language) %>%
+  nest() %>%
+  mutate(aoas = map(data, ~fit_aoa(.x, measure = "understands", method = "glm",
+                                   age_max = 30))) %>%
+  select(-data) %>%
+  unnest() %>%
+  left_join(items %>% filter(form == "WG") %>% 
+              group_by(language, uni_lemma) %>% 
+              distinct(num_item_id) %>%
+              slice(1), by = c("language", "num_item_id", "uni_lemma"))
 
-# Compute number of kids who produce each word at each age
-production_data <- stitched_data %>%
-  group_by(form, language, lexical_category, age, uni_lemma) %>%
-  summarise(produces = sum(value == "produces", na.rm = T), 
-            total = n()) %>%
-  filter(!is.na(uni_lemma)) %>%
-  filter(!language %in% c("French (Quebec)", "Hebrew"))
+produce_items <- items %>%
+  filter(form == "WG") %>%
+  mutate(value = if_else(is.na(value), "", value)) %>%
+  distinct(language, uni_lemma) %>%
+  left_join(items , by = c("language", "uni_lemma")) %>%
+  left_join(item_data, by = c("language", "num_item_id", "form")) %>%
+  mutate(value = value == "produces") %>%
+  ungroup() %>%
+  arrange(form) %>%
+  group_by(language, uni_lemma, age, data_id) %>%
+  summarise(num_item_id = first(num_item_id), value = any(value)) %>% #within subj
+  group_by(uni_lemma) %>%
+  mutate(num_item_id = first(num_item_id)) %>% #across forms
+  mutate(value = if_else(value, "produces", ""))
 
-# Get production for items on both forms 
-both_form_data <- production_data %>%
-  group_by(language, uni_lemma) %>%
-  summarise(num_forms = length(unique(form))) %>%
-  filter(num_forms > 1) %>%
-  select(-num_forms) %>%
-  left_join(production_data)
+produce_aoas <- produce_items %>%
+  group_by(language) %>%
+  nest() %>%
+  mutate(aoas = map(data, ~fit_aoa(.x, measure = "produces", method = "glm",
+                                   age_max = 36))) %>%
+  select(-data) %>%
+  unnest() %>%
+  left_join(items %>% filter(form == "WG")) %>%
+  select(language, num_item_id, aoa, uni_lemma)
 
-# Comprehension on WG
-understanding_data <- kid_wg_data %>%
-  group_by(language, lexical_category, age, uni_lemma) %>%
-  summarise(understands = sum(value %in% c("understands", "produces"), 
-                              na.rm = T),  
-            total = n()) %>%
-  filter(!is.na(uni_lemma)) %>%
-  filter(!language %in% c("French (Quebec)", "Hebrew"))
+all_aoas <- understand_aoas %>% 
+  mutate(measure = "understands") %>%
+  bind_rows(produce_aoas %>% mutate(measure = "produces")) %>%
+  filter(!is.na(aoa))
 
-# Estimate AOAs for production
-production_aoas <- both_form_data%>%
-  split(paste(.$language, .$uni_lemma, sep = "_")) %>%
-  map(fit_rglm) %>%
-  bind_rows %>%
-  mutate(measure = "produces")
-
-# Estimate AOAs for comprehension
-understanding_aoas <- understanding_data %>%
-  split(paste(.$language, .$uni_lemma, sep = "_")) %>%
-  map(fit_rglm) %>%
-  bind_rows %>%
-  mutate(measure = "understands")
-
-all_aoas <- bind_rows(production_aoas, understanding_aoas)
-write_feather(all_aoas,"data/items/aoas.feather")
+write_feather(all_aoas,"data/items-consistency/aoas.feather")
 ```
 
 ```{r items-load_aoas}
-all_aoas <- read_feather("data/items/aoas.feather")
+all_aoas <- read_feather("data/items-consistency/aoas.feather")
 ```
 
-Looking at unilemma completeness
-
 ```{r items-uni_lemma_completeness}
+IN_LANGS <- 8
+
 lemma_completeness <- all_aoas %>%
   group_by(measure, uni_lemma) %>%
-  summarise(in_langs = sum(!is.na(rglm_aoa))) %>%
+  summarise(in_langs = sum(!is.na(aoa))) 
+
+cutoffs <- lemma_completeness%>%
   group_by(measure, in_langs) %>%
   summarise(n = n()) %>%
   arrange(measure, desc(in_langs)) %>%
   mutate(prop = n/sum(n)) %>%
   mutate(cum_prop = cumsum(prop),
          cum_n = cumsum(n))
+
+cutoff_n <- cutoffs %>%
+  filter(measure == "produces", in_langs == IN_LANGS) %>%
+  slice(1) %>%
+  pull(cum_n)
 ```
 
-Production
+In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not evey word appeared on all forms. The figure below shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the  `r n_distinct(all_aoas$language)` languages. 
 
-```{r items-uni_lemma_completeness_production}
-lemma_completeness %>%
-  ungroup() %>%
-  filter(measure == "produces") %>%
-  select(-measure) %>%
-  DT::datatable(options = list(scrollX='400px'))
+```{r items-uni_lemma_completeness-figure}
+ggplot(filter(cutoffs, measure == "produces"),
+       aes(x = in_langs, y = cum_prop)) +
+  geom_line() +
+  scale_x_reverse() +
+  labs(x = ("Number of Forms"), y = "Cumulative Proportion of Words")
 ```
 
-Comprehension
-
-```{r items-uni_lemma_completeness_comprehension}
-lemma_completeness %>%
-  ungroup() %>%
-  filter(measure == "understands") %>%
-  select(-measure) %>%
-  DT::datatable(options = list(scrollX='400px'))
-```
-
-To begin, we ask about the earliest words. Following @tardif2008, we present the first 10 words acquired by children across langauges
-
-Top 10 words across languages
+Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured. Similar words appeared in the Top 10 across languages, especially in children's first productions. These words consisted primarily of important family members ("mommy", "daddy", "grandma"), social routines ("hi", "bye", "peekaboo"), and sounds ("yum yum", "vroom", "woof woof"). Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
 
 ```{r items-top10_compute}
 top10 <- all_aoas %>%
+  inner_join(filter(lemma_completeness, in_langs >= IN_LANGS)) %>%
   group_by(measure,language) %>%
-  arrange(rglm_aoa) %>%
+  arrange(aoa) %>%
   slice(1:10) %>%
-  select(-rglm_aoa, -lexical_category) %>%
+  select(-aoa, -num_item_id, -in_langs) %>%
   mutate(order = 1:n()) %>%
   spread(language, uni_lemma) 
 ```
 
-Comprehension
+Production
 
 ```{r items-top10_production}
 top10 %>% 
@@ -192,7 +150,7 @@ top10 %>%
   DT::datatable(options = list(scrollX='400px'))
 ```
 
-Production
+Comprehension
 
 ```{r items-top10_comprehension}
 top10 %>% 
@@ -202,191 +160,191 @@ top10 %>%
   DT::datatable(options = list(scrollX='400px'))
 ```
 
-Acquisition order in production vs comprehension across languages
 
-```{r items-understands_and_produces}
-median_aoas <- all_aoas %>%
+```{r items-understands-and-produces}
+mean_aoas <- all_aoas %>%
   group_by(measure, uni_lemma) %>%
-  summarise(n = sum(!is.na(rglm_aoa)),
-            rglm_aoa = median(rglm_aoa, na.rm = T)) %>%
-  filter(n >= 6) %>%
-  arrange(measure, rglm_aoa)
+  summarise(n = sum(!is.na(aoa)),
+            aoa = mean(aoa, na.rm = T)) %>%
+  filter(n >= IN_LANGS) %>%
+  arrange(measure, aoa) %>%
+  group_by(measure) %>%
+  mutate(order = 1:n())
 
-wide_medians <- median_aoas %>%
-  spread(measure, rglm_aoa) %>%
+wide_means <- mean_aoas %>%
+  spread(measure, aoa) %>%
   group_by(uni_lemma) %>%
   summarise_at(vars(n, produces, understands), mean, na.rm=T)
 
-ggplot(wide_medians, aes(x = produces, y = understands, label = uni_lemma)) + 
-  geom_text() +
-  theme_bw()
+measure_correlation <- cor.test(wide_means$produces, 
+                                wide_means$understands, use = "pairwise")
+
+```
+
+Despite these differences between comprehension and production, words reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure below shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages. The correlation between the two measures was quite high: `r round(measure_correlation$estimate, 2)` (p = `r papaja::printp(measure_correlation$p.value)`).
+
+```{r items-understands-and-produces-plots}
+ggplot(wide_means, aes(x = produces, y = understands, label = uni_lemma)) + 
+  geom_smooth(method = "lm", aes(alpha = .1), se = F, color = "lightgray") +
+   geom_text(position=position_jitter(width=.25,height=.25), size = 2) +
+  theme(legend.position = "none")
 ```
 
 Consistency across languages
-```{r items-aoa_consistency}
-aoa_corr <- function(df, lang1, lang2) {
-
- corrs <- df %>%
-    select(-lexical_category, -measure) %>%
-    filter(language == lang1 | language == lang2) %>%
-    spread(language, rglm_aoa) %>%
-    select(-uni_lemma) %>%
-    cor(., use = "complete") 
- 
- return(corrs[2,1])
+```{r items-aoa-consistency}
+cor_reorder <- function(df) {
+  
+  mat <- df %>%
+    select(-measure) %>%
+    spread(language2, correlation) %>%
+    as.data.frame() %>%
+    column_to_rownames("language1") %>%
+    data.matrix()
+  
+  corOrder <- corrplot::corrMatOrder(mat, order = "hclust")
+  
+  df %>%
+    mutate(language1 = factor(language1, levels = unique(df$language1)[corOrder]),
+           language2 = factor(language2, levels = unique(df$language2)[corOrder]))
 }
 
-compute_corrs <- function(aoas, top_n = NA) {
-  
-  if(!is.na(top_n)) {
-    
-    sub_words <- median_aoas %>%
-      filter(measure == unique(aoas$measure)) %>%
-      slice(1:top_n)
-    
-    filtered_aoas <- aoas %>%
-      filter(uni_lemma %in% sub_words$uni_lemma)
-  } 
-  else 
-    filtered_aoas <- aoas
-  
-  
-  langs <- unique(filtered_aoas$language)
-  
-  lang_pairs <- combn(langs, 2) %>%
-    t() %>%
-    as_data_frame() %>%
-    rename(lang1 = V1, lang2 = V2)
+cors <- all_aoas %>%
+  group_by(measure) %>%
+  nest() %>%
+  mutate(cors = map(data, ~widyr::pairwise_cor(.x, language, uni_lemma, aoa))) %>%
+  select(-data) %>%
+  unnest() %>%
+  complete(measure, item1, item2, fill = list(correlation = 1)) %>%
+  rename(language1 = item1, language2 = item2) %>%
+  split(.$measure) %>%
+  map_dfr(cor_reorder) 
 
-  
-  lang_pairs %>%
-    mutate(cor = unlist(map(1:nrow(lang_pairs), function(x) {
-      aoa_corr(filtered_aoas,
-               as.character(lang_pairs[x,"lang1"]), 
-               as.character(lang_pairs[x,"lang2"]))})))
+```
 
+Production and comprehension consistency 
+```{r items-consistency-heatmap}
+ggplot(cors, aes(x = language1, y = language2, fill = correlation)) +
+  facet_grid(measure ~ .) + 
+  geom_tile() + 
+  geom_text(aes(label = round(correlation, 2))) +
+  theme(legend.position = "none")
+
+```
+
+
+
+```{r items-dendro-setup}
+make_hc <- function(df) {
+   mat <- df %>%
+    spread(language2, correlation) %>%
+    as.data.frame() %>%
+    column_to_rownames("language1") %>%
+    data.matrix()
+   
+   hclust(dist(mat))
 }
 
-
-production_corrs <- compute_corrs(filter(all_aoas, measure == "produces",
-                                         rglm_aoa < 60, rglm_aoa > 6)) 
-
-
-
-understanding_corrs <- compute_corrs(filter(all_aoas, measure == "understands",
-                                         rglm_aoa < 60, rglm_aoa > 6))
-```
-
-Production consistency 
-```{r items-production_consistentency_mat}
-
-production_corrs_full <- production_corrs %>%
-  bind_rows(rename(production_corrs, lang1 = lang2, lang2 = lang1)) %>%
-  bind_rows(data_frame(lang1 = unique(all_aoas$language), 
-                       lang2 = unique(all_aoas$language), cor = 1))
-
-ggplot(production_corrs_full, aes(x = lang1, y = lang2, fill = cor)) +
-  geom_tile() + 
-  geom_text(aes(label = round(cor, 2))) +
-  theme_bw()
-```
-
-Comprehension consistency 
-```{r items-comprehension_consistency_mat}
-
-understanding_corrs_full <- understanding_corrs %>%
-  bind_rows(rename(understanding_corrs, lang1 = lang2, lang2 = lang1)) %>%
-  bind_rows(data_frame(lang1 = unique(all_aoas$language), 
-                       lang2 = unique(all_aoas$language), cor = 1))
-
-ggplot(understanding_corrs_full, aes(x = lang1, y = lang2, fill = cor)) +
-  geom_tile() + 
-  geom_text(aes(label = round(cor, 2))) +
-  theme_bw()
+dendros <- cors %>%
+  group_by(measure) %>%
+  nest() %>%
+  mutate(hc = map(data, make_hc)) %>%
+  select(-data) 
 ```
 
 Production dendrogram
-```{r items-consistency_dendro}
-production_wide <- production_corrs_full %>%
-  spread(lang2, cor) %>%
-  as.data.frame 
-rownames(production_wide) <- production_wide$lang1
-
-production_hc <- hclust(dist(select(production_wide, -lang1)))
-ggdendro::ggdendrogram(production_hc) +
-  theme_bw()
+```{r items-production-dendro}
+ggdendro::ggdendrogram(dendros %>% filter(measure == "produces")
+                       %>% pull(hc) %>% .[[1]]) 
 ```
 
-Understanding dendrogram
-
-```{r items-comp_dendro}
-understanding_wide <- understanding_corrs_full %>%
-  spread(lang2, cor) %>%
-  as.data.frame 
-rownames(understanding_wide) <- understanding_wide$lang1
-
-understanding_hc <- hclust(dist(select(understanding_wide, -lang1)))
-ggdendro::ggdendrogram(understanding_hc) +
-  theme_bw()
+Comprehension dendrogram
+```{r items-comprehension-dendro}
+ggdendro::ggdendrogram(dendros %>% filter(measure == "understands")
+                       %>% pull(hc) %>% .[[1]]) 
 ```
+
 
 Consistency across acquisition order
-```{r items-step_corrs}
-median_common_aoas <- median_aoas %>%
-  filter(n >= 6) %>%
-  mutate(language = "Median") %>%
-  select(-n) %>%
-  group_by(measure) %>%
-  arrange(rglm_aoa) %>%
-  mutate(order = 1:n()) 
-
-step_corr <- function (max_order, meas) {
+```{r items-step-corrs}
+step_cor <- function(max_order, meas, mean_aoas) {
   
-  median_sub_aoas <- median_common_aoas %>%
-    filter(order <= max_order, measure == meas) %>%
-    select(-order)
-  
-  empirical_sub_aoas <- all_aoas %>%
+   uni_lemmas <- mean_aoas %>%
+      filter(measure == meas) %>%
+      slice(1:max_order) %>%
+      pull(uni_lemma)
+   
+  all_aoas %>%
     ungroup() %>%
-    filter(measure == meas) %>%
-    filter(uni_lemma %in% median_sub_aoas$uni_lemma) %>%
-    split(.$language) 
-  
-  corr <- map(empirical_sub_aoas, function(df) {
-    aoa_corr(bind_rows(df, median_sub_aoas), "Median", df$language[1])
-    }) 
-  
-  data_frame(language = names(empirical_sub_aoas), n = max_order, corr = unlist(corr),
-             measure = meas)
+    filter(measure == meas, uni_lemma %in% uni_lemmas) %>%
+    select(-measure, -num_item_id) %>%
+    pairwise_cor(language, uni_lemma, aoa, use = "pairwise") %>%
+    group_by(item1) %>%
+    summarise(correlation = mean(correlation)) %>%
+    mutate(n = max_order, measure = meas)
 }
 ```
 
-```{r items-compute_corrs, eval=FALSE}
-understands_step_corrs <- map(5:max(filter(median_common_aoas, 
-                                           measure == "understands")$order), 
-                              function(x) step_corr(x,"understands")) %>%
-  bind_rows()
+Consistency across acquisition order
 
-produces_step_corrs <- map(5:max(filter(median_common_aoas, 
-                                        measure == "produces")$order), 
-                           function(x) step_corr(x,"produces")) %>%
-  bind_rows()
+```{r items-compute-corrs, eval=FALSE}
+MIN_ITEMS <- 5
 
-write_feather(understands_step_corrs, "data/items/understands_step_corrs.feather")
-write_feather(produces_step_corrs, "data/items/produces_step_corrs.feather")
+understands_step_cors <- map_dfr(MIN_ITEMS:max(filter(mean_aoas, 
+                                           measure == "understands") %>% pull(order)), 
+                              function(x) step_cor(x,"understands", mean_aoas))
+
+produces_step_cors <- map_dfr(MIN_ITEMS:max(filter(mean_aoas, 
+                                        measure == "produces") %>% pull(order)), 
+                           function(x) step_cor(x,"produces", mean_aoas))
+
+
+empirical_step_cors <- bind_rows(understands_step_cors, produces_step_cors) %>%
+  group_by(measure, n) %>%
+  summarise(correlation = mean(correlation, na.rm = T))
+
+make_random_step_cors <- function() {
+  
+  random_aoas <- mean_aoas %>%
+    group_by(measure) %>%
+    sample_frac(1)
+  
+  understands_step_cors_shuffle <- map_dfr(MIN_ITEMS:max(filter(mean_aoas, 
+                                             measure == "understands") %>% pull(order)), 
+                                function(x) step_cor(x,"understands", random_aoas))
+  
+  produces_step_cors_shuffle <- map_dfr(MIN_ITEMS:max(filter(mean_aoas, 
+                                          measure == "produces") %>% pull(order)), 
+                             function(x) step_cor(x,"produces", random_aoas))
+  
+  bind_rows(understands_step_cors_shuffle, 
+            produces_step_cors_shuffle)
+}
+
+
+random_step_cors <- replicate(100, make_random_step_cors(), simplify = F) %>%
+  bind_rows(.id = "sample") %>% 
+  group_by(measure, n, sample) %>%
+  summarise(correlation = mean(correlation)) %>%
+  summarise(ci_upper = quantile(correlation, .975),
+            ci_lower = quantile(correlation, .025),
+            correlation = mean(correlation))
+
+write_feather(random_step_cors, "data/items-consistency/random_step_cors.feather")
+write_feather(empirical_step_cors, "data/items-consistency/empirical_step_cors.feather")
 ```
 
-```{r items-plot_corrs}
-understands_step_corrs <- read_feather("data/items/understands_step_corrs.feather")
-produces_step_corrs <- read_feather("data/items/produces_step_corrs.feather")
+```{r items-plot-cors}
+empirical_step_cors <-
+  read_feather("data/items-consistency/empirical_step_cors.feather")
 
-ggplot(bind_rows(understands_step_corrs, produces_step_corrs), 
-       aes(x = n, y = corr, color = language, fill = language,
-           label = language)) + 
-  facet_wrap(~ measure) + 
-  geom_smooth() + 
-  theme_bw() + 
-  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x + .2), "last.points", cex=1)) + 
-  scale_x_continuous(name = "Median Acquisition Order Number", limits = c(0, 450)) +
+random_step_cors <- 
+  read_feather("data/items-consistency/random_step_cors.feather")
+
+ggplot(random_step_cors, aes(x = n, y = correlation)) +
+  facet_wrap(~measure) +
+  geom_ribbon(aes(ymin = ci_lower, ymax = ci_upper, alpha = .1)) +
+  geom_line() +
+  geom_line(aes(color = measure), data = empirical_step_cors) +
+  labs(x = "Mean acquisition order number", y = "Cross-linguistic correlation") +
   theme(legend.position = "none")
 ```

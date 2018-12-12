@@ -92,11 +92,11 @@ all_aoas <- understand_aoas %>%
 write_feather(all_aoas,"data/items-consistency/aoas.feather")
 ```
 
-```{r items-load_aoas}
+```{r items-load-aoas}
 all_aoas <- read_feather("data/items-consistency/aoas.feather")
 ```
 
-```{r items-uni_lemma_completeness}
+```{r items-uni-lemma-completeness}
 IN_LANGS <- 8
 
 lemma_completeness <- all_aoas %>%
@@ -119,7 +119,7 @@ cutoff_n <- cutoffs %>%
 
 In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not evey word appeared on all forms. The figure below shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the  `r n_distinct(all_aoas$language)` languages. 
 
-```{r items-uni_lemma_completeness-figure}
+```{r items-uni-lemma-completeness-figure}
 ggplot(filter(cutoffs, measure == "produces"),
        aes(x = in_langs, y = cum_prop)) +
   geom_line() +
@@ -129,7 +129,7 @@ ggplot(filter(cutoffs, measure == "produces"),
 
 Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured. Similar words appeared in the Top 10 across languages, especially in children's first productions. These words consisted primarily of important family members ("mommy", "daddy", "grandma"), social routines ("hi", "bye", "peekaboo"), and sounds ("yum yum", "vroom", "woof woof"). Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
 
-```{r items-top10_compute}
+```{r items-top10-compute}
 top10 <- all_aoas %>%
   inner_join(filter(lemma_completeness, in_langs >= IN_LANGS)) %>%
   group_by(measure,language) %>%
@@ -142,7 +142,7 @@ top10 <- all_aoas %>%
 
 Production
 
-```{r items-top10_production}
+```{r items-top10-production}
 top10 %>% 
   ungroup() %>%
   filter(measure == "produces") %>%
@@ -152,7 +152,7 @@ top10 %>%
 
 Comprehension
 
-```{r items-top10_comprehension}
+```{r items-top10-comprehension}
 top10 %>% 
   ungroup() %>%
   filter(measure == "understands") %>%

@@ -1,0 +1,74 @@
+# Language Development at Scale {#conclusion-scale}
+
+What have we learned about language development through the analyses presented in this book? Are there empirical generalizations that we can make fo 
+
+This chapter synthesizes knowledge gained from the broader enterprise, in the sense of attempting to make generalizations about early language development that hold true across the different datasets in our sample. 
+
+## Content themes
+
+<!-- Cheat sheet: What did we learn in each chapter?  -->
+
+* Across children, variability is a constant in early language. 
+
+* The first words are very consistent across languages.
+
+* Gender, first-born, and SES
+
+* Early social/communicative gesture is correlated with language.
+
+* While there is some noun bias in nearly all languages, verbs/adjective bias varies by language. No explanation yet for sources.
+
+* 
+
+* The growth of grammar is linked to vocabulary growth.
+
+* Style???
+
+
+
+<!-- Are the chapters in the right order? -->
+
+
+## Methodological themes
+
+Wordbank embodies our belief that scale is in itself transformative. The existence of a noun bias is a fascinating observation, but this observation gives limited leverage to differentiate theories. The magnitude of a noun bias provides more leverage for quantiative theorizing. And the distribution of magnitudes across many of the world's languages gives greater leverage still. Our hope is that, by generalizing and applying many influential analyses by many contributors, our work here can affect theory more broadly.
+
+More ABOUT POWER TO MEASURE MEAN AND VARIANCE
+
+REPRODUCIBILITY
+
+
+## Theoretical Themes
+
+
+## Conclusions
+
+Developmental psychology often appears to be divided between two groups that do not communicate with one another. On the one hand, there are researchers interested in the ontogenetic and phylogenetic origins of knowledge -- the epistemological project of understanding how we reason about objects, communicate using language, or learn from other people [@carey2009, @spelke2007, @tomasellooriginoflanguage]. On the other hand, there are researchers interested in growth, change, and variation across individuals in psychometric constructs like executive function, working memory, and personality [@zelazo?, other cites]. The first type of research has led to a productive union of philosophical and psychological ideas, addressing many of the most exciting questions in the history of philosophy using empirical methods [@gopnik, @carey]. The second type has had success in its connections to educational policy [@nelson2007;@diamond2011, others?]. In many areas of research, these two traditions have little interchange with one another. They read different journals, record different measures, use different research designs and statisical models, and often appear to be pursuing entirely different goals. 
+
+Yet language learning is an area where these traditions come together. The knowledge being acquired -- the stock of words in the child's lexicon -- is both the epistemic construct whose origins we are studying *and* the psychometric construct whose reliability across individuals we wish to assess. By studying the variability and consistency in the early lexcion, we can both study the origins of knowledge and the processes and factors by which human beings differ from one another across different cultural contexts, family environments, and genetic endowments.
+
+
+
+
+
+<!-- ## Limitations -->
+
+<!-- All of our analyses are fundamentally correlational. No causal inferences from Wordbank data are possible. We'll say this again so you know we mean it: *no causal inferences are possible*. All of the consistencies described above admit alternative causal explanations.  -->
+
+<!-- For example, as noted, parents could *think* that girls speak more and hence report more words for girls. Or girls could actually know more words. Similarly, first-born children could receive more language input due to the lack of other competition for parents' attention, and hence have larger vocabulary. Or parents could be *aware* of more of first-born children's vocabulary. Or both. As in the gender case, external data can provide evidence for or against particular causal explanations but in their absence we are left to speculate.  -->
+
+<!-- For more cognitive consistencies that we observe, alternative causal interpretations are again possible. To take one example, the "noun bias" could result from any of the following causal mechansisms (as well as mixtures of these, or mixtures of these and others not described):  -->
+<!-- * children could learn nouns more easily due to their social/referential disambiguation relative to the syntactic disambiguation  [@gleitman1990;@gillette1999];  -->
+<!-- * they could be learned more easily due to their conceptual transparency [@gentner2003];  -->
+<!-- * they could be reported more frequently by parents due to some feature, such as their  imageability or concreteness; -->
+<!-- * etc.  -->
+
+<!-- Nevertheless, an observed pattern of correlations can still create a target for theory.  -->
+
+<!-- Theorizing in language acquisition has traditionally argued on the axes defined by the nativist/empiricist debate, as well as the debate between domain-general and domain-specific representations and mechanisms. We label the implied axis of the debate here as the continuum between domain-general, empiricist theories and domain-specific, nativist theories. Anchoring one side of this continuum are statistical learning theories, that posit that domain-general mechanisms that learn structure from continuous input can induce structure from linguistic input [CITES: rethinking innateness, etc.]. On the other side are content-nativist theories that posit language-specific representational structures, such as the Principles and Parameters theory [@chomsky1981, @baker2005].  -->
+
+<!-- For all the reasons described above, we do not believe that the observed consistencies directly bear on traditional questions of the mechanisms underlying language acquisition. Taking the correlation between grammar and the lexicon as a case study: theoretical proposals from many parts of the space shown in Figure \@ref(fig:theoryspace) can account for these data. For example, a purely bottom-up statistical generalization mechanism would clearly produce a correlation between lexical and grammatical structure [as in @bates1997's original propopsal]; statistical generalizations require lexical data and so more data should correlate with more generalization. But a more domain-specific nativist grammatical proposal might also produce this correlation, provided that it required triggering data [e.g., @gibson1994, @yang2015tolerance]. And many variations in between.  -->
+
+
+
+<!-- the consistencies we observe across languages point to putative universals: generalizations that hold across very disparate populations of human children learning typologically distinct languages. Surely such universals should be an important basis for theorizing about language acquisition. A theory that accounted for such universals "for free" -- as a result of basic assumptions about the nature of the learning mechansisms -- would be able to claim more and broader evidence, for example.  -->

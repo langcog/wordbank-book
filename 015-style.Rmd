@@ -2,7 +2,7 @@
 
 > Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development, If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994]
 
-Preceeding chapters have dealt with the degree of variability between individuals in Chapter \@ref(vocab) and the stability of individuals' learning in Chapter \@ref(psychometrics). Then Chapters \@ref(demographics) and \@ref(itemsdemo) used demographic factors to explain variability. In general, our treatment of variability has focused on issues of learning rate in the sense discussed by Bates et al. in the quote above (or, to be more precise, vocabulary size). With the exception of Chapter \@ref(itemsdemo), which examined the rate of learning individual words, we have not dealt yet with issues of *style*. 
+Preceeding chapters have dealt with the degree of variability between individuals in Chapter \@ref(vocabulary) and the stability of individuals' learning in Chapter \@ref(psychometrics). Then Chapters \@ref(demographics) and \@ref(items-demographics) used demographic factors to explain variability. In general, our treatment of variability has focused on issues of learning rate in the sense discussed by Bates et al. in the quote above (or, to be more precise, vocabulary size). With the exception of Chapter \@ref(items-demographics), which examined the rate of learning individual words, we have not dealt yet with issues of *style*. 
 
 What does it mean for two children to show differences in language learning style? Intuitively, some aspect of the learning process should differ. Unfortunately, from the data that we use here, we cannot observe process -- we can only observe the outcome of learning: knowledge. Thus, children must exhibit some differences in the way their vocabulary grows. This difference could be distributional and inferred indirectly from cross-sectional data or it could be shown directly through longitudinal data (though this move limits the number of datasets we can use from Wordbank). 
 
@@ -12,7 +12,7 @@ Since this seminal work, the referential/expressive distinction has become enshr
 
 While exploring the referential/expressive phenomenon more rigorously, @bates1994 presented analyses largely supporting that view: much systematic variation in the "referentiality" (proportion nouns) in children's vocabularies was due to the size of their vocabulary. As children's vocabularies grow, they tends to increase in their over-representation of nouns (as shown also in Chapter \@ref(categories-syntactic)). Thus, two children of the same age who have different proportions of nouns may also have different overall vocabulary sizes. After controlling for this factor, @bates1994 found only more limited evidence for stylistic variation. In the first subsection of this chapter, we pick up these analyses and apply them broadly to our dataset. 
 
-A second area of stylistic variation that has been much discussed is whether some children go through a vocabulary "spurt," defined as a change in the rate of vocabulary growth. The idea of a "spurt" or "explosion" occurs in a wide variety of discussions of early vocabulary [e.g., @nelson1973;@kamhi1986;@bates1988, see e.g., @dapretto2000 for review]. Clearly, from the average growth rates observed in Chapter \@ref(vocab), children's vocabulary growth accelerates dramatically during the period following first birthday and the emergence of production. Investigations of this acceleration have focused on two distinct features: its variation across children and its explanation. 
+A second area of stylistic variation that has been much discussed is whether some children go through a vocabulary "spurt," defined as a change in the rate of vocabulary growth. The idea of a "spurt" or "explosion" occurs in a wide variety of discussions of early vocabulary [e.g., @nelson1973;@kamhi1986;@bates1988, see e.g., @dapretto2000 for review]. Clearly, from the average growth rates observed in Chapter \@ref(vocabulary), children's vocabulary growth accelerates dramatically during the period following first birthday and the emergence of production. Investigations of this acceleration have focused on two distinct features: its variation across children and its explanation. 
 
 Although there has been a tremendous amount of discussion of explanations for accelerations in vocabulary growth, we will not investigate this topic further here. Our data not allow us to investigate issues of mechanistic process directly. In addition, a short but convincing analysis by @mcmurray2007 suggests that such acceleration is over-determined in the sense that it will likely emerge from almost any plausible mechanism acquisition mechanisms. Assuming that words vary in difficulty as a normal distribution, vocabulary growth will naturally accelerate with increases in a child's ability. Thus, making reverse inferences from the presence of acceleration to a particular mechanism is unwarranted. 
 
@@ -33,11 +33,11 @@ In this subsection we examine the question of variation across children in refer
 <!-- Recall that we computed the proportion of children's vocabulary that was made up of nouns as a function of age in that chapter.  -->
 
 ```{r style-re_beginning}
-vocab_comp_data <- read_feather("data/categories_syntax/vocab_comp_data.feather")
+vocab_comp_data <- read_feather("data/categories-syntactic/vocab_comp_data.feather")
 
 ws_vc <- vocab_comp_data %>%
   filter(form %in% WSs)  %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 ws_vc_all <- ws_vc %>%
   filter(measure == "produces", 
@@ -81,7 +81,7 @@ coefs <- vc_pred %>%
   group_by(language, form) %>%
   do(broom::tidy(glm(cbind(produces, doesnt_produce) ~ age + noun_prop, 
                      data = ., family = "binomial"))) %>%
-  mutate(langform = paste(language, form)) %>%
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   filter(term %in% c("age", "noun_prop","age:noun_prop")) %>%
   mutate(term = factor(term, 
                        labels = c("Age", "Prop Nouns","Age x Prop Nouns"), 
@@ -102,7 +102,7 @@ ggplot(coefs,
 
 A simple model of this hypothesis is a GLM predicting the number of CDI words a child produces as a function of age and proportion nouns.^[We omit interactions from most of the models below for interpretability; including interactions leads to unstable coefficient estimates.] The coefficients of such a model, fit to the data from each language, are shown above. Age coefficients are positive, indicating more words with age. Proportion of nouns is also negative, indicating that having more nouns is related to a smaller vocabulary, controlling for age. (Standard errors are plotted, but are typically tiny and hence invisible.) This result appears to provide support for the *opposite* to the claimed relationship between the referential/expressive distinction and vocabulary size. Those children with more referential vocabularies have *smaller* vocabularies, controlling for age. 
 
-The trouble is that these variables -- age, noun bias, and total vocabulary size -- have a complex relationship to one another. For a young child, having a bigger noun bias is correlated with having a bigger vocabulary (because they are on the early part of the "noun over-representation" curve shown in Chapter \@ref(categories-syntax)). In contrast, for an older child, having a bigger noun bias is correlated with having a smaller vocabulary because they are on the later part of the curve. Thus, the directionality of the relationship that you discover is largely determined by what part of your sample is densest. 
+The trouble is that these variables -- age, noun bias, and total vocabulary size -- have a complex relationship to one another. For a young child, having a bigger noun bias is correlated with having a bigger vocabulary (because they are on the early part of the "noun over-representation" curve shown in Chapter \@ref(categories-syntactic)). In contrast, for an older child, having a bigger noun bias is correlated with having a smaller vocabulary because they are on the later part of the curve. Thus, the directionality of the relationship that you discover is largely determined by what part of your sample is densest. 
 
 Put another way, proportion nouns could be predictive of vocabulary size not because children with a particular style have bigger vocabularies, but because having more nouns in your vocabulary tends to indicate that you are further along a standard prorgession. Put another way, perhaps all children follow the same trajectory through the noun bias. Even in this scenario, knowing the size of a child's noun bias will tell you something about vocabulary size, without that implying that the child is following a different trajectory. This point is made in different ways by both @bates1994 and @lieven1992.
 
@@ -153,7 +153,7 @@ resid_coefs <- resid_vc_pred %>%
   mutate(term = factor(term, 
                        labels = c("Age"), 
                        levels = c("age")), 
-         langform = paste(language, form)) 
+         langform = paste(language, form, sep = .inst_sep)) 
 
 
 ggplot(resid_coefs, 
@@ -169,7 +169,7 @@ ggplot(resid_coefs,
   scale_color_solarized(guide = FALSE) 
 ```
 
-Our first analysis looks at the correlation between vocabulary-residualized noun bias and age. The plot above shows coefficient estimates on this analysis. Now most age coefficients are reliably negative, suggesting that a greater residual noun bias is associated with being *younger*. Two of the main outliers here are from Mandarin, which, as discussed in Chapter \@ref(categories-syntax), has the smallest noun bias of any of the languages in our dataset. 
+Our first analysis looks at the correlation between vocabulary-residualized noun bias and age. The plot above shows coefficient estimates on this analysis. Now most age coefficients are reliably negative, suggesting that a greater residual noun bias is associated with being *younger*. Two of the main outliers here are from Mandarin, which, as discussed in Chapter \@ref(categories-syntactic), has the smallest noun bias of any of the languages in our dataset.
 
 Next we examine correlations with grammatical ability. @lieven1992 was interested in the possibility that an alternative route into language from a referential style would be the use of construction-based generalizations. 
 
@@ -186,7 +186,7 @@ grammar_coefs <- grammar_summary %>%
   do(broom::tidy(glm(cbind(positive, negative) ~ resid_noun_prop, 
                      family = "binomial", data = .)))  %>%
   filter(term %in% c("resid_noun_prop")) %>%
-  mutate(langform = paste(language, form)) 
+  mutate(langform = paste(language, form, sep = .inst_sep)) 
 
 
 ggplot(grammar_coefs, 
@@ -212,7 +212,7 @@ grammar_age_coefs <- grammar_summary %>%
   mutate(term = factor(term,
                        labels = c("Age", "Production", "Resid Prop Nouns"),
                        levels = c("age", "production", "resid_noun_prop")),
-         langform = paste(language, form))
+         langform = paste(language, form, sep = .inst_sep))
 
 
 ggplot(grammar_age_coefs, 
@@ -259,7 +259,7 @@ Our starting point here is a study by @ganger2004, who provide a detailed, curve
 admins_cutoff <- 4
 
 longitudinal_admins <- admins %>% 
-  mutate(langform = paste(language, form)) %>%
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   group_by(langform, original_id) %>% 
   count() %>% 
   filter(n > 1) 
@@ -273,7 +273,7 @@ n_long_ws <- admins %>%
          min_age = min(age),
          first_vocab = production[age == min_age][1]) %>%
   filter(n_admins > admins_cutoff) %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 n_long_wg <- admins %>%
   filter(original_id %in% longitudinal_admins$original_id,
@@ -284,7 +284,7 @@ n_long_wg <- admins %>%
          min_age = min(age),
          first_vocab = production[age == min_age][1]) %>%
   filter(n_admins > admins_cutoff) %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 n_long <- bind_rows(n_long_ws, n_long_wg)
 ```
@@ -530,8 +530,8 @@ ggplot(rates_logit,
 ```
 The `r length(unique(rates_logit$original_id))` children (out of `r  length(unique(rates$original_id))` total) with a best-fitting quadratic model are shown above. Some of these children do appear to have data that are well-fit by the quadratic model. But for many, this fit appears to be the product of a signle datapoint; assuming some error, a more parsimonious model (e.g. simple linear) might do just as well. Thus, with more children but less density, our conclusion tends to be similar to @ganger2004: there is limited evidence for a vocabulary spurt in most children. 
 
-```{r}
-roy <- read_csv("data/roy_et_al_data.csv")
+```{r style-roy}
+roy <- read_csv("data/style/roy_et_al_data.csv")
 
 roy_rate <- roy %>%
   mutate(age = floor(aoa), 
@@ -637,7 +637,7 @@ ggplot(eng_wg, aes(x = comprehension, y = productivity)) +
 ```{r style-wg_productivity_subset}
 wg <- filter(admins, form %in% WGs) %>%
   mutate(productivity = production / comprehension) %>%
-  mutate(langform = paste(language, form))
+  mutate(langform = paste(language, form, sep = .inst_sep))
 
 wg$langform <- fct_reorder(factor(wg$langform), wg$productivity, 
                            fun = function(x) {mean(x, na.rm=TRUE)}, .desc = FALSE)
@@ -661,6 +661,7 @@ ggplot(filter(wg, !(langform %in% c("British Sign Language WG"))),
   # geom_jitter(alpha = .2) + 
   # geom_smooth(method = "loess", se = FALSE, span = 1, alpha = .5) + 
   geom_smooth(method = "lm", se = FALSE) + 
+  scale_colour_manual(values = inst_colours, name = "") +
   xlab("Age (Months)") + 
   ylab("Productivity Ratio") + 
   theme(legend.position = "bottom") + 
@@ -676,7 +677,8 @@ productivity_coefs <- wg %>%
   do(broom::tidy(lm(productivity ~ age, data = .))) %>%
   filter(term == "age") %>%
   ungroup %>%
-  mutate(langform = fct_reorder(paste(language, form), estimate, fun = mean))
+  mutate(langform = fct_reorder(paste(language, form, sep = .inst_sep),
+                                estimate, fun = mean))
 
 ggplot(productivity_coefs, 
        aes(x = langform, y = estimate)) + 

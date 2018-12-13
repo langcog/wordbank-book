@@ -105,7 +105,48 @@ Finally, while predictors of word difficulty are consistent relative to a chance
 
 ## Synthesis
 
-What is the picture of language development that emerges from the analysis above? In this section we return to the theoretical speculation of Chapter \@ref(intro-theory). The goal of characterizing areas of consistency in theoretically-relevant signatures of early language was to be able to provide constraints on theory. We turn back to the question of these constraints and how they intersect with existing theories of language development. 
+What is the picture of language development that emerges from the analysis above? In this section we return to the theoretical speculation of Chapter \@ref(theory). The goal of characterizing areas of consistency in theoretically-relevant signatures of early language was to be able to provide constraints on theory. We turn back to the question of these constraints. First, we consider generalizations from our data. Next, we turn to the possible processes that could support these generalizations and hence their relation to other theories of acquisition. 
+
+### Generalizations
+
+First, we consider three major generalizations from our data. These are, roughly speaking, that:
+
+1. The language system is tightly woven or perhaps even unitary. Although our data provide multiple opportunities for aspects of language development (communication, vocabulary, morphology, grammar) to pull apart across individuals, they instad hang together very tightly across every language examined. 
+
+2. The content of children's early language is strikingly similar across languages, both in the specific words they learn and the general categories that are over-represented in their vocabularies. These foci likely emerge from a combination of children's particular attention and interests; the communicative priorities of child-caregiver dyads; and the informational structure of language, which renders certain aspects of langauge easier to learn than others. 
+
+3. Despite these aggregate similarities across children and across cultures, children individually take different routes into language. The speed with which they acquire language is highly variable in the first years of life and this variability itself is a constant across cultures. Further, children vary stably in the nature of their acquisition path, soem naming more objects and others combing words relatively more.
+
+We consider these in turn. 
+
+
+Unitary construct
+hangs together, even when it's not CDI
+modular subsystems? 
+look at grammar lex t1 - t2 in norwegian/english
+Dixon/marchman linear-nonlinear
+  - our idea is not that the shape of lex-grammar is of a particular sort, it's that the shape is consistent. 
+Could do IRT on the grammar items? Look at distribution univariate, and also 
+
+Interest- conceptual - priorities - not just frequency - drive content of vocab
+- semantic bias
+- no function words
+- same order of acquisition
+Dyadic interest and focus - very consistent across cultures
+"Not doing nuclear physics with a two-year-old" 
+Snedeker adoption stuff - is it the learning problem or the cognitive (is it about the structure of language)
+color/time/adjectives?
+
+
+
+Different routes into language
+Variably is a constant
+variability is endogenous
+referential/expressive distinction 
+check longitudinal stability
+
+
+## Learning processes
 
 In Chapter \@ref(intro-theory), we introduced the idea of "process universals." These cannot be universals of content as all of the content being reported by parents filling CDI forms is language-specific. Intead, the idea of process universals is that there are processes that operate in different language context to produce the observed pattern of phenomena. These processes could be -- but need not be -- learner-internal. They could also operate at the level of the child-caregiver dyad, for example. 
 

@@ -335,11 +335,8 @@ asjp_tests <- cors %>%
   unnest()
 
 ```
-These dendrograms show high similarity within the North Germanic, Slavic, and Romance language families. Some relationships resist straightforward linguistic explanations (e.g. the relationship of Quebec French to other languages). These may non-uniform sparsity of data across these languages, or may instead reflect interesting cultural or other source of variability. Despite these cases, the structure of ages of acquisition appear to a high degree to reflect the structure of the languages that children learning these words speak. To confirm this observation quantitatively, we borrowed an established measure for measuring linguistic similarity: the lexical similarity of words for the same meaning [@wichmann2010].  Using a set of 40 words for meanings common to all of the words languages, @holman2008 were able to use a string-edit distance measure recover linguistic similarity measures that correlated highly with geographic distance and also several typological systems. This method is appealing for our purposes as it is relatively agnostic as to the processes of language contact and change that have produced modern-day languages and instead tracks the similarity of wordforms themselves. The language distance measures produced by this method were highly correlated with pairwise correlations in acquisition trajectories for both prodution (r = `r filter(asjp_tests, measure == "produces") %>% pull(estimate) %>% round(2)`, p `r filter(asjp_tests, measure == "produces") %>% pull(p.value) %>% papaja::printp()`) and comprehhension (r = `r filter(asjp_tests, measure == "understands") %>% pull(estimate) %>% round(2)`, p `r filter(asjp_tests, measure == "understands") %>% pull(p.value) %>% papaja::printp()`) 
+These dendrograms show high similarity within the North Germanic, Slavic, and Romance language families. Some relationships resist straightforward linguistic explanations (e.g. the relationship of Quebec French to other languages). These may non-uniform sparsity of data across these languages, or may instead reflect interesting cultural or other source of variability. Despite these cases, the structure of ages of acquisition appear to a high degree to reflect the structure of the languages that children learning these words speak. To confirm this observation quantitatively, we borrowed an established measure for measuring linguistic similarity: the lexical similarity of words for the same meaning [@wichmann2010].  Using a set of 40 words for meanings common to all of the words languages, @holman2008 were able to use a string-edit distance measure recover linguistic similarity measures that correlated highly with geographic distance and also several typological systems. This method is appealing for our purposes as it is relatively agnostic as to the processes of language contact and change that have produced modern-day languages and instead tracks the similarity of wordforms themselves. The language distance measures produced by this method were highly correlated with pairwise correlations in acquisition trajectories for both prodution (r = `r filter(asjp_tests, measure == "produces") %>% pull(estimate) %>% round(2)`, p `r filter(asjp_tests, measure == "produces") %>% pull(p.value) %>% papaja::printp()`) and comprehhension (r = `r filter(asjp_tests, measure == "understands") %>% pull(estimate) %>% round(2)`, p `r filter(asjp_tests, measure == "understands") %>% pull(p.value) %>% papaja::printp()`). 
 
-
-the similarity of compared the crosslinguistic correlations in ages of acquisition with an external measure of language similarity.
-`
 
 
 ```{r items-language-levs, eval = F}
@@ -415,11 +412,11 @@ lang_pairs <- combn(unique(item_aoas$language), 2, simplify = F)
 
 levs <- map_dfr(lang_pairs, ~pairwise_levs(.x, item_aoas))
   
-lev_cors <- cors %>%
-  filter(measure == "produces") %>%
+lev_char_cors <- cors %>%
   left_join(levs) %>%
   filter(language1 < language2)
 ```
+
 
 ```{r items-ipa-levs, eval = F}
 lang_codes <- list(
@@ -491,11 +488,10 @@ lang_ipa_pairs <- combn(unique(mapped_ipas$language), 2, simplify = F)
 ipa_levs <- map_dfr(lang_ipa_pairs, ~pairwise_levs(.x, mapped_ipas))
 
 lev_ipa_cors <- cors %>%
-  filter(measure == "produces") %>%
   left_join(ipa_levs) %>%
   filter(language1 < language2)
 
-all_lev_cors <- lev_cors %>%
+all_lev_cors <- lev_char_cors %>%
   rename(char = dist) %>%
   left_join(lev_ipa_cors, 
             by = c("measure", "language1", "language2", "correlation")) %>%
@@ -504,16 +500,24 @@ all_lev_cors <- lev_cors %>%
 write_feather(all_lev_cors, "data/items-consistency/lev_cors.feather")
 ```
 
+
 ```{r items-lev-cors}
 lev_cors <- read_feather("data/items-consistency/lev_cors.feather")
 
 
-cor.test(lev_cors$correlation, lev_cors$ipa, use = "pairwise")
 
+lev_tests <- lev_cors %>%
+  gather(lev_type, distance, char, ipa) %>%
+  group_by(measure, lev_type) %>%
+  nest() %>%
+  mutate(cor = map(data, ~cor.test(.x$distance, .x$correlation))) %>%
+  mutate(estimate = map(cor, ~.x$estimate),
+         p.value = map(cor, ~.x$p.value)) %>%
+  select(-data, -cor) %>%
+  unnest()
 ```
 
-
-These data suggest despite the high degree of cross-linguistic similarities in the order of acquisition of words--both in comprehension and production--the differences we do find likely reflect reflect differences in the target languages being learned.
+We also applied this same analysis to the words on the words on the CDI themselves. For each language, we compute the average normalized @levenshtein1966 distance between the word for each of the `r cutoff_n` common words in our analyses. Levenshtein distance is a measure of the minimum number of insertions, deletions, or substitutions required to transform one string into another. For instance, the distance between the Italian and Norwegian words for dog ("cane" and "hund") is `r stringdist::stringdist("cane","hund", method = "lv")`. We computed this measure pairwise for all words, and then divided it by the number of characters in the longest word in order to get the edit distance per character (`r stringdist::stringdist("cane","hund", method = "lv") /nchar("hund")` for "cane" and "hund"). This measure was even more correlated with pairwise acquisition trajectories as similarity computed using the 40 words identified by @holman2008 for both production (r = `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(p.value) %>% papaja::printp()`) and comprehension (r = `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(p.value) %>% papaja::printp()`). Because this analysis likely overestimates the dissimilarity of langues written in different scripts--as every word receives a normalized Levenshtein distance of 1--we replicated this analysis at the phonemic level. We used eSpeak to compute phonetic transcripts of each word and repeated the same analysis on distance between words' phonetic units in the International Phonetic Alphabet [IPA; @decker1999]). These correlations between IPA distance and pairwise age of acquisition trajectories were again reliable although slightly attentuated for both production (r = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, p = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(p.value) %>% papaja::printp()`) and comprehension (r = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(p.value) %>% papaja::printp()`). The robustness of these correlations across a variety of methods suggests that in addition to the high degree of general cross-linguistic similarities in the order of acquisition of words, the dissimilarities between them likely likely reflect reflect differences in the target languages being learned. 
 
 In our final analysis, we ask whether similarities in ages of acquisition are constant over the course of acquisition, or whether the similarty across languages changes over development. If variability in acquisition trajectories across languages reflects variability in those languages, we might expect that children's trajectories diverge over the course of language acquisition as the structure of their target language or their cultural mileu play a stronger role in guiding which words are easy or important to learn. Our analyses of the first 10 words above shows striking similarity in the earliest words. Does this similarity decrease for the next 300 words?
 

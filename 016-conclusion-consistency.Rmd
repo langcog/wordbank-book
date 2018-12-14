@@ -102,12 +102,9 @@ Fourth, generalizations about vocabulary composition span the range from extreme
 
 Finally, while predictors of word difficulty are consistent relative to a chance baseline (see Chapter \@ref(items-prediction)), they are also on the higher end of variability. Especially in comparison to some of the relational signatures (e.g., the correlation between grammatical complexity and vocabulary), their variability is high. Plausibly some of this variability is due to additional variation added to these estimates by the use of external resources (e.g., corpus counts). In particular, as we discussed in that earlier chapter, there is an unknown amount of noise added by estimating frequencies from smaller-scale cross-linguistic corpora. 
 
+## Generalizations
 
-## Synthesis
-
-What is the picture of language development that emerges from the analysis above? In this section we return to the theoretical speculation of Chapter \@ref(theory). The goal of characterizing areas of consistency in theoretically-relevant signatures of early language was to be able to provide constraints on theory. We turn back to the question of these constraints. First, we consider generalizations from our data. Next, we turn to the possible processes that could support these generalizations and hence their relation to other theories of acquisition. 
-
-### Generalizations
+What is the picture of language development that emerges from the analysis above? In this section we return to the theoretical speculation of Chapter \@ref(theory). The goal of characterizing areas of consistency in theoretically-relevant signatures of early language was to be able to provide constraints on theory. We turn back to the question of these constraints. First, we consider generalizations from our data. In the next section, we turn to the possible processes that could support these generalizations and hence their relation to other theories of acquisition. 
 
 First, we consider three major generalizations from our data. These are, roughly speaking, that:
 
@@ -119,6 +116,7 @@ First, we consider three major generalizations from our data. These are, roughly
 
 We consider these in turn. 
 
+### The language system is tightly woven
 
 Unitary construct
 hangs together, even when it's not CDI
@@ -127,6 +125,8 @@ look at grammar lex t1 - t2 in norwegian/english
 Dixon/marchman linear-nonlinear
   - our idea is not that the shape of lex-grammar is of a particular sort, it's that the shape is consistent. 
 Could do IRT on the grammar items? Look at distribution univariate, and also 
+
+### Content similarities in early language
 
 Interest- conceptual - priorities - not just frequency - drive content of vocab
 - semantic bias
@@ -138,6 +138,7 @@ Snedeker adoption stuff - is it the learning problem or the cognitive (is it abo
 color/time/adjectives?
 
 
+### Children take different routes into language
 
 Different routes into language
 Variably is a constant

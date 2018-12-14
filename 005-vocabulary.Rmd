@@ -1,11 +1,11 @@
 # Vocabulary Size {#vocabulary}
+ 
+This chapter begins our substantive analysis of properties of language learning and their variation across languages and children. We begin with one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows, out of the total in the form. We first quantify the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data. In these analyses as well as subsequent chapters, our inspiration comes from what we think of as the "Batesian" approach to variation.
+
 
 > Far from simply reflecting noise in our measuring instruments or variability in low-level aspects of physiological maturation, the variations that we will document (in vocabulary development) are *substantial,* *stable,* and have their own *developmental course.* Because this variation is substantial, it is critical for defining the boundary between normal and abnormal development; because it is stable, it provides a window onto the correlates and (by inference) the causes of developmental change; and because it has its own developmental course, it can be used to pinpoint critical developmental transitions that form the basis for theories of learning and change. (Bates et al., 1995)
 
-This chapter focuses on one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows, out of the total in the form. We begin by quantifying the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data.  
-<!-- (We discuss why we use raw score, as opposed to other measures, in \@ref(psychometrics)).  -->
-
-This chapter trades in variability, but variability is only meaningful in the case that it is stable; that is, that it reflects signal about individuals (or cultures) rather than measurement error. With respect to the CDI, the strong evidence for the reliability and validity of the forms -- reviewed in Chapter \@ref(psychometrics) and in @fenson2007 -- provides support for the contention that observed variability is meaningful. Such evidence has primarily been collected for the English CDI, however. In this chapter we examine variability across the full set of languages, and it is worth noting up front that we project the reliability and validity of the English instrument to its adaptations. 
+We are interested in these theoretical uses of variability. But variability is only meaningful in the case that it is stable; that is, that it reflects signal about individuals (or cultures) rather than measurement error. With respect to the CDI, the strong evidence for the reliability and validity of the forms -- reviewed in Chapter \@ref(psychometrics) and in @fenson2007 -- provides support for the contention that observed variability is meaningful. Such evidence has primarily been collected for the English CDI, however. In this chapter we examine variability across the full set of languages, and it is worth noting up front that we project the reliability and validity of the English instrument to its adaptations. 
 
 One study nicely illustrates why such an approach might not be misguided. @bornstein2012 collected multiple language measures at 20 and 48 months in a sample of nearly 200 children and used a structural equation model to estimate the stability of a single latent construct, language ability. Essentially all measures related strongly to this latent variable and the coefficient on its stability over time was $r = .84$, suggesting that early language is quite stable, at least when measured appropriately. Notably, the ELI, a precursor to the CDI, was included in the measures at 20 months and was found to correlate with the 20-month latent construct at $r = .87$. 
 
@@ -32,25 +32,18 @@ ages <- 8:18
 
 ## Central Tendencies 
 
-One first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown below.
+The first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown in Figure \@ref(fig:vocab-schematic).
 
 ```{r vocab-schematic, fig.cap="Schematic true vocabulary growth and vocbaulary growth as measured by the CDI."}
 include_graphics("images/vocab_growth_schematic.png")
 ```
 
-
-<!-- ```{r fig.cap="Schematic true vocabulary growth and vocbaulary growth as measured by the CDI."} -->
-<!-- p <- png::readPNG("images/vocab_growth_schematic.png") -->
-<!-- plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE, mai=c(0,0,0,0)) -->
-<!-- rasterImage(p, xleft=0, xright=1, ybottom=0, ytop=1) -->
-<!-- ``` -->
-
-This image reveals a number of patterns that are explored in this and subsequent chapters. The CDI necessarily captures a small fraction of any individual's true vocabulary, but even within this range there are specific questions that are usefully addressed. The question of the exact slope of children's growth, especially in the period immediately after the emergence of language, is treated in Chapter \@ref(style) -- this question is sometimes posed as whether children undergo a vocabulary "spurt" [@ganger2004]. On the other side of the CDI curve, the question of the divergence between CDI-measured vocabulary and true vocabulary (and whether true vocabulary can be recovered via a statistical correction) is treated in Appendix \@ref(appendix-vocabulary). In the current chapter, we focus on the middle section of the CDI curve, in which children's vocabulary is neither at the floor or the ceiling of the instrument. 
+This schematic reveals a number of patterns that are explored in this and subsequent chapters. The CDI necessarily captures a small fraction of any individual's true vocabulary, but even within the measured range there are a number of specific questions that can be addressed by different analyses. The question of the exact slope of children's growth, especially in the period immediately after the emergence of language, is treated in Chapter \@ref(style) -- this question is sometimes posed as whether children undergo a vocabulary "spurt" [@ganger2004]. On the other side of the CDI curve, the question of the divergence between CDI-measured vocabulary and true vocabulary (and whether true vocabulary can be recovered via a statistical correction) is treated in Appendix \@ref(appendix-vocabulary). In the current chapter, we focus on the middle section of the CDI curve, in which children's vocabulary is neither at the floor or the ceiling of the instrument. 
 
 
 ### Commonalities across languages
 
-```{r vocab-medians, fig.cap="Median production using the Words and Sentences form. Included are only lanugages where there are more than 200 administrations total."}
+```{r vocab-medians, fig.cap="Median production using Words and Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
 lang_ns <- admins %>% 
   group_by(language, form) %>% 
   summarise(n_admins = n())
@@ -77,9 +70,12 @@ ggplot(filter(medians, form %in% WGs, n_admins > 200),
   scale_size(guide = FALSE)
 ```
 
-Plotted above are the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted.^[As @eriksson2012 write, "Using raw data assumes that each form is exhaustive, while using percentages assumes that each form is equally exhaustive. Neither is correct and the truth lies somewhere in between."] In general, the median child before the first birthday is reported to produce a small number of words. (These data raise a number of questions about the specific reliability of very early parent reports, which we take up below.) Overall, however, these curves accord relatively well with our intuitive sense of early vocabulary development: they reveal that most children tend to speak at most only a few words before their first birthday, but that production accelerates across the second year.
+Figure \@ref(fig:vocab-medians) shows the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted.^[As @eriksson2012 write, "Using raw data assumes that each form is exhaustive, while using percentages assumes that each form is equally exhaustive. Neither is correct and the truth lies somewhere in between."] In general, the median child before the first birthday is reported to produce a small number of words. (These data raise a number of questions about the specific reliability of very early parent reports, which we take up below.) Overall, however, these curves accord relatively well with our intuitive sense of early vocabulary development: they reveal that most children tend to speak at most only a few words before their first birthday, but that production accelerates across the second year.
 
-```{r vocab-medians_production_ws}
+This analysis also motivates the decision made in most our large-scale analyses to omit early production from Words and Gestures forms. Many WG forms end at 16--18 months, meaning that the median production is only around 50 words. For analyses of vocabulary composition or predictive modeling, these numbers are often too small to yield reliable and meaningful estimates, although they can be combined with Words and Sentences data (see Appendix \@ref(appendix-stitching)). 
+
+```{r vocab-medians-production-ws, fig.cap="Median production using Words and Sentences-type forms. Included are only languages where there are more than 200 administrations total."}
+
 ggplot(filter(medians, form %in% WSs , n_admins > 200), 
        aes(x = age, y = production,
            col = interaction(language, form, sep = .inst_sep))) + 
@@ -94,11 +90,11 @@ ggplot(filter(medians, form %in% WSs , n_admins > 200),
   scale_size(guide = FALSE)
 ```
 
-This acceleration is even clearer when looking at production reports from older children using Words and Sentences. In every language, we see the median child is reported to produce 50 words between 16 and 20 months. As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We discuss Mandarin in particular, which is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies between languages. 
+The acceleration in early vocabulary is even clearer when looking at production reports from older children using Words and Sentences. Figure \@ref(fig:vocab-medians-production-ws) shows this pattern. In every language, the median child is reported to produce 50 words between 16--20 months (dashed line). As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We focus on Mandarin in particular, since it is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies in the shape and general numerical range across languages. 
 
-During the period 24-30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which many authors assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form. (See Appendix \@ref{appendix-vocabulary) for estimates of how many words children actually might know.)
+During the period 24--30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which most researchers assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form. (See Appendix \@ref{appendix-vocabulary) for estimates of how many words children actually might know.)
 
-```{r vocab-medians_comprehension_wg}
+```{r vocab-medians-comprehension-wg, fig.cap="Median comprehension using Words and Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
 ggplot(filter(medians, form %in% WGs, n_admins > 200), 
        aes(x = age, y = comprehension,
            col = interaction(language, form, sep = .inst_sep))) + 
@@ -118,37 +114,37 @@ mins <- medians %>%
   filter(form %in% WGs, age == 8) 
 ```
 
-We next turn to comprehension. Comprehension is only queried on the Words and Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months. See Chapter \@ref(style) for discussion of the differences in the balance between comprehension and production between children. As with the production data, we see substantial differences across languages in reported vocabulary (see below). 
+We next turn to comprehension medians, shown in Figure \@ref(fig:vocab-medians-comprehension-wg). Comprehension is only queried on the Words and Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months (Chapter \@ref(style) discusses differences in the balance between comprehension and production between children). As with the production data, we see substantial differences across languages in reported vocabulary, discussed below (we also examine the odd data for Taiwanese Mandarin in more depth). 
 
-One striking aspect of comprehension data is how early comprehension is reported.  For example, from 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. Intuitively, to many researchers (and parents) these high numbers feel unlikely. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available [e.g., @tincoff1999;@tincoff2012;@bergelson2012;@bergelson2017]. The representations revealed in these tasks are quite weak -- often amounting to a 2-5% difference in looking to a target on hearing a word uttered -- but, depending on the criterion used by parents, may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially suppose.^[An alternative possibility is that *both* accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overestimating their vocabulary based on observed behaviors -- in essence, parents could be right, but for the wrong reasons.]
+Outside of that particular dataset, one striking aspect of the comprehension data is how early comprehension is reported.  For example, from 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. To many researchers (and some parents) these high numbers feel unlikely. We are largely agnostic on this issue, but the literature does provide some support for early comprehension reports. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available [e.g., @tincoff1999;@tincoff2012;@bergelson2012;@bergelson2017]. The representations revealed in these tasks are quite weak -- often amounting to a 2-5% difference in looking to a target on hearing a word uttered -- but, depending on the criterion used by parents, may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially suppose.^[An alternative possibility is that *both* accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overestimating their vocabulary based on observed behaviors -- in essence, parents could be right, but for the wrong reasons.]
 
-### Cross-language differences
+### Difficult datasets
 
-What causes the differences between languages observed above? In this discussion, we examine production on the Words and Sentences form, as the data are the densest and most reliable for this instrument. 
+In the analyses above, our comparisons revealed two cases where datasets showed large disparities: Mandarin (Beijing) Words and Sentences production and Mandarin (Taiwain) Words and Sentences comprehension. 
 
-We first discuss the case of Mandarin. Mandarin Words & Sentences data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there also show the pronounced Mandarin advantage plotted above. The authors investigate possible explanations, given that the administration and sampling procedures were similar in these two languages. The children in the Mandarin sample are nearly all monolingual, only (first born) children; but these factors did not account for variation between samples. @tardif2009 therefore, speculate that structural factors regarding Mandarin (e.g., phonological structure relative to Cantonese) might be accounting for the Mandarin advantage. These speculations seem unlikely in light of the data presented here. First, the same trajectory is not shown in the data from the analogous questionnaire of @hao2008. Second, this unusual trajectory is not apparent in the production data from the Mandarin WG data shown above. Finally, given the surprising difference between Mandarin and all other languages in the sample, pure phonological factors seem unlikely to account fully for the differences. These differences thus remain somewhat mysterious -- and serve as an important caution against simple cross-linguistic comparison in raw scores. 
 
-```{r vocab-ords}
-ordering_raw <- filter(medians, form %in% WSs, 
-                     n_admins > 200, 
-                     age >=18, 
-                     age <=30,
-                     !(language == "Mandarin" & form == "WS"),
-                   !(language == "Hebrew")) %>%
-  do(broom::tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
+```{r vocab-ords-mandarin, fig.cap="Median production vocabulary for 24-month-olds, with total item scores shown in the left panel and proportions on the right. Scores are sorted by total item score. To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months."}
+ordering_raw <- filter(medians, 
+                       form %in% WSs, 
+                       n_admins > 200, 
+                       age >= 18, 
+                       age <= 30,
+                       !(language == "Mandarin" & form == "WS"),
+                       !(language == "Hebrew")) %>%
+  do(broom::tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), 
+                    data = .))) %>%
   filter(term == "(Intercept)") %>% 
   mutate(measure = "raw")
 
 ordering_props <- filter(medians, form %in% WSs, 
-                     n_admins > 200, 
-                     age >=18, 
-                     age <=30,
-                     !(language == "Mandarin" & form == "WS"),
-                   !(language == "Hebrew")) %>%
-  do(broom::tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), data =.))) %>%
+                         n_admins > 200, 
+                         age >= 18, 
+                         age <= 30) %>%
+  do(broom::tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), 
+                    data = .))) %>%
   filter(term == "(Intercept)") %>%
   mutate(measure = "proportion")
-  
+
 ords <- bind_rows(ordering_raw, ordering_props) %>%
   ungroup %>%
   mutate(language = fct_reorder(language, estimate), 
@@ -160,12 +156,41 @@ ggplot(ords, aes(x = language, y = estimate)) +
   coord_flip() + 
   ylab("Median 24-month vocabulary estimate") + 
   xlab("")
-
 ```
 
-In the remainder of this section, we consider the other languages in the WS sample. The figure above shows estimates of the median 24-month vocabulary in both raw scores and proportions. (To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months). Clearly there are substantial differences in raw scores. We consider a range of explanations for this pattern. 
+Mandarin Words & Sentences data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there also show the pronounced Mandarin advantage plotted above, which are shown for 24-month olds specifically in Figure \@ref(fig:vocab-ords-mandarin). (This figure also reveals the high level of vocabulary reported for Hebrew speakers, which goes unnoticed in the figure above because of the relatively smaller number of items on the Hebrew form). 
 
-```{r vocab-nums}
+To investigate the Mandarin disparities further, @tardif2009 discussed a number of possible explanations, given that the administration and sampling procedures were similar in these two languages. The children in the Mandarin sample are nearly all monolingual, only (first born) children; but these factors did not account for variation between samples. @tardif2009 therefore, speculate that structural factors regarding Mandarin (e.g., phonological structure relative to Cantonese) might be accounting for the Mandarin advantage.
+
+These speculations seem unlikely in light of the data presented here. First, the same trajectory is not shown in the data from the analogous questionnaire of @hao2008. Second, this unusual trajectory is not apparent in the production data from the Mandarin Beijing WG data shown above. Finally, given the surprising difference between Mandarin and all other languages in the sample, pure phonological factors seem unlikely to account fully for the differences. These differences thus remain somewhat mysterious; perhaps some quirk of administration instructions led to relative over-reporting, or perhaps the populations being sampled truly were different. Alongside the Hebrew data, these data serve as an important caution against simple cross-linguistic comparison in raw scores or even percentiles. 
+
+```{r taiwan-comprehension}
+taiwan_comp_data <- vocab_data %>%
+  filter(form == "WG", language == "Mandarin (Taiwanese)") %>%
+  mutate(mean = comprehension)
+
+ggplot(taiwan_comp_data,
+       aes(x = age, y = mean)) +
+  geom_jitter(width = .4, size = 1, alpha = .1) +
+  geom_smooth(aes(col = interaction(language, form, sep = .inst_sep)))+ 
+  scale_x_continuous(breaks = seq(8, 16, 2),
+                     limits = c(8, 16),
+                     name = "Age (months)") +
+  scale_colour_manual(values = inst_colours, name = "") +
+  ylab("Production (Number of Words)") +
+  ylim(c(0, 380)) + 
+  theme(legend.position = "bottom")
+```
+
+Turning to our second case study, Mandarin (Taiwanese) comprehension scores, we see that they are relatively flat and show very high medians very early in development. Deeper inspection of the full distributional pattern (Figure \@ref(fig:taiwan-comprehension)) suggests that there is relatively little developmental change in comprehension scores on this dataset. In contrast, production, seen above, appears to follow a more typical pattern. In our experience, this pattern results from parents who do not understand what is being asked on the comprehension section of a form; sometimes they report whether they think a child has heard a particular word, or whether they respond to language in more general ways. We have observed a population of "over-responders" of this sort in a number of self-report contexts -- often they are parents of very young children who appear loathe to return a form having checked essentially no items at all. But such an explanation is only speculation.
+
+The datasets discussed in this section deviate from the normal pattern of CDI forms in a number of ways. While we have offered some tentative explanations, these are necessarily post hoc and rely on our assumption that they *should* be relatively similar to other datasets from other cultures and with other forms. Thus, in our further analyses we choose not to omit these data but instead consider them as a caution on making strong inferences from variability rather than from consistency. As we discussed in Chapter \@ref(intro-theory), variability may be caused by a wide variety of sources; consistency is somewhat more surprising. 
+
+### Cross-language differences
+
+While we have reason to believe that there are some outlier languages in our data, there is still other observed variation that does not seem unusual. What are the sources of this variation? In these anlayses, we examine production on the Words and Sentences form, as the data are the densest and most reliable for this instrument. Figure \@ref(fig:vocab-ords-mandarin)  shows estimates of the median 24-month vocabulary in both raw scores and proportions. Clearly there are substantial differences in raw scores, even leaving aside Mandarin and Hebrew. We consider a range of explanations for this pattern. 
+
+```{r vocab-nums, fig.cap}
 nums <- left_join(ordering_raw, num_words)
 num_cor <- cor.test(nums$estimate, nums$n)
 
@@ -179,9 +204,10 @@ num_prop <- ords %>%
 num_prop_cor <- cor.test(num_prop$raw, num_prop$proportion)
 ```
 
-1. Differences could be due to differences in form length. As shown in the plot above, medians for production and raw scores are highly correlated ($r$(`r num_prop_cor$parameter`) = `r signif(num_prop_cor$estimate, 3)`, $p$ = `r signif(num_prop_cor$p.value, 3)`), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length ($r$(`r num_cor$parameter`) = `r signif(num_cor$estimate, 3)`, $p$ = `r signif(num_cor$p.value, 3)`), this correlation changes direction and is no longer reliable for proportions ($r$(`r prop_cor$parameter`) = `r signif(prop_cor$estimate, 3)`, $p$ = `r signif(prop_cor$p.value, 3)`). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. See below for a plot of the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).
+Differences could be due to differences in form length. As shown in the plot above, however, medians for production and raw scores are highly correlated ($r$(`r num_prop_cor$parameter`) = `r signif(num_prop_cor$estimate, 3)`, $p$ = `r signif(num_prop_cor$p.value, 3)`), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length ($r$(`r num_cor$parameter`) = `r signif(num_cor$estimate, 3)`, $p$ = `r signif(num_cor$p.value, 3)`), this correlation changes direction and is no longer reliable for proportions ($r$(`r prop_cor$parameter`) = `r signif(prop_cor$estimate, 3)`, $p$ = `r signif(prop_cor$p.value, 3)`). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. Figure \@ref(fig:vocab-medians-production-ws-prop) shows the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).
 
-```{r vocab-medians_production_ws_prop}
+
+```{r vocab-medians-production-ws-prop, fig.cap="Cross-linguistic production data, proportions plotted by age. English (American) and Danish are highlighted."}
 highlight_langs <- c("Danish", "English (American)")
 
 highlight_data <- filter(medians, form %in% WSs, 
@@ -209,10 +235,9 @@ ggplot(highlight_data,
   xlim(18,30)
 ```
 
-2. Differences could be due to form construction. For example, the Czech form could contain harder words, leading to fewer words being checked. We cannot directly address questions about the difficulty distribution items without moving to psychometric models, which carry their own risks (see Chapter \@ref(psychometrics)). Further, even latent ability scores (estimated via item response theory) will not be comparable across instruments unless items are assumed to be shared across instruments (which they are not, since *dog* in English need not be equally easy as *perro* in Spanish). Thus, assessing form difficulty across languages is a complex proposition.
+Differences could also be due to form construction. For example, the Czech form could contain harder words, leading to fewer words being checked. We cannot directly address questions about the difficulty distribution items without moving to psychometric models  (see Chapter \@ref(psychometrics)). These models in turn would need to be equated across forms in order to compare latent ability scores across instruments. While we have experimented with these procedures, there is a circularity to these procedures that makes us leery of proceeding. In particular, in order to equate across tests in standard item response theory models, it is critical to have test items that are share across instruments. But although we have *concepts* that are shared across instruments (see Chapter \@ref(aoa-prediction)), we do not believe the words that represent these concpets are equally difficult across languages -- in fact, the premise of our later analyses is that they are not. Thus, assessing form difficulty across languages is a complex proposition that we do not address directly here.
 
-
-```{r vocab-select_medians}
+```{r vocab-select-medians-DE, fig.cap="Porportion production plotted by age for Danish and English samples, now subsetting to the first-born female children of college-aged mothers.}
 select_medians <- vocab_data %>%
   filter(form %in% WSs, language %in% highlight_langs, 
          mom_ed == "College", sex == "Female", birth_order == "First") %>%
@@ -235,61 +260,18 @@ ggplot(select_medians,
 ```
 
 
-3. Differences could be due to demographic differences across samples. We can examine sample composition in Chapter \@ref(methods) and see that -- to the extent we have access to demographic data -- sample composition does vary in features that affect vocabulary (e.g., maternal education, birth order; see Chapter \@ref(demographics)). We are not yet in a position to conduct a full analysis of these differences, controlling for demographics, as data are sparse and demographic differences *also* vary across cultures. But we can examine the difference between Danish, and English (American) for example, and note that these differences look quite similar (though noisier) in the female, first-born children of college-educated mothers. Thus, we do not believe that demographic differences fully explain the cross-linguistic differences observed. 
+Differences could also be due to demographic differences across samples. We can examine sample composition in Chapter \@ref(methods) and see that -- to the extent we have access to demographic data -- sample composition does vary in features that affect vocabulary (e.g., maternal education, birth order; see Chapter \@ref(demographics) for fuller analysis). We are not yet in a position to conduct a full analysis of these differences, controlling for demographics, as data are sparse and demographic differences *also* vary across cultures. But we can examine the difference between Danish, and English (American) for example, and note that these differences look quite similar (though noisier) in the female, first-born children of college-educated mothers (Figure \@ref(fig:vocab-select-medians-DE)). Thus, we do not believe that demographic differences fully explain the cross-linguistic differences observed. 
 
-4. Differences could be due to cohort effects, in which older sets of data show differences from newer datasets. Most of our data date to the period 2005-2015, but some of the English and Spanish data are older. It's not clear that there is an obvious trend, though, as the Danish data for example are relatively recent and were collected online using standardized instructions. 
+Differences could be due to cohort effects, in which older sets of data show differences from newer datasets. Most of our data date from the period 2005-2015, but some of our English and Spanish data are older, as they date to the period in which CDI forms were first being designed [the early 1990s; @fenson1992]. Unfortunately we do not have reliable information about the collection data for many datasets, so we cannot do regression analyses straightforwardly. Naively, we would expect later cohorts to show higher vocabularies, consistent with the Flynn effect [@flynn1987]. Yet, the Danish data, for example are relatively recent and were collected online using standardized instructions. Danish is subject to its own issues, howver, but the Norwegian data are also relatively recent and are quite comparable to the English data. 
 
-5. Differences may relate not to demographics of the sample but to the administration, and these we cannot control for statistically. For example, instructions at administration -- whether written on the form or given by experimenters -- might have been more liberal in the case of Slovak or English (American) samples. Such instructions could have emphasized completeness in reporting vocabulary. Or the circumstances of administration could have been different -- for example, Danish data were collected online while most English data were collected using paper and pencil forms. English (American) data are contributed by many different labs, so there are likely many different administration styles represented.
+Differences may relate not to demographics of the sample but to the procedure at administration. These differences are not transparent to us in all cases, and so, similar to cohort effects, we cannot control for statistically. For example, instructions at administration -- whether written on the form or given by experimenters -- might have been more liberal in the case of Slovak or English (American) samples. Such instructions could have emphasized completeness in reporting vocabulary. Or the circumstances of administration could have been different -- for example, Danish data were collected online while most English data were collected using paper and pencil forms. English (American) data are contributed by many different labs, so there are likely many different administration styles represented.
 
-6. Differences could be due to cultural or experimental differences in reporting bias. Slovak parents might have a lower criterion for reporting knowledge of a word. Recalling our discussion of these issues in Chapter \@ref(intro-practical), their model of children's overall competence might be shifted up. (Such an explanation could be true in principle for the case of the Mandarin data discussed above, as well, though this would be a case of extreme differences!). This explanation is as an extension of the discussion above of administration and instructions -- perhaps cultural expectations for what it means to be producing a word or cultural expectations for how verbal children are expected to be. 
+Differences could be due to cultural or experimental differences in reporting bias. Slovak parents might have a lower criterion for reporting knowledge of a word. Recalling our discussion of these issues in Chapter \@ref(intro-practical), their model of children's overall competence might be shifted up. (Such an explanation could be true in principle for the case of the Mandarin and Hebrew data discussed above, as well, though this would be a case of extreme differences!) This explanation is as an extension of the discussion above of administration and instructions -- perhaps cultural expectations for what it means to be producing a word or cultural expectations for how verbal children are expected to be. 
 
-7. Finally, differences could be due to true differences in language acquisition. Many researchers working on Danish believe that, due to its phonological properties, it is truly a difficult language to learn [@bleses2008;@bleses2011]. In particular, Danish is characterized by some highly distinctive phonological reduction processes which greatly reduce the frequency of obstruents, and more generally lead to “an indistinct syllable structure which in turn results in blurred vowel-consonant, syllable and word boundaries. In particular, word endings are often indistinctly pronounced…” (Bleses et al., 2008, p. 623).  The authors were also able to provide evidence against the alternative view that Danish parents are simply more reluctant to respond ‘yes’ – there were no differences on either gestures or word production.  They conclude that the phonological structure of Danish produces an initial obstacle to breaking into the stream of speech and is reflected in overall patterns of vocabulary development.
+Finally, differences could be due to true differences in language acquisition. While this explanation is a possiblity, we hope we have emphasized that it is only one among the many enumerated above. Many researchers working on Danish believe that, due to its phonological properties, it is truly a difficult language to learn [@bleses2008;@bleses2011]. In particular, Danish is characterized by some highly distinctive phonological reduction processes which greatly reduce the frequency of obstruents, and more generally lead to "an indistinct syllable structure which in turn results in blurred vowel-consonant, syllable and word boundaries [where]... word endings are often indistinctly pronounced" (Bleses et al., 2008, p. 623).  The authors of this study also able to provide evidence against the alternative view that Danish parents are simply more reluctant to respond "yes’"– there were no differences on either gestures or word production.  They concluded that the phonological structure of Danish produces an initial obstacle to breaking into the stream of speech and is reflected in overall patterns of vocabulary development. While this generalization may in fact be true, it does not answer the question of why children learning other languages are equally slow by both raw and percentile metrics. 
 
-In summary, differences between languages in the sheer number of words reported are unlikely to be accounted for purely by differences in form size or demographic differences between samples. In our view, they likely result from a combination of cultural attitudes towards children's language, differences in administration instructions, and real differences in learning across languages. Partialling out these differences would likely require better-controlled data that included constant administration and sampling methods. For this reason, we attempt to avoid interpreting overall differences in vocabulary size wherever possible and limit ourselves to quantities that can be effectively normalized. 
+In summary, differences between languages in the sheer number of words reported are unlikely to be accounted for purely by differences in form size or demographic differences between samples. In our very speculative view, they likely result from a combination of cultural attitudes towards children's language, differences in administration instructions, and real differences in learning across languages. Partialling out these differences would likely require better-controlled data that included constant administration and sampling methods. For this reason, in the remainder of our analyses, we attempt to avoid interpreting overall differences in vocabulary size wherever possible and limit ourselves to quantities that can be effectively normalized. 
 
-
-<!-- Do we see a vocabulary explosion in these data? @brent2001 -->
-
-
-<!-- ### The shape of development -->
-
-<!-- What is the shape of this developmental process? Naively, it appears to be a logistic function, with the characteristic "S" shape describing a rise from floor, a steep acceleration, and a leveling off at ceiling.  -->
-
-<!-- Individual words -->
-
-
-<!-- @mollica2017 -->
-
-
-
-<!-- ### The reliability of early parent reports -->
-
-
-<!-- ```{r 3_production_wg_early} -->
-<!-- ggplot(filter(medians, form == "WG", n_admins > 200),  -->
-<!--        aes(x = age, y = production, col = language)) +  -->
-<!--   geom_jitter(aes(size = n), width = .2) +  -->
-<!--   # geom_smooth(se=FALSE, span = 1) +   -->
-<!--   theme(legend.position = "bottom") +  -->
-<!--   xlab("Age (months)") +  -->
-<!--   ylab("Median Production") +  -->
-<!--   ylim(0,30) + -->
-<!--   xlim(7,14) -->
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-<!-- ggplot(filter(admins, form == "WG", age == 8) %>% -->
-<!--          left_join(lang_ns) %>% -->
-<!--          filter(n_admins > 200),  -->
-<!--        aes(x = production)) +  -->
-<!--   # geom_point(aes(size = n)) +  -->
-<!--   geom_histogram(binwidth = 2) +  -->
-<!--   facet_wrap(~language) + -->
-<!--   xlab("Production at 8 months") +  -->
-<!--   xlim(0,50) +  -->
-<!--   ylim(0,20) -->
-<!-- ``` -->
 
 ## Variability between individuals
 

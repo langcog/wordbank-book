@@ -30,7 +30,6 @@ Imports:
   maps,
   mirt,
   pander,
-  papaja,
   quantregGrowth,
   rmarkdown,
   robustbase,
@@ -40,5 +39,6 @@ Imports:
   wordbankr,
   viridis
 Remotes:
-  langcog/langcog
+  langcog/langcog,
+  crsh/papaja
 License: GPL-3

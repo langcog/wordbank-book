@@ -389,7 +389,7 @@ Figure \@ref(fig:vocab-madm1) shows the MADM value for American English producti
 
 To get a sense of this variability, it can help to have a smaller dataset to consider. Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
 
-```{r vocab-madm2, fig.cap="MADM for production, plotted by age group, for the full sample of languages in our dataset.}
+```{r vocab-madm2, fig.cap="MADM for production, plotted by age group, for the full sample of languages in our dataset."}
 
 ggplot(madm_data, aes(x = age, y = madm_p)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 

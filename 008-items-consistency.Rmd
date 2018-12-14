@@ -1,8 +1,5 @@
 # Consistency in Early Vocabulary {#items-consistency}
 
-<!-- How consistent are childen's first words? -->
-
-
 Which words do children learn first? In spite of tremendous individual variation in rate of development [@fenson1994; @hart1995], the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (“mom”, “dad”), social routines (“hi”, “uh oh”), animals (“dog”, “duck”), and foods (“milk”, “banana”). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (“go”) and other predicates (“hot”) to their production repertoires. Indeed, variability in the difficulty of words--and presumably the consistent of this difficulty across children--is a key feature of models that attemtpt to characterize global features of language learning[ e.g @mcmurray2007; @mollica2017; @blythe2010]. 
 
 In the latter part of this chapter, we ask *why* some words are learned before others. In future chapters, we will take up the question of *why* some words are learned before others. In this chapter, we as the prior question: Are words learned in the same order, and at the same rate, across languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. As detailed in the Chapter \@ref(intro-practical), the items on each language's form are adaptations and not translations: They are intended to capture the spirit of the items on the English form rather to replicate them exactly. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
@@ -30,7 +27,7 @@ item_data <- map_dfr(1:nrow(items_nested),
                                       administrations = T))
 ```
 
-To estimate the similarlity of each item's trajectories, we use a single measure of it's difficulty: Age of acquisition (AOS)--The age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
+To estimate the similarlity of each item's trajectories, we use a single measure of it's difficulty: Age of acquisition (AOA)--The age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
 
 ```{r items-get_aoas, eval = FALSE}
 understand_items <- item_data %>%
@@ -63,7 +60,7 @@ produce_items <- items %>%
   filter(form == "WG") %>%
   mutate(value = if_else(is.na(value), "", value)) %>%
   distinct(language, uni_lemma) %>%
-  left_join(items , by = c("language", "uni_lemma")) %>%
+  left_join(items, by = c("language", "uni_lemma")) %>%
   left_join(item_data, by = c("language", "num_item_id", "form")) %>%
   mutate(value = value == "produces") %>%
   ungroup() %>%
@@ -81,7 +78,7 @@ produce_aoas <- produce_items %>%
                                    age_max = 36))) %>%
   select(-data) %>%
   unnest() %>%
-  left_join(items %>% filter(form == "WG")) %>%
+  left_join(items %>% filter(form == "WG"), by = "language") %>%
   select(language, num_item_id, aoa, uni_lemma)
 
 all_aoas <- understand_aoas %>% 
@@ -117,17 +114,29 @@ cutoff_n <- cutoffs %>%
   pull(cum_n)
 ```
 
-In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not evey word appeared on all forms. The figure below shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the  `r n_distinct(all_aoas$language)` languages. 
+In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not evey word appeared on all forms. Figure \@ref(fig:items-uni-lemma-completeness-figure) below shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the  `r n_distinct(all_aoas$language)` languages. 
 
-```{r items-uni-lemma-completeness-figure}
+```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = "The proportion of words found on a given number of language's CDI forms."}
 ggplot(filter(cutoffs, measure == "produces"),
        aes(x = in_langs, y = cum_prop)) +
   geom_line() +
   scale_x_reverse() +
+  geom_segment(aes(x = IN_LANGS, xend = IN_LANGS, y = 0,
+                   yend = filter(cutoffs,  measure == "produces", 
+                                 in_langs == IN_LANGS) %>% pull(cum_prop)),
+               linetype = "dashed") +
+  geom_segment(aes(x = max(in_langs), xend = IN_LANGS, 
+                   y = filter(cutoffs,  measure == "produces", 
+                                 in_langs == IN_LANGS) %>% pull(cum_prop),
+                   yend = filter(cutoffs,  measure == "produces", 
+                                 in_langs == IN_LANGS) %>% pull(cum_prop)),
+                   linetype = "dashed") +
   labs(x = ("Number of Forms"), y = "Cumulative Proportion of Words")
 ```
 
-Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured. Similar words appeared in the Top 10 across languages, especially in children's first productions. These words consisted primarily of important family members ("mommy", "daddy", "grandma"), social routines ("hi", "bye", "peekaboo"), and sounds ("yum yum", "vroom", "woof woof"). Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
+## The first 10 words
+
+Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(fig:items-top10-production) and \@ref(fig:items-top10-comprehension)). Similar words appeared in the Top 10 across languages, especially in children's first productions. These words consisted primarily of important family members ("mommy", "daddy", "grandma"), social routines ("hi", "bye", "peekaboo"), and sounds ("yum yum", "vroom", "woof woof"). Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
 
 ```{r items-top10-compute}
 top10 <- all_aoas %>%
@@ -141,8 +150,7 @@ top10 <- all_aoas %>%
 ```
 
 Production
-
-```{r items-top10-production}
+```{r items-top10-production, fig.cap = "The 10 earliest words that children produce in each language"}
 top10 %>% 
   ungroup() %>%
   filter(measure == "produces") %>%
@@ -151,8 +159,7 @@ top10 %>%
 ```
 
 Comprehension
-
-```{r items-top10-comprehension}
+```{r items-top10-comprehension, fig.cap = "The 10 earliest words that children comprehend in each language"}
 top10 %>% 
   ungroup() %>%
   filter(measure == "understands") %>%
@@ -160,8 +167,9 @@ top10 %>%
   DT::datatable(options = list(scrollX='400px'))
 ```
 
+## Global crosslinguistic similarity 
 
-```{r items-understands-and-produces}
+```{r items-understands-and-produces, width = 4, height = 4}
 mean_aoas <- all_aoas %>%
   group_by(measure, uni_lemma) %>%
   summarise(n = sum(!is.na(aoa)),
@@ -181,16 +189,61 @@ measure_correlation <- cor.test(wide_means$produces,
 
 ```
 
-Despite these differences between comprehension and production, words reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure below shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages. The correlation between the two measures was quite high: `r round(measure_correlation$estimate, 2)` (p = `r papaja::printp(measure_correlation$p.value)`).
+Despite these differences between comprehension and production, words reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure below shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages (Figure \@ref(fig:items-understands-and-produces-plots)). The correlation between the two measures was quite high: r = `r round(measure_correlation$estimate, 2)` (p `r papaja::printp(measure_correlation$p.value)`). 
 
-```{r items-understands-and-produces-plots}
+
+```{r items-understands-and-produces-plots, fig.cap = "Correlation between the average age of acquisition in comprehhension and production for each measured word."}
 ggplot(wide_means, aes(x = produces, y = understands, label = uni_lemma)) + 
   geom_smooth(method = "lm", aes(alpha = .1), se = F, color = "lightgray") +
-   geom_text(position=position_jitter(width=.25,height=.25), size = 2) +
-  theme(legend.position = "none")
+  geom_text(position=position_jitter(width=.25,height=.25), size = 2) +
+  labs(x = "Production", y = "Comprehension") +
+  theme(legend.position = "none")  
 ```
 
-Consistency across languages
+Taken together, these anlayses suggest that the rate at which the words on the CDI, and by inference the processes that underpin them, are highly similar across languages. The source of this similarity is hard to pin down. One possibility is that the difficulty of learning a word is determined predominantly by the complexity of the concept denoted by that word, and thus that variability in linguistic and cultural features play a relatively small role in determining the difficulty of learning a word [@gentner2001]. Alternatively, the primary driver of difficulty could be linguistic, but the dimensions of linguistic variability could be orthogonal to the difficulty of learning. For instance, verbs may be more difficult that nouns because they are relational, and thus that learnings nouns makes learning verbs relatively easier than learning verbs makes learning nouns [@gleitman1990]. In this case, the linguistically relevant dimensions would be relatively invariant across languages [@snedeker2007]. Finally, becuase the words on the CDI are not a random sample of words in each language, it could be that generalization from these analyses overestimes the degree of crosslinguistic similarity.
+
+One way of beginning to distinguis among these possiblities is to look at these cross-linguistic relationships in a less aggregate and more nuanced way. In the remainder of the chapter, we address this problem from two directions: (1) Does similarity in order of acquisition vary with linguistic similarity, and (2) Does similarity in order of acquisition change over development?
+
+## Acquisition similarity and linguistic similarity
+
+```{r items-load-asjp-distances, eval = F}
+# Download file from https://github.com/ddediu/lgfam-newick/blob/master/input/distances/ASJP/asjp16-dists.RData?raw=true
+load("asjp16-dists.RData")
+
+asjp <- asjp16.dm %>%
+  as_data_frame()
+
+isocodes <- ISOcodes::ISO_639_3 %>%
+  select(Id,eng) %>%
+  rename(iso = Id, language = eng)
+
+tidy_asjp <- asjp %>%
+  mutate(code1 = names(asjp)) %>%
+  gather(code2, distance, -code1)
+
+
+languages <- data_frame(language = unique(all_aoas$language)) %>%
+  mutate(trim_language = gsub("\\s*\\([^\\)]+\\)", "", language)) %>%
+  left_join(isocodes, by = c("trim_language" = "language")) %>%
+  mutate(iso = if_else(trim_language == "Spanish", "spa",
+                       if_else(trim_language == "Kiswahili", "swh",
+                               if_else(trim_language == "Hebrew", "hbo", iso)))) %>%
+  select(-trim_language)
+
+asjp_dist <- tidy_asjp %>%
+  left_join(languages, by = c("code1" = "iso")) %>%
+  filter(!is.na(language)) %>%
+  rename(language1 = language) %>%
+  select(-code1) %>%
+  left_join(languages, by = c("code2" = "iso")) %>%
+  filter(!is.na(language)) %>%
+  rename(language2 = language) %>%
+  select(-code2)
+
+write_feather(asjp_dist, "data/items-consistency/asjp_dist.feather")
+```
+
+
 ```{r items-aoa-consistency}
 cor_reorder <- function(df) {
   
@@ -219,19 +272,25 @@ cors <- all_aoas %>%
   split(.$measure) %>%
   map_dfr(cor_reorder) 
 
+wide_method_cor <- cors %>% spread(measure, correlation) %>% 
+  filter(language1 != language2)
+
+pairwise_cor_test <- cor.test(wide_method_cor$produces, wide_method_cor$understands)
 ```
 
-Production and comprehension consistency 
-```{r items-consistency-heatmap}
+Unfortunately, the `r n_distinct(all_aoas$language)` languages in our analyses are both a small and nonrepresentative sample of the world's languages, and thus do not have sufficient power to detect typological features of language that might be responsible for differences in the similarity of acquisition across languages. Nonetheless, the languages do come from different languages families, and do vary in their phylogenetic distance. We leverage this variability to ask whether the similarity between two languages is related to similarity in how quickly words for the same concepts are learned in those two languages.
+
+Instead of correlating the average similarity of age of acquisition across all languages, we consider the pairwise similarities in the age of acquisition of each of the `r cutoff_n` words in each language. Figure \@ref(fig:items-consistency-heatmap) shows these pairwise correlations for both comprehension and production as matrices in which each cell shows a single pairwise correlation. These correlation matrices appear to contain a signficant amount of structure, with languages that are from the same language family (e.g. Norwegian and Danish) showing higher correlations between the ages of acquisition for the same concepts. Perhaps unsurprisingly from the high average correlation between production and comprehension, pariwise correlations were nearly identical for production and comprehension (r = `r round(pairwise_cor_test$estimate, 2)`, p `r papaja::printp(pairwise_cor_test$p.value)`). Figures \@ref(fig:items-production-dendro) and \@ref(fig:items-comprehension-dendro) respectively show dendrograms produced by hierarchically clustering these pairwise correlations. 
+
+```{r items-consistency-heatmap, fig.width=8, fig.height=8, fig.cap = "Correlation matrics showing pairwise correlations in words' age of acquisition. Languages that are more similar have more similar acquisition orders."}
 ggplot(cors, aes(x = language1, y = language2, fill = correlation)) +
   facet_grid(measure ~ .) + 
   geom_tile() + 
   geom_text(aes(label = round(correlation, 2))) +
-  theme(legend.position = "none")
-
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle=90, vjust = .5),
+        axis.title = element_blank()) 
 ```
-
-
 
 ```{r items-dendro-setup}
 make_hc <- function(df) {
@@ -251,20 +310,215 @@ dendros <- cors %>%
   select(-data) 
 ```
 
-Production dendrogram
-```{r items-production-dendro}
+```{r items-production-dendro, fig.cap = "A hierarchical clustering of the similarity in the ages of words' first production crosslinguistically"}
 ggdendro::ggdendrogram(dendros %>% filter(measure == "produces")
                        %>% pull(hc) %>% .[[1]]) 
 ```
 
-Comprehension dendrogram
-```{r items-comprehension-dendro}
+```{r items-comprehension-dendro, fig.cap = "A hierarchical clustering of the similarity in the ages of words' first comprehension crosslinguistically"}
 ggdendro::ggdendrogram(dendros %>% filter(measure == "understands")
                        %>% pull(hc) %>% .[[1]]) 
 ```
 
+```{r items-asjp-distance}
+asjp_dist <- read_feather("data/items-consistency/asjp_dist.feather")
 
-Consistency across acquisition order
+asjp_tests <- cors %>%
+  left_join(asjp_dist) %>%
+  filter(language1 < language2) %>%
+  group_by(measure) %>%
+  nest() %>%
+  mutate(cor = map(data, ~cor.test(.x$distance, .x$correlation))) %>%
+  mutate(estimate = map(cor, ~.x$estimate),
+         p.value = map(cor, ~.x$p.value)) %>%
+  select(-data, -cor) %>%
+  unnest()
+
+```
+These dendrograms show high similarity within the North Germanic, Slavic, and Romance language families. Some relationships resist straightforward linguistic explanations (e.g. the relationship of Quebec French to other languages). These may non-uniform sparsity of data across these languages, or may instead reflect interesting cultural or other source of variability. Despite these cases, the structure of ages of acquisition appear to a high degree to reflect the structure of the languages that children learning these words speak. To confirm this observation quantitatively, we borrowed an established measure for measuring linguistic similarity: the lexical similarity of words for the same meaning [@wichmann2010].  Using a set of 40 words for meanings common to all of the words languages, @holman2008 were able to use a string-edit distance measure recover linguistic similarity measures that correlated highly with geographic distance and also several typological systems. This method is appealing for our purposes as it is relatively agnostic as to the processes of language contact and change that have produced modern-day languages and instead tracks the similarity of wordforms themselves. The language distance measures produced by this method were highly correlated with pairwise correlations in acquisition trajectories for both prodution (r = `r filter(asjp_tests, measure == "produces") %>% pull(estimate) %>% round(2)`, p `r filter(asjp_tests, measure == "produces") %>% pull(p.value) %>% papaja::printp()`) and comprehhension (r = `r filter(asjp_tests, measure == "understands") %>% pull(estimate) %>% round(2)`, p `r filter(asjp_tests, measure == "understands") %>% pull(p.value) %>% papaja::printp()`) 
+
+
+the similarity of compared the crosslinguistic correlations in ages of acquisition with an external measure of language similarity.
+`
+
+
+```{r items-language-levs, eval = F}
+# clean_words(c("dog", "dog / cat", "dog (animal)", "(a) dog", "dog*", "dog(go)", "(a)dog", " dog ", "Cat"))
+clean_words <- function(word_set) {
+  word_set %>%
+    
+    # dog / doggo
+    strsplit("/") %>% flatten_chr() %>%
+    
+    # dog (animal) | (a) dog
+    strsplit(" \\(.*\\)|\\(.*\\) ") %>% flatten_chr() %>%
+    
+    # dog* | dog? | dog! | ¡dog! | dog's
+    gsub("[*?!¡']", "", .) %>%
+    
+    # dog(go) | (a)dog
+    map_if(
+      # if "dog(go)"
+      ~grepl("\\(.*\\)", .x),
+      # replace with "dog" and "doggo"
+      ~c(sub("\\(.*\\)", "", .x),
+         sub("(.*)\\((.*)\\)", "\\1\\2", .x))
+    ) %>%
+    flatten_chr() %>%
+  
+    # trim
+    gsub("^ +| +$", "", .) %>%
+    
+    keep(nchar(.) > 0) %>%
+    tolower() %>%
+    unique() %>% 
+    first()
+   
+}
+
+
+item_aoas <- all_aoas %>%
+  filter(measure == "produces") %>%
+  left_join(items, by = c("language", "uni_lemma")) %>%
+  select(language, aoa, uni_lemma, definition) %>%
+  group_by(language, aoa, uni_lemma) %>%
+  slice(1) %>%
+  mutate(definition = clean_words(definition))
+
+
+pairwise_levs <- function(langs, definitions) {
+  lang1 <- first(langs)
+  lang2 <- last(langs)
+  
+  
+  lang1_aoas <- definitions %>%
+    filter(language == lang1) %>%
+    rename(lang1 = language, def1 = definition) %>%
+    ungroup() %>%
+    select(lang1, uni_lemma, def1)
+  
+  lang2_aoas <- definitions %>%
+    filter(language == lang2) %>%
+    rename(lang2 = language, def2 = definition) %>%
+    ungroup() %>%
+    select(lang2, uni_lemma, def2)
+  
+  left_join(lang1_aoas, lang2_aoas, by = "uni_lemma") %>%
+   filter(!is.na(lang1) ,!is.na(lang2)) %>%
+   mutate(length = pmax(nchar(def1), nchar(def2))) %>%
+   mutate(dist = stringdist::stringdist(def1, def2, method= "lv")/length) %>%
+   summarise(dist = mean(dist, na.rm = T)) %>%
+   mutate(language1 = lang1, language2 = lang2)
+}
+
+lang_pairs <- combn(unique(item_aoas$language), 2, simplify = F)
+
+levs <- map_dfr(lang_pairs, ~pairwise_levs(.x, item_aoas))
+  
+lev_cors <- cors %>%
+  filter(measure == "produces") %>%
+  left_join(levs) %>%
+  filter(language1 < language2)
+```
+
+```{r items-ipa-levs, eval = F}
+lang_codes <- list(
+  "Croatian" = "hr",
+  "Danish" = "da",
+  "English (American)" = "en-us",
+  "French (French)" = "fr",
+  "French (Quebecois)" = "fr",
+  "Italian" = "it",
+  "Norwegian" = "no",
+  "Russian" = "ru",
+  "Spanish (Mexican)" = "es",
+  "Swedish" = "sv",
+  "Turkish" = "tr",
+  "Kiswahili" = "sw",
+  "Slovak" = "sk"
+)
+
+get_ipa <- function(word, lang) {
+  lang_code <- lang_codes[[lang]]
+  system2("espeak", args = c("--ipa=3", "-v", lang_code, "-q", glue("'{word}'")),
+          stdout = TRUE) %>%
+    gsub("^ ", "", .) %>%
+    gsub("[ˈˌ]", "", .)
+}
+get_phons <- function(words, lang) {
+  words %>% map_chr(function(word) word %>% get_ipa(lang))
+}
+
+phons <- item_aoas %>%
+  filter(!language %in% c("Hebrew", "Korean")) %>%
+  group_by(language) %>%
+  nest() %>%
+  mutate(phons = map2(data, language, ~get_phons(.x$clean_definition, .y))) %>%
+  unnest()
+
+ipas <- phons %>%
+  mutate(ipas = str_split(phons, "[ _]+")) %>%
+  unnest() %>%
+  filter(nchar(ipas) > 0)
+
+chars <- ipas %>%
+  distinct(ipas)
+
+ascii_chars <- paste0("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 
+        "0123456789", " !\"#$%&'()*+,./:;<=>?@[\\^_`{|}~-", "]")
+
+latin_extended <- paste0("ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿ")
+
+mapping_chars <- paste0(ascii_chars, latin_extended) %>%
+  str_split("") %>%
+  unlist() %>%
+  data_frame(mapping = .) %>%
+  distinct() %>%
+  slice(1:nrow(chars))
+
+mapping_table <- bind_cols(chars, mapping_chars)
+
+mapped_ipas <- ipas  %>%
+  left_join(mapping_table) %>%
+  group_by(language, phons, aoa, uni_lemma, definition, clean_definition) %>%
+  summarise(mapping = paste0(mapping, collapse = "")) %>%
+  ungroup() %>%
+  select(-definition) %>%
+  rename(definition = mapping)
+
+lang_ipa_pairs <- combn(unique(mapped_ipas$language), 2, simplify = F)
+
+ipa_levs <- map_dfr(lang_ipa_pairs, ~pairwise_levs(.x, mapped_ipas))
+
+lev_ipa_cors <- cors %>%
+  filter(measure == "produces") %>%
+  left_join(ipa_levs) %>%
+  filter(language1 < language2)
+
+all_lev_cors <- lev_cors %>%
+  rename(char = dist) %>%
+  left_join(lev_ipa_cors, 
+            by = c("measure", "language1", "language2", "correlation")) %>%
+  rename(ipa = dist)
+
+write_feather(all_lev_cors, "data/items-consistency/lev_cors.feather")
+```
+
+```{r items-lev-cors}
+lev_cors <- read_feather("data/items-consistency/lev_cors.feather")
+
+
+cor.test(lev_cors$correlation, lev_cors$ipa, use = "pairwise")
+
+```
+
+
+These data suggest despite the high degree of cross-linguistic similarities in the order of acquisition of words--both in comprehension and production--the differences we do find likely reflect reflect differences in the target languages being learned.
+
+In our final analysis, we ask whether similarities in ages of acquisition are constant over the course of acquisition, or whether the similarty across languages changes over development. If variability in acquisition trajectories across languages reflects variability in those languages, we might expect that children's trajectories diverge over the course of language acquisition as the structure of their target language or their cultural mileu play a stronger role in guiding which words are easy or important to learn. Our analyses of the first 10 words above shows striking similarity in the earliest words. Does this similarity decrease for the next 300 words?
+
+## Consistency across development
+
 ```{r items-step-corrs}
 step_cor <- function(max_order, meas, mean_aoas) {
   
@@ -284,7 +538,6 @@ step_cor <- function(max_order, meas, mean_aoas) {
 }
 ```
 
-Consistency across acquisition order
 
 ```{r items-compute-corrs, eval=FALSE}
 MIN_ITEMS <- 5
@@ -333,7 +586,7 @@ write_feather(random_step_cors, "data/items-consistency/random_step_cors.feather
 write_feather(empirical_step_cors, "data/items-consistency/empirical_step_cors.feather")
 ```
 
-```{r items-plot-cors}
+```{r items-plot-cors, fig.cap = "Crosslinguistic correlation ages of words' acquisition over the course of language development. Colored lines show empirical correlations, the gray area shows a 95% confidence interval for a randoly shuffled baseline. Especially in production, cross-linguistic similarity declines over the course of language development."}
 empirical_step_cors <-
   read_feather("data/items-consistency/empirical_step_cors.feather")
 
@@ -346,5 +599,6 @@ ggplot(random_step_cors, aes(x = n, y = correlation)) +
   geom_line() +
   geom_line(aes(color = measure), data = empirical_step_cors) +
   labs(x = "Mean acquisition order number", y = "Cross-linguistic correlation") +
-  theme(legend.position = "none")
+  theme(legend.position = "none") + 
+  .scale_colour_discrete()
 ```

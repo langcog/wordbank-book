@@ -1,0 +1,162 @@
+---
+## Hierarchical GLM model
+
+Set some stan settings. 
+
+```{r appaoa-stan_setup, eval=FALSE}
+rstan::rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
+# ms <- read_csv("engdata.csv")
+```
+
+The model. Constraints:
+
+* No negative slopes - we don't get worse at words. 
+* Strong prior on slopes, they should have mean and sd around .25 (empirical)
+* Much weaker prior on intercepts, though yoked their SDs (perhaps too tightly?
+
+
+```{r appaoa-stan_model, eval=FALSE}
+hierarchical_logit <-'
+data {                            
+  int<lower=1> W; // number of words
+  int<lower=1> A; // number of ages
+  vector[A] age; // subject ages
+  int<lower=0> produces[W,A]; // count data
+  int<lower=0> attempts[W,A]; // count data
+}
+
+parameters {
+  real mu_i;             // intercept mean
+  real<lower=0> sigma_i; // intercept SD
+  
+  real<lower=0> mu_s;             // slope mean
+  real<lower=0> sigma_s; // slope SD
+
+  vector[W] intercept; // word means
+  vector[W] slope; // subject means
+}
+
+transformed parameters {
+  matrix[W,A] p;
+
+  for (w in 1:W) 
+    for (a in 1:A)
+      p[w,a] = intercept[w] + (slope[w] * age[a]);
+}
+
+model {
+  mu_i ~ normal(0, 10); 
+  sigma_i ~ normal(0, 1);
+
+  mu_s ~ normal(0, .25);
+  sigma_s ~ normal(0, .25);
+
+  intercept ~ normal(mu_i, sigma_i);
+  slope ~ normal(mu_s, sigma_s);
+  
+  for (w in 1:W) 
+    for (a in 1:A)
+      produces[w,a] ~ binomial_logit(attempts[w,a], p[w,a]);
+}
+'
+```
+
+Now reformat the data to stan format and compute. 
+
+```{r appaoa-stan_prep, eval=FALSE}
+model.data <- ms %>%
+  ungroup %>%
+  mutate(word = definition, 
+         n = num_true,
+         N = num_true + num_false) %>%
+  # filter(word %in% c("daddy*","mommy*","no","bye")) %>%
+  select(word, age, category, n, N)
+
+ages <- unique(model.data$age)
+n.words <- length(unique(model.data$word))
+
+dat <- list(age = ages,
+            produces = matrix(model.data$n, 
+                              nrow=n.words, ncol=length(ages), byrow = TRUE),
+            attempts = matrix(model.data$N, 
+                              nrow=n.words, ncol=length(ages), byrow = TRUE),
+            W = n.words, 
+            A = length(ages))
+```
+
+```{r appaoa-stan_fit, eval=FALSE}
+samps <- rstan::stan(model_code = hierarchical_logit, 
+              cores = 4, 
+              data = dat, iter = 200, warmup=100, chains = 4, 
+              pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
+save(samps, "data/appendix_aoa/aoa-samps.Rds")
+```
+
+Diagnostics.
+
+```{r appaoa-stan-diagnostics, eval=FALSE}
+load("data/appendix-aoa/aoa-samps.Rds")
+rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
+                 inc_warmup = TRUE)
+```
+
+Explore parameters. 
+
+```{r appaoa-stan_params, eval=FALSE}
+coefs <- data.frame(summary(samps)$summary)
+coefs$name <- rownames(coefs)
+
+word_ids <- model.data %>% 
+  group_by(word) %>% 
+  summarise(category = category[1]) %>%
+  mutate(word_id = 1:n())
+
+words <- coefs %>% 
+  filter(str_detect(name, "slope") | str_detect(name, "intercept")) %>%
+  separate(name, c("variable", "word_id"), "\\[") %>%
+  mutate(word_id = as.numeric(str_replace(word_id, "]", ""))) %>%
+  left_join(word_ids) %>%
+  select(mean, variable, word, category) %>%
+  spread(variable, mean) %>%
+  mutate(aoa = intercept / slope) %>%
+  arrange(aoa) %>%
+  mutate(word = factor(word, 
+                        levels = word,
+                        labels = word))
+```
+
+and plot again:
+
+```{r appaoa-stan_plot, eval=FALSE}
+age_range <- 0:36
+preds <- words %>%
+  group_by(word, category) %>%
+  do(data.frame(age = age_range, 
+                pred.prop = boot::inv.logit(.$intercept + age_range * .$slope))) %>%
+  left_join(model.data) %>%
+  mutate(prop = n/N) 
+
+ggplot(filter(preds, word %in% target_words), aes(x = age, y = prop)) + 
+  geom_point() + 
+  facet_wrap(~word) + 
+  geom_line(aes(x = age, y = pred.prop))
+```
+
+Check the histogram.
+
+```{r appaoa-stan_hist, eval=FALSE}
+hglm.aoas <- words %>%
+  mutate(aoa = -intercept / slope)
+
+qplot(aoa, geom = "blank", data = hglm.aoas) + 
+  geom_histogram(aes(y = ..density..)) + 
+  geom_density(col = "red")
+```
+
+What are the crazy ones? 
+
+```{r appaoa-stan_outliers, eval=FALSE}
+hglm.aoas$word[hglm.aoas$aoa <10]
+```
+
+Don't know what's going on with these but everything else looks good. 

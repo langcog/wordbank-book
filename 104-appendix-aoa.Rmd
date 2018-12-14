@@ -1,13 +1,11 @@
 # Estimating Age of Acquisition {#appendix-aoa}
 
-In this Appendix, we systematically compare methods for estimating age of acquisition, using the English Words and Sentences data as a case study.
+It is frequently useful to have an estimate of the age at which children produce a particular word with a probability greater than some threshold; these are commonly referred to as the word's age of acquisition [AOA; @goodman2008]. In this Appendix, we compare methods for estimating age of acquisition, using the English Words and Sentences data as a case study. 
 
 ```{r appaoa-load_data}
 # eng_ws <- read_feather("data/psychometrics/eng_ws_raw_data.feather")
 load("data/psychometrics/eng_ws_raw_data.Rds")
 ```
-
-All the AOA curves.
 
 ```{r appaoa-means}
 ms <- eng_ws %>%
@@ -17,31 +15,28 @@ ms <- eng_ws %>%
             num_false = sum(value!="produces", na.rm=TRUE), 
             n = sum(c(num_true,num_false))) %>%
   filter(!is.na(category))
-
-ggplot(ms, aes(age, prop, col = definition)) + 
-  geom_line() + 
-  facet_wrap(~category) +
-  .scale_colour_numerous(guide=FALSE)
 ```
-
-Let's compare methods. 
-
-## Empirical quantiles
-
-First try empirical quantiles. This loses many observations that never go above 50%. 
 
 ```{r appaoa-empirical}
 empirical_aoas <- ms %>%
   group_by(definition, category) %>%
   summarise(empirical_aoa = min(age[prop > .5]))
 
-qplot(empirical_aoa, data = empirical_aoas)
-qplot(empirical_aoa, facets = ~ category, data = empirical_aoas)
+# qplot(empirical_aoa, data = empirical_aoas)
+# qplot(empirical_aoa, facets = ~ category, data = empirical_aoas)
 ```
+The simplest and most obvious measure is to use the empirically-determined first month at which the proportion producing a word exceeds the threshold (we will use 50% of children producing as our threshold in all subsequent discussion, following previous literature [@goodman2008]. This approach is simple, but results in the exclusion of a large number of words. Of the total, `r round(mean(!is.finite(empirical_aoas$empirical_aoa)), 2)*100`% do not reach this rate by the ceiling of the form and must be discarded. Further, this method is very sensitive to sparse data. A dataset with highly clustered data will show clustered AoAs. For example, in the Swedish data, there are `r sum(admins$language == "Swedish" & admins$age == 22)` 22-month-olds and `r sum(admins$language == "Swedish" & admins$age == 21)` 21-month-olds. Thus, there will be no 21-month AoAs in this dataset. For these reasons, a model-based approach is likely to be more robust. 
 
-## Basic GLM
+We initially investigated three model-based methods. Each of these models was fit to data from each word (proportion of children producing at each age) individually, resulting in a continuous curve that can be used to predict AoA more precisely. The three models we examined were:
 
-Now let's try the basic GLM version. 
+1. Standard generalized linear model, logistic link (GLM),
+2. Robust GLM, and
+3. Bayesian GLM with hand-tuned prior parameters [@gelman2008].
+
+For the Bayesian GLM, we experimented substantially with prior setting in order to incorporate information about the slopes and intercepts we expected for words. We used default (Cauchy) priors over coefficients. We used the empirical distribution of GLM slopes to set a strict prior over the age slopes we expected, while setting a much weaker prior over intercepts. In practice, in larger datasets, only the most extreme words (e.g. "mommy", for which there is a ceiling effect for nearly every age) are affected by this choice. 
+
+In addition to these models, we investigated a hierarchical Bayesian model with shared distributional components across words. This model appeared to perform similarly to the simple word-based Bayesian model (at least in the presence of sufficient data) and was relatively expensive to fit in terms of computation, so we do not discuss it here. 
+
 
 ```{r appaoa-glm}
 fit_glm <- function(data) {
@@ -50,8 +45,9 @@ fit_glm <- function(data) {
   fit <- predict(model, newdata = data.frame(age = 0:36), se.fit = TRUE)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
   
-  data.frame(definition = data$definition[1],
+  tibble(definition = data$definition[1],
              category = data$category[1],
+             glm_slope = model$coefficients[["age"]],
              glm_aoa = aoa)
 }
 
@@ -59,27 +55,7 @@ glm_aoas <- ms %>%
   split(.$definition) %>%
   map(fit_glm) %>%
   bind_rows
-
-qplot(glm_aoa, data = glm_aoas)
-qplot(glm_aoa, facets = ~ category, data = glm_aoas)
 ```
-
-Compare. The GLM AOA gives some very early values, but it is OK with a lot of data (as in the case of English).
-
-```{r appaoa-glm_compare}
-aoas <- full_join(empirical_aoas, glm_aoas)
-
-ggplot(aoas, aes(x = empirical_aoa, y = glm_aoa, col = category)) + 
-  geom_point() + 
-  geom_text(aes(label = definition), nudge_y = 3) +
-  .scale_colour_numerous(guide=FALSE) 
-
-aoas %>%
-  gather(measure, aoa, empirical_aoa, glm_aoa) %>%
-  ggplot(aes(x = aoa)) + facet_grid(.~measure) + geom_histogram()
-```
-
-## Robust GLM
 
 
 ```{r appaoa-rglm}
@@ -89,8 +65,9 @@ fit_rglm <- function(data) {
   fit <- predict(model, newdata = data.frame(age = 0:36), se.fit = TRUE)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
   
-  data.frame(definition = data$definition[1],
+  tibble(definition = data$definition[1],
              category = data$category[1],
+             rglm_slope = model$coefficients[["age"]],
              rglm_aoa = aoa)
 }
 
@@ -98,98 +75,25 @@ rglm_aoas <- ms %>%
   split(.$definition) %>%
   map(fit_rglm) %>%
   bind_rows
-
-qplot(rglm_aoa, data = rglm_aoas)
-qplot(rglm_aoa, data = rglm_aoas) + 
-  xlim(c(0,50))
-qplot(rglm_aoa, facets = ~ category, data = rglm_aoas)
 ```
 
-Looks totally reasonable except for the two crazy ones. 
-
-```{r appaoa-rglm_outliers}
-rglm_aoas$definition[rglm_aoas$rglm_aoa < 0] 
-```
-
-
-## Bayes GLM
-
-Can we do a `arm::bayesglm` to regularize things a bit? Let's explore a single curve. Basically, `arm::bayesglm` does *exactly* the same thing as GLM because of the huge amount of data, no matter what prior. Let's try also robust GLM.   
-
-```{r appaoa-bayes_sample}
-target_words <- 
-  sample(unique(ms$definition), 20)
-# c((c("pattycake","mommy*","bye", "tomorrow","play pen", "today",
-#                   "child", "all","night night","brother", "daddy", "bye", "when"),) 
-                  
-
-do.fits <- function(data) {
-  glm_model <- glm(cbind(num_true, num_false) ~ age, 
-                   family = "binomial", 
-                   data = data)
-  bayes_model <- arm::bayesglm(cbind(num_true, num_false) ~ age, 
-                          family = binomial(link="logit"),
-                          prior.mean = .25, 
-                          prior.scale = c(.01), 
-                          prior.mean.for.intercept = 0, 
-                          prior.scale.for.intercept = 2.5,
-                          prior.df=Inf, 
-                          data = data)
-  rob_model <- robustbase::glmrob(cbind(num_true, num_false) ~ age, 
-                      family = binomial(link="logit"), data = data)
-  
-  
-  fits <- data.frame(age = 0:36) %>%
-    mutate(glm = predict(glm_model, 
-                         type = "response", 
-                         data.frame(age = age)), 
-           bayes = predict(bayes_model, 
-                           type = "response", 
-                           data.frame(age = age)), 
-           robust = predict(rob_model, 
-                            type = "response", 
-                            data.frame(age = age)), 
-           definition = data$definition[1]) %>%
-    left_join(data) 
-  
-  return(fits)
-}
-
-mms <- ms %>%
-  filter(definition %in% target_words) %>%
-  group_by(definition) %>%
-  do(do.fits(.)) 
-
-pal_3 <- .pal()(3)
-ggplot(mms, aes(x = age)) + 
-  geom_line(aes(y = glm), col = pal_3[1]) + 
-  geom_line(aes(y = bayes), col = pal_3[2]) +
-  geom_line(aes(y = robust), col = pal_3[3]) + 
-  scale_colour_manual(values = c("glm" = pal_3[1], 
-                                 "bayes" = pal_3[2], 
-                                 "robustglm" = pal_3[3]), 
-                      name = "model") +
-  geom_point(aes(y = prop), col = "black") + 
-  ylim(c(0,1)) + 
-  facet_wrap(~definition)
-```
-
-Now apply this more broadly. Note that the 50% point for logistic regression = $- \beta_1 / \beta_2$.
 
 ```{r appaoa-bayes_all}
 fit_bglm <- function(data) {
-  model <- arm::bayesglm(cbind(num_true, num_false) ~ age, family = "binomial", 
-                    prior.mean = .25, 
-                          prior.scale = c(.01), 
-                          prior.mean.for.intercept = 0, 
-                          prior.scale.for.intercept = 2.5,
-                          prior.df=Inf,
-                    data = data)
+  model <- arm::bayesglm(cbind(num_true, num_false) ~ age, 
+                         family = "binomial", 
+                         prior.mean = .3,
+                         prior.scale = c(.01),
+                         prior.mean.for.intercept = 0,
+                         prior.scale.for.intercept = 2.5,
+                         prior.df=1,
+                         data = data)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
   
-  data.frame(definition = data$definition[1],
-             category = data$category[1],
-             bglm_aoa = aoa)
+  tibble(definition = data$definition[1],
+         category = data$category[1],
+         bglm_slope = model$coefficients[["age"]],
+         bglm_aoa = aoa)
 }
 
 bglm_aoas <- ms %>%
@@ -198,259 +102,33 @@ bglm_aoas <- ms %>%
   bind_rows
 ```
 
-`arm::bayesglm` is working very well here, basically moving Mommy and Daddy a bit more conservative but otherwise preserving most of the curve. 
+```{r appaoa-compare-dist, fig.cap="Histogram of English (American) age of acquisition values as estimated via a variety of statistical methods (panels)."}
 
-```{r appaoa-bayes_plot}
-aoas <- left_join(bglm_aoas, glm_aoas)
-ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) + 
-  geom_point() + 
-  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa) > 1.5), 
-                   aes(label = definition)) +
-  xlab("Bayes GLM") + 
-  ylab("Standard GLM") + 
-  ylim(-3,36) + 
-  xlim(-3,36) + 
-  geom_abline(lty = 2, col = "red")
-```
-
-
-
-
-
-`arm::bayesglm` with these made-up parameters fixes some of the issues, produces a better-looking distribution with fewer crazy outliers. 
-
-## Hierarchical GLM model
-
-Set some stan settings. 
-
-```{r appaoa-stan_setup, eval=FALSE}
-rstan::rstan_options(auto_write = TRUE,mc.cores = parallel::detectCores())
-# ms <- read_csv("engdata.csv")
-```
-
-The model. Constraints:
-
-* No negative slopes - we don't get worse at words. 
-* Strong prior on slopes, they should have mean and sd around .25 (empirical)
-* Much weaker prior on intercepts, though yoked their SDs (perhaps too tightly?
-
-
-```{r appaoa-stan_model, eval=FALSE}
-hierarchical_logit <-'
-data {                            
-  int<lower=1> W; // number of words
-  int<lower=1> A; // number of ages
-  vector[A] age; // subject ages
-  int<lower=0> produces[W,A]; // count data
-  int<lower=0> attempts[W,A]; // count data
-}
-
-parameters {
-  real mu_i;             // intercept mean
-  real<lower=0> sigma_i; // intercept SD
+aoas <- left_join(glm_aoas, empirical_aoas) %>%
+  left_join(rglm_aoas) %>%
+  left_join(bglm_aoas) %>%
+  gather(measure, aoa, ends_with("aoa")) %>%
+  mutate(measure = factor(measure, 
+                          levels = c("empirical_aoa", 
+                                     "glm_aoa",
+                                     "rglm_aoa",
+                                     "bglm_aoa"),
+                          labels = c("Empirical",
+                                     "GLM",
+                                     "Robust GLM",
+                                     "Bayesian GLM"))) 
   
-  real<lower=0> mu_s;             // slope mean
-  real<lower=0> sigma_s; // slope SD
-
-  vector[W] intercept; // word means
-  vector[W] slope; // subject means
-}
-
-transformed parameters {
-  matrix[W,A] p;
-
-  for (w in 1:W) 
-    for (a in 1:A)
-      p[w,a] = intercept[w] + (slope[w] * age[a]);
-}
-
-model {
-  mu_i ~ normal(0, 10); 
-  sigma_i ~ normal(0, 1);
-
-  mu_s ~ normal(0, .25);
-  sigma_s ~ normal(0, .25);
-
-  intercept ~ normal(mu_i, sigma_i);
-  slope ~ normal(mu_s, sigma_s);
-  
-  for (w in 1:W) 
-    for (a in 1:A)
-      produces[w,a] ~ binomial_logit(attempts[w,a], p[w,a]);
-}
-'
+ggplot(aoas, aes(x = aoa)) + 
+  facet_wrap(~ measure) + 
+  geom_histogram(binwidth = 1) + 
+  xlab("Age of Acquisition")
 ```
 
-Now reformat the data to stan format and compute. 
+Figure \@ref(fig:appaoa-compare-dist) shows the results of these simulations, in the form of histograms of recovered 50% AoA values. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (N = `r length(unique(eng_ws$data_id))`). In contrast, all three models smooth the distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently. Both the GLM and robust GLM recover two AoAs below zero ("mommy" and "daddy"); the priors of the Bayesian GLM regularize these AoAs to be `r round(filter(aoas, definition == "mommy*", measure == "Bayesian GLM")$aoa)` and `r round(filter(aoas, definition == "daddy*", measure == "Bayesian GLM")$aoa)` months respectively. Further, the Bayesian GLM estimates `r round(mean(filter(aoas, measure == "Bayesian GLM")$aoa >30),2)*100`% of AoAs above 30 months (the max value in the data), while the other two methods estimate slightly fewer: `r round(mean(filter(aoas, measure == "GLM")$aoa >30),2)*100`% and `r round(mean(filter(aoas, measure == "Robust GLM")$aoa >30),2)*100`% respectively. These Bayesian GLM results strike us as *a priori* more reasonable than those returned by the other methods (although they only affect a small minority of words). 
 
-```{r appaoa-stan_prep, eval=FALSE}
-model.data <- ms %>%
-  ungroup %>%
-  mutate(word = definition, 
-         n = num_true,
-         N = num_true + num_false) %>%
-  # filter(word %in% c("daddy*","mommy*","no","bye")) %>%
-  select(word, age, category, n, N)
+```{r appaoa-sparcity, fig.cap="Recovered AoAs from a sparse subsample (100 children), plotted by the Bayesian GLM AoAs from the full dataset. Left panel shows standard GLM, right panel shows Bayesian GLM. Differences of AoA > 4 months between methods are labeled."}
+set.seed(12)
 
-ages <- unique(model.data$age)
-n.words <- length(unique(model.data$word))
-
-dat <- list(age = ages,
-            produces = matrix(model.data$n, 
-                              nrow=n.words, ncol=length(ages), byrow = TRUE),
-            attempts = matrix(model.data$N, 
-                              nrow=n.words, ncol=length(ages), byrow = TRUE),
-            W = n.words, 
-            A = length(ages))
-```
-
-```{r appaoa-stan_fit, eval=FALSE}
-samps <- rstan::stan(model_code = hierarchical_logit, 
-              cores = 4, 
-              data = dat, iter = 200, warmup=100, chains = 4, 
-              pars = c("mu_i", "sigma_i", "mu_s", "sigma_s", "slope", "intercept"))
-save(samps, "data/appendix_aoa/aoa-samps.Rds")
-```
-
-Diagnostics.
-
-```{r appaoa-stan-diagnostics, eval=FALSE}
-load("data/appendix-aoa/aoa-samps.Rds")
-rstan::traceplot(samps, pars = c("mu_i","sigma_i","mu_s","sigma_s"), 
-                 inc_warmup = TRUE)
-```
-
-Explore parameters. 
-
-```{r appaoa-stan_params, eval=FALSE}
-coefs <- data.frame(summary(samps)$summary)
-coefs$name <- rownames(coefs)
-
-word_ids <- model.data %>% 
-  group_by(word) %>% 
-  summarise(category = category[1]) %>%
-  mutate(word_id = 1:n())
-
-words <- coefs %>% 
-  filter(str_detect(name, "slope") | str_detect(name, "intercept")) %>%
-  separate(name, c("variable", "word_id"), "\\[") %>%
-  mutate(word_id = as.numeric(str_replace(word_id, "]", ""))) %>%
-  left_join(word_ids) %>%
-  select(mean, variable, word, category) %>%
-  spread(variable, mean) %>%
-  mutate(aoa = intercept / slope) %>%
-  arrange(aoa) %>%
-  mutate(word = factor(word, 
-                        levels = word,
-                        labels = word))
-```
-
-and plot again:
-
-```{r appaoa-stan_plot, eval=FALSE}
-age_range <- 0:36
-preds <- words %>%
-  group_by(word, category) %>%
-  do(data.frame(age = age_range, 
-                pred.prop = boot::inv.logit(.$intercept + age_range * .$slope))) %>%
-  left_join(model.data) %>%
-  mutate(prop = n/N) 
-
-ggplot(filter(preds, word %in% target_words), aes(x = age, y = prop)) + 
-  geom_point() + 
-  facet_wrap(~word) + 
-  geom_line(aes(x = age, y = pred.prop))
-```
-
-Check the histogram.
-
-```{r appaoa-stan_hist, eval=FALSE}
-hglm.aoas <- words %>%
-  mutate(aoa = -intercept / slope)
-
-qplot(aoa, geom = "blank", data = hglm.aoas) + 
-  geom_histogram(aes(y = ..density..)) + 
-  geom_density(col = "red")
-```
-
-What are the crazy ones? 
-
-```{r appaoa-stan_outliers, eval=FALSE}
-hglm.aoas$word[hglm.aoas$aoa <10]
-```
-
-Don't know what's going on with these but everything else looks good. 
-
-## Full comparison between models
-
-Merge with previous data frame. 
-
-```{r appaoa-compare, eval=FALSE}
-all.preds <- left_join(mms, 
-                       preds %>% 
-                         ungroup %>%
-                         rename(hglm = pred.prop, 
-                                definition = word) %>% 
-                         select(definition, age, hglm)) %>%
-  select(-num_true, -num_false)
-
-ggplot(all.preds, aes(x = age)) + 
-  geom_line(aes(y = glm), col = "red") + 
-  geom_line(aes(y = bayes), col = "blue") +
-  geom_line(aes(y = robust), col = "green") + 
-  geom_line(aes(y = hglm), col = "orange") + 
-  geom_point(aes(y = prop), col = "black") + 
-  ylim(c(0,1)) + 
-  facet_wrap(~definition) + 
-  scale_colour_manual(values = c(glm = "red", 
-                                 bayes = "blue", 
-                                 robustglm = "green", 
-                                 hglm = "orange"), 
-                      name = "model")
-
-```
-
-
-AOA distribution
-
-```{r appaoa-compare_dist, eval=FALSE}
-
-aoas <- full_join(full_join(glm_aoas, full_join(bglm_aoas, rglm_aoas)), empirical_aoas) %>%
-  full_join(hglm.aoas %>% rename(definition = word, 
-                               hglm_aoa = aoa) %>% 
-            select(-intercept, -slope))
-  
-```
-
-Plot.
-
-```{r appaoa-compare_plot, eval=FALSE}
-qplot(aoa,facets = ~ measure, 
-      data = aoas %>% gather(measure, aoa, ends_with("aoa")))
-```
-
-
-And pairs plots. 
-
-```{r appaoa-compare_pairs, eval=FALSE}
-pair_data <- aoas %>% 
-  select(ends_with("aoa")) %>%
-          mutate(empirical_aoa = ifelse(is.infinite(empirical_aoa), 
-                                       NA, empirical_aoa)) %>%
-  filter(glm_aoa > 0, glm_aoa < 50, rglm_aoa > 0, rglm_aoa < 50)
-
-GGally::ggpairs(pair_data) 
-```
-
-## Sparsity simulations
-
-BGLM with fairly restricted priors appeared to perform well, giving us reasonably constrained estimates for early words and otherwise being very correlated with glm and the more computation-heavy hglm. 
-
-One consideration remains: does it perform well with very sparse data? 
-
-Examples of this process with 100 children actually look much stronger overall. 
-
-```{r appaoa-sparcity}
 ids <- eng_ws %>%
   group_by(data_id) %>%
   count %>%
@@ -461,35 +139,49 @@ ids <- eng_ws %>%
 ms_sparse <- eng_ws %>%
   filter(data_id %in% ids) %>%
   group_by(definition, age, category) %>%
-  summarise(prop = mean(value=="produces", na.rm=TRUE), 
-            num_true = sum(value=="produces", na.rm=TRUE), 
-          num_false = sum(value!="produces", na.rm=TRUE), 
+  summarise(prop = mean(value=="produces", na.rm=TRUE),
+            num_true = sum(value=="produces", na.rm=TRUE),
+          num_false = sum(value!="produces", na.rm=TRUE),
             n = sum(c(num_true,num_false))) %>%
   filter(!is.na(category))
 
 bglm_aoas_sparse <- ms_sparse %>%
   split(.$definition) %>%
   map(fit_bglm) %>%
-  bind_rows
+  bind_rows %>%
+  rename(bglm_aoa_sparse = bglm_aoa, 
+         bglm_slope_sparse = bglm_slope)
 
 glm_aoas_sparse <- ms_sparse %>%
   split(.$definition) %>%
   map(fit_glm) %>%
-  bind_rows
+  bind_rows %>%
+  rename(glm_aoa_sparse = glm_aoa, 
+         glm_slope_sparse = glm_slope)
 
-aoas <- left_join(bglm_aoas_sparse, glm_aoas_sparse)
-ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa)) + 
-  geom_point() + 
-  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa) > 1.5), 
+aoas <- left_join(bglm_aoas_sparse, 
+                  bglm_aoas) %>%
+  left_join(glm_aoas_sparse)
+
+a <- ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa_sparse)) +
+  geom_point() +
+  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa_sparse) > 4),
                    aes(label = definition)) +
-  xlab("Bayes GLM") + 
-  ylab("Standard GLM") + 
+  ylab("GLM (sparse data)") +
+  xlab("Bayes GLM (full dataset)") +
   geom_abline(lty = 2, col = "red")
+
+b <- ggplot(aoas, aes(x = bglm_aoa, y = bglm_aoa_sparse)) +
+  geom_point() +
+  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - bglm_aoa_sparse) > 4),
+                   aes(label = definition)) +
+  ylab("Bayes GLM (sparse data)") +
+  xlab("Bayes GLM (full dataset)") +
+  geom_abline(lty = 2, col = "red")
+
+cowplot::plot_grid(a,b)
 ```
-## Conclusion
 
-`arm::bayesglm` with hand-tuned priors seems to perform pretty well. 
+To further test the Bayesian GLM approach, we tested the accuracy of the method in recovering AoAs for much smaller datasets. We did this by taking a subsample of only 100 children from the full English (American) WS dataset. We then fit standard and Bayesian GLMs to this sparse subsample. The resulting AoA estimates are plotted in Figure \@ref(fig:appaoa-sparcity). The Bayesian GLM shows the same minor bias to lower AoAs for hard words that the regular GLM does (a slightly below-diagonal slope), but the GLM shows much noisier estimates for the top and bottom words, suggesting that the regularization from the prior values in the Bayesian model is allowing it to deal with sparse data more effectively. 
 
-To Do:
-* Test with WG comprehension
-* Test with another language
+In sum, our analyses suggest that some sort of Bayesian approach is useful for estimating AoA values. 

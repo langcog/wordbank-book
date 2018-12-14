@@ -1,6 +1,6 @@
 # Variability and Consistency {#conclusion-consistency}
 
-In the preceding chapters, we have have presented evidence from a wide range of analyses of the Wordbank dataset. These analyses have revealed both striking variability across our units of sampling -- children, primarily, but also words and even languages -- but they have also revealed substantial consistency. In this synthetic chapter we begin by presenting a set of analyses of the empirical consistency and variability of specific phenomena. We then discuss the interplay and tension between these two ideas, variability and consistency, and how they interact with and inform theoretical conceptions of language acquisition more broadly.
+In the preceding chapters, we have have presented evidence from a wide range of analyses of the Wordbank dataset. These analyses have revealed both striking variability across our units of sampling -- children, primarily, but also words and even languages -- but they have also reealed substantial consistency. In this synthetic chapter we begin by presenting a set of analyses of the empirical consistency and variability of specific phenomena. We then discuss the interplay and tension between these two ideas, variability and consistency, and how they interact with and inform theoretical conceptions of language acquisition more broadly.
 
 ## Measuring variability and consistency
 

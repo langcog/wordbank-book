@@ -291,27 +291,28 @@ ws_prod_preds <- ws_prod_data %>%
   split(.$language) %>%
   map_df(function(x) pred_gcrq(x, ws_prod_models)) 
 
-ggplot(ws_prod_data,
-       aes(x = age, y = mean)) +
-  facet_wrap(~language) +
-  geom_jitter(width = .4, size = 1, alpha = .02) +
-  geom_line(data = ws_prod_preds, 
-            aes(y = pred, col = percentile, group = percentile)) + 
-  .scale_colour_discrete(name="Percentile") +
-  scale_x_continuous(name = "Age (months)", 
-                     breaks = seq(16, 36, 4),
-                     limits = c(16, 36)) +
-  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
-                     name = "Production Vocabulary") +
-  theme(legend.position = "bottom", 
-        strip.text.x = element_text(size = 8))
+# ggplot(ws_prod_data,
+#        aes(x = age, y = mean)) +
+#   facet_wrap(~language) +
+#   geom_jitter(width = .4, size = 1, alpha = .02) +
+#   geom_line(data = ws_prod_preds, 
+#             aes(y = pred, col = percentile, group = percentile)) + 
+#   .scale_colour_discrete(name="Percentile") +
+#   scale_x_continuous(name = "Age (months)", 
+#                      breaks = seq(16, 36, 4),
+#                      limits = c(16, 36)) +
+#   scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), 
+#                      name = "Production Vocabulary") +
+#   theme(legend.position = "bottom", 
+#         strip.text.x = element_text(size = 8))
 ```
 
-We next turn from the question of central tendencies to the question of variability. One of the most important features of early vocabulary development is its variability [@fenson1994]. To examine variability, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability?^[@feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual.]
+We next turn from the question of central tendencies in early vocabulary to the question of variability. One of the most important features of early vocabulary development is its variability [@fenson1994]. To examine variability, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability? That is the question addressed by our next set of analyses. 
+
 
 ### Quantifying Variability
 
-```{r vocab-eng_prod}
+```{r vocab-eng-prod, fig.cap="Raw production scores for English (American) production data. Dots show individual participants, while lines give standardized percentiles, computed via spline-based quantile-regression."}
 eng_prod_data <- vocab_data %>%
   filter(form == "WS", language == "English (American)") %>%
   mutate(mean = production)
@@ -340,10 +341,9 @@ ggplot(eng_prod_data,
   theme(legend.position = "bottom")
 ```
 
-As an example, we zoom in on the English (American) production data from the Words and Sentences form. Consider just a single age group, 24-month-olds. The distribution of vocabularies across children is far from normally distributed, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing nearly all of the 680 listed on the form (as well as others, in all likelihood).
-<!-- ^[It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every sentence, so we will acknowledge them up front and then mention them only when relevant throughout.]  -->
+As an example, we zoom in on the English (American) production data from the Words and Sentences form. The canonical view of these data is given in Figure \@ref(fig:vocab-eng-prod). It is very clear that variability is the norm! Children are all over the map at almost all age groups. 
 
-```{r vocab-histogram}
+```{r vocab-histogram, fig.cap="Histogram of English (American) production values for 24-month-olds."}
 ggplot(filter(eng_prod_data, age == 24), 
        aes(x = production)) + 
   geom_histogram(binwidth=30) + 
@@ -352,18 +352,20 @@ ggplot(filter(eng_prod_data, age == 24),
   xlab("Number of words produced")
 ```
 
+Next consider just a single age group, 24-month-olds. A histogram of two-year-old production vocabulary is show in Figure \@ref(fig:vocab-histogram). The distribution of vocabularies across children is far from normal, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing nearly all of the 680 listed on the form (as well as others, in all likelihood). (It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every analyses, so we acknowledge them up front and then mention them only when relevant throughout.) 
+
 One way to describe these data is to consider the relationship of the variance to the central tendency. The "coefficient of variation" (CV) is a common measure used for this purpose: 
 
 $$CV = \frac{\sigma}{\mu}$$
 
-This statistic allows standardized comparison of variability across measurements with different scales, an important concern when we want to compare forms with very different numbers of vocabulary items. For example, for two-year-olds, the mean productive vocabulary is `r round(mean(eng_prod_data$production[eng_prod_data$age == 24]))` words, and the standard deviation is `r round(sd(eng_prod_data$production[eng_prod_data$age == 24]))`, words, leading to a CV of `r signif(sd(eng_prod_data$production[eng_prod_data$age == 24])/mean(eng_prod_data$production[eng_prod_data$age == 24]), digits = 2)`. 
+\noindent This statistic allows standardized comparison of variability across measurements with different scales, an important concern when we want to compare forms with very different numbers of vocabulary items. For example, for two-year-olds, the mean productive vocabulary is `r round(mean(eng_prod_data$production[eng_prod_data$age == 24]))` words, and the standard deviation is `r round(sd(eng_prod_data$production[eng_prod_data$age == 24]))`, words, leading to a CV of `r signif(sd(eng_prod_data$production[eng_prod_data$age == 24])/mean(eng_prod_data$production[eng_prod_data$age == 24]), digits = 2)`. 
 
-But, as seen in Figure \@ref(fig:v_histogram), the distribution of productive vocabulary scores is far from normal; this trend is even more apparent at the younger and older ages. Thus, a non-parametric approach is more appropriate. Accordingly, we compute the MADM statistic, the non-parametric equivalent of the CV. In MADM, the mean $\mu$ is replaced by the median ($m(x)$, and the standard deviation $\sigma$ is replaced by the mean absolute deviation (which captures how far away values are from the median):
+But, again as seen in Figure \@ref(fig:vocab-histogram), the distribution of productive vocabulary scores is far from normal. And distributional forms deviate even more from the standard normal distribution at younger and older ages. Thus, a non-parametric approach is more appropriate. Accordingly, we compute the MADM statistic, the non-parametric equivalent of the CV. In MADM, the mean $\mu$ is replaced by the median ($m(x)$, and the standard deviation $\sigma$ is replaced by the mean absolute deviation (which captures how far away values are from the median):
 
 $$MADM(x) = \frac{\frac{1}{n} \sum_{i = 1..n}{|x_i - m(x)|}}{m(x)}$$
+Appendix \@ref(appendix-variability) demonstrates that, although MADM is more appropriate for our data, CV and MADM are very highly correlated with one another. 
 
-
-```{r vocab-madm1}
+```{r vocab-madm1, fig.cap="MADM values plotted by age for English (American) production data, across forms. The smoothing line is produced by a loess smoothing function."}
 madm_data <- vocab_data %>%
   filter(form %in% c(WSs, WGs)) %>%
   group_by(language, form, age) %>%
@@ -383,11 +385,12 @@ ggplot(filter(madm_data, language == "English (American)"),
   .scale_colour_discrete(name = "Form")
 ```
 
-In American English production, this ratio is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! The decline begins before variability is substantially truncated by the ceiling of the form, suggesting that variability between kids is really highest before the second birthday. 
+Figure \@ref(fig:vocab-madm1) shows the MADM value for American English production data, plotted by age. In these data, the MADM is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! 
 
-Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
+To get a sense of this variability, it can help to have a smaller dataset to consider. Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
 
-```{r vocab-madm2}
+```{r vocab-madm2, fig.cap="MADM for production, plotted by age group, for the full sample of languages in our dataset.}
+
 ggplot(madm_data, aes(x = age, y = madm_p)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 
   geom_smooth(aes(group = 1)) + 
@@ -400,13 +403,12 @@ ggplot(madm_data, aes(x = age, y = madm_p)) +
   scale_size(guide = FALSE)
 ```
 
-The next figure shows MADM across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, language is remarkably variable. Yet this variability is quite *consistent*! We summarize the MADM in the second year of life by taking its mean. This mean is close to 1 for almost every language and form for which we have data. 
+Does the general level of variability observed in American English hold for other languages? Figure \@ref(fig:vocab-madm2) shows MADM, now plotted for production across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, children's early language is remarkably variable. Yet this variability itself is quite *consistent*! 
 
-One question that could be raised regarding the analysis above is the extent to which variability is caused by *variability across children* vs. *variability in reporting*. The extreme values seen in the English data, for example, could easily be the result of a mixture of lazy parents who stopped answering the form with overly diligent parents who misunderstood and checked every box for a word they thought the child had been exposed to. Several arguments speak against this account, however. First, to the extent these biases are the source of variability, they are extremely *consistent* across languages -- which, recall, is the exact opposite argument from the one we considered above (where parent diligence was supposed to be variable enough across samples to lead to differences between languages). In sum, although there are certainly some reporting biases represented in the data, these results do not appear likely to be an artifact of reporting bias. 
-
-```{r vocab-madm_summary}
+```{r vocab-madm-summary, fig.cap="MADM values from 12-24 months for all languages and forms."}
 madm_summary_prod <- madm_data %>%
-  filter(!(language %in% c("Kigiriama", "French (France)"))) %>% # missing data
+  filter(!(language == "Kigiriama") & 
+             !(language == "French (French)" & form == "WG")) %>% # missing data
   group_by(language, form) %>%
   filter(age >= 12, age <= 24) %>%
   summarise(madm_mean = mean(madm_p), 
@@ -425,8 +427,11 @@ ggplot(madm_summary_prod, aes(x = language, y = madm_mean, col = form)) +
   .scale_colour_discrete()
 ```
 
+We can summarize the MADM in the second year of life by taking its mean. This summary is shown in Figure \@ref(fig:vocab-madm-summary). This mean is close to 1 for almost every language and form for which we have data. Confirming the analysis above, we see cross-linguistic consistency in the variability of children.
 
-```{r vocab-madm_comprehension}
+One question that could be raised regarding the analysis above is the extent to which variability is caused by *variability across children* vs. *variability in reporting*. The extreme values seen in the English data, for example, could easily be the result of a mixture of lazy parents who stopped answering the form with overly diligent parents who misunderstood and checked every box for a word they thought the child had been exposed to. But to the extent these biases are the source of variability, they are extremely *consistent* across languages -- which, recall, is the exact opposite argument from the one we considered above (where parent diligence was supposed to be variable enough across samples to lead to differences between languages). Although there are certainly some reporting biases represented in the data, we do not believe that the particular results of this analysis are an artifact of reporting bias. 
+
+```{r vocab-madm-comprehension, fig.cap="MADM for comprehension, plotted by age group, for the full sample of languages in our dataset."}
 ggplot(filter(madm_data, form %in% WGs), 
        aes(x = age, y = madm_c)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 
@@ -440,11 +445,10 @@ ggplot(filter(madm_data, form %in% WGs),
   scale_size(guide = FALSE)
 ```
 
+We can complete the same analysis using comprehension data, shown in Figure \@ref(fig:vocab-madm-comprehension). In this measure, we see a gradual decrease in variability throughout development. The intercept for the 12-18 month period appears to be lower than that observed in production, despite (or because of?) the higher scores. This observation matches one made by @mayor2014, namely that production vocabulary appears more idiosyncratic in distribution of words than comprehension vocabulary. One speculative explanation for this difference would be the tremendous differences in speech-motor development (as well as general differences in loquacity) between toddlers. This variability would then carry over into production. Another possibility, however, is that true variability is masked by the overall lower reliability of comprehension items (see Chapter \@ref(psychometrics)). Our data do not allow us to distinguish between these two explanations.
 
-We can complete the same analysis using comprehension data. Here we see a gradual decrease in variability throughout development. The intercept for the 12-18 month period appears to be lower than that observed in production, despite (or because of?) the higher scores. This observation matches one made by @mayor2014, namely that production vocabulary appears more idiosyncratic in distribution of words than comprehension vocabulary. One speculative explanation for this difference would be the tremendous differences in speech-motor development (as well as general differences in loquacity) between toddlers. This variability would then carry over into production. Another possibility, however, is that true variability is masked by the overall lower reliability of comprehension items (see Chapter \@ref(psychometrics)). Our data do not allow us to distinguish between these two explanations.
 
-
-```{r vocab-madm_summary_comprehension}
+```{r vocab-madm-summary-comprehension, fig.cap="MADM values from 12-18 months for all languages and forms."}
 madm_summary_comp <- madm_data %>%
   filter(form %in% WGs, language != "Kigiriama", age < 19, age > 11) %>% #missing
   group_by(language, form) %>%
@@ -462,7 +466,9 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
 
-### Item-response theory 
+The final plot in this sequence is shown in Figure \@ref(fig:vocab-madm-summary-comprehension), which shows 12-18-month MADM values. These are slightly lower and slightly more variable than the production values shown above, but still display a quite consistent level of variability. 
+
+### Is there a ceiling to variability?
 
 The analysis above suggests that variability between individuals decreases. But this  conclusion is compromised by ceiling effects: once children begin to reach the ceiling of the CDI form, variability is necessarily truncated. No analysis can completely eliminate these effects, but the use of item response theory-based analyses can partially address the issue by estimating variation in latent ability (which leads to a particular score) rather than variation in raw scores themselves.  
 
@@ -559,7 +565,7 @@ Interestingly, slopes for the variability of latent ability are fairly flat or i
 
 ### Discussion 
 
-We observed a striking consistency in the individual variability of children's vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary.What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from @storvold2013. 
+We observed a striking consistency in the individual variability of children's vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary. What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from @storvold2013. 
 
 ```{r vocab-walking_comparison}
 p100 <- vocab_data %>%
@@ -598,6 +604,9 @@ p100 %>%
 ```
 
 The 25th and 75th percentiles for a variety of behaviors are summarized in the table above. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
+
+
+We note that @feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual.
 
 In sum, these results echo the conclusions of @bornstein2005 based their comparative data across Spanish, English, and Italian, who noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 
 

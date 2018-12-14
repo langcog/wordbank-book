@@ -104,7 +104,7 @@ Finally, while predictors of word difficulty are consistent relative to a chance
 
 ## Generalizations
 
-What is the picture of language development that emerges from the analysis above? In this section we return to the theoretical speculation of Chapter \@ref(theory). The goal of characterizing areas of consistency in theoretically-relevant signatures of early language was to be able to provide constraints on theory. We turn back to the question of these constraints. First, we consider generalizations from our data. In the next section, we turn to the possible processes that could support these generalizations and hence their relation to other theories of acquisition. 
+What is the picture of language development that emerges from the analysis above? In this section we return to the theoretical speculation of Chapter \@ref(intro-theory). The goal of characterizing areas of consistency in theoretically-relevant signatures of early language was to be able to provide constraints on theory. We turn back to the question of these constraints. First, we consider generalizations from our data. In the next section, we turn to the possible processes that could support these generalizations and hence their relation to other theories of acquisition. 
 
 First, we consider three major generalizations from our data. These are, roughly speaking, that:
 

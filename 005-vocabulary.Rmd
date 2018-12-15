@@ -403,7 +403,7 @@ ggplot(madm_data, aes(x = age, y = madm_p)) +
   scale_size(guide = FALSE)
 ```
 
-Does the general level of variability observed in American English hold for other languages? Figure \@ref(fig:vocab-madm2) shows MADM, now plotted for production across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, children's early language is remarkably variable. Yet this variability itself is quite *consistent*! 
+Does the general level of variability observed in American English hold for other languages? Figure \@ref(fig:vocab-madm2) shows MADM, now plotted for production across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, children's early language is remarkably variable. Yet this variability itself is quite *consistent*.
 
 ```{r vocab-madm-summary, fig.cap="MADM values from 12-24 months for all languages and forms."}
 madm_summary_prod <- madm_data %>%
@@ -472,7 +472,7 @@ The final plot in this sequence is shown in Figure \@ref(fig:vocab-madm-summary-
 
 The analysis above suggests that variability between individuals decreases. But this  conclusion is compromised by ceiling effects: once children begin to reach the ceiling of the CDI form, variability is necessarily truncated. No analysis can completely eliminate these effects, but the use of item response theory-based analyses can partially address the issue by estimating variation in latent ability rather than variation in raw scores themselves. The logic   
 
-Chapter \@ref(psychometrics) provides a summary of our approach to using item response theory (IRT). In brief, item response theory provides a framework in which the full test (the CDI) is broken down into a series of items, with each having its own logistic model predicting the response for a particular child on the basis of their latent ability. In Chapter \@ref(psychometrics), we examine the parameters of individual items with respect to their properties; but fitting an IRT model also implies estimating a set of latent ability parameters for individual participants. These latent ability parameters are logistic regression coefficients and hence are not bounded in the same way that individual responses (and hence raw scores) are. Thus, we can examine their variability as a way of dealing with ceiling effects.
+Chapter \@ref(psychometrics) provides a summary of our approach to using item response theory (IRT) with CDI data. In brief, IRT provides a framework in which the full test (the CDI) is broken down into a series of items, with each having its own logistic model predicting the response for a particular child on the basis of their latent ability. In Chapter \@ref(psychometrics), we examine the parameters of individual items with respect to their properties; but fitting an IRT model also implies estimating a set of latent ability parameters for individual participants. These latent ability parameters are logistic regression coefficients and hence are not bounded in the same way that individual responses (and hence raw scores) are. Thus, we can examine their variability as a way of dealing with ceiling effects.
 
 ```{r vocab-mirt, eval=FALSE}
 mirt_params <- function(dx) {
@@ -527,7 +527,7 @@ write_feather(mirt_params, "data/vocabulary/mirt_params.feather")
 ```
 
 
-```{r vocab-variability_IRT_slopes}
+```{r vocab-variability_IRT_slopes, fig.cap="Standard deviation of latent ability scores from IRT models fit to each Words and Sentences-type dataset. Panels show individual languages. Smoothing lines are linear model fits."}
 mirt_params <- read_feather("data/vocabulary/mirt_params.feather")
 
 mirt_sd <- mirt_params %>%
@@ -559,13 +559,15 @@ ggplot(mirt_sd,
   xlim(12,40)
 ```
 
-The above figure shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret -- the range of latent ability scores on a form is a function of how consistently difficult or easy the items are. Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children's abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases. 
+Figure \@ref(fig:vocab-variability_IRT_slopes) shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret -- the range of latent ability scores on a form is a function of how consistently difficult or easy the items are (and as we noted above, we do not think it is trivial to equate these scores across tests) Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children's abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases. 
 
-Interestingly, slopes for the variability of latent ability are fairly flat or increasing (with Mandarin -- which has extreme ceiling effects -- the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. Variability is constant, or even increasing, with age.
+Interestingly, slopes for the variability of latent ability are fairly flat or increasing (with Mandarin, which has extreme ceiling effects, being the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. In sum, when we remove ceiling effects, we find that variability is constant -- or perhaps even increasing -- throughout the full measured range of early language.
 
 ### Discussion 
 
-We observed a striking consistency in the individual variability of children's vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary. What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from @storvold2013. 
+We observed a striking consistency in the individual variability of children's vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary. 
+
+What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from @storvold2013. 
 
 ```{r vocab-walking_comparison}
 p100 <- vocab_data %>%
@@ -582,33 +584,32 @@ p100 <- vocab_data %>%
                        response= "walking", 
                        form = "MoBa"))
   
-ggplot(p100, aes(x = age, y = prob, col = response)) +
-  geom_line(aes(group = interaction(response, form))) + 
-  geom_line(data = filter(p100, response == "walking"), 
-                          aes(group = interaction(response, form)), size = 2) + 
-  ylim(0,1) + 
-  .scale_colour_discrete() + 
-  theme(legend.position = "bottom") + 
-  ylab("Probability") + xlab("Age (months)")
+# ggplot(p100, aes(x = age, y = prob, col = response)) +
+#   geom_line(aes(group = interaction(response, form))) + 
+#   geom_line(data = filter(p100, response == "walking"), 
+#                           aes(group = interaction(response, form)), size = 2) + 
+#   ylim(0,1) + 
+#   .scale_colour_discrete() + 
+#   theme(legend.position = "bottom") + 
+#   ylab("Probability") + xlab("Age (months)")
 ```
 
-```{r vocab-walking_comparison_2}
+```{r vocab-walking-comparison-2, fig.cap="Comparison of language milestones with walking, in terms of month at which a percentile ranking is achieved."}
 p100 %>%
   group_by(response) %>%
   summarise(`25th percentile` = min(age[prob >= .25]),
             `75th percentile` = min(age[prob >= .75]), 
-            range = `75th percentile` - `25th percentile`, 
-            `range (proportion of age)` = range / min(age[prob >=.5])) %>%
-  arrange(range) %>%
-  kable(digits = 2)
+            `Range (mo)` = `75th percentile` - `25th percentile`, 
+            `Range (prop.)` = `Range (mo)` / min(age[prob >=.5])) %>%
+  arrange(`Range (mo)`) %>%
+  rename(Response = response) %>%
+  kable(digits = 2) 
+  
 ```
 
-The 25th and 75th percentiles for a variety of behaviors are summarized in the table above. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
+Table \@ref(fig:vocab-walking-comparison-2) shows the 25th and 75th percentiles for a variety of behaviors. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
 
-
-We note that @feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual.
-
-In sum, these results echo the conclusions of @bornstein2005 based their comparative data across Spanish, English, and Italian, who noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 
+In sum, these results echo the conclusions of @bornstein2005 based their comparative study of Spanish, English, and Italian. They noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 
 
 
 ```{r vocab-save_covs}
@@ -635,3 +636,6 @@ cvs <- data_frame(signature = c("MADM 12-24mo",
 write_feather(cvs, "data/cvs/madm_cvs.feather")
 ```
 
+
+
+<!-- We note that @feldman2000 discusses the possibility that some portion of the observed variability in her data as well as the CDI norming data [@fenson1994] is due to reporting issues. In their response, @fenson2000 cite an unpublished dataset comparing lab-based elicited production and parent report for 36 object names and show that the standard deviation is greater than the mean on both measures, suggesting that the variability found in CDI scores is not artifactual. -->

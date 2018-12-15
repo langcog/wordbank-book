@@ -1,5 +1,6 @@
 ---
-title: "Variability and Consistency in Early Language Learning: The Wordbank Project"
+title: "Variability and Consistency in Early Language Learning"
+subtitle: "The Wordbank Project"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
 site: bookdown::bookdown_site
 documentclass: book
@@ -36,11 +37,12 @@ This set of contributions reflects an important guiding principle of our work he
 
 The first chapters of this book provide an overview of the practical and theoretical issues that we cover. Chapter \@ref(intro-theory) gives a broad theoretical overview of our claims and sets up some of the empirical themes that we return to throughout, especially the notion of using the consistency and variability of phenomena to make generalizations about the process of acquisition. Chapter \@ref(intro-practical) then discusses the practicalities of the CDI and the Wordbank project. Chapter \@ref(methods) gives a methodological and descriptive overview of the dataset we analyze throughout. And Chapter \@ref(psychometrics) discusses the psychometric properties of parent report data, addressing questions about the strengths and limitations of this method. 
 
-Chapters \@ref(vocabulary) -- \@ref(style) then form the empirical heart of the book. Each applies a particular analysis of interest to our dataset. Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data (see the figure below). 
 
 ```{r preface-outline, fig.cap="A graphical outline of the book."}
 include_graphics("images/outline-graffle.png")
 ```
+
+Chapters \@ref(vocabulary) -- \@ref(style) then form the empirical heart of the book. Each applies a particular analysis of interest to our dataset. Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data (see Figure \@ref(fig:preface-outline)). 
 
 Considering the data in this way leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocabulary) considers this view of the data, examining developmental change and variability in such data. Then in Chapter \@ref(demographics), we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-cultually valid proxy for socioeconomic status). 
 
@@ -65,7 +67,7 @@ A number of the analyses reported here were first described in earlier conferenc
 
 The dataset in Wordbank is constantly growing and changing as we add new features, new data, and new languages. In addition, as users of the data occasionally identify issues and errors, we make will make corrections to the database. In writing this manuscript, we have attempted to find a middle ground between a completely dynamic document that responds to any change in the database, on the one hand, and a traditional, static book, on the other. A static manuscript would be a shame given the potential for dynamic extension and updating with new data. On the other hand, if the data were completely dynamic, any claim we made in prose would risk being out of date almost as soon as we wrote it. 
 
-For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. The current build of the book is from `r date()`, based on data cached on CACHE DATE.
+For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. The current build of the book is from `r date()`, based on data cached on `r format(file.mtime("data/_common"), "%a %b %d %H:%M:%S %Y")`.
 
 ## Acknowledgements {-}
 

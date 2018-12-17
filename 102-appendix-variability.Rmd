@@ -1,6 +1,6 @@
 # Measures of Variability {#appendix-variability}
 
-In Chapter \@ref(vocabulary), we make use of non-parametric measures of variability. MADM and MMAD rather than the more standard coefficient of variation and Cohen's $d$. In this brief Appendix, we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
+In Chapter \@ref(vocabulary), we make use of non-parametric measures of variability, especially MADM (mean absolute deviation from the median) rather than the more standard coefficient of variation. In this brief Appendix, we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
 
 
 ```{r appvar-vocab_data}
@@ -31,7 +31,7 @@ ratios <- vocab_data %>%
 ```
 
 
-```{r appvar-ratios_cv}
+```{r appvar-ratios-cv, fig.cap="Coefficient of Variation and MADM, with each point showing a particular combination of language, form, and age."}
 ggplot(ratios, aes(x = madm, y = cv)) + 
   geom_point(aes(size = n, col = language), alpha = .3) + 
   geom_smooth(method = "lm") +
@@ -42,17 +42,4 @@ ggplot(ratios, aes(x = madm, y = cv)) +
   scale_colour_manual(values = lang_colours, guide = FALSE)
 ```
 
-Our first analysis plots Coefficient of Variation (CV) vs. MADM, with each point representing a single age group for a particular combination of form and language. The slope of the relationshup between the two measures is 1, despite some considerable variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it goes dramatically higher for some individual datasets. We speculate that this is due to floor/ceiling effect and small sample effects. Overall, this analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme flunctions than CV.
-
-```{r appvar-ratios_d}
-ggplot(ratios, aes(x = mmad, y = d)) + 
-  geom_point(aes(size = n, col = language), alpha = .3) + 
-  geom_smooth(method = "lm") +
-  ylim(0,3) + xlim(0,3) +
-  geom_abline(lty = 2) +
-  ylab("Cohen's d") + 
-  xlab("MMAD") + 
-  scale_colour_manual(values = lang_colours, guide = FALSE)
-```
-
-Our second analysis is identical except that it plots Cohen's $d$ by MMAD. Each of these is the reciprocal of the related measure plotted above. (For example, $d = \frac{\mu}{\sigma}$ whereas $CV = \frac{\sigma}{\mu}$). Thus, the same relation holds.
+Figure \@ref(fig:appvar-ratios-cv) shows Coefficient of Variation (CV) vs. MADM, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is 1, despite some considerable variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it goes dramatically higher for some individual datasets. We speculate that this is due to floor/ceiling effect and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme flunctions than CV.

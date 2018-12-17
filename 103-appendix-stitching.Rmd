@@ -1,14 +1,16 @@
 # Stitching Across Forms {#appendix-stitching}
 
-Because we use different forms for different ages, there are sometimes good reasons to combine data across forms to get a broader range of ages in a particular analysis. We call this combination "stitching." This appendix provides some motivation for the practice. 
 
 
-## Item Stitching
+```{r appstitch-example, fig.cap="WS and WG proportion production scores for a set of 25 randomly-sampled examples."}
 
-For arbitrary items, stitching across English WS and WG tends to look pretty good. 
+wg_unilemmas <- filter(items, language == "English (American)", 
+                       form == "WG", 
+                       !is.na(uni_lemma)) %>% 
+  pull(uni_lemma)
 
-```{r appstitch-example}
-target_items <- c("dog","table","run")
+set.seed(12)
+target_items <- sample(wg_unilemmas, 25)#c("dog","table","run")
 
 eng_wg <- get_instrument_data(language = "English (American)",
                               form = "WG", 
@@ -33,53 +35,57 @@ eng_ws <- get_instrument_data(language = "English (American)",
 eng_items <- bind_rows(eng_wg, eng_ws) %>%
   left_join(admins) %>%
   group_by(age, form, uni_lemma) %>%
-  summarise(produces = mean(value == "produces", na.rm=TRUE))
+  summarise(produces = mean(value == "produces", 
+                            na.rm=TRUE)) %>%
+  filter(!is.na(age))
 
 ggplot(eng_items, 
        aes(x = age, y = produces, col = form)) + 
   facet_wrap(~uni_lemma) +
-  geom_point() + 
-  geom_smooth()
+  geom_point(alpha = .5) + 
+  # geom_smooth() +
+  .scale_colour_discrete()
 ```
 
+Because we use different forms for different ages, there are sometimes good reasons to combine data across forms to get a broader range of ages in a particular analysis. We call this combination "stitching." This appendix provides some motivation for the practice. Figure \@ref(fig:appstitch-example) shows 25 randomly-sampled items from the English (American) data. To a first approximation, production trajectories line up quite nicely with little or no visible gap between the two instruments. 
 
-## Form Stitching
 
-We can "stitch" across WS and WG forms to get a fuller picture of production across ages. There are several ways to accomplish this. The simplest is to use proportions for each form. 
-This isn't particularly good.
 
-```{r appstitch-eng_prod}
-num_words <- items %>%
-  filter(type == "word") %>%
-  group_by(language, form) %>%
-  summarise(n = n())
+<!-- In contrast, this procedure does not work for full percentile ranks -- presumably because of the differences in difif -->
+<!-- We can "stitch" across WS and WG forms to get a fuller picture of production across ages. There are several ways to accomplish this. The simplest is to use proportions for each form.  -->
+<!-- This isn't particularly good. -->
 
-vocab_data <- admins %>%
-  select(data_id, language, form, age, sex, 
-         mom_ed, birth_order, production, comprehension) %>% 
-  left_join(num_words) %>%
-  mutate(no_production = n - production)
+<!-- ```{r appstitch-eng_prod} -->
+<!-- num_words <- items %>% -->
+<!--   filter(type == "word") %>% -->
+<!--   group_by(language, form) %>% -->
+<!--   summarise(n = n()) -->
 
-eng_prod_data <- vocab_data %>%
-  filter(language == "English (American)") %>%
-  mutate(mean = production / n)
+<!-- vocab_data <- admins %>% -->
+<!--   select(data_id, language, form, age, sex,  -->
+<!--          mom_ed, birth_order, production, comprehension) %>%  -->
+<!--   left_join(num_words) %>% -->
+<!--   mutate(no_production = n - production) -->
 
-ggplot(eng_prod_data,
-       aes(x = age, y = mean, col = form)) +
-  facet_wrap(~language) +
-  geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_smooth() + 
-  # geom_line(data = ws_prod_preds,
-  #           aes(y = pred, col = percentile, group = percentile)) +
-  .scale_colour_discrete(name="Percentile") +
-  scale_x_continuous(name = "Age (months)",
-                     breaks = seq(8, 30, 4),
-                     limits = c(8, 30)) +
-  scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1),
-                     name = "Production Vocabulary") +
-  theme(legend.position = "bottom")
-```
+<!-- eng_prod_data <- vocab_data %>% -->
+<!--   filter(language == "English (American)") %>% -->
+<!--   mutate(mean = production / n) -->
 
-You can also stitch item by item, this is trickier but better. 
+<!-- ggplot(eng_prod_data, -->
+<!--        aes(x = age, y = mean, col = form)) + -->
+<!--   facet_wrap(~language) + -->
+<!--   geom_jitter(width = .4, size = 1, alpha = .1) + -->
+<!--   geom_smooth() +  -->
+<!--   # geom_line(data = ws_prod_preds, -->
+<!--   #           aes(y = pred, col = percentile, group = percentile)) + -->
+<!--   .scale_colour_discrete(name="Percentile") + -->
+<!--   scale_x_continuous(name = "Age (months)", -->
+<!--                      breaks = seq(8, 30, 4), -->
+<!--                      limits = c(8, 30)) + -->
+<!--   scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1), -->
+<!--                      name = "Production Vocabulary") + -->
+<!--   theme(legend.position = "bottom") -->
+<!-- ``` -->
 
-## Item-Level Form Stitching
+<!-- You can also stitch item by item, this is trickier but better.  -->
+

@@ -10,6 +10,7 @@ Imports:
   bookdown,
   boot,
   corrplot,
+  cowplot,
   directlabels,
   DT,
   extrafont,

@@ -39,6 +39,5 @@ Imports:
   wordbankr,
   viridis
 Remotes:
-  langcog/langcog,
-  crsh/papaja
+  langcog/langcog
 License: GPL-3

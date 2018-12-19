@@ -4,7 +4,7 @@ Following the approach in the previous chapter, we investigate the consistency o
 
 ## Introduction and Methods
 
-In contrast to the "noun bias" literature, where a wide variety of hypotheses have been articulated over the preceding decades, differences in content have been less explored and so these analyses are far more exploratory. To limit the scope of this exploration, we focus on WS-type forms and production measures, which we have reason to believe will be most reliable. 
+In contrast to the "noun bias" literature, where a wide variety of hypotheses have been articulated over the preceding decades, differences in content have been less explored and so these analyses are far more exploratory. Analyses of cognitive biases in the early language of international adoptees by @snedeker2012 are a notable exception, but these analyses are limited to English data due to the complexity of gathering such data. To limit the scope of our current exploration, we focus on WS-type forms and production measures, which we have reason to believe will be most reliable. 
 
 ```{r catsem-items}
 items <- items %>%

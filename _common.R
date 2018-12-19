@@ -64,3 +64,7 @@ inst_colours <- insts$colour %>% set_names(insts$instrument)
 ### FORM VARIANTS
 WGs <- c("WG", "IC", "Oxford CDI")
 WSs <- c("WS", "TC")
+
+printp <- function(x, min_val = 0.001) {
+  if (x < min_val) sprintf("< %s", min_val) else sprintf("%.3f", x)
+}

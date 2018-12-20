@@ -700,9 +700,7 @@ The table above shows the proportion of children showing more than 95% productiv
 
 In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of developing instructions for parents that more effectively convey the concept of what it means for a child to "understand" a word. 
 
-
-
-## Conclusions
+## Discussion
 
 In this chapter, we have explored three classic indices of individual variation in children's "style" of learning, that is, variation in how children approach the task of language learning.  Compared to differences in rate/timing of learning, stylistic differences have been proposed to be a stronger test of the proposal that language acquisition is a constructed process. But, few studies to date have had the power and scope to explore the extent of these differences crosslinguistically.  The results of these analyses were a bit mixed.  We can summarize the conclusions from our various different sub-analyses:
 

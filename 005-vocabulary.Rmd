@@ -177,7 +177,7 @@ ggplot(taiwan_comp_data,
                      limits = c(8, 16),
                      name = "Age (months)") +
   scale_colour_manual(values = inst_colours, name = "") +
-  ylab("Production (Number of Words)") +
+  ylab("Comprehension (Number of Words)") +
   ylim(c(0, 380)) + 
   theme(legend.position = "bottom")
 ```

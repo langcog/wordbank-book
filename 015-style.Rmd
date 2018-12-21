@@ -26,7 +26,7 @@ The final area of stylistic variation that we address in our third subsection is
 
 <!-- Further, idiosyncrasy in children's vocabulary is an interesting measure suggested by @mayor2014. -->
 
-## Variation in Vocabulary Composition
+## Variation in vocabulary composition
 
 In this subsection we examine the question of variation across children in referential vs. expressive vocabulary. Following @bates1994, we operationalize the notion of a "referential" vocabulary as one that has a greater proportion of nouns relative to other classes (the definition of "noun" is the same here as in Chapter \@ref(categories-syntactic). While there might be other more nuanced measures that we could construct, this one has the advantage of being directly related to the framework in Chapter \@ref(categories-syntactic); thus, we use that same framework to investigate vocabulary composition in individuals here. 
 
@@ -234,7 +234,7 @@ Summarizing, we were interested in this subsection in whether we found cross-lin
 
 Taken together, these data provide some cross-linguistic support for the idea that children show variability beyond differences in rate of vocabulary acqisition. One dimension of variability is that, for a particular level of vocabulary size, there appear to be children who are younger, know more nouns, and combine words less (perhaps the "referential" children referred to in previous literature); other children will tend to be older, have a more diverse vocabulary (including more predicates), and will tend to use these to combine words more. 
 
-## "Spurts" in Vocabulary
+## "Spurts" in vocabulary
 
 ```{r style-median_production}
 admins %>%
@@ -577,7 +577,7 @@ To further examine this issue in a denser dataset, we used data from @roy2015's 
 Stepping back, in this subsection we examined the growth rate of children's vocabulary. To a first, group-wise approximation, children's vocabulary growth accelerates linearly with vocabulary size during the initial period (up to around 250 words). After this point, we run into substantial measurement issues because the CDI does not contain enough words to be certain of the pattern of growth. Further, when we examined individuals' growth, it also often appeared to be linear or quadratic; only in a minority of individuals was there any evidence for a "spurt" (a discrete change). This conclusion was tempered, however, by the difficulty of drawing conclusions without even denser longitudinal data concerning the very beginnings of language. 
 
 
-## Variation in Production vs. Comprehension
+## Variation in production vs. comprehension
 
 
 <!-- RELEVANT FOR CLINICAL -->

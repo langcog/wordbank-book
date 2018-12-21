@@ -2,7 +2,7 @@
 
 Following the approach in the previous chapter, we investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," are some languages "vehicle-focused"? These analyses are expected to reveal cultural and linguistic differences in the specific words learned by children (perhaps due to differences in the content of their environment). 
 
-## Introduction and Methods
+## Introduction and methods
 
 In contrast to the "noun bias" literature, where a wide variety of hypotheses have been articulated over the preceding decades, differences in content have been less explored and so these analyses are far more exploratory. Analyses of cognitive biases in the early language of international adoptees by @snedeker2012 are a notable exception, but these analyses are limited to English data due to the complexity of gathering such data. To limit the scope of our current exploration, we focus on WS-type forms and production measures, which we have reason to believe will be most reliable. 
 
@@ -148,7 +148,7 @@ The largest *under*-representation across categories is Time Words. This pattern
 
 We next turn to how this pattern varies across languages. 
 
-## Global Results
+## Global results
 
 ```{r catsem-plot_points_ws}
 plot_data <- cat_comp_data %>%

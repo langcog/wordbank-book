@@ -1,0 +1,50 @@
+p.caption {
+  color: #777;
+  font-size: 90%;
+}
+caption {
+  color: #777;
+  font-size: 90%;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+
+.book.font-family-1, .book .book-header, .book .book-summary {
+  font-family: Source Sans Pro,sans-serif;
+}
+
+.header-section-number {
+  padding-right: .2em;
+  font-weight: 500;
+  display: inline-block;
+  border-bottom: 3px solid;
+}
+.level1 h1 {
+  border-bottom: 1px solid;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+.book .book-body .page-wrapper .page-inner section.normal h1.title {
+  font-weight: 700;
+  margin-bottom: 0px;
+}
+.book .book-body .page-wrapper .page-inner section.normal h2.subtitle {
+  font-weight: 700;
+  margin-top: 0px;
+}
+.book .book-body .page-wrapper .page-inner section.normal h1, .book .book-body .page-wrapper .page-inner section.normal h2, .book .book-body .page-wrapper .page-inner section.normal h3, .book .book-body .page-wrapper .page-inner section.normal h4, .book .book-body .page-wrapper .page-inner section.normal h5, .book .book-body .page-wrapper .page-inner section.normal h6 {
+  margin-top: 1em;
+  margin-bottom: .5em;
+}
+.font-settings {
+  display: none;
+}

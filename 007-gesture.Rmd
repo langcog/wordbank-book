@@ -225,7 +225,7 @@ eng_gesture_aoas %>%
 
 ```
 
-### Consistency of the First Gestures
+### Consistency of the first gestures
 
 While the "First Gestures" are not universally learned before the other gestures measured, they are among the earliest learned. Because of the particular theoretical importance of these early communicative gestures (i.e. deictics like pointing and showing, showing routines like "pick me up"), we analyze the cross-linguistic consistency of these at the item level. 
 
@@ -401,7 +401,7 @@ age_cor_data %>%
 #   kable()
 ```
 
-## Gesture and Demographic Variables
+## Gesture and demographic variables
 
 Type and sex. Small female advantage overall, but big interaction in gestures_parent
 ```{r gesture-sex_type_plot}

@@ -58,7 +58,7 @@ cvs <- cvs %>%
 
 write_feather(cvs,"data/cvs/cvs.feather")
 ```
-## Results and Discussion
+## Results and discussion
 
 
 ```{r cons-cvs-plot-1, fig.cap="Coefficient of variation across languages for signatures of language development corresponding to four different categories (panels). Each point gives an estimate, with point size corresponding to number of languages. Color indicates whether comprehension or production is measured. Error bars give the standard error of the coefficient of variation."}

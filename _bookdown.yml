@@ -1,8 +1,11 @@
-github-repo: langcog/wordbank-book
+repo: langcog/wordbank-book
 description: ""
 always_allow_html: yes
 book_filename: "wordbank-book"
-chapter_name: ""
 output_dir: "docs"
 delete_merged_file: true
 before_chapter_script: "_common.R"
+language:
+  ui:
+    edit: "Edit"
+    chapter_name: "Chapter "

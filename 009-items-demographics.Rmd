@@ -506,7 +506,7 @@ demo_ranef %>%
 
 The same general patterns are present in the production data, with further evidence that having elder siblings appears to be related exposure to sweets, at least in some cultures: "popsicle," "donut," and "candy" all appear now in the English data, and "tyggegummi" (gum) and several soda- and candy-related words appear in the Nowegian data. ("Hate" also appears in the English data, suggesting some emotional expressions due to having a sibling). We interpret this pattern with caution, however, as birth order is likely partially confounded with socio-economic status, and so later-born children might also be from low-SES families who have more environmental exposure to "junk foods" like soda and candy.
 
-### Maternal Education
+### Maternal education
 
 Our final set of analyses examine vocabulary items that are differentially present in the vocabulary of children with lower maternal education. As noted in Chapter \@ref(demographics), there are substantial cross-linguistic differences in how large the overall socioeconomic stratification is. For example, we observe large differences in children's vocabulary size in the English (American) data, with children of less educated mothers reporting substantially lower production vocabulary. 
 

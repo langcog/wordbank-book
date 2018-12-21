@@ -6,6 +6,10 @@ library(tidyverse)
 
 # extrafont::loadfonts()
 
+options(digits = 2,
+        DT.options = list(searching = FALSE,
+                          lengthChange = FALSE))
+
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -18,8 +22,13 @@ opts_chunk$set(
   fig.show = "hold"
 )
 
-theme_set(theme_mikabr())
-.font <- theme_mikabr()$text$family
+.font <- "Source Sans Pro"
+theme_set(theme_mikabr(base_family = .font))
+theme_update(plot.margin = margin(0, 0, 2, 0, "pt"),
+             legend.margin = margin(0, 0, 0, 0, "pt"))
+.grey <- "grey70"
+.refline <- "dotted"
+.ages <- seq(5, 45, 5)
 
 .pal <- ggthemes::ptol_pal
 .scale_colour_discrete <- ggthemes::scale_colour_ptol
@@ -67,4 +76,22 @@ WSs <- c("WS", "TC")
 
 printp <- function(x, min_val = 0.001) {
   if (x < min_val) sprintf("< %s", min_val) else sprintf("%.3f", x)
+}
+
+label_caps <- as_labeller(function(value) {
+  paste0(toupper(substr(value, 1, 1)), substr(value, 2, nchar(value))) %>%
+    str_replace_all("_", " ")
+})
+
+dt_caption <- function(caption) {
+  glue::glue('<table> <caption> (#tab:{opts_current$get("label")}) {caption} </caption> </table>')
+}
+
+dt <- function(data, ...) {
+  DT::datatable(
+    data = data,
+    rownames = FALSE,
+    colnames = label_caps(colnames(data)),
+    ...
+  )
 }

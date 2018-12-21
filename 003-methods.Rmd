@@ -4,18 +4,21 @@ We begin by introducing the structure of our dataset and the database that conta
 
 ## Database
 
-Why use a database to store vocabulary data? Consider the standard format of raw CDI data. Here is a small slice of the original CDI norming data [@fenson1994;@fenson2007]. 
-![Example data from the CDI norming sample (Fenson et al., 2007). Each row has a unique child identifier, demographics, and word-by-word checklist data.](images/itembychild.png)
+Why use a database to store vocabulary data? Consider the standard format of raw CDI data, illustrated in Figure \@ref(fig:methods-itembychild) for a small slice of the original CDI norming data [@fenson1994;@fenson2007].
+
+```{r methods-itembychild, fig.cap="Example data from the CDI norming sample (Fenson et al., 2007). Each row has a unique child identifier, demographics, and word-by-word checklist data."}
+include_graphics("images/itembychild.png")
+```
 
 Each row is a child, each column gives a variable -- either a demographic variable or the result of a particular word being administered to a particular child. Although this format is useful for homogeneous administrations of a single instrument, it cannot accommodate multiple instruments, multiple languages, or datasets with different sources or kinds of demographic information. Consolidating data across different instruments is very difficult in this format, and tracking data on children with multiple longitudinal administrations of a single instrument must also be done in an ad-hoc manner. The move to a database format allows far more flexible and programmatic handling of heterogeneous data structures from different sources.
 
 Further, as information about particular entities becomes available -- for example, cross-linguistic mappings of lexical items -- this information can be added in a way that preserves previous analyses. In a tabular format, such functionality is not guaranteed, and changes to the structure of the dataset will necessarily break previous analyses. A database, especially when supplemented with an appropriate application programming interface (API, see below), can solve this problem elegantly. 
 
-### Database Architecture 
+### Database architecture 
 
 A relational database such as Wordbank is at its heart an ontology: a set of entities that are described in a series of tables linked by unique identifiers. The primary entities in the Wordbank database are: 
 
-+ **Instrument**: A specific parent-report survey or questionnaire with a particular set of items. For example, the American English Words and Sentences form is an individual instrument. 
++ **Instrument**: A specific parent-report survey or questionnaire with a particular set of items. For example, the American English Words & Sentences form is an individual instrument. 
 + **Item**: A particular question on an instrument. A specific word like *dog* is our canonical CDI item, but other items include questions about gestures, morphological and syntactic complexity, and other aspects of early language or behavior.
 + **Administration**: A particular instance of an instrument being given to a child, with an associated child age and source (the contributing lab).
 + **Child**: A unique individual, with associated demographics. 
@@ -23,20 +26,20 @@ A relational database such as Wordbank is at its heart an ontology: a set of ent
 
 These entities are related by two primary groups of tables in Wordbank. The *common* tables store data that is shared between CDI instruments, including information about *administrations* (individual instances of a form being filled out for a child), and *items* (words and other questions on a form). Then the *instrument* tables store the item-by-item response data for particular CDI instruments. We currently include all items on CDI instruments, including questions about communication, gesture, morphology, and grammar (though in quite a few of the datasets that we archive these non-vocabulary questions have not been digitized so data on these are sparse at present; see e.g., Chapters \@ref(gesture) and \@ref(grammar)).
 
-Wordbank is designed so that it can accommodate data from a wide variety of instruments, both within and across languages. Indeed, at the time of rendering, the site includes data from more than `r nrow(admins)` administrations of the CDI across `r length(unique(instruments$language))` different languages and `r nrow(instruments)` different instruments.
+Wordbank is designed so that it can accommodate data from a wide variety of instruments, both within and across languages. Indeed, at the time of rendering, the site includes data from `r nrow(admins)` administrations of the CDI across `r length(unique(instruments$language))` different languages and `r nrow(instruments)` different instruments.
 
 ### Implementation
 
-Wordbank is constructed using free, open-source tools. The database is a standard `MySQL` database, managed using `Python` and `Django`.All code for Wordbank is hosted in GitHub repositories, with the [primary site repository](http://github.com/langcog/wordbank) containing data and database code, 
-the [r package repository](http://github.com/langcog/wordbankr) containing code for the API, and the [book repository](http://github.com/langcog/wordbank-book) containing the code and text for this manuscript. 
+Wordbank is constructed using free, open-source tools. The database is a standard `MySQL` database, managed using `Python` and `Django`. All code for Wordbank is hosted in GitHub repositories, with the [primary site repository](http://github.com/langcog/wordbank) containing data and database code, 
+the [`R` package repository](http://github.com/langcog/wordbankr) containing code for the API, and the [book repository](http://github.com/langcog/wordbank-book) containing the code and text for this manuscript. 
 
 All data uploaded to Wordbank are open and freely available for download, both through the site itself and through the GitHub repository. The site includes only de-identified data that cannot be linked to individual parents and children under US Department of Health and Human Services' "Safe Harbor" standard. Because of these features, the Stanford Institutional Review Board has determined that the Wordbank project does not constitute human subjects research.
 
 ### The `wordbankr` API
 
-An application programming interface (API) is a set of abstractions that allow applications to interact with a resource (e.g., a set of data like Wordbank) through consistent abstractions. Although in principle it is possible to construct raw SQL queries to Wordbank, in practice all access is through an `R` API that constructs individual SQL calls. This API is distributed to `R` users through the `wordbankr` package, which is available through the Comprehensive R Network (CRAN). 
+An application programming interface (API) is a set of abstractions that allow applications to interact with a resource (e.g., a set of data like Wordbank) through consistent abstractions. Although in principle it is possible to construct raw `SQL` queries to Wordbank, in practice all access is through an `R` API that constructs individual `SQL` calls. This API is distributed to `R` users through the `wordbankr` package, which [is available through CRAN](https://CRAN.R-project.org/package=wordbankr). 
 
-We developed this package, `wordbankr`, to provide a simple and flexible API for the Wordbank dataset [@frank2016], and our current book depends on it heavily. The package provides a consistent set of function calls for retrieving data from the underlying database, for example `get_instruments` or `get_administrations` to retrieve all or subsections of these tables, respectively. We do not describe the package in depth here, since it is described in our previous paper and in its [online documentation](https://github.com/langcog/wordbankr)
+We developed this package, `wordbankr`, to provide a simple and flexible API for the Wordbank dataset [@frank2016], and our current book depends on it heavily. The package provides a consistent set of function calls for retrieving data from the underlying database, for example `get_instruments` and `get_administrations` to retrieve all or subsections of these tables, respectively. We do not describe the package in depth here, since it is described in our previous paper and in its [online documentation](https://github.com/langcog/wordbankr).
 
 ### "Unilemmas": cross-linguistic conceptual mappings
 
@@ -44,19 +47,19 @@ As described in Chapter \@ref(intro-practical), it is sometimes useful to (cauti
 
 Unilemmas were created for particular instruments by following a two-step procedure. First, using a pool of English unilemmas, we proposed candidate mappings for each lexical item on a form. This first step was often accomplished by a non-native speaker using translation resources and the context of the form (e.g., that an item occurs in the "animal sounds" section). Second, we recruited a linguistically-sophisticated native speaker of the language (often a psychologist or linguist), provided them with the candidate unilemma list, and asked them to review this list item by item and suggest corrections and amendments.^[The specific direction they were given was: "We're looking for the best English translation of these words. These are words that are among the first words that children learn, so your translation should be closest to the meaning of the word as it would be used by a young child (say, under 3 years old). For cases when there are two equally good English words, put both. If you don't think there is a good translation into a reasonable English word that a kid might know, you can leave the alternative translation blank."] 
 
-Not every instrument has unilemma mappings, but they are currently available for FIXME forms in FIXME languages.
+Not every instrument has unilemma mappings, but they are currently available, at least partially, for `r sum(instruments$unilemma_coverage > 0)` out of the `r nrow(instruments)` instruments.
 
 ### A note on age
 
-Developmental psychologists are very fond of using temporal units like months and years as rough guides. Children tend to begin to crawl between 5 and 8 months, and say their first word around one year. This practice is fine for rules of thumb, but we also use these units for measurement as though they were precise (e.g., "infants with ages between 7;0 and 8;0") when in fact such infants will vary in the number of days since their birth depending on facts like whether their seven months of life encompassed February or not. A similar problem is true of years as a scientific unit -- because of leap years, years technically include 365.2524 days --- though the magnitude of the imprecision is smaller. 
+Developmental psychologists are very fond of using temporal units like months and years as rough guides. Children tend to begin to crawl between 5 and 8 months, and say their first word around one year. This practice is fine for rules of thumb, but we also use these units for measurement as though they were precise (e.g., "infants with ages between 7;0 and 8;0") when in fact such infants will vary in the number of days since their birth depending on facts like whether their seven months of life encompassed February or not. A similar problem is true of years as a scientific unit -- because of leap years, years technically include 365.2524 days -- though the magnitude of the imprecision is smaller. 
 
-Despite these issues, months are the currency of language development research, and we often receive contributed datasets with months as the only measure of age. In Wordbank, we define a *standardized month* as 365.2524 / 12 = `r 365.2524 / 12` days. When possible, we compute the number of days from birth to testing and then compute the number of standardized months that the child has lived. If this is not possible, we use months as reported in the dataset. We define an eight-month-old (`age == 8`) as a child who has lived between 8 and 9 standard months: their age is in the range [8 - 9) standard months. (The alternative definition, from 7;16 -- 8;15, is sometimes used in infancy research but is in our opinion less intuitive.)
+Despite these issues, months are the currency of language development research, and we often receive contributed datasets with months as the only measure of age. In Wordbank, we define a *standardized month* as 365.2524 / 12 = `r 365.2524 / 12` days. When possible, we compute the number of days from birth to testing and then compute the number of standardized months that the child has lived. If this is not possible, we use months as reported in the dataset. We define an eight-month-old (`age == 8`) as a child who has lived between 8 and 9 standard months: their age is in the range [8--9) standard months. (The alternative definition, from 7;16--8;15, is sometimes used in infancy research but is in our opinion less intuitive.)
 
 ## Datasets
 
 This section gives a broad overview of the data we have available. Unlike projects in which data are collected by the organizers, in our work here, we rely on the kindness of others in contributing data that are often years or decades old. Some datasets come via an email containing well-curated tabular data; others were contributed in more idiosyncratic formats or even on paper. One dataset was even retrieved by one of us from a doorstep several hours drive away, in the form of a paper bag full of old paper forms. Thus, the amount and type of meta-data available for some datasets is limited. For example, we have limited demographic information for some datasets and only vocabulary -- not complexity or gesture -- items for others. In many cases we do not have full details of instructions and administration for a particular dataset. This section gives an overview of data availability and some demographic comparisons of the samples. Specifics of each dataset -- to the extent that they are available -- are given in Appendix \@ref(appendix-data). 
 
-### Data Provenance
+### Data provenance
 
 As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html). Several of these datasets were transferred second-hand from a pre-existing database [CLEX-CDI; @jorgensen2010], while many of the others were contributed directly via electronic or paper forms. In the case of paper forms, we re-keyed the forms using double-entry methods (either ourselves or via a commercial contractor).^[In a check for errors in the re-keying of one Korean dataset, we found that there were 4 incorrect fields in 10 full records for an error rate of ~`r round(100 * 4/6790, digits = 2)`%.]
 
@@ -66,33 +69,28 @@ Each of these datasets is then imported to the database by creating a custom imp
 
 Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments in the original Words & Gestures (infant) / Words & Sentences (toddler) format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable by the researchers constructing the adaptation). 
 
-```{r methods-overview}
-items %>%
-  group_by(language, form) %>%
-  summarise(words = sum(type=="word"),
-            categories = length(unique(category))) %>%
-  filter(form %in% c("WS","WG")) %>%
-  left_join(instruments) %>%
-  DT::datatable()
-```
+Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
 
-This table gives an overview of the available instruments in the dataset.
+Table \@ref(tab:methods-overview) shows an overview of the instruments in Wordbank.
 
-```{r methods-otherforms}
+```{r methods-overview, results="asis"}
+cat(dt_caption("Overview of the available instruments in the Wordbank dataset."))
 items %>%
   group_by(language, form) %>%
   summarise(items = n(),
-            words = sum(type=="word"),
-            categories = length(unique(category))) %>%
-  filter(!(form %in% c("WS","WG"))) %>%
-  DT::datatable()
+            words = sum(type == "word"),
+            categories = n_distinct(category)) %>%
+  left_join(instruments) %>%
+  select(language, form, categories, items, words, age_min, age_max) %>%
+  dt()
 ```
 
-Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
+The number of administrations available is highly variable across instruments and languages, however. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages.
 
-```{r methods-admins}
+```{r methods-admins, fig.cap="Log-scaled number administrations for each instrument."}
 admins_grouped <- admins %>%
-    mutate(form = ifelse(form %in% c("WS","WG"), form, "other"))
+    mutate(form = ifelse(form %in% c("WS","WG"), form, "Other") %>%
+             fct_relevel("WG", "WS", "Other"))
 
 admin_summary <- admins_grouped %>%
   group_by(language, form) %>%
@@ -105,15 +103,16 @@ admin_summary <- admins_grouped %>%
 ggplot(admin_summary, aes(x = language, y = n, col = form)) + 
   coord_flip() + 
   geom_point() + 
-  .scale_colour_discrete() + 
-  xlab("Number of Administrations") + 
-  ylab("Language") +
-  scale_y_log10()
+  .scale_colour_discrete(name = "Form") + 
+  ylab("Number of administrations") + 
+  xlab("") +
+  scale_y_log10() +
+  theme(legend.position = "bottom")
 ```
 
-The number of administrations available is highly variable across instruments and languages, however. The log-scaled plot above shows the distribution of administrations across forms and languages. 
+These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-represented. Figure \@ref(fig:methods-map) indicates which countries' languages are represented.
 
-```{r methods_map}
+```{r methods-map, fig.cap="World map with countries shaded whose dominant language is represented in the dataset.", fig.height=3.6}
 # write_csv(data.frame(unique(instruments$language)), "data/methods/languages_countries.csv")
 
 languages_countries <- read_csv("data/methods/languages_countries.csv")
@@ -132,7 +131,7 @@ map_world <- ggfortify::fortify_map(map_obj) %>%
 ggplot() + 
   geom_polygon(data = right_join(map_world, languages_countries), 
                aes(x=long, y = lat, group = group), 
-               fill = "gray") + 
+               fill = .grey) + 
   geom_polygon(data = map_world, 
                         aes(x=long, y = lat, group = group), 
                colour = "black", fill = NA, size = .4) +
@@ -141,7 +140,6 @@ ggplot() +
   scale_x_continuous(labels = NULL) + 
   scale_y_continuous(labels = NULL, lim = c(-55,90)) 
 ```
-These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-represented. 
 
 ### Administration details
 
@@ -157,9 +155,9 @@ In one trial we conducted using electronic administration, we found that basic w
 
 ### Demographic details
 
-In addition to differences in administration and form, samples from different studies also differ in myriad other ways. The most important of these, especially cultural differences between language communities, are extremely hard to quantify. But we can make a first stab at investigating some similarities and differences between the convenience samples from different studies by comparing demographics where they are available. 
+In addition to differences in administration and form, samples from different studies also differ in myriad other ways. The most important of these, especially cultural differences between language communities, are extremely hard to quantify. But we can make a first stab at investigating some similarities and differences between the convenience samples from different studies by comparing demographics where they are available. The demographic makeup of our datasets is shown in Figure \@ref(fig:methods-gender) for sex, Figure \@ref(fig:methods-momed) for maternal education, and Figure \@ref(fig:methods-ord) for birth order.
 
-```{r methods-gender}
+```{r methods-gender, fig.height=6, fig.cap="Proportion of female-assigned children for each instrument."}
 gender_counts <- admins_grouped %>%
   filter(!is.na(sex)) %>%
   group_by(language, form, sex) %>%
@@ -170,24 +168,29 @@ gender_counts <- admins_grouped %>%
                                        methods = "bayes")$lower, 
          ci_high = binom::binom.confint(x = n, n = sum(n),
                                         methods = "bayes")$upper, 
-         n = sum(n))
+         n = sum(n)) %>%
+  ungroup() %>%
+  mutate(form = fct_relevel(form, "WG", "WS", "Other"))
            
 ggplot(filter(gender_counts, sex == "Female"), 
        aes(x = language, y = prop)) + 
+  coord_flip() +
   geom_point(aes(size = n)) +
   geom_linerange(aes(ymin = ci_low, ymax = ci_high)) + 
-  facet_wrap(~form, scale = "free_x") + 
+  facet_wrap(~form) + 
   .scale_colour_discrete() +
+  scale_size_continuous(name = "N") +
   geom_hline(yintercept = .5, lty = 2) + 
-  ylab("Proportion Female") + 
+  ylab("Female proportion") + 
   xlab("") + 
-  ylim(.2, .8) + 
+  # ylim(.2, .8) + 
   theme(axis.text.x = element_text(angle = 90, vjust = .5, hjust = 1), 
         legend.position = "bottom")
 ```
+
 Sex proportions tend to be quite close to .5, with a few exceptions for small datasets. Several WG datasets (e.g., British Sign Language, Russian, Italian, Quebec French) have more males than would be expected by chance. This pattern is important because (as we will investigate in Chapter \@ref(demographics)), there are systematic differences in vocabulary size between boys and girls, and so sample differences in gender will lead to absolute differences in mean vocabulary size. 
 
-```{r methods-momed}
+```{r methods-momed, fig.cap="Proportions of children with each level of maternal education for each instrument."}
 momed_counts <- admins %>%
   filter(form %in% c("WS","WG"), 
          !is.na(mom_ed)) %>%
@@ -202,13 +205,14 @@ ggplot(momed_counts,
   geom_bar(stat = "identity") +
   coord_flip() + 
   facet_grid(~form) + 
-  ylab("Maternal Education Proportions") + 
+  ylab("Maternal education proportions") + 
   xlab("") +
-  .scale_fill_discrete(name = "Maternal Education") 
+  .scale_fill_discrete(name = "Maternal education") 
 ```
+
 Although we have maternal education data for far fewer datasets, there are also substantial differences between datasets on this variable (we will also return to this issue again in Chapter \@ref(demographics)). Analyses of this variable are complicated by different reporting formats, so for example the German and Mexican Spanish datasets have no separate categorization for graduate education. That said, even for datasets with the most fine-grained maternal education breakdown, we see substantial differences.
 
-```{r methods-ord}
+```{r methods-ord, fig.cap="Proportions of children with each value of birth order for each instrument."}
 ord_counts <- admins %>%
   filter(form %in% c("WS","WG"), 
          !is.na(birth_order)) %>%
@@ -223,9 +227,9 @@ ggplot(ord_counts,
   geom_bar(stat = "identity") +
   coord_flip() + 
   facet_grid(~form) + 
-  ylab("Birth Order Proportions") + 
+  ylab("Birth order proportions") + 
   xlab("") +
-  .scale_fill_discrete(name = "Birth Order") 
+  .scale_fill_discrete(name = "Birth order") 
 ```
 
 Finally, when we examine birth order, we also see differences in the proportion of children who are first- vs. later-born. The majority of the German sample is first-born, while the Czech sample has many more second children, for example. 
@@ -234,32 +238,33 @@ In summary, our samples differ substantially in their demographic makeup. Presum
 
 ### Longitudinal vs. cross-sectional data
 
-```{r methods-longitudinal}
+The strongest developmental inferences can be made by the examination of longitudinal data, in which children's individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. Figure \@ref(fig:methods-longitudinal) shows the number of administrations for particular languages that come from longitudinal datasets with a particular depth. There is a substantial amount of two-administration longitudinal data for several languages, but only a few have more than two observations for an individual child.
+
+```{r methods-longitudinal, fig.cap="Number of children for whom there are multiple administrations for each instrument, split into bins."}
 longitudinal <- admins %>%
   filter(form %in% c(WSs,WGs), 
          !is.na(original_id)) %>%
   group_by(language, form, original_id) %>%
-  count %>%
+  count() %>%
   transmute(n_admins = n) %>%
   mutate(n_admins = cut(n_admins,
                         breaks = c(0, 1,  2,  3,    6,    16),
                         labels = c("1","2","3","4-6","7-16"))) %>%
   group_by(language, form, n_admins) %>%
-  count 
+  count() %>%
+  rename(`Number of administrations` = n_admins)
 
-ggplot(filter(longitudinal, n_admins != "1") %>%
+ggplot(filter(longitudinal, `Number of administrations` != "1") %>%
          ungroup %>%
          mutate(language = fct_reorder(language, n)), 
        aes(x = language, y = n, fill = language)) + 
   geom_bar(stat="identity") + 
-  facet_wrap(~n_admins) + 
+  facet_wrap(~`Number of administrations`, labeller = label_both) + 
   coord_flip() + 
   scale_fill_manual(values = lang_colours, guide = FALSE) +
-  ylab("Number of Children") + 
-  xlab("Number of Administrations")
+  ylab("Number of children") +
+  xlab("")
 ```
-
-The strongest developmental inferences can be made by the examination of longitudinal data, in which children's individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. The figure above shows the number of administrations for particular languages that come from longitudinal datasets with a particular depth. There is a substantial amount of two-administration longitudinal data for several languages, but only a few have more than two observations for an individual child. 
 
 In general, this aspect of our data is a consequence of the fact that, for normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the more extensive Norwegian and English longitudinal data in Chapter \@ref(style), however.
 

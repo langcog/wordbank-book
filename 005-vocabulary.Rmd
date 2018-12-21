@@ -7,7 +7,7 @@ This chapter begins our substantive analysis of properties of language learning 
 
 We are interested in these theoretical uses of variability. But variability is only meaningful in the case that it is stable; that is, that it reflects signal about individuals (or cultures) rather than measurement error. With respect to the CDI, the strong evidence for the reliability and validity of the forms -- reviewed in Chapter \@ref(psychometrics) and in @fenson2007 -- provides support for the contention that observed variability is meaningful. Such evidence has primarily been collected for the English CDI, however. In this chapter we examine variability across the full set of languages, and it is worth noting up front that we project the reliability and validity of the English instrument to its adaptations. 
 
-One study nicely illustrates why such an approach might not be misguided. @bornstein2012 collected multiple language measures at 20 and 48 months in a sample of nearly 200 children and used a structural equation model to estimate the stability of a single latent construct, language ability. Essentially all measures related strongly to this latent variable and the coefficient on its stability over time was $r = .84$, suggesting that early language is quite stable, at least when measured appropriately. Notably, the ELI, a precursor to the CDI, was included in the measures at 20 months and was found to correlate with the 20-month latent construct at $r = .87$. 
+One study nicely illustrates why such an approach might not be misguided. @bornstein2012 collected multiple language measures at 20 and 48 months in a sample of nearly 200 children and used a structural equation model to estimate the stability of a single latent construct, language ability. Essentially all measures related strongly to this latent variable and the coefficient on its stability over time was _r_ = .84, suggesting that early language is quite stable, at least when measured appropriately. Notably, the ELI, a precursor to the CDI, was included in the measures at 20 months and was found to correlate with the 20-month latent construct at _r_ = .87.
 
 This finding -- along with the other evidence, mentioned above -- justifies the implicit conceptual model of the following analyses. That model is that there is a single quantity, early language ability, that is stably measured by parent report and that can be approximated as the raw proportion of words a child "understands" or "understands and says" on CDI forms. 
 
@@ -30,7 +30,7 @@ taus <-  c(0.1, 0.25, 0.5, 0.75, 0.9)
 ages <- 8:18
 ```
 
-## Central Tendencies 
+## Central tendencies 
 
 The first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown in Figure \@ref(fig:vocab-schematic).
 
@@ -43,7 +43,7 @@ This schematic reveals a number of patterns that are explored in this and subseq
 
 ### Commonalities across languages
 
-```{r vocab-medians, fig.cap="Median production using Words and Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
+```{r vocab-medians, fig.height=6, fig.cap="Median production using Words & Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
 lang_ns <- admins %>% 
   group_by(language, form) %>% 
   summarise(n_admins = n())
@@ -63,18 +63,20 @@ ggplot(filter(medians, form %in% WGs, n_admins > 200),
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  
   xlab("Age (months)") + 
-  ylab("Median Production") +
+  ylab("Median production") +
+  guides(colour = guide_legend(ncol = 4)) +
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) +
+        legend.text=element_text(size=7)) +
   scale_colour_manual(values = inst_colours, name = "") +
-  scale_size(guide = FALSE)
+  scale_size(guide = FALSE) +
+  scale_x_continuous(breaks = .ages)
 ```
 
 Figure \@ref(fig:vocab-medians) shows the median patterns of growth for early production. Rather than showing proportions, as we will do more standardly throughout the book, here individual item totals are plotted.^[As @eriksson2012 write, "Using raw data assumes that each form is exhaustive, while using percentages assumes that each form is equally exhaustive. Neither is correct and the truth lies somewhere in between."] In general, the median child before the first birthday is reported to produce a small number of words. (These data raise a number of questions about the specific reliability of very early parent reports, which we take up below.) Overall, however, these curves accord relatively well with our intuitive sense of early vocabulary development: they reveal that most children tend to speak at most only a few words before their first birthday, but that production accelerates across the second year.
 
-This analysis also motivates the decision made in most our large-scale analyses to omit early production from Words and Gestures forms. Many WG forms end at 16--18 months, meaning that the median production is only around 50 words. For analyses of vocabulary composition or predictive modeling, these numbers are often too small to yield reliable and meaningful estimates, although they can be combined with Words and Sentences data (see Appendix \@ref(appendix-stitching)). 
+This analysis also motivates the decision made in most our large-scale analyses to omit early production from Words & Gestures forms. Many WG forms end at 16--18 months, meaning that the median production is only around 50 words. For analyses of vocabulary composition or predictive modeling, these numbers are often too small to yield reliable and meaningful estimates, although they can be combined with Words & Sentences data (see Appendix \@ref(appendix-stitching)). 
 
-```{r vocab-medians-production-ws, fig.cap="Median production using Words and Sentences-type forms. Included are only languages where there are more than 200 administrations total."}
+```{r vocab-medians-production-ws, fig.height=6, fig.cap="Median production using Words & Sentences-type forms. Included are only languages where there are more than 200 administrations total."}
 
 ggplot(filter(medians, form %in% WSs , n_admins > 200), 
        aes(x = age, y = production,
@@ -82,45 +84,48 @@ ggplot(filter(medians, form %in% WSs , n_admins > 200),
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  
   xlab("Age (months)") + 
-  ylab("Median Production") +
-  geom_hline(yintercept = 50, lty = 2) +
+  ylab("Median production") +
+  geom_hline(yintercept = 50, linetype = .refline, colour = .grey) +
+  guides(colour = guide_legend(ncol = 4)) +
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) + 
+        legend.text=element_text(size=7)) + 
   scale_colour_manual(values = inst_colours, name = "") +
-  scale_size(guide = FALSE)
+  scale_size(guide = FALSE) +
+  scale_x_continuous(breaks = .ages)
 ```
 
-The acceleration in early vocabulary is even clearer when looking at production reports from older children using Words and Sentences. Figure \@ref(fig:vocab-medians-production-ws) shows this pattern. In every language, the median child is reported to produce 50 words between 16--20 months (dashed line). As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We focus on Mandarin in particular, since it is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies in the shape and general numerical range across languages. 
+The acceleration in early vocabulary is even clearer when looking at production reports from older children using Words & Sentences. Figure \@ref(fig:vocab-medians-production-ws) shows this pattern. In every language, the median child is reported to produce 50 words between 16--20 months (dotted line). As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We focus on Mandarin in particular, since it is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies in the shape and general numerical range across languages. 
 
-During the period 24--30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which most researchers assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form. (See Appendix \@ref{appendix-vocabulary) for estimates of how many words children actually might know.)
+During the period of 24--30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which most researchers assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form.
 
-```{r vocab-medians-comprehension-wg, fig.cap="Median comprehension using Words and Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
+```{r vocab-medians-comprehension-wg, fig.height=6, fig.cap="Median comprehension using Words & Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
 ggplot(filter(medians, form %in% WGs, n_admins > 200), 
        aes(x = age, y = comprehension,
            col = interaction(language, form, sep = .inst_sep))) + 
   geom_point(aes(size = n), alpha = .5) + 
   geom_smooth(se=FALSE, span = 1, size = .5) +  
-  theme(legend.position = "bottom") + 
-  xlab("Age (months)") + 
-  ylab("Median Comprehension") + 
-  # geom_hline(yintercept = 50, lty = 2) + 
+  guides(colour = guide_legend(ncol = 4)) +
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) + 
+        legend.text=element_text(size=7)) + 
+  xlab("Age (months)") +
+  ylab("Median comprehension") + 
+  # geom_hline(yintercept = 50, lty = 2) + 
   scale_colour_manual(values = inst_colours, name = "") +
-  scale_size(guide = FALSE)
+  scale_size(guide = FALSE) +
+  scale_x_continuous(breaks = .ages)
 
 mins <- medians %>% 
   filter(n_admins > 200) %>%
   filter(form %in% WGs, age == 8) 
 ```
 
-We next turn to comprehension medians, shown in Figure \@ref(fig:vocab-medians-comprehension-wg). Comprehension is only queried on the Words and Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months (Chapter \@ref(style) discusses differences in the balance between comprehension and production between children). As with the production data, we see substantial differences across languages in reported vocabulary, discussed below (we also examine the odd data for Taiwanese Mandarin in more depth). 
+We next turn to comprehension medians, shown in Figure \@ref(fig:vocab-medians-comprehension-wg). Comprehension is only queried on the Words & Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months (Chapter \@ref(style) discusses differences in the balance between comprehension and production between children). As with the production data, we see substantial differences across languages in reported vocabulary, discussed below (we also examine the odd data for Taiwanese Mandarin in more depth). 
 
 Outside of that particular dataset, one striking aspect of the comprehension data is how early comprehension is reported.  For example, from 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. To many researchers (and some parents) these high numbers feel unlikely. We are largely agnostic on this issue, but the literature does provide some support for early comprehension reports. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available [e.g., @tincoff1999;@tincoff2012;@bergelson2012;@bergelson2017]. The representations revealed in these tasks are quite weak -- often amounting to a 2-5% difference in looking to a target on hearing a word uttered -- but, depending on the criterion used by parents, may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially suppose.^[An alternative possibility is that *both* accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overestimating their vocabulary based on observed behaviors -- in essence, parents could be right, but for the wrong reasons.]
 
 ### Difficult datasets
 
-In the analyses above, our comparisons revealed two cases where datasets showed large disparities: Mandarin (Beijing) Words and Sentences production and Mandarin (Taiwain) Words and Sentences comprehension. 
+In the analyses above, our comparisons revealed two cases where datasets showed large disparities: Mandarin (Beijing) Words & Sentences production and Mandarin (Taiwan) Words & Sentences comprehension. 
 
 
 ```{r vocab-ords-mandarin, fig.cap="Median production vocabulary for 24-month-olds, with total item scores shown in the left panel and proportions on the right. Scores are sorted by total item score. To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months."}
@@ -151,8 +156,9 @@ ords <- bind_rows(ordering_raw, ordering_props) %>%
          measure = factor(measure, levels = c("raw","proportion")))
 
 ggplot(ords, aes(x = language, y = estimate)) + 
-  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
-  facet_wrap(~measure, scales = "free_x") +
+  geom_pointrange(aes(ymin = estimate - std.error,
+                      ymax = estimate + std.error)) + 
+  facet_wrap(~measure, scales = "free_x", labeller = label_caps) +
   coord_flip() + 
   ylab("Median 24-month vocabulary estimate") + 
   xlab("")
@@ -177,7 +183,7 @@ ggplot(taiwan_comp_data,
                      limits = c(8, 16),
                      name = "Age (months)") +
   scale_colour_manual(values = inst_colours, name = "") +
-  ylab("Comprehension (Number of Words)") +
+  ylab("Comprehension (number of words)") +
   ylim(c(0, 380)) + 
   theme(legend.position = "bottom")
 ```
@@ -188,7 +194,7 @@ The datasets discussed in this section deviate from the normal pattern of CDI fo
 
 ### Cross-language differences
 
-While we have reason to believe that there are some outlier languages in our data, there is still other observed variation that does not seem unusual. What are the sources of this variation? In these anlayses, we examine production on the Words and Sentences form, as the data are the densest and most reliable for this instrument. Figure \@ref(fig:vocab-ords-mandarin)  shows estimates of the median 24-month vocabulary in both raw scores and proportions. Clearly there are substantial differences in raw scores, even leaving aside Mandarin and Hebrew. We consider a range of explanations for this pattern. 
+While we have reason to believe that there are some outlier languages in our data, there is still other observed variation that does not seem unusual. What are the sources of this variation? In these analyses, we examine production on the Words & Sentences form, as the data are the densest and most reliable for this instrument. Figure \@ref(fig:vocab-ords-mandarin) shows estimates of the median 24-month vocabulary in both raw scores and proportions. Clearly there are substantial differences in raw scores, even leaving aside Mandarin and Hebrew. We consider a range of explanations for this pattern. 
 
 ```{r vocab-nums, fig.cap}
 nums <- left_join(ordering_raw, num_words)
@@ -204,10 +210,10 @@ num_prop <- ords %>%
 num_prop_cor <- cor.test(num_prop$raw, num_prop$proportion)
 ```
 
-Differences could be due to differences in form length. As shown in the plot above, however, medians for production and raw scores are highly correlated ($r$(`r num_prop_cor$parameter`) = `r signif(num_prop_cor$estimate, 3)`, $p$ = `r signif(num_prop_cor$p.value, 3)`), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length ($r$(`r num_cor$parameter`) = `r signif(num_cor$estimate, 3)`, $p$ = `r signif(num_cor$p.value, 3)`), this correlation changes direction and is no longer reliable for proportions ($r$(`r prop_cor$parameter`) = `r signif(prop_cor$estimate, 3)`, $p$ = `r signif(prop_cor$p.value, 3)`). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. Figure \@ref(fig:vocab-medians-production-ws-prop) shows the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).
+Differences could be due to differences in form length. As shown in the plot above, however, medians for production and raw scores are highly correlated (_r_(`r num_prop_cor$parameter`) = `r signif(num_prop_cor$estimate, 3)`, _p_ = `r printp(num_prop_cor$p.value)`), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length (_r_(`r num_cor$parameter`) = `r signif(num_cor$estimate, 3)`, _p_ = `r printp(num_cor$p.value)`), this correlation changes direction and is no longer reliable for proportions (_r_(`r prop_cor$parameter`) = `r signif(prop_cor$estimate, 3)`, _p_ = `r printp(prop_cor$p.value)`). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. Figure \@ref(fig:vocab-medians-production-ws-prop) shows the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).
 
 
-```{r vocab-medians-production-ws-prop, fig.cap="Cross-linguistic production data, proportions plotted by age. English (American) and Danish are highlighted."}
+```{r vocab-medians-production-ws-prop, fig.height=6, fig.cap="Cross-linguistic production data, proportions plotted by age. English (American) and Danish are highlighted."}
 highlight_langs <- c("Danish", "English (American)")
 
 highlight_data <- filter(medians, form %in% WSs, 
@@ -223,19 +229,19 @@ ggplot(highlight_data,
   geom_point(aes(size = n, alpha = highlight)) +
   geom_smooth(se=FALSE, span = 1, 
               data = filter(highlight_data, language %in% highlight_langs)) +
-  theme(legend.position = "bottom") + 
   scale_alpha_continuous(guide=FALSE) + 
   xlab("Age (months)") + 
-  ylab("Production Proportion") + 
+  ylab("Production proportion") + 
+  guides(colour = guide_legend(ncol = 4)) +
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) + 
+        legend.text=element_text(size=7)) + 
   scale_colour_manual(values = lang_colours, name = "") +
   scale_size(guide = FALSE) +
   ylim(0,1) + 
-  xlim(18,30)
+  scale_x_continuous(breaks = .ages, limits = c(18, 30))
 ```
 
-Differences could also be due to form construction. For example, the Czech form could contain harder words, leading to fewer words being checked. We cannot directly address questions about the difficulty distribution items without moving to psychometric models  (see Chapter \@ref(psychometrics)). These models in turn would need to be equated across forms in order to compare latent ability scores across instruments. While we have experimented with these procedures, there is a circularity to these procedures that makes us leery of proceeding. In particular, in order to equate across tests in standard item response theory models, it is critical to have test items that are share across instruments. But although we have *concepts* that are shared across instruments (see Chapter \@ref(items-prediction)), we do not believe the words that represent these concpets are equally difficult across languages -- in fact, the premise of our later analyses is that they are not. Thus, assessing form difficulty across languages is a complex proposition that we do not address directly here.
+Differences could also be due to form construction. For example, the Czech form could contain harder words, leading to fewer words being checked. We cannot directly address questions about the difficulty distribution items without moving to psychometric models  (see Chapter \@ref(psychometrics)). These models in turn would need to be equated across forms in order to compare latent ability scores across instruments. While we have experimented with these procedures, there is a circularity to these procedures that makes us leery of proceeding. In particular, in order to equate across tests in standard item response theory models, it is critical to have test items that are share across instruments. But although we have *concepts* that are shared across instruments (see Chapter \@ref(items-prediction)), we do not believe the words that represent these concepts are equally difficult across languages -- in fact, the premise of our later analyses is that they are not. Thus, assessing form difficulty across languages is a complex proposition that we do not address directly here.
 
 ```{r vocab-select-medians-DE, fig.cap="Proportion production plotted by age for Danish and English samples, now subsetting to the first-born female children of college-aged mothers."}
 select_medians <- vocab_data %>%
@@ -251,24 +257,24 @@ ggplot(select_medians,
   geom_point(aes(size = n)) + 
   geom_smooth(se=FALSE, span = 1) +
   theme(legend.position = "bottom") + 
-  scale_alpha_continuous(guide=FALSE) + 
   scale_colour_manual(values = lang_colours, name = "") +
+  scale_size_continuous(name = "N") +
   xlab("Age (months)") + 
-  ylab("Median Production Proportion") + 
+  ylab("Median production proportion") + 
   ylim(0,1) + 
-  xlim(18,30)
+  scale_x_continuous(breaks = .ages, limits = c(18, 30))
 ```
 
 
 Differences could also be due to demographic differences across samples. We can examine sample composition in Chapter \@ref(methods) and see that -- to the extent we have access to demographic data -- sample composition does vary in features that affect vocabulary (e.g., maternal education, birth order; see Chapter \@ref(demographics) for fuller analysis). We are not yet in a position to conduct a full analysis of these differences, controlling for demographics, as data are sparse and demographic differences *also* vary across cultures. But we can examine the difference between Danish, and English (American) for example, and note that these differences look quite similar (though noisier) in the female, first-born children of college-educated mothers (Figure \@ref(fig:vocab-select-medians-DE)). Thus, we do not believe that demographic differences fully explain the cross-linguistic differences observed. 
 
-Differences could be due to cohort effects, in which older sets of data show differences from newer datasets. Most of our data date from the period 2005-2015, but some of our English and Spanish data are older, as they date to the period in which CDI forms were first being designed [the early 1990s; @fenson1994]. Unfortunately we do not have reliable information about the collection data for many datasets, so we cannot do regression analyses straightforwardly. Naively, we would expect later cohorts to show higher vocabularies, consistent with the Flynn effect [@flynn1987]. Yet, the Danish data, for example are relatively recent and were collected online using standardized instructions. Danish is subject to its own issues, howver, but the Norwegian data are also relatively recent and are quite comparable to the English data. 
+Differences could be due to cohort effects, in which older sets of data show differences from newer datasets. Most of our data date from the period 2005-2015, but some of our English and Spanish data are older, as they date to the period in which CDI forms were first being designed [the early 1990s; @fenson1994]. Unfortunately we do not have reliable information about the collection data for many datasets, so we cannot do regression analyses straightforwardly. Naively, we would expect later cohorts to show higher vocabularies, consistent with the Flynn effect [@flynn1987]. Yet, the Danish data, for example are relatively recent and were collected online using standardized instructions. Danish is subject to its own issues, however, but the Norwegian data are also relatively recent and are quite comparable to the English data. 
 
 Differences may relate not to demographics of the sample but to the procedure at administration. These differences are not transparent to us in all cases, and so, similar to cohort effects, we cannot control for statistically. For example, instructions at administration -- whether written on the form or given by experimenters -- might have been more liberal in the case of Slovak or English (American) samples. Such instructions could have emphasized completeness in reporting vocabulary. Or the circumstances of administration could have been different -- for example, Danish data were collected online while most English data were collected using paper and pencil forms. English (American) data are contributed by many different labs, so there are likely many different administration styles represented.
 
 Differences could be due to cultural or experimental differences in reporting bias. Slovak parents might have a lower criterion for reporting knowledge of a word. Recalling our discussion of these issues in Chapter \@ref(intro-practical), their model of children's overall competence might be shifted up. (Such an explanation could be true in principle for the case of the Mandarin and Hebrew data discussed above, as well, though this would be a case of extreme differences!) This explanation is as an extension of the discussion above of administration and instructions -- perhaps cultural expectations for what it means to be producing a word or cultural expectations for how verbal children are expected to be. 
 
-Finally, differences could be due to true differences in language acquisition. While this explanation is a possiblity, we hope we have emphasized that it is only one among the many enumerated above. Many researchers working on Danish believe that, due to its phonological properties, it is truly a difficult language to learn [@bleses2008;@bleses2011]. In particular, Danish is characterized by some highly distinctive phonological reduction processes which greatly reduce the frequency of obstruents, and more generally lead to "an indistinct syllable structure which in turn results in blurred vowel-consonant, syllable and word boundaries [where]... word endings are often indistinctly pronounced" (Bleses et al., 2008, p. 623).  The authors of this study also able to provide evidence against the alternative view that Danish parents are simply more reluctant to respond "yes’"– there were no differences on either gestures or word production.  They concluded that the phonological structure of Danish produces an initial obstacle to breaking into the stream of speech and is reflected in overall patterns of vocabulary development. While this generalization may in fact be true, it does not answer the question of why children learning other languages are equally slow by both raw and percentile metrics. 
+Finally, differences could be due to true differences in language acquisition. While this explanation is a possibility, we hope we have emphasized that it is only one among the many enumerated above. Many researchers working on Danish believe that, due to its phonological properties, it is truly a difficult language to learn [@bleses2008;@bleses2011]. In particular, Danish is characterized by some highly distinctive phonological reduction processes which greatly reduce the frequency of obstruents, and more generally lead to "an indistinct syllable structure which in turn results in blurred vowel-consonant, syllable and word boundaries [where]... word endings are often indistinctly pronounced" (Bleses et al., 2008, p. 623).  The authors of this study also able to provide evidence against the alternative view that Danish parents are simply more reluctant to respond "yes’"– there were no differences on either gestures or word production.  They concluded that the phonological structure of Danish produces an initial obstacle to breaking into the stream of speech and is reflected in overall patterns of vocabulary development. While this generalization may in fact be true, it does not answer the question of why children learning other languages are equally slow by both raw and percentile metrics. 
 
 In summary, differences between languages in the sheer number of words reported are unlikely to be accounted for purely by differences in form size or demographic differences between samples. In our very speculative view, they likely result from a combination of cultural attitudes towards children's language, differences in administration instructions, and real differences in learning across languages. Partialling out these differences would likely require better-controlled data that included constant administration and sampling methods. For this reason, in the remainder of our analyses, we attempt to avoid interpreting overall differences in vocabulary size wherever possible and limit ourselves to quantities that can be effectively normalized. 
 
@@ -307,10 +313,10 @@ ws_prod_preds <- ws_prod_data %>%
 #         strip.text.x = element_text(size = 8))
 ```
 
-We next turn from the question of central tendencies in early vocabulary to the question of variability. One of the most important features of early vocabulary development is its variability [@fenson1994]. To examine variability, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words and Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability? That is the question addressed by our next set of analyses. 
+We next turn from the question of central tendencies in early vocabulary to the question of variability. One of the most important features of early vocabulary development is its variability [@fenson1994]. To examine variability, we switch to a view of the data that reveals the full range of variation across the samples in the database. Examining Words & Sentences data, we can see that across every language in the database there is a tremendous range of vocabulary sizes reported. How systematic is this variability? That is the question addressed by our next set of analyses. 
 
 
-### Quantifying Variability
+### Quantifying variability
 
 ```{r vocab-eng-prod, fig.cap="Raw production scores for English (American) production data. Dots show individual participants, while lines give standardized percentiles, computed via spline-based quantile-regression."}
 eng_prod_data <- vocab_data %>%
@@ -330,18 +336,18 @@ eng_prod_preds <- eng_prod_data %>%
 ggplot(eng_prod_data,
        aes(x = age, y = mean)) +
   geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_line(data = eng_prod_preds, 
+  geom_line(data = eng_prod_preds, size = 1,
             aes(y = pred, col = percentile, group = percentile)) + 
   .scale_colour_discrete(name="Percentile") +
-  scale_x_continuous(breaks = seq(16, 30, 4),
+  scale_x_continuous(breaks = .ages,
                      limits = c(16, 30),
                      name = "Age (months)") +
-  ylab("Production (Number of Words)") +
+  ylab("Production (number of words)") +
   ylim(c(0, 680)) + 
   theme(legend.position = "bottom")
 ```
 
-As an example, we zoom in on the English (American) production data from the Words and Sentences form. The canonical view of these data is given in Figure \@ref(fig:vocab-eng-prod). It is very clear that variability is the norm! Children are all over the map at almost all age groups. 
+As an example, we zoom in on the English (American) production data from the Words & Sentences form. The canonical view of these data is given in Figure \@ref(fig:vocab-eng-prod). It is very clear that variability is the norm! Children are all over the map at almost all age groups. 
 
 ```{r vocab-histogram, fig.cap="Histogram of English (American) production values for 24-month-olds."}
 ggplot(filter(eng_prod_data, age == 24), 
@@ -349,7 +355,8 @@ ggplot(filter(eng_prod_data, age == 24),
   geom_histogram(binwidth=30) + 
   # geom_density(col = "red", aes(y = ..density..)) +
   xlim(0,680) + 
-  xlab("Number of words produced")
+  xlab("Number of words produced") +
+  ylab("Count")
 ```
 
 Next consider just a single age group, 24-month-olds. A histogram of two-year-old production vocabulary is show in Figure \@ref(fig:vocab-histogram). The distribution of vocabularies across children is far from normal, with many children at the very bottom of the scale and almost as many at the top. Quite a few two-year-olds on their second birthday are producing only a handful of words (or at least their parents say they are) and others are producing nearly all of the 680 listed on the form (as well as others, in all likelihood). (It will quickly get tiresome to acknowledge ceiling effects and parent report biases in every analyses, so we acknowledge them up front and then mention them only when relevant throughout.) 
@@ -375,32 +382,34 @@ madm_data <- vocab_data %>%
   filter(n > 20) 
 
 ggplot(filter(madm_data, language == "English (American)"), 
-       aes(x = age, y = madm_p, col = form)) + 
-  geom_point() + 
+       aes(x = age, y = madm_p)) + 
+  geom_point(aes(col = form)) + 
   geom_smooth(aes(group = 1)) + 
   ylim(0,2) +
   xlim(8,30) + 
   ylab("MADM (MAD / median)") + 
   xlab("Age (months)") + 
-  .scale_colour_discrete(name = "Form")
+  .scale_colour_discrete(name = "Form") +
+  theme(legend.position = "bottom")
 ```
 
 Figure \@ref(fig:vocab-madm1) shows the MADM value for American English production data, plotted by age. In these data, the MADM is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! 
 
 To get a sense of this variability, it can help to have a smaller dataset to consider. Imagine groups of three children. A group where one produced 30 words, one produced 100, and another produced 170 would have a MADM of `r round(madm(c(33,100,180)), digits = 2)`. In contrast, one where they were more closely grouped -- say 70, 100, 130 -- would have a MADM of `r round(madm(c(70,100,130)), digits = 2)`.
 
-```{r vocab-madm2, fig.cap="MADM for production, plotted by age group, for the full sample of languages in our dataset."}
+```{r vocab-madm2, fig.height=6, fig.cap="MADM for production, plotted by age group, for the full sample of languages in our dataset."}
 
 ggplot(madm_data, aes(x = age, y = madm_p)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 
   geom_smooth(aes(group = 1)) + 
   ylim(0,2) + 
-  ylab("MADM (Production)") + 
+  ylab("MADM (production)") + 
   xlab("Age (months)") + 
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) + 
+        legend.text=element_text(size=7)) + 
   scale_colour_manual(values = lang_colours, name = "") +
-  scale_size(guide = FALSE)
+  scale_size(guide = FALSE) +
+  scale_x_continuous(breaks = .ages)
 ```
 
 Does the general level of variability observed in American English hold for other languages? Figure \@ref(fig:vocab-madm2) shows MADM, now plotted for production across languages and instruments. This similarity in variability structure is quite striking, such that between the first and second birthdays, children's early language is remarkably variable. Yet this variability itself is quite *consistent*.
@@ -415,32 +424,33 @@ madm_summary_prod <- madm_data %>%
             madm_ci_lower = mean(madm_p) - ci.t(madm_p),
             madm_ci_upper = mean(madm_p) + ci.t(madm_p)) 
 
-ggplot(madm_summary_prod, aes(x = language, y = madm_mean, col = form)) + 
-  geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper), 
-                  position = position_dodge(width = .2)) + 
-  ylim(0,1.5) + 
-  coord_flip() + 
-  ylab("Language") + 
-  xlab("MADM (Production 12-24 mo)") +
+ggplot(madm_summary_prod, aes(y = language, x = madm_mean, col = form)) + 
+  ggstance::geom_pointrangeh(aes(xmin = madm_ci_lower, xmax = madm_ci_upper), 
+                             position = ggstance::position_dodgev(height = .2)) + 
+  xlim(0,1.5) + 
+  # coord_flip() + 
+  xlab("Language") + 
+  ylab("MADM (production 12-24 months)") +
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
-  .scale_colour_discrete()
+  .scale_colour_discrete(name = "Form") +
+  theme(legend.position = "bottom")
 ```
 
 We can summarize the MADM in the second year of life by taking its mean. This summary is shown in Figure \@ref(fig:vocab-madm-summary). This mean is close to 1 for almost every language and form for which we have data. Confirming the analysis above, we see cross-linguistic consistency in the variability of children.
 
 One question that could be raised regarding the analysis above is the extent to which variability is caused by *variability across children* vs. *variability in reporting*. The extreme values seen in the English data, for example, could easily be the result of a mixture of lazy parents who stopped answering the form with overly diligent parents who misunderstood and checked every box for a word they thought the child had been exposed to. But to the extent these biases are the source of variability, they are extremely *consistent* across languages -- which, recall, is the exact opposite argument from the one we considered above (where parent diligence was supposed to be variable enough across samples to lead to differences between languages). Although there are certainly some reporting biases represented in the data, we do not believe that the particular results of this analysis are an artifact of reporting bias. 
 
-```{r vocab-madm-comprehension, fig.cap="MADM for comprehension, plotted by age group, for the full sample of languages in our dataset."}
+```{r vocab-madm-comprehension, fig.height=6, fig.cap="MADM for comprehension, plotted by age group, for the full sample of languages in our dataset."}
 ggplot(filter(madm_data, form %in% WGs), 
        aes(x = age, y = madm_c)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 
   geom_smooth(aes(group  = 1)) + 
   ylim(0,2) + 
-  ylab("MADM (Comprehension)") + 
+  ylab("MADM (comprehension)") + 
   xlab("Age (months)") + 
   theme(legend.position = "bottom",
-        legend.text=element_text(size=6)) + 
+        legend.text=element_text(size=7)) + 
   scale_color_manual(values = lang_colours, name = "") + 
   scale_size(guide = FALSE)
 ```
@@ -461,7 +471,7 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   ylim(0,1.5) + 
   coord_flip() + 
   ylab("Language") + 
-  xlab("MADM (Comprehension)") 
+  xlab("MADM (comprehension)") 
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```
@@ -470,7 +480,7 @@ The final plot in this sequence is shown in Figure \@ref(fig:vocab-madm-summary-
 
 ### Is there a ceiling to variability?
 
-The analysis above suggests that variability between individuals decreases. But this  conclusion is compromised by ceiling effects: once children begin to reach the ceiling of the CDI form, variability is necessarily truncated. No analysis can completely eliminate these effects, but the use of item response theory-based analyses can partially address the issue by estimating variation in latent ability rather than variation in raw scores themselves. The logic   
+The analysis above suggests that variability between individuals decreases. But this conclusion is compromised by ceiling effects: once children begin to reach the ceiling of the CDI form, variability is necessarily truncated. No analysis can completely eliminate these effects, but the use of item response theory-based analyses can partially address the issue by estimating variation in latent ability rather than variation in raw scores themselves.  
 
 Chapter \@ref(psychometrics) provides a summary of our approach to using item response theory (IRT) with CDI data. In brief, IRT provides a framework in which the full test (the CDI) is broken down into a series of items, with each having its own logistic model predicting the response for a particular child on the basis of their latent ability. In Chapter \@ref(psychometrics), we examine the parameters of individual items with respect to their properties; but fitting an IRT model also implies estimating a set of latent ability parameters for individual participants. These latent ability parameters are logistic regression coefficients and hence are not bounded in the same way that individual responses (and hence raw scores) are. Thus, we can examine their variability as a way of dealing with ceiling effects.
 
@@ -527,7 +537,7 @@ write_feather(mirt_params, "data/vocabulary/mirt_params.feather")
 ```
 
 
-```{r vocab-variability_IRT_slopes, fig.cap="Standard deviation of latent ability scores from IRT models fit to each Words and Sentences-type dataset. Panels show individual languages. Smoothing lines are linear model fits."}
+```{r vocab-variability-IRT-slopes, fig.height=7, fig.cap="Standard deviation of latent ability scores from IRT models fit to each Words & Sentences-type dataset. Panels show individual languages. Smoothing lines are linear model fits."}
 mirt_params <- read_feather("data/vocabulary/mirt_params.feather")
 
 mirt_sd <- mirt_params %>%
@@ -543,11 +553,11 @@ mirt_sd <- mirt_params %>%
   
 ggplot(mirt_sd, 
        aes(x = age, y = sd, col = langform)) + 
-  facet_wrap(~langform) +
+  facet_wrap(~langform, labeller = label_caps) +
   # geom_line() + 
   # geom_smooth(se=FALSE, span = 1) +
   geom_point() +
-  geom_smooth(method = "lm", col = "black", lty=2 ) +
+  geom_smooth(method = "lm", col = "black", linetype = "dashed") +
   # geom_label_repel(data = mirt_sd %>%
   #                    group_by(langform) %>%
   #                    filter(age == max(age)),
@@ -555,11 +565,12 @@ ggplot(mirt_sd,
   # # geom_dl(aes(label = langform, col = langform),
   #         method = "last.points", ) + 
   scale_colour_manual(values = inst_colours, guide = FALSE) +
-  ylab("Latent Ability SD") + xlab("Age (Months)") +
-  xlim(12,40)
+  ylab("Latent ability SD") + xlab("Age (months)") +
+  scale_x_continuous(breaks = .ages, limits = c(12, 40)) +
+  theme(strip.text = element_text(size = rel(0.7)))
 ```
 
-Figure \@ref(fig:vocab-variability_IRT_slopes) shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret -- the range of latent ability scores on a form is a function of how consistently difficult or easy the items are (and as we noted above, we do not think it is trivial to equate these scores across tests) Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children's abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases. 
+Figure \@ref(fig:vocab-variability-IRT-slopes) shows the normalized standard deviation of latent ability scores, plotted by age. The absolute size of the standard deviations is not easy to interpret -- the range of latent ability scores on a form is a function of how consistently difficult or easy the items are (and as we noted above, we do not think it is trivial to equate these scores across tests) Thus, the standard deviation of these scores will be larger or smaller based on this feature as well as the consistency of children's abilities within an age group and is not interpretable. On the other hand, age-related trends in the standard deviation are interpretable and can be used as an index of whether variability in ability stays constant, increases, or decreases. 
 
 Interestingly, slopes for the variability of latent ability are fairly flat or increasing (with Mandarin, which has extreme ceiling effects, being the exception). This finding suggests that the decreases in variability observed above are very likely due to ceiling effects. In sum, when we remove ceiling effects, we find that variability is constant -- or perhaps even increasing -- throughout the full measured range of early language.
 
@@ -594,20 +605,21 @@ p100 <- vocab_data %>%
 #   ylab("Probability") + xlab("Age (months)")
 ```
 
-```{r vocab-walking-comparison-2, fig.cap="Comparison of language milestones with walking, in terms of month at which a percentile ranking is achieved."}
+```{r vocab-walking-comparison-2, results="asis"}
+cat(dt_caption("Comparison of language milestones with walking, in terms of month at which a percentile ranking is achieved."))
 p100 %>%
   group_by(response) %>%
   summarise(`25th percentile` = min(age[prob >= .25]),
             `75th percentile` = min(age[prob >= .75]), 
-            `Range (mo)` = `75th percentile` - `25th percentile`, 
-            `Range (prop.)` = `Range (mo)` / min(age[prob >=.5])) %>%
-  arrange(`Range (mo)`) %>%
+            `Range (months)` = `75th percentile` - `25th percentile`, 
+            `Range (proportion)` = `Range (months)` / min(age[prob >=.5])) %>%
+  arrange(`Range (months)`) %>%
   rename(Response = response) %>%
-  kable(digits = 2) 
-  
+  dt() %>%
+  DT::formatRound(columns = "Range (proportion)", digits = 2)
 ```
 
-Table \@ref(fig:vocab-walking-comparison-2) shows the 25th and 75th percentiles for a variety of behaviors. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
+Table \@ref(tab:vocab-walking-comparison-2) shows the 25th and 75th percentiles for a variety of behaviors. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 
 
 In sum, these results echo the conclusions of @bornstein2005 based their comparative study of Spanish, English, and Italian. They noted that “individual variability is probably a universal feature of early language acquisition” (p. 311). 
 

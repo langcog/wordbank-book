@@ -30,7 +30,7 @@ In sum, identifying the extent of cross-linguistic variation vs. universals has 
 
 One notable exception in a literature where samples have been small -- in terms of both languages and children -- is @bornstein2004, in which the researchers compared vocabulary composition in seven different languages. In this chapter, we follow this comparative approach [see also @tardif2008]. Since we have access to many more observations, our approach offers a more comprehensive approach than these earlier studies. Moreover, we attempt to quantify the estimates of the extent to which languages show a noun bias: we develop a statistical method for quantifying the extent of the noun bias across the entire developmental range in which a particular form is used. 
 
-## Methods and Data
+## Methods and data
 
 Each CDI form contains a mixture of words in different classes. We adopt the categorization of @bates1994, categorizing words into nouns, predicates (both verbs and adjectives), function words (also referred to as "closed class" words), and other words. For each child's vocabulary, we compute the proportion of the total words in each of these categories that they are reported to produce. Following the approach developed by @bates1994, for each of the languages in our sample, we plot these proportions against total vocabulary. As shown in the schematic figure below, if every time a child learns a word, that word is sampled randomly from the different words available on the form, then the proportion of nouns in vocabulary should track perfectly with the proportion of total vocabulary (the diagonal).  In contrast, the extent to which each child's vocabulary has more words in a category than expected, the child's datapoint would be plotted above the diagonal; to the extent that a child's vocabulary contains words that are below the diagonal, they are reported to produce fewer words in that category than expected.
 
@@ -263,7 +263,7 @@ base_plot <- function(input_forms, input_measure) {
 }
 ```
 
-### Comprehension: Words and Gestures
+### Comprehension: WG
 
 
 ```{r catsyn-plot_points_wg_comp, fig.asp=1.25}
@@ -342,7 +342,7 @@ ggplot(filter(plot_areas_wg, lexical_category == "Function Words"),
 
 Function words are substantially under-represented across nearly every language in our sample (except Slovak). Note the scale difference -- the function-word values are far more extreme than the noun and predicate values. These results likely reflect some combination of true under-representation of function-words as well as the difficulty of reporting on function-word comprehension in very early language (see Chapter \@ref(psychometrics) for more details on this issue). Such issues may also vary across cultures, languages, and administration methods. Function-word representation might plausibly differ due to linguistic factors such as morphological complexity, pronoun dropping, agreement, etc. However, it is also notable that the two lowest function-word scores come from Kiswahili and Kigiriama [@alcock2015], a study in which the parents may have had substantially less meta-linguistic awareness as a result of many being illiterate. 
 
-### Production: Words and Sentences
+### Production: WS
 
 
 ```{r catsyn-plot_points_ws, fig.asp=1.25}

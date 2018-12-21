@@ -1,10 +1,24 @@
 bookdown::gitbook:
+  css: css/style.css
   split_bib: no
   config:
     edit: https://github.com/langcog/wordbank-book/edit/master/%s
-    download: ["pdf"]
+    download: no
     toc:
       collapse: section
+      before: |
+        <li>
+          <a href="http://wordbank.stanford.edu/" target="_blank">Wordbank</a>
+        </li>
+    toolbar:
+      position: static
+    sharing:
+      github: yes
+      facebook: no
+      all: no
+    fontsettings:
+      size: 1
+#  df_print: kable
 
 #bookdown::pdf_book:
 #  includes:
@@ -12,4 +26,3 @@ bookdown::gitbook:
 #  latex_engine: pdflatex
 #  citation_package: natbib
 #  keep_tex: yes
-

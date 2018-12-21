@@ -3,10 +3,11 @@ title: "Variability and Consistency in Early Language Learning"
 subtitle: "The Wordbank Project"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
 site: bookdown::bookdown_site
+github-repo: langcog/wordbank-book
 documentclass: book
 bibliography: book.bib
 biblio-style: apalike
-link-citations: true
+link-citations: yes
 ---
 
 # Preface {-}
@@ -21,7 +22,7 @@ How do children learn their first language? To what extent do different children
 
 Answering this question is complicated immensely by the fact that there is no one single event that constitutes language acquisition. Early language learning involves the accumulation of thousands of words, grammatical rules, and constructions, and takes place over the course of years of growth and millions of separate interactions. This problem of timescales makes measurement a tremendous challenge. In addition, during the period in which language emerges, language ability varies wildly from child to child and most children are at best reluctant experimental participants. Accurate measurement of language development across individuals is thus a major challenge. 
 
-Parent report is one powerful method for adressing these. The MacArthur-Bates Communicative Development Inventory (CDI) is a simple survey instrument for measuring early language outcomes that was designed to address these issues.^[For purposes of clarity and ease throughout we refer to CDIs (the family of instruments) rather than the MB-CDI (the particular English forms). We will use this term throughout even though technically some of our data come from "checklists" containing only vocabulary items rather than true Communicative Development Inventory forms.] The CDI is a checklist for parents to fill out to report on their child’s progress in language. In different versions of the form, parents mark whether their child “says” or “understands and says” particular words out of a list of several hundred. Separate sections for gestures, word forms, and grammar are also present in some versions. Despite their simplicity, over the past 25 years of use, CDI forms have been shown to be reliable and valid measures of children’s early language. In addition, CDI forms have been adapted to more than 100 different languages around the world. Research based on the CDI has contributed tremendously to our understanding of the growth of language in early childhood. 
+Parent report is one powerful method for addressing these. The MacArthur-Bates Communicative Development Inventory (CDI) is a simple survey instrument for measuring early language outcomes that was designed to address these issues.^[For purposes of clarity and ease throughout we refer to CDIs (the family of instruments) rather than the MB-CDI (the particular English forms). We will use this term throughout even though technically some of our data come from "checklists" containing only vocabulary items rather than true Communicative Development Inventory forms.] The CDI is a checklist for parents to fill out to report on their child’s progress in language. In different versions of the form, parents mark whether their child “says” or “understands and says” particular words out of a list of several hundred. Separate sections for gestures, word forms, and grammar are also present in some versions. Despite their simplicity, over the past 25 years of use, CDI forms have been shown to be reliable and valid measures of children’s early language. In addition, CDI forms have been adapted to more than 100 different languages around the world. Research based on the CDI has contributed tremendously to our understanding of the growth of language in early childhood. 
 
 In this book, we examine the question of variability and consistency in early language through the lens of the CDI. Our book is an outgrowth of the Wordbank project [@frank2016], which has as its goal to archive CDI data in a structured format so that they can be explored and analyzed in the service of describing early language. The database currently contains data from more than `r length(admins$data_id)` CDI form administrations across `r length(unique(instruments$language))` languages. Wordbank is also continuously growing as new researchers contribute data. We believe this database is the largest and most diverse set of data on early language acquisition currently in existence.
 
@@ -44,7 +45,7 @@ include_graphics("images/outline-graffle.png")
 
 Chapters \@ref(vocabulary) -- \@ref(style) then form the empirical heart of the book. Each applies a particular analysis of interest to our dataset. Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data (see Figure \@ref(fig:preface-outline)). 
 
-Considering the data in this way leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocabulary) considers this view of the data, examining developmental change and variability in such data. Then in Chapter \@ref(demographics), we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-cultually valid proxy for socioeconomic status). 
+Considering the data in this way leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocabulary) considers this view of the data, examining developmental change and variability in such data. Then in Chapter \@ref(demographics), we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-culturally valid proxy for socioeconomic status). 
 
 Averaging across the other margin of the data leads to *by-item averages*. These can be examined in a number of different ways. Gesture items and their growth trajectory -- and relationship to overall vocabulary size -- are examined in Chapter \@ref(gesture). Chapter \@ref(items-consistency) then considers the growth trajectories for individual words, focusing especially on early vocabulary. Chapter \@ref(items-prediction) follows this approach and attempts to predict the trajectories of individual words based on both environmental and conceptual features of these words. This last approach calls for the incorporation of other resources, and so we use a variety of English and cross-linguistic resources to supplement Wordbank data in this chapter. 
 
@@ -53,11 +54,11 @@ Next, we investigate the grouping of items into categories (both syntactic and s
 Chapter \@ref(grammar) explores the relationship between vocabulary growth and the growth of grammar. 
 Finally, Chapter \@ref(style) returns to the question of individual variation using tools built up in previous chapters to quantify differences in the style and trajectory of learning across children.
 
-The book ends with two synthesis chapters. Chapter \@ref(conclusion-consistency) synthesizes observations across languages for the preceding chapters to quantify variability and consistency directly across phenomena. And the concluding chapter, Chapter \@ref(conclusion-scale), considers broadly the question of what the process of language acquisition looks like from the birdseye view afforded by our data. 
+The book ends with two synthesis chapters. Chapter \@ref(conclusion-consistency) synthesizes observations across languages for the preceding chapters to quantify variability and consistency directly across phenomena. And the concluding chapter, Chapter \@ref(conclusion-scale), considers broadly the question of what the process of language acquisition looks like from the birds-eye view afforded by our data. 
 
 Finally, a number of appendices provide supplemental analyses, validating particular analytic practices that we adopt. 
 
-## How to Read This Book {-}
+## How to read this book {-}
 
 You can read this book as a narrative monograph. If you intend to do so, we recommend you read Chapters \@ref(intro-theory), \@ref(intro-practical), \@ref(methods), and \@ref(psychometrics) before moving on to substantive chapters of interest. 
 
@@ -67,7 +68,8 @@ A number of the analyses reported here were first described in earlier conferenc
 
 The dataset in Wordbank is constantly growing and changing as we add new features, new data, and new languages. In addition, as users of the data occasionally identify issues and errors, we make will make corrections to the database. In writing this manuscript, we have attempted to find a middle ground between a completely dynamic document that responds to any change in the database, on the one hand, and a traditional, static book, on the other. A static manuscript would be a shame given the potential for dynamic extension and updating with new data. On the other hand, if the data were completely dynamic, any claim we made in prose would risk being out of date almost as soon as we wrote it. 
 
-For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. The current build of the book is from `r date()`, based on data cached on `r format(file.mtime("data/_common"), "%a %b %d %H:%M:%S %Y")`.
+For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. The current build of the book is from `r lubridate::now()`.
+<!-- , based on data cached on `r format(file.mtime("data/_common"), "%a %b %d %H:%M:%S %Y")`. -->
 
 ## Acknowledgements {-}
 
@@ -75,6 +77,6 @@ Our sincere thanks go to all of the generous researchers -- too many to name her
 
 Major thanks are also due to the MacArthur-Bates CDI Advisory Board, especially Philip Dale and Larry Fenson, for their continued intellectual, financial, logistical, and personal support of the Wordbank project. 
 
-Thanks to Danielle Kellier for substantial work importing data and mantaining the Wordbank website, as well as updating the universal lemma mappings. Initial programming work was done by Ranjay Krishna, and some database imports were performed by Elise Sugarman.  
+Thanks to Danielle Kellier for substantial work importing data and maintaining the Wordbank website, as well as updating the universal lemma mappings. Initial programming work was done by Ranjay Krishna, and some database imports were performed by Elise Sugarman.  
 
 Thanks to NSF Award #1528526, "Wordbank: An Open Repository for Developmental Vocabulary Data" for financial support of the Wordbank project as well as to the Stanford Psychology Department for a small seed funding award that supported the initial development of the site. 

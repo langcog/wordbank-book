@@ -166,7 +166,7 @@ So what sort of developmental process of vocabulary learning could lead to these
 
 
 
-<!-- ### Speculations about Process -->
+<!-- ### Speculations about process -->
 
 
 
@@ -207,7 +207,7 @@ More ABOUT POWER TO MEASURE MEAN AND VARIANCE
 REPRODUCIBILITY
 
 
-## Theoretical Themes
+## Theoretical themes
 
 
 ## Conclusions

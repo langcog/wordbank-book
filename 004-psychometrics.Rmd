@@ -246,7 +246,7 @@ d_ws_summary <- d_ws %>%
 A first question that we can ask using a fitted IRT model is how well individual items relate to children's overall latent abilities. Practically speaking, in these analyses, we use the `mirt` package [@chalmers2012;@chalmers2016] to estimate the parameters of a four-parameter IRT model. As described above, the two-parameter model includes difficulty and discrimination parameters for each item. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds. 
 
 
-```{r psycho-items-ws, fig.cap="FIXME"}
+```{r psycho-items-ws, fig.cap="Words (points), plotted by their difficulty and discrimination parameters, as recovered by the 4-parameter IRT model (see text). Outliers are labled."}
 ggplot(coefs_4pl,  
        aes(x = a1, y = d)) + 
   geom_point(alpha = .3) + 
@@ -263,7 +263,7 @@ Figure \@ref(fig:psycho-items-ws) shows item discrimination and difficulty, with
 
 On the lower right hand side of the plot, the remainder of items are clumped, with discrimination above zero and somewhat higher difficulty. The right-hand tip of this triangle shows the most diagnostic words (e.g., *run*, *kitchen*, and *table*), all of which effectively distinguish between the upper and lower groups of children in the sample. Finally, at the bottom of this triangle is a large cluster of words that are quite difficult. Some of these do not show good discrimination (e.g., *country*), since it is likely too difficult for nearly all children in the sample. 
 
-```{r psycho-bounds-plot, fig.cap="FIXME"}
+```{r psycho-bounds-plot, fig.cap="Words (points), plotted now by their lower and upper bound parameters from the same 4-parameter IRT model."}
 ggplot(coefs_4pl,  
        aes(x = g, y = u)) + 
   geom_point(alpha = .3) + 
@@ -281,7 +281,7 @@ One way to think about these analyses is that they show that the CDI has not onl
 
 ### Production and comprehension
 
-```{r psycho-load-irt-data-wg, fig.cap="FIXME"}
+```{r psycho-load-irt-data-wg, fig.cap="Histograms of words' difficulty and discrimination parameters, for comprehension and production."}
 load("data/psychometrics/eng_wg_mods_4pl.Rds")
 
 coefs_4pl_wg <- bind_rows(coefs_4pl_wg_produces %>%
@@ -322,7 +322,7 @@ Finally, mean discrimination is substantially lower for comprehension relative t
 One hypothesis that we have often speculated about is the question of whether there are special psychometric issues with particular word classes. For example, do parents struggle especially to identify whether children produce or understand function words? 
 
 
-```{r psycho-lexcat, fig.height=6.5, fig.cap="FIXME"}
+```{r psycho-lexcat, fig.height=6.5, fig.cap="Lexical class effects on difficulty and discrimination for Words and Sentences. The top plot shows individual words plotted by their parameter values, with color representing the lexical class of the words. The bottom plot shows discrimination information in the form of a histogram."}
 coefs_4pl <- coefs_4pl %>%
   left_join(items %>% 
                filter(language == "English (American)", 
@@ -360,7 +360,7 @@ gridExtra::grid.arrange(a, b)
 Figure \@ref(fig:psycho-lexcat) shows WS item difficulty and discrimination (as above) and the histogram of discrimination, but broken down by lexical class (color). Many of the easy, non-discriminating items are found in the "other" section. In contrast, the hardest items tend to be function words. These items tend to have lower discrimination on average (`r signif(class_summary$a1[class_summary$lexical_class == "function_words"],2)`) compared with nouns (`r signif(class_summary$a1[class_summary$lexical_class == "nouns"],2)`), adjectives (`r signif(class_summary$a1[class_summary$lexical_class == "adjectives"],2)`), and especially verbs (`r signif(class_summary$a1[class_summary$lexical_class == "verbs"],2)`). Nevertheless, the situation is not dire: most have a discrimination parameter above one. Thus, although function words are not the most discriminative items on the CDI WS, these items still appear to encode valid signal about children's abilities.
 
 
-```{r psycho-lexcat-summary, fig.width=4.5, fig.cap="FIXME"}
+```{r psycho-lexcat-summary, fig.width=4.5, fig.cap="Mean discrimination values for individual words' in production and comprehension measures from the Words and Gestures form (error bars show SD)."}
 coefs_4pl_wg <- coefs_4pl_wg %>%
   left_join(items %>% 
                filter(language == "English (American)", 

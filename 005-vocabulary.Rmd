@@ -94,7 +94,7 @@ ggplot(filter(medians, form %in% WSs , n_admins > 200),
   scale_x_continuous(breaks = .ages)
 ```
 
-The acceleration in early vocabulary is even clearer when looking at production reports from older children using Words & Sentences. Figure \@ref(fig:vocab-medians-production-ws) shows this pattern. In every language, the median child is reported to produce 50 words between 16--20 months (dotted line). As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (We focus on Mandarin in particular, since it is a major outlier from other languages in this analysis). Nevertheless, there are still substantial consistencies in the shape and general numerical range across languages. 
+The acceleration in early vocabulary is even clearer when looking at production reports from older children using Words & Sentences. Figure \@ref(fig:vocab-medians-production-ws) shows this pattern. In every language, the median child is reported to produce 50 words between 16--20 months (dotted line). As we will see below, this analysis masks the tremendous variability apparent during this period. In addition, as we discuss below, languages vary considerably in the absolute number of words reported. (As it is a major outlier, we discuss the Beijing Mandarin WS data in Chapter \@ref(methods)). Nevertheless, there are still substantial consistencies in the shape and general numerical range across languages. 
 
 During the period of 24--30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which most researchers assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form.
 
@@ -119,76 +119,9 @@ mins <- medians %>%
   filter(form %in% WGs, age == 8) 
 ```
 
-We next turn to comprehension medians, shown in Figure \@ref(fig:vocab-medians-comprehension-wg). Comprehension is only queried on the Words & Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months (Chapter \@ref(style) discusses differences in the balance between comprehension and production between children). As with the production data, we see substantial differences across languages in reported vocabulary, discussed below (we also examine the odd data for Taiwanese Mandarin in more depth). 
+We next turn to comprehension medians, shown in Figure \@ref(fig:vocab-medians-comprehension-wg). Comprehension is only queried on the Words & Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months (Chapter \@ref(style) discusses differences in the balance between comprehension and production between children). As with the production data, we see substantial differences across languages in reported vocabulary, discussed below (see Chapter \@ref(methods) for more discussion of Taiwanese Mandarin comprehension data). 
 
 Outside of that particular dataset, one striking aspect of the comprehension data is how early comprehension is reported.  For example, from 8 months, we see parents reporting medians of `r min(mins$comprehension)` (`r mins$language[mins$comprehension == min(mins$comprehension)]`) and `r max(mins$comprehension)` (`r mins$language[mins$comprehension == max(mins$comprehension)]`) words. To many researchers (and some parents) these high numbers feel unlikely. We are largely agnostic on this issue, but the literature does provide some support for early comprehension reports. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available [e.g., @tincoff1999;@tincoff2012;@bergelson2012;@bergelson2017]. The representations revealed in these tasks are quite weak -- often amounting to a 2-5% difference in looking to a target on hearing a word uttered -- but, depending on the criterion used by parents, may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially suppose.^[An alternative possibility is that *both* accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overestimating their vocabulary based on observed behaviors -- in essence, parents could be right, but for the wrong reasons.]
-
-### Difficult datasets
-
-In the analyses above, our comparisons revealed two cases where datasets showed large disparities: Mandarin (Beijing) Words & Sentences production and Mandarin (Taiwan) Words & Sentences comprehension. 
-
-
-```{r vocab-ords-mandarin, fig.cap="Median production vocabulary for 24-month-olds, with total item scores shown in the left panel and proportions on the right. Scores are sorted by total item score. To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months."}
-ordering_raw <- filter(medians, 
-                       form %in% WSs, 
-                       n_admins > 200, 
-                       age >= 18, 
-                       age <= 30,
-                       !(language == "Mandarin" & form == "WS"),
-                       !(language == "Hebrew")) %>%
-  do(broom::tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), 
-                    data = .))) %>%
-  filter(term == "(Intercept)") %>% 
-  mutate(measure = "raw")
-
-ordering_props <- filter(medians, form %in% WSs, 
-                         n_admins > 200, 
-                         age >= 18, 
-                         age <= 30) %>%
-  do(broom::tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), 
-                    data = .))) %>%
-  filter(term == "(Intercept)") %>%
-  mutate(measure = "proportion")
-
-ords <- bind_rows(ordering_raw, ordering_props) %>%
-  ungroup %>%
-  mutate(language = fct_reorder(language, estimate), 
-         measure = factor(measure, levels = c("raw","proportion")))
-
-ggplot(ords, aes(x = language, y = estimate)) + 
-  geom_pointrange(aes(ymin = estimate - std.error,
-                      ymax = estimate + std.error)) + 
-  facet_wrap(~measure, scales = "free_x", labeller = label_caps) +
-  coord_flip() + 
-  ylab("Median 24-month vocabulary estimate") + 
-  xlab("")
-```
-
-Mandarin Words & Sentences data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there also show the pronounced Mandarin advantage plotted above, which are shown for 24-month olds specifically in Figure \@ref(fig:vocab-ords-mandarin). (This figure also reveals the high level of vocabulary reported for Hebrew speakers, which goes unnoticed in the figure above because of the relatively smaller number of items on the Hebrew form). 
-
-To investigate the Mandarin disparities further, @tardif2009 discussed a number of possible explanations, given that the administration and sampling procedures were similar in these two languages. The children in the Mandarin sample are nearly all monolingual, only (first born) children; but these factors did not account for variation between samples. @tardif2009 therefore, speculate that structural factors regarding Mandarin (e.g., phonological structure relative to Cantonese) might be accounting for the Mandarin advantage.
-
-These speculations seem unlikely in light of the data presented here. First, the same trajectory is not shown in the data from the analogous questionnaire of @hao2008. Second, this unusual trajectory is not apparent in the production data from the Mandarin Beijing WG data shown above. Finally, given the surprising difference between Mandarin and all other languages in the sample, pure phonological factors seem unlikely to account fully for the differences. These differences thus remain somewhat mysterious; perhaps some quirk of administration instructions led to relative over-reporting, or perhaps the populations being sampled truly were different. Alongside the Hebrew data, these data serve as an important caution against simple cross-linguistic comparison in raw scores or even percentiles. 
-
-```{r vocab-taiwan-comprehension, fig.cap="Comprehension data from Taiwanese Mandarin."}
-taiwan_comp_data <- vocab_data %>%
-  filter(form == "WG", language == "Mandarin (Taiwanese)") %>%
-  mutate(mean = comprehension)
-
-ggplot(taiwan_comp_data,
-       aes(x = age, y = mean)) +
-  geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_smooth(aes(col = interaction(language, form, sep = .inst_sep)))+ 
-  scale_x_continuous(breaks = seq(8, 16, 2),
-                     limits = c(8, 16),
-                     name = "Age (months)") +
-  scale_colour_manual(values = inst_colours, name = "") +
-  ylab("Comprehension (number of words)") +
-  ylim(c(0, 380)) + 
-  theme(legend.position = "bottom")
-```
-
-Turning to our second case study, Mandarin (Taiwanese) comprehension scores, we see that they are relatively flat and show very high medians very early in development. Deeper inspection of the full distributional pattern (Figure \@ref(fig:vocab-taiwan-comprehension)) suggests that there is relatively little developmental change in comprehension scores on this dataset. In contrast, production, seen above, appears to follow a more typical pattern. In our experience, this pattern results from parents who do not understand what is being asked on the comprehension section of a form; sometimes they report whether they think a child has heard a particular word, or whether they respond to language in more general ways. We have observed a population of "over-responders" of this sort in a number of self-report contexts -- often they are parents of very young children who appear loathe to return a form having checked essentially no items at all. But such an explanation is only speculation.
 
 
 ### Cross-language differences

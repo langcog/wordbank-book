@@ -36,76 +36,80 @@ What is the picture of language development that emerges from these individual f
 
 It could easily be the case that children are "pointy" with respect to language -- that is, highly proficient in some sub-aspect of languages and poor at others. A naive examiner of a group of children in a toddler classroom might conclude that the variation that they observed was supportive of such a view. In such a classroom, some children will only be able to gesture and say a few words; while some others will appear to show a large noun bias; and still others will be fluently combining words. Furthermore, these children will be distributed across a range of ages, with this progress only somewhat predicted by relative age (especially in a tightly-grouped sample from say 18--30 months). 
 
-This viewpoint is incorrect, however. Instead, the language system is tightly woven together, such that on the whole children who are good at gesture have larger vocabulary, and children who have larger vocabulary also inflect and combine words more proficiently. These correlations within individuals are large and they are universal across those languages in which we can evaluate them. Further, while these correlations could in principle arise in CDI data from parent reporting bias across sections of a single form, they are largely borne out in a variety of observational and behavioral datasets [e.g., @brinchmann2018; @rowe2009]. 
+This viewpoint is largely incorrect, however. Instead, the language system is tightly woven together, such that on the whole children who are good at gesture have larger vocabulary, and children who have larger vocabulary also inflect and combine words more proficiently. These correlations within individuals are large and they are universal across those languages in which we can evaluate them. Further, while these correlations could in principle arise in CDI data from parent reporting bias across sections of a single form, they are largely borne out in a variety of observational and behavioral datasets [e.g., @brinchmann2018; @rowe2009]. 
 
 How can the consistence and coherence of these distinct aspects of early language be reconciled with the type of variation our preschool observer might see? Consider the following model of early language. The first posit of this model is that the trajectory of children's learning follows a single, coherent path through the stages of early language. Initially, gestures and early nouns and social routines are learned. Nouns follow, leading into verbs. Verbs in turn promote word combination and morphology. The second posit is that aspects of this trajectory may be non-linear: the noun bias increases and then decreases [@bates1994]; the relation between lexicon and grammar may be flatter at one period than another [@dixon2007]. Finally, imagine a third posit: this non-linear trajectory is followed at different rates, with a child's current state partially a function of age and partially a function of their own idiosycratic learning rate. 
 
 Under such a "unitary non-linear trajectory" model, we would still see "pointy" children in the preschool classroom. These children would be cross-sections cut from the same trajectory, but at different points along it. The younger child who knows a surprising number of names might be further along relative to age and hence firmly in the "noun bias" part of the general path. In contrast, the older child who primarily gestures might be a child with a slightly slower growth rate. Observed variation need not indicate that the subparts of language do not "hang together" (to return to the Batesian phrasing). We return below to the analyses of true variation in learning style that are reported in Chapter \@ref(style)).
 
-Alongside its support from the cross-linguistic consistency in cross-domain correlations, this unitary view of early language is supported by several other bodies of wrok. The first is a set of longitudinal analyses by Bornstein and colleagues. In a two-cohort longitudinal study, @bornstein1998 and @bornstein2004b collected data from a sample of American English learning children at two and four years and measured language using a variety of instruments including parent report, transcripts, and behavioral tasks. In a re-analysis of these data, @bornstein2012 found that the core construct of early languaeg that emerged from the sub-measures was both highly correlated with each of the sub measures and also highly stable over time (as we noted earlier in Chapter \@ref(psychometrics)). 
+Alongside its support from the cross-linguistic consistency in cross-domain correlations, this unitary view of early language is supported by several other bodies of work. The first is a set of longitudinal analyses by Bornstein and colleagues. In a two-cohort longitudinal study, @bornstein1998 and @bornstein2004b collected data from a sample of American English learning children at two and four years and measured language using a variety of instruments including parent report, transcripts, and behavioral tasks. In a re-analysis of these data, @bornstein2012 found that the core construct of early languaeg that emerged from the sub-measures was both highly correlated with each of the sub measures and also highly stable over time (as we noted earlier in Chapter \@ref(psychometrics)). 
 
 In addition, research on international adoption, a unique case study of changes in learning rate relative to input, provides support for this unitary trajectory view as well. International adoptees often have to let go of their native language copletely, sometimes at a fairly old age, and begin learning a host language. A body of work by Snedeker, Geren, and Shafto [@snedeker2007;@snedeker2012] suggests that these children go through the same general course of acquisition, including an early noun bias and early gramamtical omissions, but they did so much more quickly on average then native learners. Although these children were more conceptually sophisticated and could learn faster, the informational challenges of breaking into the language were still similar on the whole. 
 
-In sum, the language system is tightly woven or perhaps even unitary in nature. Our work here confirms and extends previous investigations by @bates1994 and @bornstein2012.  Although our data provided multiple opportunities for aspects of language development (communication, vocabulary, morphology, grammar) to pull apart across individuals into modular subsystems, they instad hung together very tightly. Further, the strength of these connections did not vary across every language examined: the nature of the trajectory was surprisingly consistent, even across languages with substantial differences in morphosyntactic structure. 
+In sum, the language system is much more tightly woven than casual observation might lead an observer to expect. Our work here confirms and extends previous investigations by @bates1994 and @bornstein2012.  Although our data provided multiple opportunities for aspects of language development (communication, vocabulary, morphology, grammar) to pull apart across individuals into modular subsystems, they instad hung together very tightly. Further, the strength of these connections did not vary across every language examined: the nature of the trajectory was surprisingly consistent, even across languages with substantial differences in morphosyntactic structure. 
 
 <!-- look at grammar lex t1 - t2 in norwegian/english -->
 
 <!-- Could do IRT on the grammar items? Look at distribution univariate, and also  -->
 
 
-### Content similarities in early language
+### Young children talk about similar things 
 
-A second broad generalization from our work here is the content similarities in children's early vocabulary across languages. Put simply, regardless of the language they are learning, children in the early stages of language learning appear to talk about similar things, especially people, social routines, small objects, and body parts. This work built on work by @tardif2008, which compared the distribution of children's first ten words across three languages. Many of the content generalizations that held for those three languages in fact hold much more broadly as well. 
+A second broad generalization from our work here is the content similarities in children's early vocabulary across languages. Put simply, regardless of the language they are learning, children in the early stages of language learning appear to talk about similar things, especially people, social routines, small objects, and body parts. This work builds on analyses by @tardif2008, who compared the distribution of children's first ten words across three languages. Many of the content generalizations that held for those three languages in fact hold much more broadly as well. 
 
-We observed findinga related to this generalization in at least three aspects of our data analysis. First, relating most directly to @tardif1999's work, in Chapter \@ref(items-consistency), we observed a strong correlation in the rank order of acquisition for the earliest words. Those words that were typically learned very early in one language tended to be very early learned in others. Second, we saw that some word categories -- both syntactic and semantic -- were typically overrepresetend across languages. Nouns generally were over-represented (with some cross-linguistic variability in the amount of over-representation). But beyond that, words for body parts, games and social routines, and sounds were all over-represented. And third, when we looked for systematic predictors of the ease of learning words across language, the predictor "babiness" -- which captures association with infants -- was among the strongest predictors, especially for early-learned words. 
+As with the example above, it is useful to consider the counterfactual situations, which are very reasonable *a priori*. Without knowing anything about language acquisition in other languages, we might suppose that children in different cultures begin speaking about quite different things. We could easily imagine a culture in which children primarily began by describing the properties of objects: "soft!" "small!" or another in which children described places. We might think that, while American children are obsessed with animals, children in other cultures might abhor them. It turns out that all of these counterfactuals are largely not observed. 
 
-Where does this similarity come from? Our findings likely emerge from a combination of children's particular attention and interests; the communicative priorities of child-caregiver dyads; and the informational structure of language, which renders certain aspects of langauge easier to learn than others. We consider each of these in turn. 
+We observed three broad categories of findings that support this generalization.  First, relating most directly to @tardif1999's work, in Chapter \@ref(items-consistency), we observed a strong correlation in the rank order of acquisition for the earliest words. Those words that were typically learned very early in one language tended to be very early learned in others. These correlations were attenuated for later-learned words. Second, we saw that some word categories -- both syntactic and semantic categories -- were typically overrepresetend across languages. Nouns generally were over-represented (with some cross-linguistic variability in the amount of over-representation). But beyond that, words for body parts, games and social routines, and sounds were all over-represented. In contrast, predicates and function words, as well as words for time and places were under-represented. And third, when we looked for systematic predictors of the ease of learning words across language, the predictor "babiness" -- which captures association with infants -- was among the strongest predictors, especially for early-learned words. 
 
-The entities that are most common in children's early vocabulary are also those w
+Where do these similarities come from? They likely emerge from a combination of children's particular attention and interests; the communicative priorities of child-caregiver dyads; and the informational structure of language, which renders certain aspects of langauge easier to learn than others. We consider each of these in turn. 
 
-Interest- conceptual - priorities - not just frequency - drive content of vocab
-- semantic bias
-- no function words
-- same order of acquisition
-Dyadic interest and focus - very consistent across cultures
-"Not doing nuclear physics with a two-year-old" 
-Snedeker adoption stuff - is it the learning problem or the cognitive (is it about the structure of language)
-color/time/adjectives?
+Further, we can say that they likely *do not* emerge from simple linguistic or environmental frequency. Not only is frequency controlled in some of our analyses (e.g., those in Chapter \@ref(items-prediction)) but also there are clear dissociations between linguistic frequency and children's comprehension and production. Although mothers and fathers are likely common in children's experience, "mom" and "dad" (or the local equivalent) are actually relatively infrequent in language directed to children -- yet they are uttered very early, sometimes even first. Many function words are highly frequent in speech to children, yet are produced much later than expected. Finally, many omnipresent environmental stimuli from diapers to couches and carpets are referred to only much later than the people, animals, and small objects on and in them. 
 
+First, although we do not have an independent operationalization of children's specific interests, anyone who has spent time with toddlers can say that these interest are present and extremely powerful. The red puppet Elmo, who has a squeaky (some might say annoying) voice, is almost designed to drive children's attention and interest, despite some parents' best efforts to minimize his frequency in the environment. More generally, toddlers tend to make a bee-line towards animals and toys that they perceive as interesting. These preferences may stem from general conceptual preferences for animates, or broader perceptual preferences, or likely some mixture of the two, but their impact on children's attention -- and from there their vocabulary across languages -- is undeniable. 
+
+But children's own attention is far from the only driver of the language they hear. Children's language exposure takes place in an evironment that is largely constructed by their caregivers, rather than them. Thus, much of the language they hear is "functional talk" that takes place in the context of routines like dressing, diapering, mealtime, and bathtime. These dyadic priorities mean that children's vocabulary often contains a wide variety of functional terms. In fact, @roy2015 even argued that the contextual distinctiveness of words that appear in these routines may lead to earlier acquisition. Similar dyadic priorities across cultures would thus lead to cross-linguistic consistency in early vocabulary. 
+
+Finally, some words may be learned earlier than others simply because of the informational structure of language. As argued by @snedeker2007, verbs may be later-learned simply because you need to know some nouns to figure them out. To the extent that these regularities extend across languages, they would impose a variety of ordering constraints on acquisition that could be reflected in our analyses. 
+
+Of course, it is always possible that relatively more variant languages exist. All of the typological caveats that we first stated in Chapter \@ref(intro-theory) hold still: most of our languages are WEIRD [@henrich2010], and the majority are Indo-European. Especially with respect to assessing semantic variation across languages, it will be critical for future work to incorporate a wider range of languages and language families. 
 
 
 ### Children take different routes into language
 
-3. Despite these aggregate similarities across children and across cultures, children individually take different routes into language. The speed with which they acquire language is highly variable in the first years of life and this variability itself is a constant across cultures. Further, children vary stably in the nature of their acquisition path, soem naming more objects and others combing words relatively more.
+Despite these aggregate similarities across children and across cultures, children individually take different routes into language. The speed with which they acquire language is highly variable in the first years of life and this variability itself is a constant across cultures. Further, children vary stably in the nature of their acquisition path, soem naming more objects and others combing words relatively more.
 
+First, even controlling for the non-linear trajectory of acquisition mentioned above, we found stable differences in "referential style" amongst children. Thus, although the language system is tightly woven and moves through a relatively consistent learning trajectory across individuals, there is nevertheless an interesting, second-order component. Some children, especially the faster-learning ones, appear to learn more nouns. Others, often the slower-learning ones, tend to combine words. This pattern may relate to the age-moderation found in Chapter \@ref(grammar): it is precisely the older children who gain more "grammar per unit lexicon." Perhaps those children who are learning slightly more slowly then are able to bring more mature working memory to the task of grammatical induction. Or perhaps these children have heard more language and hence the natural statistics of language are easier to extract. Either way, these differences appear as a stable aspect of the relatively consistent developmental course we observed. 
 
-Different routes into language
-Variably is a constant
-variability is endogenous
-referential/expressive distinction 
-check longitudinal stability
+Beginning with the first monograph reporting the CDI norming study, @fenson1994 noted that variability is perhaps the primary and most striking fact about children's vocabulary learning. In practical terms, the huge variance across children accounts for the fact that while some typically-developing two year olds will talk your ear off, others will barely utter a handful of words (even if they understand more). From a biological perspective, this variability is quite unprecedented. As a comparison, variation in heights for toddlers is tiny compared with variation in vocabulary: the mean height for a 24-month-old is around 33 inches, with a standard deviation of a little more than an inch, leading to a coefficient of variation around .03. This measurement is almost two orders of magnitude smaller than the coefficient of variation on vocabulary.
+ 
+Examining the varability in English-learning children's vocabulary documented by @fenson1994, it was easy to think that the spread of children's outcomes was due to the demographic and parenting variability found in the United States, which -- even in the restricted set sampled in that initial study -- was large. But a look at the variability estimates found in our broader sample dispells this hypothesis -- the variability is surprisingly constant (and large) across every language we examined. If culture homogeneity was an important influence on the homogenity of early language, we would expect a smaller variability measurement for the Norwegian, Korean, or Chinese populations, where cultural, educational, and socio-economic heterogeneity would be expected to be higher. Instead, these populations show a similar level of variation. 
 
+Where does this variability come from? We can only speculate. Some must come from variation in input across households, which has been amply documented to relate to children's early vocabulary [@hart1995;@hoff2003;@weisleder2013;et seq.]. Further, some component of this input-correlated variation is likely to be genetic [e.g., @hayiou-thomas2012], such that some children inherit a tendency towards slower vocabulary growth from parents who themselves talk relatively less and use relatively less diverse vocabulary. 
 
+Does this variation persist beyond the range of our study? One of the most intriguing aspects of our analysis is the suggestion that, accounting for ceiling effects, variation in ability does not compress in the range we meausured. An important direction for future work would be to ask about the range of variation observed within and across cultures on other standardized measures of language in school-age children. One possibility is that variability compresses on most standard vocabulary and grammar measures simply because functional communication is possible for nearly all speakers, but variation transfers instead to more "leading edge" domains like literacy or discourse comprehension. 
 
-
-
-
+More generally, we are curious about how the range of variation we observed here relates to the variation in other non-trivial aspects of cognition. If we were to obtain stable measures of mathematical cognition, for example, would we observe the same degree of variation? This extension points to one of the under-appreciated virtues of scale of the type we have explored here: by virtue of the quantitative measurement that it affords, scale can lead to brand new questions. 
 
 ## Learning processes
 
-In Chapter \@ref(intro-theory), we introduced the idea of "process universals." These cannot be universals of content as all of the content being reported by parents filling CDI forms is language-specific. Intead, the idea of process universals is that there are processes that operate in different language context to produce the observed pattern of phenomena. These processes could be -- but need not be -- learner-internal. They could also operate at the level of the child-caregiver dyad, for example. 
+In Chapter \@ref(intro-theory), we introduced the idea of "process universals." These cannot be universals of content as all of the content being reported by parents filling CDI forms is language-specific. Intead, the idea of process universals is that there are processes that operate in different language context to produce the observed pattern of phenomena. These processes could be -- but need not be -- learner-internal. They could also operate at the level of the child-caregiver dyad, for example. What more can we say about them from the perspective of the discussion above?
 
-```{r}
-cvs <- read_feather("data/cvs/cvs.feather")
-```
+As we have stressed throughout, the connections between the broad trends and tendencies that we observed and any specific learner- or dyad-level process are weak, at best. Many different processes can likely lead to the same outcome, thus the linkages we make here are abductive rather than deductive. Further, as with many abductive arguments, some amount of evidential weight is given to the prior probability of the theoretical proposal. Bearing all that in mind, we highlight three process-level connections that appear consistent with our data. 
 
-In what follows, we move away from the term "universal." Although in principle our theoretical goal is process universals, in practice thelimitations of the analysis above are such that we can only speak about "consistent processes." Not only do we have a maximum of `r max(cvs$n)` distinct language/instrument samples represented in any estimate, we have a maximum of `r length(unique(instruments$language))` languages or dialects in any analysis (and often considerably fewer) . This sample, while strong in terms of the within-language estimates, is only a weak start in terms of cross-language estimates [see @piantadosi2014 for guidance on claims about strict universals]. Further, there is a strong Indo-European and WEIRD (western, educated, industrialized, rich, democratic) bias amongst the languages in the database [@henrich2010]. Thus, some consistencies that we observe are probably conditioned on *environmental* consistencies as well as dyadic and child-internal processes. In the remainder of this chapter, we speculate on some of these.
+### Interactional input drives learning
 
-So what sort of developmental process of vocabulary learning could lead to these universals? Any claim of this sort must be very speculative. If pushed, we would point to the following (weak) proposals regarding processes that are consistent with some of our putative universals. 
+From 
 
-1. Demographic differences are -- at least -- consistent with interactional-input theories of vocabulary development [@hart1995;@hoff2003;@weisleder2013] in which the more and higher-quality the input the child receives, the faster vocabulary grows. Under this hypothesis, first-born, female, and higher-maternal education children all are likely to receive more and higher-quality input: female children through the route of their somewhat greater social/interactional abilities (an extra assumption), first-born children through their greater allocation of parent attention, and high maternal-education children through greater parental awareness of the role of input, differering parental practices, and greater amount of leisure time to spend with children among other factors. 
+[@hart1995;@hoff2003;@weisleder2013]
+
+
+Demographic differences are -- at least -- consistent with interactional-input theories of vocabulary development  in which the more and higher-quality the input the child receives, the faster vocabulary grows. Under this hypothesis, first-born, female, and higher-maternal education children all are likely to receive more and higher-quality input: female children through the route of their somewhat greater social/interactional abilities (an extra assumption), first-born children through their greater allocation of parent attention, and high maternal-education children through greater parental awareness of the role of input, differering parental practices, and greater amount of leisure time to spend with children among other factors. 
+
+### Individual word meanings must be inferred based on evidence
 
 2. Both the noun bias and the age-of-acquisition prediction results are consistent with the broader cross-situational viewpoint on acquisition [@smith2008;@gleitman1990]. On this view, nouns are easy to learn because the more they are heard, the more opportunities children get to build consistent mappings between the words and their referents. In contrast, verbs and other predicates rely more on a base of nouns and a basic comprehension of the syntactic structures in which they appear in order to infer meaning in context. Thus they should be acquired relatively later and with relativel more support from shorter, easier-to-parse utterances (MLU as a predictor, for example). Cross-linguistic exceptions will tend to be for languages like Mandarin where many early-learned verbs are semantically-transparent enough to be learned cross-situationally. 
+
+### Generalizations appear gradually 
 
 3. Correlations between grammar and the lexicon, as well as the greater role of MLU in predicting acquisition of function words are both consistent with views that posit gradual syntactic abstraction and generalization. Versions of such viewpoints exist throughout the broad theoretical space of language acquisition [@yang2016;@tomasello2003;@meylan2017], but all proposals rely on a learning mechanism in which generalizations about structure are graded and rely on the amount of evidence available. 
 
@@ -113,92 +117,8 @@ So what sort of developmental process of vocabulary learning could lead to these
 
 
 
-<!-- ### Variability -->
-
-<!-- Beginning with the first monograph reporting the CDI norming study, @fenson1994 noted that variability is perhaps the primary and most striking fact about children's vocabulary learning. In Chapter \@ref(vocabulary), we quantified this variability and found that -- across languages and spanning children's second year -- the variability was as large as the central tendency.  -->
-
-<!-- In practical terms, the huge variance across children accounts for the fact that while some typically-developing two year olds will talk your ear off, others will barely utter a handful of words (even if they understand more). From a biological perspective, this variability is quite unprecedented. As a comparison, variation in heights for toddlers is tiny compared with variation in vocabulary: the mean height for a 24-month-old is around 33 inches, with a standard deviation of a little more than an inch, leading to a coefficient of variation around .03. This measurement is almost two orders of magnitude smaller than the coefficient of variation on vocabulary.  -->
-
-
-
-
-
-
-<!-- One important class of explanations that limits our ability to make generalizations is explanations of our observations that rely on data regarding the process of gathering CDI data itself, whether they relate to: -->
-
-<!-- * the design process for the CDI, e.g., biases on the selection of words to be included in a form; -->
-<!-- * the sampling process for families, e.g., biases on backgrounds of families within and across samples; -->
-<!-- * the reporting process, e.g., biases regarding particular types of children (e.g., girls) or particular types of words (e.g., function words); -->
-
-<!-- To rule out these explanations, we need to rely on the existence of converging evidence for the same effects from other sources. Some of these sources are cited in the original chapters, but we briefly review them here. -->
-
-<!-- **Gender** [Probably in the original CDI/gender paper, look for references?] -->
-
-<!-- **Birth order** [??] -->
-
-<!-- **Noun bias** [bornstein study, others cited in that chapter?] -->
-
-<!-- **Grammar/Lexicon** [??] -->
-
-<!-- **Predictor consistency** [at least @huttenlocher1991, maybe others for frequency. harder for babiness, etc.] -->
-
-<!-- In sum, for many of our proposed consistencies, we can begin to muster evidence against them from convergent sources. Nevertheless, much more work is needed to measure the size (not just the direction) of these effects and compare effect size across different measurements. For example, if the same size gender effect were found in the same population with both parent report and pointing-based methods, this finding would provide evidence against a parent-reporting bias account of gender differences. This high standard has yet to be met for most of the findings we report.  -->
-
-
-
-<!-- ### Ruling out methodological alternatives -->
-
-<!-- ======= -->
-
-<!-- ## Limitations -->
-
-<!-- All of our analyses are fundamentally correlational. No causal inferences from Wordbank data are possible. We'll say this again so you know we mean it: *no causal inferences are possible*. All of the consistencies described above admit alternative causal explanations.  -->
-
-<!-- For example, as noted, parents could *think* that girls speak more and hence report more words for girls. Or girls could actually know more words. Similarly, first-born children could receive more language input due to the lack of other competition for parents' attention, and hence have larger vocabulary. Or parents could be *aware* of more of first-born children's vocabulary. Or both. As in the gender case, external data can provide evidence for or against particular causal explanations but in their absence we are left to speculate.  -->
-
-<!-- For more cognitive consistencies that we observe, alternative causal interpretations are again possible. To take one example, the "noun bias" could result from any of the following causal mechansisms (as well as mixtures of these, or mixtures of these and others not described):  -->
-<!-- * children could learn nouns more easily due to their social/referential disambiguation relative to the syntactic disambiguation  [@gleitman1990;@gillette1999];  -->
-<!-- * they could be learned more easily due to their conceptual transparency [@gentner2003];  -->
-<!-- * they could be reported more frequently by parents due to some feature, such as their  imageability or concreteness; -->
-<!-- * etc.  -->
-
-<!-- Nevertheless, an observed pattern of correlations can still create a target for theory.  -->
-
-
-
-<!-- ### Speculations about process -->
-
-
-
-
-<!-- ======= -->
-<!-- ### Consistency  -->
-
-<!-- How can we describe and explain this variability? While much of the variance in the distribution of children remains unexplained, we still observe some striking correlates that can provide  -->
-<!--  In this sense, our work here follows what we might call the "Batesian program," the use of large-N data from the CDI to identify consistent developmental patterns that give clues to the organization of the mechanisms of language acquisition. To provide grounding to our discussion, we review consistencies below: -->
-
-<!-- **Demographic differences**. In Chapter \@ref(vocabulary), we explored demographic differences in vocabulary. With very limited exceptions, we see a consistent advantage for girls over boys in early word learning across languages. Similarly, across (a smaller set of) languages, children with earlier birth orders are reported to have larger vocabularies. Both of these demographic differences should be considered in light of the probability of reporting biases -- for example, parents might *expect* girls to have larger vocabularies and hence report more words on average [though perhaps the consistency of the female advantage is surprising given variation in gender biases and stereotypes across countries, e.g., @nosek2009]. We return to the issue of difficulties in causal inference below.  -->
-
-<!-- **Coefficient of Variation** Variability across kids (size of the fan) FIXME -->
-
-<!-- **Category biases**. In Chapter \@ref(categories-syntactic), we extend previous work [e.g., @bornstein2004] by quantifying the degree of bias for and against different word classes in early vocabulary. For example, with a handful of exceptions (discussed in depth in that chapter) we see a bias for the overrepresentation of nouns in early vocabulary, at the expense of predicates and, even more so, function words.  -->
-
-<!-- **Individual words**. Following @tardif2008, we show that there are large similarities in the most common early words. Further, we show that the predictors of what words are easier and harder across langauges are extremely consistent.  -->
-
-<!-- **Grammar and the lexicon**. Following @bates1997, we show the tight developmental correlations between the growth of grammatical complexity in children's early language and the growth of their vocabulary.  -->
-
-
-
-
-
-
-
-
-
-<!-- Are the chapters in the right order? -->
-
-
 ## Methodological themes
+
 
 Wordbank embodies our belief that scale is in itself transformative. The existence of a noun bias is a fascinating observation, but this observation gives limited leverage to differentiate theories. The magnitude of a noun bias provides more leverage for quantiative theorizing. And the distribution of magnitudes across many of the world's languages gives greater leverage still. Our hope is that, by generalizing and applying many influential analyses by many contributors, our work here can affect theory more broadly.
 
@@ -207,37 +127,11 @@ More ABOUT POWER TO MEASURE MEAN AND VARIANCE
 REPRODUCIBILITY
 
 
-## Theoretical themes
-
-
 ## Conclusions
 
-<!-- Developmental psychology often appears to be divided between two groups that do not communicate with one another. On the one hand, there are researchers interested in the ontogenetic and phylogenetic origins of knowledge -- the epistemological project of understanding how we reason about objects, communicate using language, or learn from other people [@carey2009, @spelke2007, @tomasellooriginoflanguage]. On the other hand, there are researchers interested in growth, change, and variation across individuals in psychometric constructs like executive function, working memory, and personality [@zelazo?, other cites]. The first type of research has led to a productive union of philosophical and psychological ideas, addressing many of the most exciting questions in the history of philosophy using empirical methods [@gopnik, @carey]. The second type has had success in its connections to educational policy [@nelson2007;@diamond2011, others?]. In many areas of research, these two traditions have little interchange with one another. They read different journals, record different measures, use different research designs and statisical models, and often appear to be pursuing entirely different goals.  -->
+Developmental psychology often appears to be divided between two groups that do not communicate with one another. On the one hand, there are researchers interested in the ontogenetic and phylogenetic origins of knowledge -- the epistemological project of understanding how we reason about objects, communicate using language, or learn from other people [@carey2009;@spelke2007;@tomasello2010]. On the other hand, there are researchers interested in growth, change, and variation across individuals in psychometric constructs like executive function, working memory, and personality [@diamond2013;@gathercole1994;@ainsworth2013]. The first type of research has led to a productive union of philosophical and psychological ideas, addressing exciting questions in the history of philosophy using empirical methods [e.g., @gopnik2004;@carey2009]. In contrast, the second type has had its impact in connections to educational policy [@nelson2007;@diamond2011; ]. In many areas of research, these two traditions have little interchange with one another. They read different journals, record different measures, use different research designs and statisical models, and often appear to be pursuing entirely different goals.
 
-<!-- Yet language learning is an area where these traditions come together. The knowledge being acquired -- the stock of words in the child's lexicon -- is both the epistemic construct whose origins we are studying *and* the psychometric construct whose reliability across individuals we wish to assess. By studying the variability and consistency in the early lexcion, we can both study the origins of knowledge and the processes and factors by which human beings differ from one another across different cultural contexts, family environments, and genetic endowments. -->
-
-
+Yet language learning is an area where these traditions come together. The knowledge being acquired -- the stock of words in the child's lexicon -- is both the epistemic construct whose origins we are studying *and* the psychometric construct whose reliability across individuals we wish to assess. By studying the variability and consistency in the early lexcion, we can both study the origins of knowledge and the processes and factors by which human beings differ from one another across different cultural contexts, family environments, and genetic endowments.
 
 
 
-<!-- ## Limitations -->
-
-<!-- All of our analyses are fundamentally correlational. No causal inferences from Wordbank data are possible. We'll say this again so you know we mean it: *no causal inferences are possible*. All of the consistencies described above admit alternative causal explanations.  -->
-
-<!-- For example, as noted, parents could *think* that girls speak more and hence report more words for girls. Or girls could actually know more words. Similarly, first-born children could receive more language input due to the lack of other competition for parents' attention, and hence have larger vocabulary. Or parents could be *aware* of more of first-born children's vocabulary. Or both. As in the gender case, external data can provide evidence for or against particular causal explanations but in their absence we are left to speculate.  -->
-
-<!-- For more cognitive consistencies that we observe, alternative causal interpretations are again possible. To take one example, the "noun bias" could result from any of the following causal mechansisms (as well as mixtures of these, or mixtures of these and others not described):  -->
-<!-- * children could learn nouns more easily due to their social/referential disambiguation relative to the syntactic disambiguation  [@gleitman1990;@gillette1999];  -->
-<!-- * they could be learned more easily due to their conceptual transparency [@gentner2003];  -->
-<!-- * they could be reported more frequently by parents due to some feature, such as their  imageability or concreteness; -->
-<!-- * etc.  -->
-
-<!-- Nevertheless, an observed pattern of correlations can still create a target for theory.  -->
-
-<!-- Theorizing in language acquisition has traditionally argued on the axes defined by the nativist/empiricist debate, as well as the debate between domain-general and domain-specific representations and mechanisms. We label the implied axis of the debate here as the continuum between domain-general, empiricist theories and domain-specific, nativist theories. Anchoring one side of this continuum are statistical learning theories, that posit that domain-general mechanisms that learn structure from continuous input can induce structure from linguistic input [CITES: rethinking innateness, etc.]. On the other side are content-nativist theories that posit language-specific representational structures, such as the Principles and Parameters theory [@chomsky1981, @baker2005].  -->
-
-<!-- For all the reasons described above, we do not believe that the observed consistencies directly bear on traditional questions of the mechanisms underlying language acquisition. Taking the correlation between grammar and the lexicon as a case study: theoretical proposals from many parts of the space shown in Figure \@ref(fig:theoryspace) can account for these data. For example, a purely bottom-up statistical generalization mechanism would clearly produce a correlation between lexical and grammatical structure [as in @bates1997's original propopsal]; statistical generalizations require lexical data and so more data should correlate with more generalization. But a more domain-specific nativist grammatical proposal might also produce this correlation, provided that it required triggering data [e.g., @gibson1994, @yang2015tolerance]. And many variations in between.  -->
-
-
-
-<!-- the consistencies we observe across languages point to putative universals: generalizations that hold across very disparate populations of human children learning typologically distinct languages. Surely such universals should be an important basis for theorizing about language acquisition. A theory that accounted for such universals "for free" -- as a result of basic assumptions about the nature of the learning mechansisms -- would be able to claim more and broader evidence, for example.  -->

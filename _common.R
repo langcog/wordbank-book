@@ -8,8 +8,10 @@ library(tidyverse)
 
 options(digits = 2,
         DT.options = list(searching = FALSE,
-                          lengthChange = FALSE))
-
+                          lengthChange = FALSE,
+                          columnDefs = list(list(
+                            className = "dt-head-left", targets = "_all"
+                          ))))
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,

@@ -87,7 +87,7 @@ items %>%
 
 The number of administrations available is highly variable across instruments and languages, however. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages.
 
-```{r methods-admins, fig.cap="Log-scaled number administrations for each instrument."}
+```{r methods-admins, fig.cap="Log-scaled number of administrations for each instrument."}
 admins_grouped <- admins %>%
     mutate(form = ifelse(form %in% c("WS","WG"), form, "Other") %>%
              fct_relevel("WG", "WS", "Other"))
@@ -292,9 +292,7 @@ ggplot(russian_animal_means,
        aes(x = age, y = mean, group = uni_lemma)) + 
   geom_line(alpha = .3) + 
   xlab("Age (months)") + 
-  ylab("Median Production")
-  
-  
+  ylab("Median production")
 ```
 
 One small example of this kind of situation comes from the Russian dataset. Although -- as we will explore in depth -- nearly every individual item in every dataset shows a positive developmental slope (indicating learning over time), Russian animal sounds are a distinctive exception, as shown in Figure \@ref(fig:methods-russian-animals). Every item in this category *decreases* developmentally in a very consistent and reliable way. What happened? One possibility is that this set of items was reverse coded (and so it should be asymptoting at three years). Another possibility is that Russian parents treat these as "baby words" that a three-year-old wouldn't or shouldn't produce (e.g., rather than saying "oink" they should say "pig.") We can speculate but we will likely never know. 
@@ -349,15 +347,17 @@ ordering_props <- filter(medians, form %in% WSs,
 ords <- bind_rows(ordering_raw, ordering_props) %>%
   ungroup %>%
   mutate(language = fct_reorder(language, estimate), 
-         measure = factor(measure, levels = c("raw","proportion")))
+         measure = factor(measure, levels = c("raw", "proportion"),
+                          labels = c("Raw", "Proportion")))
 
-ggplot(ords, aes(x = language, y = estimate, col = form)) + 
-  geom_pointrange(aes(ymin = estimate - std.error, ymax = estimate + std.error)) + 
-  facet_wrap(~measure, scales = "free_x") +
-  coord_flip() + 
-  ylab("Median 24-month vocabulary estimate") + 
-  xlab("") +
-  .scale_colour_discrete()
+ggplot(ords, aes(y = language, x = estimate, col = form)) + 
+  ggstance::geom_pointrangeh(aes(xmin = estimate - std.error,
+                                 xmax = estimate + std.error)) + 
+  facet_wrap(~measure, scales = "free_x", labeller = label_caps) +
+  xlab("Median 24-month vocabulary estimate") + 
+  ylab("") +
+  .scale_colour_discrete(name = "Form") +
+  theme(legend.position = "bottom")
 ```
 
 Turning to our first example, Mandarin Words & Sentences data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there show a pronounced Mandarin advantage. As it turns out, this advantage is almost unprecedented relative to other languages. We plot the median production for 24-month olds in Figure \@ref(fig:vocab-ords-mandarin). This figure reveals both how large the Mandarin advantage and the high level of vocabulary reported for Hebrew speakers as well, which is less unusual in raw scores because of the relatively smaller number of items on the Hebrew form. 
@@ -374,12 +374,12 @@ taiwan_comp_data <- vocab_data %>%
 ggplot(taiwan_comp_data,
        aes(x = age, y = mean)) +
   geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_smooth(aes(col = interaction(language, form, sep = .inst_sep)))+ 
+  geom_smooth() + #aes(col = interaction(language, form, sep = .inst_sep)))+
   scale_x_continuous(breaks = seq(8, 16, 2),
                      limits = c(8, 16),
                      name = "Age (months)") +
-  scale_colour_manual(values = inst_colours, name = "") +
-  ylab("Comprehension (Number of Words)") +
+  # scale_colour_manual(values = inst_colours, name = "") +
+  ylab("Comprehension (number of words)") +
   ylim(c(0, 380)) + 
   theme(legend.position = "bottom")
 ```

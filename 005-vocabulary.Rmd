@@ -126,9 +126,20 @@ Outside of that particular dataset, one striking aspect of the comprehension dat
 
 ### Cross-language differences
 
-While we have reason to believe that there are some outlier languages in our data, there is still other observed variation that does not seem unusual. What are the sources of this variation? In these analyses, we examine production on the Words & Sentences form, as the data are the densest and most reliable for this instrument. Figure \@ref(fig:vocab-ords-mandarin) shows estimates of the median 24-month vocabulary in both raw scores and proportions. Clearly there are substantial differences in raw scores, even leaving aside Mandarin and Hebrew. We consider a range of explanations for this pattern. 
+While we have reason to believe that there are some outlier languages in our data, there is still other observed variation that does not seem unusual. What are the sources of this variation? In these analyses, we examine production on the Words & Sentences form, as the data are the densest and most reliable for this instrument. Clearly there are substantial differences in raw scores, even leaving aside Mandarin and Hebrew (which we discussed in Chapter \@ref(methods), in the section on "difficult data"). We consider a range of explanations for this pattern. 
 
-```{r vocab-nums, fig.cap}
+```{r vocab-nums}
+
+ordering_raw <- filter(medians, 
+                       form %in% WSs, 
+                       n_admins > 200, 
+                       age >= 18, 
+                       age <= 30) %>%
+  do(broom::tidy(lm(production ~ scale(age, center = TRUE, scale=FALSE), 
+                    data = .))) %>%
+  filter(term == "(Intercept)") %>% 
+  mutate(measure = "raw")
+
 nums <- left_join(ordering_raw, num_words)
 num_cor <- cor.test(nums$estimate, nums$n)
 

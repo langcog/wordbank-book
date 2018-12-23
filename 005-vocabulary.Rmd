@@ -30,7 +30,7 @@ taus <-  c(0.1, 0.25, 0.5, 0.75, 0.9)
 ages <- 8:18
 ```
 
-## Central tendencies 
+## Central tendencies
 
 The first question we can ask about CDI data is about its central tendency -- the median pattern of vocabulary growth. Our general expectation is shown in Figure \@ref(fig:vocab-schematic).
 
@@ -129,7 +129,6 @@ Outside of that particular dataset, one striking aspect of the comprehension dat
 While we have reason to believe that there are some outlier languages in our data, there is still other observed variation that does not seem unusual. What are the sources of this variation? In these analyses, we examine production on the Words & Sentences form, as the data are the densest and most reliable for this instrument. Clearly there are substantial differences in raw scores, even leaving aside Mandarin and Hebrew (which we discussed in Chapter \@ref(methods), in the section on "difficult data"). We consider a range of explanations for this pattern. 
 
 ```{r vocab-nums}
-
 ordering_raw <- filter(medians, 
                        form %in% WSs, 
                        n_admins > 200, 
@@ -139,6 +138,21 @@ ordering_raw <- filter(medians,
                     data = .))) %>%
   filter(term == "(Intercept)") %>% 
   mutate(measure = "raw")
+
+ordering_props <- filter(medians, form %in% WSs, 
+                         n_admins > 200, 
+                         age >= 18, 
+                         age <= 30) %>%
+  do(broom::tidy(lm(production_prop ~ scale(age, center = TRUE, scale=FALSE), 
+                    data = .))) %>%
+  filter(term == "(Intercept)") %>%
+  mutate(measure = "proportion")
+
+ords <- bind_rows(ordering_raw, ordering_props) %>%
+  ungroup %>%
+  mutate(language = fct_reorder(language, estimate), 
+         measure = factor(measure, levels = c("raw", "proportion"),
+                          labels = c("Raw", "Proportion")))
 
 nums <- left_join(ordering_raw, num_words)
 num_cor <- cor.test(nums$estimate, nums$n)
@@ -150,7 +164,7 @@ num_prop <- ords %>%
   select(estimate, measure, language, form) %>%
   spread(measure, estimate) 
 
-num_prop_cor <- cor.test(num_prop$raw, num_prop$proportion)
+num_prop_cor <- cor.test(num_prop$Raw, num_prop$Proportion)
 ```
 
 Differences could be due to differences in form length. As shown in the plot above, however, medians for production and raw scores are highly correlated (_r_(`r num_prop_cor$parameter`) = `r signif(num_prop_cor$estimate, 3)`, _p_ = `r printp(num_prop_cor$p.value)`), suggesting that this ordering is not only a function of form length. Further, although raw scores are correlated with form length (_r_(`r num_cor$parameter`) = `r signif(num_cor$estimate, 3)`, _p_ = `r printp(num_cor$p.value)`), this correlation changes direction and is no longer reliable for proportions (_r_(`r prop_cor$parameter`) = `r signif(prop_cor$estimate, 3)`, _p_ = `r printp(prop_cor$p.value)`). In sum, it appears that there are form-length differences (motivating the use of proportions in general), but that there is still stratification between languages even correcting for this issue. Figure \@ref(fig:vocab-medians-production-ws-prop) shows the relevant proportion trajectories, highlighting remaining differences between English and Danish (two languages for which we have substantial datasets with full demographic information).
@@ -558,7 +572,7 @@ p100 %>%
             `Range (proportion)` = `Range (months)` / min(age[prob >=.5])) %>%
   arrange(`Range (months)`) %>%
   rename(Response = response) %>%
-  dt() %>%
+  dt(options = list(dom = "t")) %>%
   DT::formatRound(columns = "Range (proportion)", digits = 2)
 ```
 

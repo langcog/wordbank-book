@@ -1,6 +1,6 @@
 # Vocabulary Composition: Semantic {#categories-semantic}
 
-Following the approach in the previous chapter, we investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," are some languages "vehicle-focused"? These analyses are expected to reveal cultural and linguistic differences in the specific words learned by children (perhaps due to differences in the content of their environment). 
+Following the approach in the previous chapter, we investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," are some languages "vehicle focused" or "animal focused"? These analyses are expected to reveal cultural and linguistic differences in the specific words learned by children (perhaps due to differences in the content of their environment). 
 
 ## Introduction and methods
 
@@ -40,7 +40,7 @@ included_cats <- category_freqs %>%
   pull(category)
 ```
 
-In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., "animals" or "body parts"). As the figure above shows, while some semantic categories are shared across many instruments, there are others that are quite rare (many corresponding to specific syntactic categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories-syntactic), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, "action words" and "descriptive words" tend to be broad predicate classes without as much clear semantic differentiation). This filtering step leaves `r length(included_cats)` categories: `r Reduce(paste0, sprintf("%s, ", included_cats[1:length(included_cats)-1]))` and `r included_cats[length(included_cats)]`. Samples included in this analysis are shown below 
+In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., Animals or Body Parts). As the figure above shows, while some semantic categories are shared across many instruments, there are others that are quite rare (many corresponding to specific categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories-syntactic), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, Action Words and Descriptive Words tend to be broad predicate classes without as much clear semantic differentiation). This filtering step leaves `r length(included_cats)` categories: `r Reduce(paste0, sprintf("%s, ", included_cats[1:length(included_cats)-1]))` and `r included_cats[length(included_cats)]`. Samples included in this analysis are shown below. 
 
 
 ```{r catsem-script, eval=FALSE}
@@ -142,7 +142,7 @@ ggplot(filter(predictions, language == "English (American)") %>%
 
 We first illustrate this approach using data from the English WS form alone. Analogous to the plots in \@ref(categories-syntactic), the plot above shows areas where the data deviate from the pattern of category acquisition predicted by random item sampling. The size of the shaded region above vs. below the diagonal gives evidence of over- vs. under-sampling for a particular semantic category. 
 
-Many of the results of this analysis for English are expected. Sounds items are heavily over-represented, as are Body Parts, Games and Routines, and to a slightly lesser extent, Toys, Animals, and Vehicles. These particular biases are likely related  particular parenting practices, cultural emphases (for example, on animal names), and young children's' idiosyncratic interests. For a more in-depth examination of the consistencies in very early vocabulary, see Chapter \@ref(items-consistency); for more detail on what makes particular words easier or harder to learn, see Chapter \@ref(items-prediction). 
+Many of the results of this analysis for English are expected. Sound Effects/Animal Sounds items are heavily over-represented, as are Body Parts, Games and Routines, and to a slightly lesser extent, Toys, Animals, and Vehicles. These particular biases are likely related to particular parenting practices, cultural emphases (for example, on animal names), and young children's' idiosyncratic interests. For a more in-depth examination of the consistencies in very early vocabulary, see Chapter \@ref(items-consistency); for more detail on what makes particular words easier or harder to learn, see Chapter \@ref(items-prediction). 
 
 The largest *under*-representation across categories is Time Words. This pattern is consistent with a body of work on children's acquisition of the semantics of time words that suggests that children struggle with understanding these complex terms through age five [@tillman2015;@tillman2017]. 
 
@@ -176,7 +176,7 @@ ggplot(plot_data,
   geom_abline(slope = 1, intercept = 0, linetype = "dashed") 
 ```
 
-Because there are so many different languages represented in this analysis, the simplest analysis examines the spread of languages across categories. Somewhat surprisingly, the ordering of categories looks quite similar to what was observed in English. Sounds, Games and Routines, and Body parts are all over-represented. Vehicles, Food and Drink, Animals, and Clothing all are variable across cultures, as is People. Household, Outside, and Furniture and Rooms show variability but overall less bias. Finally, Places and Time Word are both under-represented systematically across all languages. 
+Because there are so many different languages represented in this analysis, the simplest analysis examines the spread of languages across categories. Somewhat surprisingly, the ordering of categories looks quite similar to what was observed in English. Sound Effects/Animal Sounds, Games and Routines, and Body parts are all over-represented. Vehicles, Food and Drink, Animals, and Clothing all are variable across cultures, as is People. Small Household Items, Outside Things, and Furniture and Rooms show variability but overall less bias. Finally, Places To Go and Time Words are both under-represented systematically across all languages. 
 
 ```{r catsem-plot_areas}
 cat_order <- area_summary %>%
@@ -200,7 +200,7 @@ ggplot(filter(area_summary,
   xlab("")
 ```
 
-We can zoom in on the most highly over-represented categories. The highest mean comes from body parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of body parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sounds are quite highly variable but almost all positive, with Russian sounds being the outlier. Inspection of these items shows *negative* developmental trajectories for a number of animal sounds. We believe these data are likely an artifact of parents feeling that they "trade off" with noun labels for animals, and hence should be discounted. Finally, vehicles appear more variable with positive preferences across language families.
+We can zoom in on the most highly over-represented categories. The highest mean comes from Body Parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of Body Parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and Routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sound Effects/Animal Sounds are quite highly variable but almost all positive, with Russian being the outlier. Inspection of these items shows *negative* developmental trajectories for a number of words in the Sound Effects/Animal Sounds category. We believe these data are likely an artifact of parents feeling that they should "trade off" with noun labels in the Animals category, and hence items in Sound Effects/Animal Sounds category should be discounted. Finally, words in the Vehicles category appear more variable with positive preferences across language families.
 
 ```{r catsem-people_places_time}
 ggplot(filter(area_summary, 
@@ -216,9 +216,9 @@ ggplot(filter(area_summary,
   ylab("Relative representation in early vocabulary") + 
   xlab("")
 ```
-We end by considering people, places, and time words. People is a highly-variable category, with some languages under-representing and others over-representing. @tardif2008 speculated that names for people were a substantial part of children's earliest words, but that may reflect that study's use of Mandarin and Cantonese data where people terms are very over-represented due to cultural emphasis on family connections. Surprisingly, despite the relatively multi-generational and family-centric nature of children's experience in Kenya [@alcock2013], people words were relatively under-represented in Kiswahili and Kigiriama. 
+We end by considering People, Places To Go, and Time Words. People is a highly-variable category, with some languages under-representing and others over-representing. @tardif2008 speculated that names for people were a substantial part of children's earliest words, but that may reflect that study's use of Mandarin and Cantonese data where people terms are very over-represented due to cultural emphasis on family connections. Surprisingly, despite the relatively multi-generational and family-centric nature of children's experience in Kenya [@alcock2013], people words were relatively under-represented in Kiswahili and Kigiriama. 
 
-In contrast to the heterogeneity in people words, words for places and, especially, time words were almost uniformly under-represented in children's vocabulary. As noted above, time is known to be conceptually difficult for children. Interestingly, though, less has been written about children's understanding of geographical vocabulary. Time words offer a number of conceptual challenges in terms of mapping an ordered set of durations (second < minute < hour < day, etc.) to a set of concepts that do not map cleanly onto perceptual experience. In some sense, many of the same conceptual difficulties hold true for larger locational/geographical hierarchies (neighborhood < city < state < country). Or alternatively, the under-representation of places in children's early vocabulary may simply reflect the relative lack of diversity of their experiences with some of the items that traditionally populate this section (e.g., *beach*, *camping*, *church*, *circus* to name the first four). See Chapter \@ref(psychometrics) for some evidence that *camping* especially may be variable in children's experience.
+In contrast to the heterogeneity in people words, words in Places To Go and, especially, Time Words were almost uniformly under-represented in children's vocabulary. As noted above, time is known to be conceptually difficult for children. Interestingly, though, less has been written about children's understanding of geographical vocabulary. Time words offer a number of conceptual challenges in terms of mapping an ordered set of durations (second < minute < hour < day, etc.) to a set of concepts that do not map cleanly onto perceptual experience. In some sense, many of the same conceptual difficulties hold true for larger locational/geographical hierarchies (neighborhood < city < state < country). Or alternatively, the under-representation of places in children's early vocabulary may simply reflect the relative lack of diversity of their experiences with some of the items that traditionally populate this section (e.g., *beach*, *camping*, *church*, *circus* to name the first four). See Chapter \@ref(psychometrics) for some evidence that *camping* especially may be variable in children's experiences.
 
 ### Dimensionality reduction
 
@@ -246,7 +246,7 @@ pcs <- princomp(areas_matrix_clean)
 
 Our next analysis of these data takes an exploratory dimensionality-reduction approach. Rather than examining each semantic category individually, we consider the space defined by variation in semantic preferences by running principal components analysis (PCA) on these data. PCA is a dimensionality reduction technique that projects high-dimensional data (e.g., bias by semantic category for each language) into a set of orthogonal dimensions where lower dimensions capture as much of the variance as possible. 
 
-Standard PCA requires no missing data, thus we removed languages with missing categories. This analysis thus includes `r nrow(areas_matrix_clean)` language/form combinations and `r ncol(areas_matrix_clean)` categories (we exclude sounds because of the issue with Russian sounds and other missing data). 
+Standard PCA requires no missing data, thus we removed languages with missing categories. This analysis thus includes `r nrow(areas_matrix_clean)` language/form combinations and `r ncol(areas_matrix_clean)` categories. (We exclude words from Sound Effects/Animal Sounds because of the issue with Russian in this category and other missing data). 
 
 ```{r catsem-pca_autoplot}
 
@@ -259,11 +259,11 @@ ggfortify:::autoplot.pca_common(pcs,  loadings = TRUE, loadings.label=TRUE,
 
 The figures above show the data projected into the space of the first two principal components and the loadings of semantic categories on these two components, respectively. 
 
-Several observations emerge: Mandarin and Cantonese WS data are very far towards the direction of people (indicating that these datasets are unusual in this respect). Second, Kiswahili and Kigiriama are especially far in the direction of  outside and place words, perhaps consistent with the datasets being collected in rural and semi-rural areas. Many Northern European datasets (as well as Korean) are clustered at the far left, with high scores on vehicles, clothing, animals. Overall, this analysis reveals some interesting structure, but care should be taken not to over-interpret. In particular, within culture differences (e.g., Mandarin TC vs. Mandarin WS) are as large in size as between-culture differences.
+Several observations emerge: Mandarin and Cantonese WS data are very far towards the direction of people (indicating that these datasets are unusual in this respect). Second, Kiswahili and Kigiriama are especially far in the direction of Outside and Places To Go words, perhaps consistent with the datasets being collected in rural and semi-rural areas. Many Northern European datasets (as well as Korean) are clustered at the far left, with high scores on Vehicles, Clothing, and Animals. Overall, this analysis reveals some interesting structure, but care should be taken not to over-interpret. In particular, within culture differences (e.g., Mandarin TC vs. Mandarin WS) are as large in size as between-culture differences.
 
 ## Individual conceptual items
 
-In this section, we isolate individual items from specific domains of interest. Our approach is to use the "universal lemma" mappings (see Chapter \@ref(methods)) to find matching lexical items across languages. The specific domains we consider are time, color, body parts, and logical words. We also investigated spatial prepositions and number words, but do not include them here. Spatial prepositions present a wide variety of mapping issues since lexical items "cut up" space differently across languages  [see e.g., @bowerman1996]. And number words are not found on enough CDI forms to have sufficient data for inclusion. 
+In this section, we isolate individual items from specific domains of interest. Our approach is to use the "universal lemma" mappings (see Chapter \@ref(methods)) to find matching lexical items across languages. The specific domains we consider are time, color, body parts, and logical words. We also investigated spatial prepositions and number words, but do not include them here. Spatial prepositions present a wide variety of mapping issues since lexical items "cut up" space differently across languages [see e.g., @bowerman1996]. Number words are not found on enough CDI forms to have sufficient data for inclusion. 
 
 
 ```{r catsem-semantics_base_plot_for_unigrams}
@@ -302,12 +302,12 @@ As discussed above, the semantics of time words are very challenging for childre
 plot_unis(time_words)
 ```
 
-The plot above shows trajectories for these lexical items across languages, sorted by difficulty. Because *night* is typically signaled by darkness, it is perceptually very concrete and likely easier. Similarly, *now* seems relatively more straightforward given that it has a common imperative meaning in sentences like "give  me that right now." In contrast, the latest-acquired is *yesterday*, which is highly abstract and deals with a specific part of the past. 
+The plot above shows trajectories for these lexical items across languages, sorted by difficulty. Because *night* is typically signaled by darkness, it is perceptually very concrete and likely easier than other time words. Similarly, *now* seems relatively more straightforward given that it has a common imperative meaning in sentences like "give me that right now." In contrast, the latest-acquired is *yesterday*, which is highly abstract and requires a sort of "mental time travel" in thinking retrospectively beyond the "here and now" [@busby2005].  While *tomorrow* shares those same features, it does not appear to pose similar challenges for children in these data. 
 
 ### Color
 
 
-Color word acquisition has been a focus of interest at least since early work by  @carey1978's influential study of "fast mapping." Although early work suggested that color words were learned almost simultaneously [@bartlett1977], more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space [@wagner2013]. Adding to the complexity of this issue is substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms [@bornstein1985].
+Color word acquisition has been a focus of interest at least since early work by @carey1978's influential study of "fast mapping." Although early work suggested that color words were learned almost simultaneously [@bartlett1977], more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space [@wagner2013]. Adding to the complexity of this issue is substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms [@bornstein1985].
 
 
 ```{r catsem-color}
@@ -322,7 +322,7 @@ There is tremendous cross-linguistic variation in color vocabulary [@kay2009]. W
 plot_unis(color_words)
 ```
 
-In this set of words, we see that *red* is typically the first learned, although their is substantial variability in when it is learned. It is followed by *yellow*, *blue*, and *green*, with *black* and *white* following behind (consistent with reports by @wagner2013. We additionally see an ordering across languages in which have higher rates of color word production reported.
+In this set of words, we see that *red* is typically the first learned, although there is substantial variability in when it is learned. It is followed by *yellow*, *blue*, and *green*, with *black* and *white* following behind, consistent with reports by @wagner2013. 
 
 ```{r catsem-color_langs_words}
 color_langs <- color_words %>%
@@ -345,7 +345,7 @@ ggplot(color_langs,
   xlim(16,36) 
 ```
 
-As in other analyses (see Chapter \@ref(vocabulary)), Mandarin WS has the highest level of production. American and Australian English also tend to have high levels of color production. Interestingly, Kiswahili has by far the lowest level of color production, perhaps related to the availability of manufactured toys of contrastive colors [@bornstein1985]. 
+We additionally see an ordering across languages which have higher rates of color word production reported. As in other analyses (see Chapter \@ref(vocabulary)), Mandarin WS has the highest level of production. American and Australian English also tend to have high levels of color production. Interestingly, Kiswahili has by far the lowest level of color production, perhaps related to the limited availability of manufactured toys of contrastive colors [@bornstein1985]. 
 
 ### Body parts
 
@@ -354,7 +354,7 @@ body_words <- read_feather("data/categories-semantic/body_words.feather")
 plot_unis(body_words)
 ```
 
-Words for body parts are produced very early by most children, and variance is quite low across languages (with the exception of a few terms in Cantonese and Cypriot Greek). One interesting pattern that is visible in these data is the ordering of *hand* and *foot* before *leg* and *arm*. 
+Words for Body Parts are produced very early by most children, and variance is quite low across languages (with the exception of a few terms in Cantonese and Cypriot Greek). One interesting pattern that is visible in these data is the ordering of *hand* and *foot* before *leg* and *arm*, perhaps due to the fact that these particular body parts are more central to the activities in which young children engage.
 
 ### Logic
 
@@ -364,12 +364,12 @@ plot_unis(logic_words)
 logic_unis <- unique(logic_words$uni_lemma)
 ```
 
-Finally, we examine words for logical operators. The only items that are available across significant samples of languages are `r Reduce(paste0,sprintf("%s, ", logic_unis[1:length(logic_unis)-1]))` and `r logic_unis[length(logic_unis)]`. The negative words are learned early, with an ordering consistent with @bellugi1967 and @pea1982. *No* is very early, and *not* later. Interestingly, the quantifiers are not ordered as shown by @katsos2016 in a massive cross-linguistic study. In that study -- as well as in our own work in English [@horowitz2017] -- *all* was found to be understood better than *none*. In contrast, here we tend to find *none* learned earlier than *all* and definitely learned earlier than *some*. One possibility is that these uses are only found in a restricted set of cases. Another is that contextualized production of negation is simpler than de-contextualized comprehension, as we have found in some of our work on the comprehension of negation in context [@nordmeyer2014;@nordmeyer2018].
+Finally, we examine words for logical operators. The only items that are available across significant samples of languages are `r Reduce(paste0,sprintf("%s, ", logic_unis[1:length(logic_unis)-1]))` and `r logic_unis[length(logic_unis)]`. The negative words are learned early, with an ordering consistent with @bellugi1967 and @pea1982. *No* is very early, and *not* later. Interestingly, the quantifiers are not ordered as shown by @katsos2016 in a massive cross-linguistic study. In that study -- as well as in our own work in English [@horowitz2017] -- *all* was found to be understood better than *none*. In contrast, here we tend to find *none* is learned earlier than *all* and definitely learned earlier than *some*. One possibility is that these uses are only found in a restricted set of cases. Another is that contextualized production of negation is simpler than de-contextualized comprehension, as we have found in some of our work on the comprehension of negation in context [@nordmeyer2014;@nordmeyer2018].
 
 ### Category variability
 
 
-Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22-26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add animal words for the sake of comparison. The table below gives the coefficient of variation for each category.
+Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22-26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. The table below gives the coefficient of variation for each category.
 
 ```{r catsem-cat_var}
 animal_words <- read_feather("data/categories-semantic/animal_words.feather")
@@ -395,7 +395,7 @@ cat_var %>%
   DT::datatable()
 ```
 
-Body words as well as animal words are highly consistent across languages. In contrast, color, logic words, and time words are far less consistent. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
+The acquisition of words from the Body Parts, as well as Animals, categories are highly consistent across languages. In contrast, color words, logic words, and time words are far less consistent cross-linguistically. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
 
 ```{r catsem-cvs}
 cvs <- cat_var %>%
@@ -410,4 +410,4 @@ write_feather(cvs,"data/cvs/semantic_comp.feather")
 
 ## Discussion
 
-In these exploratory analyses, we considered representation of different semantic categories across the different languages in our dataset. We found some surprising consistencies. Place words and time words were under-represented, while sounds, games and routines, and body parts were over-represented. These consistencies were also contrasted with some areas of greater variability: for example, the preference for vehicles, clothing, and animals appeared to be a somewhat coherent dimension in our data, with many (northern) European languages higher on this dimension than non-European languages. Still, substantial caution is necessary in interpreting these results as the sample of non-European languages is small. Finally, we found that acquisition of complex conceptual words in categories like color, time, and logical words was highly variable across languages.
+In these exploratory analyses, we considered representation of different semantic categories across the different languages in our dataset. We found some surprising consistencies. Words from the Places to Go and Words About Time categories were under-represented, while words from the Sound Effects/Animal Sounds, Games and Routines, and Body Parts categories were over-represented. These consistencies were also contrasted with some areas of greater variability: for example, the preference for words from the Vehicles, Clothing, and Animals categories appeared to be a somewhat coherent dimension in our data, with many (northern) European languages higher on this dimension than non-European languages. Still, substantial caution is necessary in interpreting these results as the sample of non-European languages is small. Finally, we found that acquisition of complex conceptual words reflecting colors, time, and logical constructs was highly variable across languages.

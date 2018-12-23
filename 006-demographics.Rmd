@@ -45,11 +45,14 @@ get_demo_means <- function (data, demo = ~sex, measure = ~production) {
 }
 
 # get glmrob models on demographic feature
-get_demo_models <- function (data, demo = ~sex, measure = ~production) {
+get_demo_models <- function (data, demo = ~sex, measure = ~production, 
+                             ref_level = "Male") {
+  
   data %>%
     mutate(measure = !!measure, 
            no_measure = n - .data$measure, 
-           demo = !!demo) %>%
+           demo = !!demo,
+           demo = fct_relevel(demo, ref_level)) %>%
     unite(langform, language, form, sep = .inst_sep) %>%
     split(.$langform) %>%
     map(possibly(function(x) {
@@ -91,10 +94,10 @@ get_demo_model_summary <- function (models, level = "Male") {
   models %>%
     map_df(possibly(function(x) {
       # print(x$language[1])
-      p <- summary(x)$coefficients[eval_tidy(coef_name), 'Pr(>|z|)']
-      beta <- summary(x)$coefficients[eval_tidy(coef_name), 'Estimate']
+      p <- summary(x)$coefficients[rlang::eval_tidy(coef_name), 'Pr(>|z|)']
+      beta <- summary(x)$coefficients[rlang::eval_tidy(coef_name), 'Estimate']
       return(data_frame(beta = round(beta, 4), 
-                        p = round(p, 4)))
+                        p = p))
     }, otherwise = tibble(p = NA, beta = NA))) %>%
     mutate(langforms = names(models)) %>% # ugly 
     separate(langforms, into = c("language","form"), sep = .inst_sep) %>%
@@ -145,16 +148,21 @@ get_mmad_summary <- function(data) {
 analysis_combos <- left_join(tibble(form = c("WG","WG","WS"), 
                                     measure = c(quo(comprehension),
                                                 quo(production),quo(production)), 
-                                    measure_name = c("comprehension","production","production"),
+                                    measure_name = c("comprehension","production",
+                                                     "production"),
                                     index = 1:3), 
                              expand.grid(index = 1:3, 
-                                         demo = c(quo(sex), quo(birth_order), quo(mom_ed)))) %>%
-  mutate(reference_level = case_when(demo == quo(sex) ~ "Male", 
-                                     demo == quo(birth_order) ~ "Second",
-                                     demo == quo(mom_ed) ~ "Secondary"), 
-         high_level =  case_when(demo == quo(sex) ~ "Female", 
-                                 demo == quo(birth_order) ~ "First",
-                                 demo == quo(mom_ed) ~ "College and Above"), 
+                                         demo = c(quo(sex), 
+                                                  quo(birth_order), 
+                                                  quo(mom_ed)))) %>%
+  mutate(reference_level = 
+           case_when(rlang::quo_get_expr(demo[[1]]) == "sex" ~ "Male", 
+                     rlang::quo_get_expr(demo[[1]]) == "birth_order" ~ "Second",
+                     rlang::quo_get_expr(demo[[1]]) == "mom_ed" ~ "Secondary"), 
+         high_level =  
+           case_when(rlang::quo_get_expr(demo[[1]]) == "sex" ~ "Female", 
+                     rlang::quo_get_expr(demo[[1]]) == "birth_order" ~ "First",
+                     rlang::quo_get_expr(demo[[1]]) == "mom_ed" ~ "College and Above"), 
          demo_name = map_chr(demo, rlang::quo_text))
 
 # run all the analyses above on all those combos
@@ -182,7 +190,8 @@ analyses <- analysis_combos %>%
         
         results <- list()
         results$means <- get_demo_means(data, demo = demo, measure = measure)
-        results$models <- get_demo_models(data, demo = demo, measure = measure)
+        results$models <- get_demo_models(data, demo = demo, measure = measure, 
+                                          ref_level = demo_data$reference_level[1])
         results$preds <- get_demo_preds(results$models, data, demo = demo)
         results$model_summary <- get_demo_model_summary(results$models, 
                                                         level = demo_data$high_level[1])
@@ -242,6 +251,7 @@ Visual inspection of the data suggest limited sex differences, but a female adva
 
 ```{r demo-sex_wg_comp}
 analyses$WG.comprehension$sex$model_summary %>%
+  mutate(p = papaja::printp(p)) %>%
   DT::datatable()
 ```
 
@@ -253,7 +263,7 @@ $$d = \frac{\mu_2 - \mu_1}{SD_{pooled}}$$
 
 But as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components:  the difference between medians, divided by the MAD. (We call this the MMAD). 
 
-```{r demo-gender_mmad_wg_comp}
+```{r demo-gender-mmad-wg-comp, fig.cap = "MMAD for female advantage, plotted by age and language, WG comprehension."}
 ggplot(analyses$WG.comprehension$sex$mmad_ratio,
        aes(x = age, y = mmad)) +
   geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
@@ -266,7 +276,7 @@ ggplot(analyses$WG.comprehension$sex$mmad_ratio,
         legend.text = element_text(size = 7)) 
 ```
 
-```{r demo-mmad_plot}
+```{r demo-gender-mmad-plot, fig.cap="Average MMAD for female advantage across ages, WG comprehension."}
 ggplot(analyses$WG.comprehension$sex$mmad_summary, 
        aes(x = interaction(language, form), y = mmad_mean)) + 
   geom_point() + 
@@ -275,61 +285,9 @@ ggplot(analyses$WG.comprehension$sex$mmad_summary,
   xlab("MMAD (Comprehension)") +
   geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 ```
-Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age. For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability. The overall median for these `r nrow(analyses$WG.comprehension$sex$mmad_summary)` languages is quite small as well, `r round(median(analyses$WG.comprehension$sex$mmad_summary$mmad_mean),2)`. In summary, there is some evidence for a modest female advantage in comprehension. 
+Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age (Figure \@ref(fig:demo-gender-mmad-wg-comp)). For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability (Figure \@ref(fig:demo-gender-mmad-plot)). The overall median for these `r nrow(analyses$WG.comprehension$sex$mmad_summary)` languages is quite small as well, `r round(median(analyses$WG.comprehension$sex$mmad_summary$mmad_mean),2)`. In summary, there is some evidence for a modest female advantage in comprehension. 
 
 
-### Production (WG)
-
-
-```{r demo-gender_plot_wg_prod}
-ggplot(analyses$WG.production$sex$means,
-       aes(x = age, y = median, colour = sex)) +
-  facet_wrap(~interaction(language, form, sep = .inst_sep)) +
-  geom_point(alpha=.2, aes(size = n)) +
-  geom_line(data = analyses$WG.production$sex$preds, aes(y = pred)) +
-  .scale_colour_discrete(name="Sex") +
-  scale_x_continuous(breaks = seq(8,
-                                  20, 4),
-                     limits = c(8, 20),
-                     name = "Age (months)") +
-  scale_y_continuous(breaks = c(0,.5,1), limits = c(0,1), 
-                     name = "Median Production") +
-  theme(legend.position = "bottom",
-        strip.text.x = element_text(size = 7)) + 
-  scale_size(guide = FALSE)
-```
-
-
-```{r demo-sex_prod_table}
-analyses$WG.production$sex$model_summary %>%
-  DT::datatable()
-```
-We next turn to production data. As in many of our subsequent analyses, data on production from Words and Gestures forms tend to be at floor, so they are of limited utility and the failure to find differences may reflect floor effects rather than any true differences. Visual inspection confirms differences at the edge of the age range covered by Words and Gestures forms, however, so for completeness we give the comparable statistical analyses as above. Here `r nrow(filter(analyses$WG.production$sex$model_summary, p < .05, beta < 0))` of `r nrow(analyses$WG.production$sex$model_summary)` languages show a statistically significant female advantage.
-
-```{r demo-gender_mmad_wg_prod}
-a <- ggplot(analyses$WG.production$sex$mmad_ratio,
-            aes(x = age, y = mmad)) +
-  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
-  geom_smooth(span = 1, aes(group = 1)) +
-  geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_colour_manual(values = inst_colours, name = "") +
-  xlab("Age (months)")  + 
-  ylab("MMAD (Female Advantage)") + 
-  theme(legend.position = "bottom") 
-
-b <- ggplot(analyses$WG.production$sex$mmad_summary, aes(x = interaction(language, form, sep = .inst_sep), y = mmad_mean)) + 
-  geom_point() + 
-  # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
-  # ylim(0,1.5) + 
-  coord_flip() + 
-  ylab("Language") + 
-  xlab("MMAD (Production)") +
-  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
-
-gridExtra::grid.arrange(a, b, ncol=2)
-```
-
-Examining the MMAD effect size measures, it is clear that there is limited signal in early production but the overall trend appears to be for a slight developmental increase from around 12 - 20 months.  In addition, overall effect sizes are larger than in comprehension, with a median effect of `r round(median(analyses$WG.production$sex$mmad_summary$mmad_mean),2)`, though in this analysis, averaging across age may be less warranted.
 
 ### Production (WS)
 
@@ -353,6 +311,7 @@ ggplot(analyses$WS.production$sex$means,
 
 ```{r demo-ws_prod_table}
 analyses$WS.production$sex$model_summary %>%
+    mutate(p = papaja::printp(p)) %>%
   DT::datatable()
 ```
 
@@ -439,6 +398,8 @@ ggplot(analyses$WG.comprehension$birth_order$means,
   scale_size(guide = FALSE)
 
 analyses$WG.comprehension$birth_order$model_summary %>%
+    mutate(p = papaja::printp(p)) %>%
+
   DT::datatable()
 
 a <- ggplot(analyses$WG.comprehension$birth_order$mmad_ratio,
@@ -464,48 +425,6 @@ gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 
-
-### Production (WG)
-
-```{r demo-birth_order_wg_prod}
-ggplot(analyses$WG.production$birth_order$means,
-       aes(x = age, y = median, colour = birth_order,
-           label = birth_order)) +
-  facet_wrap( ~interaction(language, form, sep = .inst_sep)) +
-  geom_point(alpha=.2) +
-  geom_line(data = analyses$WG.production$birth_order$preds, aes(y = pred)) +
-  .scale_colour_discrete(name="Birth Order") +
-  scale_x_continuous(breaks = seq(8, 20, 4),
-                     limits = c(8, 20),
-                     name = "Age (months)") +
-  ylab("Median Productive Vocabulary") +
-  ylim(c(0, 1)) +
-  theme(legend.position = "bottom")
-
-analyses$WG.production$birth_order$model_summary %>%
-  DT::datatable()
-
-a <- ggplot(analyses$WG.production$birth_order$mmad_ratio,
-            aes(x = age, y = mmad)) +
-  geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
-  geom_smooth(span = 1, aes(group = 1)) +
-  geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_colour_manual(values = inst_colours, name = "") +
-  xlab("Age (months)")  + 
-  ylab("MMAD (First Born Advantage)") + 
-  theme(legend.position = "bottom") 
-
-b <- ggplot(analyses$WG.production$birth_order$mmad_summary, aes(x = language, y = mmad_mean)) + 
-  geom_point() + 
-  # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
-  # ylim(0,1.5) + 
-  coord_flip() + 
-  ylab("MMAD (Production)") +
-  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
-
-gridExtra::grid.arrange(a, b, ncol=2)
-```
-
 ### Production (WS)
 
 ```{r demo-birth_order_ws_prod}
@@ -524,6 +443,7 @@ ggplot(analyses$WS.production$birth_order$means,
   theme(legend.position = "bottom")
 
 analyses$WS.production$birth_order$model_summary %>%
+    mutate(p = papaja::printp(p)) %>%
   DT::datatable()
 
 a <- ggplot(analyses$WS.production$birth_order$mmad_ratio,
@@ -578,6 +498,7 @@ ggplot(analyses$WG.comprehension$mom_ed$means,
   scale_size(guide = FALSE)
 
 analyses$WG.comprehension$mom_ed$model_summary %>%
+    mutate(p = papaja::printp(p)) %>%
   DT::datatable()
 
 a <- ggplot(analyses$WG.comprehension$mom_ed$mmad_ratio,
@@ -602,48 +523,6 @@ gridExtra::grid.arrange(a, b, ncol=2)
 ```
 
 
-
-### Production (WG)
-
-```{r demo-momed_wg_prod}
-ggplot(analyses$WG.production$mom_ed$means,
-       aes(x = age, y = median, colour = mom_ed,
-           label = mom_ed)) +
-  facet_wrap( ~language) +
-  geom_point(alpha=.2) +
-  geom_line(data = analyses$WG.production$mom_ed$preds, aes(y = pred)) +
-  .scale_colour_discrete(name="Maternal Education") +
-  scale_x_continuous(breaks = seq(8, 20, 4),
-                     limits = c(8, 20),
-                     name = "Age (months)") +
-  ylab("Median Productive Vocabulary") +
-  ylim(c(0, 1)) +
-  theme(legend.position = "bottom")
-
-analyses$WG.production$mom_ed$model_summary %>%
-  DT::datatable()
-
-a <- ggplot(analyses$WG.production$mom_ed$mmad_ratio,
-            aes(x = age, y = mmad)) +
-  geom_jitter(aes(col = language)) +
-  geom_smooth(span = 1, aes(group = 1)) +
-  geom_hline(yintercept = 0, lty = 2, col = "gray") + 
-  scale_colour_manual(values = lang_colours, name = "") +
-  xlab("Age (months)")  + 
-  ylab("MMAD (College Advantage)") + 
-  theme(legend.position = "bottom") 
-
-b <- ggplot(analyses$WG.production$mom_ed$mmad_summary, aes(x = language, y = mmad_mean)) + 
-  geom_point() + 
-  # geom_pointrange(aes(ymin = mmad_ci_lower, ymax = mmad_ci_upper)) + 
-  # ylim(0,1.5) + 
-  coord_flip() + 
-  ylab("MMAD (Production)") +
-  geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
-
-gridExtra::grid.arrange(a, b, ncol=2)
-```
-
 ### Production (WS)
 
 ```{r demo-momed_ws_prod}
@@ -661,7 +540,9 @@ ggplot(analyses$WS.production$mom_ed$means,
   theme(legend.position = "bottom")
 
 analyses$WS.production$mom_ed$model_summary %>%
+  mutate(p = papaja::printp(p)) %>%
   DT::datatable()
+
 
 a <- ggplot(analyses$WS.production$mom_ed$mmad_ratio,
             aes(x = age, y = mmad)) +

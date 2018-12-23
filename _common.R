@@ -8,10 +8,11 @@ library(tidyverse)
 
 options(digits = 2,
         DT.options = list(searching = FALSE,
-                          lengthChange = FALSE,
-                          columnDefs = list(list(
-                            className = "dt-head-left", targets = "_all"
-                          ))))
+                          lengthChange = FALSE))
+                          # autoWidth = TRUE))
+                          # columnDefs = list(list(
+                          #   className = "dt-head-left", targets = "_all"
+                          # ))))
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -89,11 +90,11 @@ dt_caption <- function(caption) {
   glue::glue('<table> <caption> (#tab:{opts_current$get("label")}) {caption} </caption> </table>')
 }
 
-dt <- function(data, ...) {
+dt <- function(data, cnames = label_caps(colnames(data)), ...) {
   DT::datatable(
     data = data,
     rownames = FALSE,
-    colnames = label_caps(colnames(data)),
+    colnames = cnames,
     ...
   )
 }

@@ -102,7 +102,7 @@ first_gestures_ordered <- eng_first_gestures %>%
 ```
 
 
-```{r gesture-first-gesture-figure, fig.width = 8.5, fig.height = 6, fig.cap="FIXME"}
+```{r gesture-first-gesture-figure, fig.width = 8.5, fig.height = 6, fig.cap='Proportion of each response type over age on each First Gestures item for American English.'}
 ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)) + 
   facet_wrap(~ Unilemma) + 
   geom_point() + 
@@ -115,7 +115,7 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
   scale_y_continuous(name = "Proportion of responses")
 ```
 
-For comparison, we collapse the "sometimes" and "often" into a single value, and plot the proportion of children at each age whose parents report that they produce each gesture (Figure \@ref(fig:gesture-first-gesture-binary-figure)). The trajectories look generally smooth and prima facie reasonable, with the potential exception of the "smacklip" gesture for which there is very little developmental change (this gesture, which corresponds to the vocalization "yum yum," may be unusual or less stereotyped).
+For comparison, we collapse the "sometimes" and "often" into a single value, and plot the proportion of children at each age whose parents report that they produce each gesture (Figure \@ref(fig:gesture-first-gesture-binary-figure)). The trajectories look generally smooth and prima facie reasonable, with the potential exception of the _smacklip_ gesture for which there is very little developmental change (this gesture, which corresponds to the vocalization _yum yum_, may be unusual or less stereotyped).
 
 ```{r gesture-first_gestures_binary}
 # Get the First Gestures
@@ -130,7 +130,7 @@ first_gestures_binary_ordered <- eng_first_gestures_binary %>%
   mutate(definition = parse_factor(Unilemma, acq_order$Unilemma))
 ```
 
-```{r gesture-first-gesture-binary-figure, fig.width = 6, fig.height = 4, fig.cap="FIXME"}
+```{r gesture-first-gesture-binary-figure, fig.width = 6, fig.height = 4, fig.cap='Trajectory over age of each First Gestures item for American English.'}
 ggplot(first_gestures_binary_ordered, aes(x = age, y = n, color = definition, 
                                   label = Unilemma)) +
   geom_point() + 
@@ -174,32 +174,33 @@ other_indiv_order <- other %>%
 
 other_gestures_ordered <- other %>%
   ungroup() %>%
-  mutate(type = parse_factor(type, other_type_order$type)) %>%
+  mutate(type = parse_factor(type, other_type_order$type),
+         type = type %>% str_replace("_", " ") %>% str_to_title()) %>%
   mutate(definition = parse_factor(definition, other_indiv_order$definition))
 ```
 
-While some are clearly learned later than the early gestures, a number of these appear to be learned quite early as well -- for example, peekaboo and pretend play with cups and spoons. They all also appear to have generally smooth and increasing trajectories with the exception of "so big" (from the Games gestures) which, like "smack lips" from the First Gestures section appears to be either less stereotyped, more difficult to identify, or more variable across children.
+While some are clearly learned later than the early gestures, a number of these appear to be learned quite early as well -- for example, peekaboo and pretend play with cups and spoons. They all also appear to have generally smooth and increasing trajectories with the exception of _so big_ (from Gestures Games) which, like _smack lips_ from the First Gestures section appears to be either less stereotyped, more difficult to identify, or more variable across children.
 
-```{r gesture-other-figure, fig.width = 8, fig.height = 7, fig.cap="FIXME"}
+```{r gesture-other-figure, fig.width = 8, fig.height = 7, fig.cap="Trajectory over age of each gestures item by type for American English."}
 ggplot(other_gestures_ordered, aes(x = age, y = n, color = definition, 
-                                  label = definition)) +
-  facet_wrap(~ type, labeller = label_caps) + 
+                                   label = definition)) +
+  facet_wrap(~type) + 
   geom_point() + 
   geom_smooth(method = "loess", se = FALSE) +
-  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x -.2),
-                                      "first.qp", cex=0.8, fontfamily = .font)) +
+  directlabels::geom_dl(method = list(directlabels::dl.trans(x = x - .2),
+                                      "first.qp", cex = 0.8,
+                                      fontfamily = .font)) +
   .scale_colour_numerous(guide = FALSE) +
   scale_x_continuous(name = "Age (months)", limits = c(5.5, 18),
-                    breaks = seq(8, 18)) + 
+                     breaks = seq(8, 18)) + 
   scale_y_continuous(name = "Proportion producing")
-
 ```
 
 Taken as a whole, it is clear that almost all of the gesture items have developmental trajectories not unlike word items, and that they thus have the potential for informative analyses. Further, trajectories look qualitatively similar across categories. Consequently, for general cross-linguistic analyses, we will consider all of the gestures together, and compress "often" and "sometimes" into a single affirmative choice.
 
-To estimate the coherence of these categories, we compute age of acquisition estimates for each of the American English gestures by gesture type: First Gestures (e.g. "pick me up", "point"), Game Gestures (e.g. "play peekaboo", "chase"), Object Gestures (e.g. "brush teeth", "push car"), Adult gestures (e.g. "type", "use pen"), and Parent Gestures (e.g. "sweep", "feed from a spoon"). These estimates were produced by fitting a robust linear regression to the proportion of children who produce each gesture and estimating the age at which 50% of children produce the given gesture. The resulting ages of acquisition for each gesture type are shown in Figure \@ref(fig:gesture-aoa). These categories vary in coherence, but overall First Gestures and Games tend to be produced early, and Adult and Parent gestures -- more representative of pretend play -- are produced relatively later. The object gestures vary substantially in their ages of acquisition. 
+To estimate the coherence of these categories, we compute age of acquisition estimates for each of the American English gestures by gesture type: First Gestures (e.g. _pick me up_, _point_), Game Gestures (e.g. _play peekaboo_, _chase_), Object Gestures (e.g. _brush teeth_, _push car_), Adult gestures (e.g. _type_, _use pen_), and Parent Gestures (e.g. _sweep_, _feed from a spoon_). These estimates were produced by fitting a robust linear regression to the proportion of children who produce each gesture and estimating the age at which 50% of children produce the given gesture. The resulting ages of acquisition for each gesture type are shown in Figure \@ref(fig:gesture-aoa). These categories vary in coherence, but overall First Gestures and Games tend to be produced early, and Adult and Parent gestures -- more representative of pretend play -- are produced relatively later. The object gestures vary substantially in their ages of acquisition. 
 
-```{r gesture-aoa, fig.width = 6, fig.height = 4, fig.cap="FIXME"}
+```{r gesture-aoa, fig.width = 6, fig.height = 4, fig.cap="Age of acquisition for each gestures item by type for American English."}
 eng_gesture_aoas <- gesture_data %>% 
   filter(type != "word", language == "English (American)") %>%
   ungroup() %>%
@@ -215,7 +216,8 @@ order <- eng_gesture_aoas %>%
   arrange(aoa)
 
 eng_gesture_aoas %>%
-  mutate(type = parse_factor(type, order$type)) %>%
+  mutate(type = parse_factor(type, order$type),
+         type = str_to_title(type)) %>%
   ggplot(aes(x = type, y = aoa, fill = type)) +
     geom_dotplot(binaxis='y', stackdir='center') +
     .scale_fill_discrete(guide = FALSE) +
@@ -225,7 +227,7 @@ eng_gesture_aoas %>%
 
 ### Consistency of the first gestures
 
-While the "First Gestures" are not universally learned before the other gestures measured, they are among the earliest learned. Because of the particular theoretical importance of these early communicative gestures (i.e. deictics like pointing and showing, showing routines like "pick me up"), we analyze the cross-linguistic consistency of these at the item level.
+While the First Gestures are not universally learned before the other gestures measured, they are among the earliest learned. Because of the particular theoretical importance of these early communicative gestures (i.e. deictics like pointing and showing, showing routines like _pick me up_), we analyze the cross-linguistic consistency of these at the item level.
 
 ```{r gesture-crossling-first}
 first_gestures_crossling <- gesture_data %>% 
@@ -246,13 +248,13 @@ mean_crossling_aoas <- crossling_aoas %>%
   summarise(mean = mean(aoa, na.rm = T), sd = sd(aoa, na.rm = T), n = n()) %>%
   arrange(mean)
 
-kable(mean_crossling_aoas, digits = 2, caption = "FIXME",
+kable(mean_crossling_aoas, digits = 2, caption = 'Summary statistics for ages of acquistion for each First Gestures item across languages.',
       col.names = c("Item", "Mean", "SD", "N"))
 ```
 
-Table \@ref(tab:gesture-crossling-first) and Figure \@ref(fig:gesture-crossling-fig) show both consistency and variability across items. As in the learning of words, the means and variances of these ages of acquisition were correlated [_r_ = `r signif(cor(mean_crossling_aoas$mean, mean_crossling_aoas$sd), digits = 2)`; @mollica2017]. The primary outliers were "request", which appears to be produced surprisingly late in American English, and "shrug" which was produced surprisingly late by French-learning infants. In general, however, most of the cross-linguistic differences appear to be consistent across the gestures (i.e. French-learning infants gestures later). It is difficult to tell from this small sample of mostly European languages whether these differences are driven by linguistic factors or rather by properties of our samples or variability in parents' interpretation of the form. Nonetheless, they provide some evidence for consistency in the process of gestural development cross-linguistically. To get additional leverage on this process, we next consider the full set of gestures.
+Table \@ref(tab:gesture-crossling-first) and Figure \@ref(fig:gesture-crossling-fig) show both consistency and variability across items. As in the learning of words, the means and variances of these ages of acquisition were correlated [_r_ = `r signif(cor(mean_crossling_aoas$mean, mean_crossling_aoas$sd), digits = 2)`; @mollica2017]. The primary outliers were _request_, which appears to be produced surprisingly late in American English, and _shrug_ which was produced surprisingly late by French-learning infants. In general, however, most of the cross-linguistic differences appear to be consistent across the gestures (i.e. French-learning infants gestures later). It is difficult to tell from this small sample of mostly European languages whether these differences are driven by linguistic factors or rather by properties of our samples or variability in parents' interpretation of the form. Nonetheless, they provide some evidence for consistency in the process of gestural development cross-linguistically. To get additional leverage on this process, we next consider the full set of gestures.
 
-```{r gesture-crossling-fig, fig.width = 8, fig.height = 5, fig.cap="FIXME"}
+```{r gesture-crossling-fig, fig.width = 8, fig.height = 5, fig.cap='Distribution of ages of acquistion for each First Gestures item for each language.'}
 crossling_aoas %>%
   ungroup() %>%
   mutate(Unilemma = parse_factor(Unilemma, mean_crossling_aoas$Unilemma)) %>%
@@ -308,13 +310,13 @@ intercor_data <- kid_type_data %>%
   summarise(mean = mean(correlation), sd = sd(correlation))
 ```
 
-Given both the similarity and the variability in the developmental trajectories of different gestures, as well as the cross-linguistic variability in first gestures, and a natural next is to quantify the relationship of gestures to each-other. We begin by computing the average intercorrelation between each of these gesture categories. In this analysis, we take gestures in pairs (e.g. "adult gestures" and "first gestures") and ask how the proportion of items that kids know in one predict the proportion of items they know in the other. For American English learning children, the proportion of gestures they know across categories is correlated at _r_ = `r intercor_data %>% filter(language == "English (American)") %>% pull(mean)` -- nearly identical to the value of ~.6 reported by @fenson1994. For comparison, the same intercorrelation computed across categories of words (e.g. "animals" and "places") yield `r word_intercor_data %>% filter(measure == "produces") %>% pull(mean)` for production and `r word_intercor_data %>% filter(measure == "understands") %>% pull(mean)` for comprehension.
+Given both the similarity and the variability in the developmental trajectories of different gestures, as well as the cross-linguistic variability in first gestures, and a natural next is to quantify the relationship of gestures to each-other. We begin by computing the average intercorrelation between each of these gesture categories. In this analysis, we take gestures in pairs (e.g. Adult Gestures and First Gestures) and ask how the proportion of items that kids know in one predict the proportion of items they know in the other. For American English learning children, the proportion of gestures they know across categories is correlated at _r_ = `r intercor_data %>% filter(language == "English (American)") %>% pull(mean)` -- nearly identical to the value of ~.6 reported by @fenson1994. For comparison, the same intercorrelation computed across categories of words (e.g. "animals" and "places") yield `r word_intercor_data %>% filter(measure == "produces") %>% pull(mean)` for production and `r word_intercor_data %>% filter(measure == "understands") %>% pull(mean)` for comprehension.
 
 This cross-category intercorrelation is quite similar cross-linguistically, ranging from `r signif(min(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == min(mean)) %>% pull(language)` to `r signif(max(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == max(mean)) %>% pull(language)`. The full set of intercorrelations is shown in Table \@ref(tab:intercor-table).
 
 ```{r intercor-table}
 kable(intercor_data, digits = 3, col.names = c("Language", "Mean", "SD"),
-      caption = "FIXME")
+      caption = "Summary statistics for intercorrelations between gesture categories for each language.")
 ```
 
 ## The relationship between language and gesture
@@ -337,7 +339,7 @@ age_cors <- binary_data %>%
   spread(measure, cor) %>%
   select(language, gesture, comprehension, production)
 
-kable(age_cors, digits=3, caption = "FIXME",
+kable(age_cors, digits=3, caption = "Correlation with age for each subscale in each language.",
       col.names = c("Language", "Gesture", "Comprehension", "Production"))
 ``` 
 
@@ -371,7 +373,7 @@ gest_lang_data <- binary_data %>%
   separate(id, into = c("language", "measure"), "_") %>%
   spread(measure, cor) 
 
-kable(gest_lang_data, digits = 3, caption = "FIXME",
+kable(gest_lang_data, digits = 3, caption = "Correlation with gesture subscale for each vocabulary subscale in each language.",
       col.names = c("Language", "Comprehension", "Production"))
 ```
 

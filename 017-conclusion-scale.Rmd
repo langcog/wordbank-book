@@ -121,14 +121,13 @@ In contrast, verbs and other predicates cannot be acquired as easily from basic 
 
 ### Generalizations appear gradually 
 
-As they are instantiated in the CDI, syntactic and morphological structures are fundamentally "item-based" in the sense of @tomasello2003. Since all syntactic information is instantiated in particular example items, every bit of knowledge that the CDI assesses is grounded in lexical items used in a specific construction. 
-Language as skill learning christensen chater
+As they are instantiated in the CDI, syntactic and morphological structures are fundamentally "item-based" in the sense of @tomasello2003. Since all syntactic information is instantiated in particular example items, every bit of knowledge that the CDI assesses is grounded in lexical items used in a specific construction. Although there may well be broader, more abstract generalizations that underly the growth of word order, we simply do not have the signal to address the presence or absence of such abstractions. 
 
-Correlations between grammar and the lexicon, as well as the greater role of MLU in predicting acquisition of function words are both consistent with views that posit gradual syntactic abstraction and generalization. Versions of such viewpoints exist throughout the broad theoretical space of language acquisition [@yang2016;@tomasello2003;@meylan2017], but all proposals rely on a learning mechanism in which generalizations about structure are graded and rely on the amount of evidence available. 
+That said, at the level of the measurements we have, our evidence is broadly consistent with the view of language as growing through the gradual induction of syntactic regularities through a reciprocal interaction with the acquisition of individual content words. Versions of this viewpoints exist throughout the broad theoretical space of language acquisition [e.g., @yang2016;@tomasello2003;@meylan2017], but all proposals rely on a learning mechanism in which generalizations about structure are graded and rely on the amount of evidence available. All such mechanisms would presumably predict some relationship individuals' grammatical and lexical abilities; an important target for future theoretical work in this area is to explore how tight these correlations are predicted to beon different viewpoints. 
 
+Further complicating matters, the relationship between grammar and the lexicon is likely reciprocal. As content vocabulary grows, it provides both the groundwork for generalization of constructions [@tomasello2003;@goldberg2006] and also the specific content words necessary for the induction of predicate meanings (as described above in the case of verbs). In the other direction, as grammar grows, it also allows for better disambiguation of predicate meanings [@gleitman1990] and creates myriad other opportunities for learning. Both of these directions of longitudinal influence are present in at least one study [@brinchmann2018], although that study found that considerable shared variance between individuals was also due to the stability of both grammatical and lexical knowledge within individuals. 
 
-
-
+As we disussed in Chapter \@ref(intro-theory), we do not see our work here as resolving long-standing debates about the nature of abstract syntactic representations. Instead, we hope our contribution is somewhat different -- we refocus the debate away from phenomena that make only occasional contact with the gross regularities of children's early language use in context. Instead, we focus on the pattern of observable changes in complexity and diversity of early language. We hope that this focus leads to theorizing that takes these observables as its primary predictive target.
 
 ## Methodological morals
 

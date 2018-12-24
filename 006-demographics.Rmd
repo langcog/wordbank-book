@@ -332,30 +332,6 @@ demo_mmad_age_plot(sex, "WG", "comprehension", "female")
 demo_mmad_plot(sex, "WG", "comprehension", "female")
 ```
 
-<!--
-### Production (WG)
-
-We next turn to production data, shown in Figure \@ref(fig:demo-data-plot-sex-wg-prod). As in many of our subsequent analyses, data on production from Words & Gestures forms tend to be at floor, so they are of limited utility and the failure to find differences may reflect floor effects rather than any true differences. Visual inspection confirms differences at the edge of the age range covered by Words & Gestures forms, however, so for completeness we give the comparable statistical analyses as above (see Table \@ref(tab:demo-table-sex-wg-prod)). Here `r nrow(filter(analyses$WG.production$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WG.production$sex$model_summary)` languages show a statistically significant female advantage.
-
-```{r demo-data-plot-sex-wg-prod, fig.height=7, fig.cap=demo_data_cap('sex', 'WG', 'production'), dependson="demo-plot-funs"}
-demo_data_plot(sex, "WG", "production")
-```
-
-```{r demo-table-sex-wg-prod, results="asis", dependson="demo-table-fun"}
-demo_table("sex", "WG", "production")
-```
-
-Examining the MMAD effect size measures (Figure \@ref(fig:demo-mmad-age-plot-sex-wg-prod) and Figure \@ref(fig:demo-mmad-plot-sex-wg-prod)), it is clear that there is limited signal in early production but the overall trend appears to be for a slight developmental increase from around 12--20 months.  In addition, overall effect sizes are larger than in comprehension, with a median effect of `r round(median(analyses$WG.production$sex$mmad_summary$mmad_mean),2)`, though in this analysis, averaging across age may be less warranted.
-
-```{r demo-mmad-age-plot-sex-wg-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'production', 'female'), dependson="demo-plot-funs"}
-demo_mmad_age_plot(sex, "WG", "production", "female")
-```
-
-```{r demo-mmad-plot-sex-wg-prod, fig.cap=demo_mmad_cap('WG', 'production', 'female'), dependson="demo-plot-funs"}
-demo_mmad_plot(sex, "WG", "production", "female")
-```
--->
-
 ### Production (WS)
 
 We next turn to production data on the Words & Sentences instrument, which we expect to be much more informative regarding production (see Figure \@ref(fig:demo-data-plot-sex-ws-prod). Visual inspection confirms differences in almost every case, and an analysis of the fitted models (see Table \@ref(tab:demo-table-sex-ws-prod)) shows that `r nrow(filter(analyses$WS.production$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WS.production$sex$model_summary)` languages show a statistically significant female advantage!
@@ -415,13 +391,13 @@ In summary, we found a considerable and strikingly consistent cross-linguistic f
 
 ## Birth order
 
-Another factor that may contribute to individual differences in children's vocabulary development is birth order.  The literature suggests some evidence for a first-born advantage in early vocabulary development, but these differences are small and tend to be most evident early in development.  For example, @bornstein2004 found that mothers report larger receptive and expressive vocabularies in their first-borns. Using naturalistic language samples, @berglund2005 found that first-born children reached the 50-word milestone earlier than later-born children, but that birth order differences diminished later in development. Finally, @hoff-ginsberg1998 found that first-born children were more advanced in vocabulary development than later-born children, but that later-born children were more advanced in their conversational skills. This may be attributed to "differences in early language experience" that "may set the stage for later developmental differences" (p. 603). 
+Another factor that may contribute to individual differences in children's vocabulary development is birth order.  The literature suggests some evidence for a first-born advantage in early vocabulary development, but these differences are small and tend to be most evident early in development.  For example, @bornstein2004 found that mothers report larger receptive and expressive vocabularies in their first-borns. Using naturalistic language samples, @berglund2005 found that first-born children reached the 50-word milestone earlier than later-born children, but that birth order differences diminished later in development. Finally, @hoff-ginsberg1998 found that first-born children were more advanced in vocabulary development than later-born children, but that later-born children were more advanced in their conversational skills. 
 
 Here, we can examine birth order effects in early vocabulary comprehension and production in a few languages in our sample.  Only `r length(unique(filter(vocab_data,!is.na(birth_order))$language))` languages have birth order data, with data available for `r length(unique(filter(vocab_data,!is.na(birth_order), form == "WS")$language))` languages for Words & Sentences, and `r length(unique(filter(vocab_data,!is.na(birth_order), form == "WG")$language))` languages for Words & Gestures.
 
 ### Comprehension (WG)
 
-We perform the same set of analyses as above, shown in Figure \@ref(fig:demo-data-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-plot-birth-order-wg-comp), and Table \@ref(tab:demo-table-birth-order-wg-comp).
+We perform the same set of analyses as for sex, shown in Figure \@ref(fig:demo-data-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-plot-birth-order-wg-comp), and Table \@ref(tab:demo-table-birth-order-wg-comp).
 
 ```{r demo-data-plot-birth-order-wg-comp, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WG', 'comprehension'), dependson="demo-plot-funs"}
 demo_data_plot(birth_order, "WG", "comprehension")
@@ -439,29 +415,9 @@ demo_mmad_age_plot(birth_order, "WG", "comprehension", "first-born")
 demo_mmad_plot(birth_order, "WG", "comprehension", "first-born")
 ```
 
-<!--
-### Production (WG)
-
-```{r demo-data-plot-birth-order-wg-prod, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WG', 'production'), dependson="demo-plot-funs"}
-demo_data_plot(birth_order, "WG", "production")
-```
-
-```{r demo-table-birth-order-wg-prod, results="asis", dependson="demo-table-fun"}
-demo_table("birth_order", "WG", "production", options = list(dom = "t"))
-```
-
-```{r demo-mmad-age-plot-birth-order-wg-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'production', 'first-born'), dependson="demo-plot-funs"}
-demo_mmad_age_plot(birth_order, "WG", "production", "first-born")
-```
-
-```{r demo-mmad-plot-birth-order-wg-prod, fig.cap=demo_mmad_cap('WG', 'production', 'first-born'), dependson="demo-plot-funs"}
-demo_mmad_plot(birth_order, "WG", "production", "first-born")
-```
--->
-
 ### Production (WS)
 
-The parallel set of analyses are shown in Figure \@ref(fig:demo-data-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-plot-birth-order-ws-prod), and Table \@ref(tab:demo-table-birth-order-ws-prod).
+The parallel set of analyses for WS Production data are shown in Figure \@ref(fig:demo-data-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-plot-birth-order-ws-prod), and Table \@ref(tab:demo-table-birth-order-ws-prod).
 
 ```{r demo-data-plot-birth-order-ws-prod, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WS', 'production'), dependson="demo-plot-funs"}
 demo_data_plot(birth_order, "WS", "production")
@@ -479,7 +435,11 @@ demo_mmad_age_plot(birth_order, "WS", "production", "first-born")
 ```{r demo-mmad-plot-birth-order-ws-prod, fig.cap=demo_mmad_cap('WS', 'production', 'first-born'), dependson="demo-plot-funs"}
 demo_mmad_plot(birth_order, "WS", "production", "first-born")
 ```
+### Discussion
 
+In sum, we see a relatively consistent cross-linguistic pattern: earlier-born children show larger vocabularies in production (though not in comprehension for the most part). This general finding is consistent with previous literature reporting a first-born advantage for individual languages. Our results suggest that the same pattern appears in most languages, with only a few showing different magnitudes. While the current dataset cannot rule out reporting-related reasons for these demographic differences, this explanation does seem unlikely for two reasons. First, our results largely mirror non-parent report findings in the literature [@berglund2005]. Second, reporting bias would be relatively *more* likely to influence comprehension relative to production vocabulary. 
+
+We can only speculate as to the cause of birth-order related differences in early language given our current data. That said, it seems very reasonable to assume that parents speak more to first-born children as the addressee, just because of the pure statistical fact of having a second possible addressee for other utterances. And although it is certainly possible to learn from overheard speech under optimal conditions [e.g., @akhtar2001;@akhtar2005], a variety of studies suggest that speech directed to a particular child is the best predictor of that child's learning outcomes [@weisleder2013;@shneidman2012].
 
 ## Socioeconomic status
 
@@ -510,27 +470,6 @@ demo_mmad_age_plot(mom_ed, "WG", "comprehension", "college-educated")
 demo_mmad_plot(mom_ed, "WG", "comprehension", "college-educated")
 ```
 
-<!--
-### Production (WG)
-
-```{r demo-data-plot-mom-ed-wg-prod, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WG', 'production'), dependson="demo-plot-funs"}
-demo_data_plot(mom_ed, "WG", "production")
-```
-
-```{r demo-table-mom-ed-wg-prod, results="asis", dependson="demo-table-fun"}
-demo_table("mom_ed", "WG", "production",
-           options = list(pageLength = "20", dom = "t"))
-```
-
-```{r demo-mmad-age-plot-mom-ed-wg-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'production', 'college-educated'), dependson="demo-plot-funs"}
-demo_mmad_age_plot(mom_ed, "WG", "production", "college-educated")
-```
-
-```{r demo-mmad-plot-mom-ed-wg-prod, fig.cap=demo_mmad_cap('WG', 'production', 'college-educated'), dependson="demo-plot-funs"}
-demo_mmad_plot(mom_ed, "WG", "production", "college-educated")
-```
--->
-
 ### Production (WS)
 
 The final set of analyses are shown in Figure \@ref(fig:demo-data-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-plot-mom-ed-ws-prod), and Table \@ref(tab:demo-table-mom-ed-ws-prod).
@@ -554,12 +493,17 @@ demo_mmad_plot(mom_ed, "WS", "production", "college-educated")
 
 ### Explanations
 
-Our findings show that the relations between maternal education and children’s vocabulary outcomes is highly variable across countries. The observational nature of our data precludes strong inferences about the precise factors that lead to these differences, though speculation is certainly possible. The large magnitude of the differences across countries suggests a powerful role for environmental factors in shaping variation in child outcomes even before the age of 3 years. Findings from the present study support the proposal that inequalities in factors that are linked to child well being should be addressed early in life. Since features of the quantity and quality of caregiver linguistic input has been strongly implicated in early language development, future research should focus on policy interventions that facilitate children’s access to  high quality talk by caregivers, including care availability and parental leave. 
-
-### Reporting biases
+The relationship between maternal education and children’s vocabulary is highly variable across countries in our data. The observational nature of our dataset precludes strong inferences about the precise factors that lead to these differences, though speculation is certainly possible. The large magnitude of the differences across countries suggests a powerful role for environmental factors in shaping variation in child outcomes even before the age of 3 years. Findings from the present study support the proposal that inequalities in factors that are linked to child well being should be addressed early in life. Since features of the quantity and quality of caregiver linguistic input has been strongly implicated in early language development, future research should focus on policy interventions that facilitate children’s access to high quality talk by caregivers, including care availability and parental leave. 
 
 While lower scores on the vocabulary checklists can reflect authentic differences across children from different SES groups, it is also possible that some of these SES effects are the result of differential reporting biases [for discussion, see @fenson2007].  For example, in @feldman2000's study of more than 2000 children, vocabulary comprehension scores on the Words & Gestures form were higher for caregivers with lower education than for caregivers with higher education, whereas, the opposite relation was found for vocabulary production and later grammar skills from the Words & Sentences form.  Thus, parents with low educational and income levels seem to overestimate their child’s comprehension abilities in comparison with parents with more education and income, especially early in development. Parents, in general, are likely to have difficulty making judgments about early comprehension.  Over-reporting may occur for those sub-scales of the CDI that require inference on the part of the parent, for example, when they have to separate evidence of comprehension of a word in isolation from that word taken together with the non-linguistic cues that are likely to support a child's appropriate behavior in a highly constrained context. In addition, some parents may recall times when the words were used in the child’s presence and may confuse exposure with understanding. These difficulties may explain why parental reports of verbal comprehension in this age range are higher than results of direct testing [@tomasello1994] and why correlations between parental reports and comprehension scores from other methods are extremely low [@goldfield1990].
 
+### Discussion 
+
+In this chapter, we have observed relationships between vocabulary and sex, birth order, and maternal education. Although all of these have some potential to be influenced by reporting bias, in all cases we see some reasons from prior literature to suspect that similar effects are present (at least in English) for non-parent report measures. More validation is certainly always useful but we see no reason to discount our measurements further.  
+
+The relationships we observed were more prominent in every case for production than comprehension. This prominence could be a function of the relatively greater psychometric reliability of production compared with comprehension (see Chapter \@ref(psychometrics)) or it could reflect demographic differences increasing over developmental time, since the production measures we examined are largely from older children than the comprehension. (We did not include early production as we found that the data were noisy and hard to interpret due to children's small production vocabularies for much of the measured range).
+
+We could only speculate about the origins of the relations we found, but the directionality of these relations was similar across languages and they showed reasonable consistency across the full language sample (especially for sex differences). For sex differences, this consistency leads us to speculate about the cognitive origins of verbal ability differences, which are found quite consistently outside of the CDI as well [e.g., @maccoby1974]. In contrast, birth order and maternal education-related differences were slightly more variable than sex differences and have been argued in previous work to relate to children's input. We return to the interpretation of demographic differences in vocabulary in Chapter \@ref(conclusion-scale). 
 
 
 ```{r demo-cvs}

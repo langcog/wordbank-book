@@ -702,7 +702,9 @@ In sum, although the relationship between production and comprehension is a fasc
 
 ## Discussion
 
-In this chapter, we have explored three classic indices of individual variation in children's "style" of learning, that is, variation in how children approach the task of language learning.  Compared to differences in rate/timing of learning, stylistic differences have been proposed to be a stronger test of the proposal that language acquisition is a constructed process. But, few studies to date have had the power and scope to explore the extent of these differences crosslinguistically.  The results of these analyses were a bit mixed.  We can summarize the conclusions from our various different sub-analyses:
+In this chapter, we have explored three classic indices of individual variation in children's "style" of learning, that is, variation in how children approach the task of language learning.  Compared to differences in rate/timing of learning, stylistic differences have been proposed to be a stronger test of the proposal that language acquisition is a constructed process. But, few studies to date have had the power and scope to explore the extent of these differences crosslinguistically.  The results of these analyses were a bit mixed.  
+
+We can summarize the conclusions from our various different sub-analyses:
 
 * The traditional referential vs. expressive distinction is supported by cross-linguistic analysis that suggests that, even at a given level of vocabulary size, some children tend to be younger, use more nouns, and combine less; others will tend to be older, know more predicates, and combine words more.
 

@@ -49,12 +49,20 @@
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<script src="libs/datatables-binding-0.5/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-bootstrap-1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="libs/dt-core-bootstrap-1.10.16/js/dataTables.bootstrap.min.js"></script>
+<link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize-0.12.0/selectize.min.js"></script>
 
 
 
@@ -168,13 +176,9 @@
 <li class="chapter" data-level="7.1.3" data-path="gesture.html"><a href="gesture.html#intercorrelation-among-gestures"><i class="fa fa-check"></i><b>7.1.3</b> Intercorrelation among gestures</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="gesture.html"><a href="gesture.html#the-relationship-between-language-and-gesture"><i class="fa fa-check"></i><b>7.2</b> The relationship between language and gesture</a></li>
-<li class="chapter" data-level="7.3" data-path="gesture.html"><a href="gesture.html#gesture-and-demographic-variables"><i class="fa fa-check"></i><b>7.3</b> Gesture and demographic variables</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="items-consistency.html"><a href="items-consistency.html"><i class="fa fa-check"></i><b>8</b> Consistency in Early Vocabulary</a><ul>
-<li class="chapter" data-level="8.1" data-path="items-consistency.html"><a href="items-consistency.html#the-first-10-words"><i class="fa fa-check"></i><b>8.1</b> The first 10 words</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="items-consistency.html"><a href="items-consistency.html#production"><i class="fa fa-check"></i><b>8.1.1</b> Production</a></li>
-<li class="chapter" data-level="8.1.2" data-path="items-consistency.html"><a href="items-consistency.html#comprehension"><i class="fa fa-check"></i><b>8.1.2</b> Comprehension</a></li>
-</ul></li>
+<li class="chapter" data-level="8.1" data-path="items-consistency.html"><a href="items-consistency.html#the-first-10-words"><i class="fa fa-check"></i><b>8.1</b> The first 10 words</a></li>
 <li class="chapter" data-level="8.2" data-path="items-consistency.html"><a href="items-consistency.html#global-cross-linguistic-similarity"><i class="fa fa-check"></i><b>8.2</b> Global cross-linguistic similarity</a></li>
 <li class="chapter" data-level="8.3" data-path="items-consistency.html"><a href="items-consistency.html#acquisition-similarity-and-linguistic-similarity"><i class="fa fa-check"></i><b>8.3</b> Acquisition similarity and linguistic similarity</a></li>
 <li class="chapter" data-level="8.4" data-path="items-consistency.html"><a href="items-consistency.html#consistency-across-development"><i class="fa fa-check"></i><b>8.4</b> Consistency across development</a></li>
@@ -288,7 +292,7 @@
 <p>Following the approach in the previous chapter, we investigate the consistency of semantic content categories across languages. By analogy with the “noun bias,” are some languages “vehicle focused” or “animal focused”? These analyses are expected to reveal cultural and linguistic differences in the specific words learned by children (perhaps due to differences in the content of their environment).</p>
 <div id="introduction-and-methods" class="section level2">
 <h2><span class="header-section-number">12.1</span> Introduction and methods</h2>
-<p>In contrast to the “noun bias” literature, where a wide variety of hypotheses have been articulated over the preceding decades, differences in content have been less explored and so these analyses are far more exploratory. Analyses of cognitive biases in the early language of international adoptees by <span class="citation">Snedeker, Geren, and Shafto (<a href="references.html#ref-snedeker2012">2012</a>)</span> are a notable exception, but these analyses are limited to English data due to the complexity of gathering such data. To limit the scope of our current exploration, we focus on WS-type forms and production measures, which we have reason to believe will be most reliable.</p>
+<p>In contrast to the “noun bias” literature, where a wide variety of hypotheses have been articulated over the preceding decades, differences in content have been less explored and so these analyses are far more exploratory. Analyses of cognitive biases in the early language of international adoptees by <span class="citation">Jesse Snedeker, Geren, and Shafto (<a href="references.html#ref-snedeker2012">2012</a>)</span> are a notable exception, but these analyses are limited to English data due to the complexity of gathering such data. To limit the scope of our current exploration, we focus on WS-type forms and production measures, which we have reason to believe will be most reliable.</p>
 <p><img src="wordbank-book_files/figure-html/catsem-items-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., Animals or Body Parts). As the figure above shows, while some semantic categories are shared across many instruments, there are others that are quite rare (many corresponding to specific categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter <a href="categories-syntactic.html#categories-syntactic">11</a>, we focus on those semantic categories that fall into “nouns” and “other” lexical classes. (In general, Action Words and Descriptive Words tend to be broad predicate classes without as much clear semantic differentiation). This filtering step leaves 14 categories: animals, body_parts, clothing, food_drink, furniture_rooms, games_routines, household, outside, people, places, sounds, time_words, toys, and vehicles. Samples included in this analysis are shown below.</p>
 <div id="htmlwidget-a51ffd2186de97e8cc0f" style="width:100%;height:auto;" class="datatables html-widget"></div>
@@ -305,7 +309,7 @@
 <p>Because there are so many different languages represented in this analysis, the simplest analysis examines the spread of languages across categories. Somewhat surprisingly, the ordering of categories looks quite similar to what was observed in English. Sound Effects/Animal Sounds, Games and Routines, and Body parts are all over-represented. Vehicles, Food and Drink, Animals, and Clothing all are variable across cultures, as is People. Small Household Items, Outside Things, and Furniture and Rooms show variability but overall less bias. Finally, Places To Go and Time Words are both under-represented systematically across all languages.</p>
 <p><img src="wordbank-book_files/figure-html/catsem-plot_areas-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We can zoom in on the most highly over-represented categories. The highest mean comes from Body Parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of Body Parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games and Routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sound Effects/Animal Sounds are quite highly variable but almost all positive, with Russian being the outlier. Inspection of these items shows <em>negative</em> developmental trajectories for a number of words in the Sound Effects/Animal Sounds category. We believe these data are likely an artifact of parents feeling that they should “trade off” with noun labels in the Animals category, and hence items in Sound Effects/Animal Sounds category should be discounted. Finally, words in the Vehicles category appear more variable with positive preferences across language families.</p>
-<p><img src="wordbank-book_files/figure-html/catsem-people_places_time-1.png" width="672" style="display: block; margin: auto;" /> We end by considering People, Places To Go, and Time Words. People is a highly-variable category, with some languages under-representing and others over-representing. <span class="citation">Tardif et al. (<a href="references.html#ref-tardif2008">2008</a>)</span> speculated that names for people were a substantial part of children’s earliest words, but that may reflect that study’s use of Mandarin and Cantonese data where people terms are very over-represented due to cultural emphasis on family connections. Surprisingly, despite the relatively multi-generational and family-centric nature of children’s experience in Kenya <span class="citation">(Alcock and Alibhai <a href="references.html#ref-alcock2013">2013</a>)</span>, people words were relatively under-represented in Kiswahili and Kigiriama.</p>
+<p><img src="wordbank-book_files/figure-html/catsem-people_places_time-1.png" width="672" style="display: block; margin: auto;" /> We end by considering People, Places To Go, and Time Words. People is a highly-variable category, with some languages under-representing and others over-representing. <span class="citation">Tardif et al. (<a href="references.html#ref-tardif2008">2008</a>)</span> speculated that names for people were a substantial part of children’s earliest words, but that may reflect that study’s use of Mandarin and Cantonese data where people terms are very over-represented due to cultural emphasis on family connections. Surprisingly, despite the relatively multi-generational and family-centric nature of children’s experience in Kenya <span class="citation">(Katie Alcock and Alibhai <a href="references.html#ref-alcock2013">2013</a>)</span>, people words were relatively under-represented in Kiswahili and Kigiriama.</p>
 <p>In contrast to the heterogeneity in people words, words in Places To Go and, especially, Time Words were almost uniformly under-represented in children’s vocabulary. As noted above, time is known to be conceptually difficult for children. Interestingly, though, less has been written about children’s understanding of geographical vocabulary. Time words offer a number of conceptual challenges in terms of mapping an ordered set of durations (second &lt; minute &lt; hour &lt; day, etc.) to a set of concepts that do not map cleanly onto perceptual experience. In some sense, many of the same conceptual difficulties hold true for larger locational/geographical hierarchies (neighborhood &lt; city &lt; state &lt; country). Or alternatively, the under-representation of places in children’s early vocabulary may simply reflect the relative lack of diversity of their experiences with some of the items that traditionally populate this section (e.g., <em>beach</em>, <em>camping</em>, <em>church</em>, <em>circus</em> to name the first four). See Chapter <a href="psychometrics.html#psychometrics">4</a> for some evidence that <em>camping</em> especially may be variable in children’s experiences.</p>
 <div id="dimensionality-reduction" class="section level3">
 <h3><span class="header-section-number">12.2.1</span> Dimensionality reduction</h3>
@@ -327,8 +331,8 @@
 </div>
 <div id="color" class="section level3">
 <h3><span class="header-section-number">12.3.2</span> Color</h3>
-<p>Color word acquisition has been a focus of interest at least since early work by <span class="citation">Carey (<a href="references.html#ref-carey1978">1978</a>)</span>’s influential study of “fast mapping.” Although early work suggested that color words were learned almost simultaneously <span class="citation">(Bartlett <a href="references.html#ref-bartlett1977">1977</a>)</span>, more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space <span class="citation">(Wagner, Dobkins, and Barner <a href="references.html#ref-wagner2013">2013</a>)</span>. Adding to the complexity of this issue is substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms <span class="citation">(Bornstein <a href="references.html#ref-bornstein1985">1985</a>)</span>.</p>
-<p>There is tremendous cross-linguistic variation in color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively larger color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was black, blue, green, red, white, and yellow.</p>
+<p>Color word acquisition has been a focus of interest at least since early work by <span class="citation">S. Carey (<a href="references.html#ref-carey1978">1978</a>)</span>’s influential study of “fast mapping.” Although early work suggested that color words were learned almost simultaneously <span class="citation">(Bartlett <a href="references.html#ref-bartlett1977">1977</a>)</span>, more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space <span class="citation">(Wagner, Dobkins, and Barner <a href="references.html#ref-wagner2013">2013</a>)</span>. Adding to the complexity of this issue is substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms <span class="citation">(Bornstein <a href="references.html#ref-bornstein1985">1985</a>)</span>.</p>
+<p>There is tremendous cross-linguistic variation in color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively larger color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was black, blue, green, red, white, and yellow.</p>
 <p><img src="wordbank-book_files/figure-html/catsem-color_words-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In this set of words, we see that <em>red</em> is typically the first learned, although there is substantial variability in when it is learned. It is followed by <em>yellow</em>, <em>blue</em>, and <em>green</em>, with <em>black</em> and <em>white</em> following behind, consistent with reports by <span class="citation">Wagner, Dobkins, and Barner (<a href="references.html#ref-wagner2013">2013</a>)</span>.</p>
 <p><img src="wordbank-book_files/figure-html/catsem-color_langs_words-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -360,8 +364,8 @@
 </div>
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like “red” would be much larger than in English.<a href="categories-semantic.html#fnref6">↩</a></p></li>
+<ol start="23">
+<li id="fn23"><p>Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like “red” would be much larger than in English.<a href="categories-semantic.html#fnref23">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -418,6 +422,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

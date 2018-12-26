@@ -6,7 +6,7 @@ library(tidyverse)
 
 # extrafont::loadfonts()
 
-options(digits = 2,
+options(#digits = 2,
         DT.options = list(searching = FALSE,
                           lengthChange = FALSE))
                           # autoWidth = TRUE))

@@ -55,6 +55,7 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
 <link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-bootstrap-1.10.16/js/jquery.dataTables.min.js"></script>
@@ -208,8 +209,8 @@
 <li class="chapter" data-level="11.1" data-path="categories-syntactic.html"><a href="categories-syntactic.html#introduction"><i class="fa fa-check"></i><b>11.1</b> Introduction</a></li>
 <li class="chapter" data-level="11.2" data-path="categories-syntactic.html"><a href="categories-syntactic.html#methods-and-data"><i class="fa fa-check"></i><b>11.2</b> Methods and data</a></li>
 <li class="chapter" data-level="11.3" data-path="categories-syntactic.html"><a href="categories-syntactic.html#results-2"><i class="fa fa-check"></i><b>11.3</b> Results</a><ul>
-<li class="chapter" data-level="11.3.1" data-path="categories-syntactic.html"><a href="categories-syntactic.html#comprehension-wg-3"><i class="fa fa-check"></i><b>11.3.1</b> Comprehension: WG</a></li>
-<li class="chapter" data-level="11.3.2" data-path="categories-syntactic.html"><a href="categories-syntactic.html#production-ws-3"><i class="fa fa-check"></i><b>11.3.2</b> Production: WS</a></li>
+<li class="chapter" data-level="11.3.1" data-path="categories-syntactic.html"><a href="categories-syntactic.html#comprehension-wg-3"><i class="fa fa-check"></i><b>11.3.1</b> Comprehension (WG)</a></li>
+<li class="chapter" data-level="11.3.2" data-path="categories-syntactic.html"><a href="categories-syntactic.html#production-ws-3"><i class="fa fa-check"></i><b>11.3.2</b> Production (WS)</a></li>
 <li class="chapter" data-level="11.3.3" data-path="categories-syntactic.html"><a href="categories-syntactic.html#reliability-of-bias-estimates"><i class="fa fa-check"></i><b>11.3.3</b> Reliability of bias estimates</a></li>
 </ul></li>
 <li class="chapter" data-level="11.4" data-path="categories-syntactic.html"><a href="categories-syntactic.html#discussion-5"><i class="fa fa-check"></i><b>11.4</b> Discussion</a></li>
@@ -614,26 +615,26 @@ Type and sex. Small female advantage overall, but big interaction in gestures_pa
 
 term                                estimate   std.error   statistic
 ---------------------------------  ---------  ----------  ----------
-(Intercept)                            0.082       0.039       2.091
-age                                    0.044       0.001      40.471
-sexMale                               -0.009       0.021      -0.442
-typegestures_games                     0.154       0.017       8.960
-typegestures_objects                  -0.432       0.017     -26.065
-typegestures_parent                   -0.622       0.017     -37.218
-typegestures_adult                    -0.551       0.017     -33.126
-age:sexMale                           -0.002       0.001      -1.566
-age:typegestures_games                -0.007       0.001      -6.002
-age:typegestures_objects               0.020       0.001      17.512
-age:typegestures_parent                0.019       0.001      15.771
-age:typegestures_adult                 0.019       0.001      16.099
-sexMale:typegestures_games            -0.038       0.024      -1.583
-sexMale:typegestures_objects           0.095       0.023       4.146
-sexMale:typegestures_parent            0.232       0.023       9.990
-sexMale:typegestures_adult             0.001       0.023       0.060
-age:sexMale:typegestures_games         0.003       0.002       1.877
-age:sexMale:typegestures_objects      -0.006       0.002      -3.763
-age:sexMale:typegestures_parent       -0.024       0.002     -14.961
-age:sexMale:typegestures_adult         0.006       0.002       3.573
+(Intercept)                            0.082       0.039        2.09
+age                                    0.044       0.001       40.47
+sexMale                               -0.009       0.021       -0.44
+typegestures_games                     0.154       0.017        8.96
+typegestures_objects                  -0.432       0.017      -26.07
+typegestures_parent                   -0.622       0.017      -37.22
+typegestures_adult                    -0.551       0.017      -33.13
+age:sexMale                           -0.002       0.001       -1.57
+age:typegestures_games                -0.007       0.001       -6.00
+age:typegestures_objects               0.020       0.001       17.51
+age:typegestures_parent                0.019       0.001       15.77
+age:typegestures_adult                 0.019       0.001       16.10
+sexMale:typegestures_games            -0.038       0.024       -1.58
+sexMale:typegestures_objects           0.095       0.023        4.15
+sexMale:typegestures_parent            0.232       0.023        9.99
+sexMale:typegestures_adult             0.001       0.023        0.06
+age:sexMale:typegestures_games         0.003       0.002        1.88
+age:sexMale:typegestures_objects      -0.006       0.002       -3.76
+age:sexMale:typegestures_parent       -0.024       0.002      -14.96
+age:sexMale:typegestures_adult         0.006       0.002        3.57
 
 Type and ses. Very small low-ses advantage?
 
@@ -643,22 +644,22 @@ Type and ses. Very small low-ses advantage?
 
 term                           estimate   std.error   statistic
 ----------------------------  ---------  ----------  ----------
-(Intercept)                      -0.497       0.051      -9.815
-age                               0.064       0.001      60.905
-typegestures_first                0.585       0.015      39.422
-typegestures_games                0.739       0.015      49.775
-typegestures_objects              0.129       0.015       8.675
-typegestures_parent               0.027       0.015       1.772
-seslow                           -0.020       0.020      -1.009
-age:typegestures_first           -0.026       0.001     -25.811
-age:typegestures_games           -0.030       0.001     -29.704
-age:typegestures_objects         -0.005       0.001      -5.447
-age:typegestures_parent          -0.017       0.001     -17.061
-typegestures_first:seslow         0.068       0.007       9.924
-typegestures_games:seslow        -0.054       0.007      -7.833
-typegestures_objects:seslow       0.069       0.007      10.072
-typegestures_parent:seslow        0.095       0.007      13.751
-age:seslow                        0.001       0.001       0.396
+(Intercept)                      -0.497       0.051        -9.8
+age                               0.064       0.001        60.9
+typegestures_first                0.585       0.015        39.4
+typegestures_games                0.739       0.015        49.8
+typegestures_objects              0.129       0.015         8.7
+typegestures_parent               0.027       0.015         1.8
+seslow                           -0.020       0.020        -1.0
+age:typegestures_first           -0.026       0.001       -25.8
+age:typegestures_games           -0.030       0.001       -29.7
+age:typegestures_objects         -0.005       0.001        -5.4
+age:typegestures_parent          -0.017       0.001       -17.1
+typegestures_first:seslow         0.068       0.007         9.9
+typegestures_games:seslow        -0.054       0.007        -7.8
+typegestures_objects:seslow       0.069       0.007        10.1
+typegestures_parent:seslow        0.095       0.007        13.8
+age:seslow                        0.001       0.001         0.4
 
 
 

@@ -1,8 +1,8 @@
 # Consistency in Early Vocabulary {#items-consistency}
 
-Which words do children learn first? In spite of tremendous individual variation in rate of development [@fenson1994; @hart1995], the first words that children utter are strikingly consistent [@tardif2008]: they tend to talk about important people in their life (_mom_, _dad_), social routines (_hi_, _uh oh_), animals (_dog_, _duck_), and foods (_milk_, _banana_). As children learn from their experiences and according to their own interests [@mayor2014] their vocabulary grows rapidly, typically adding more nouns, but also verbs (_go_) and other predicates (_hot_) to their production repertoires. Indeed, variability in the difficulty of words--and presumably the consistent of this difficulty across children--is a key feature of models that attempt to characterize global features of language learning [e.g @mcmurray2007; @mollica2017; @blythe2010]. 
+Which words do children learn first? In spite of tremendous individual variation in rate of development [see Chapter \@ref(vocabulary); @fenson1994; @hart1995], the first words that children utter are reported to be quite consistent [@tardif2008]. In particular, in English, Mandarin, and Cantonese, babies' first 10 words tended to be about important people in their life (_mom_, _dad_), social routines (_hi_, _uh oh_), animals (_dog_, _duck_), and foods (_milk_, _banana_).This chapter attempts to generalize the analysis reported in @tardif1999, asking more broadly whether words tend to be learned in the same order across languages.
 
-In the latter part of this chapter, we ask *why* some words are learned before others. In future chapters, we will take up the question of *why* some words are learned before others. In this chapter, we as the prior question: Are words learned in the same order, and at the same rate, across languages? Similar trajectories--no matter their proximal causes--suggest that these causes are consistent across languages. As detailed in the Chapter \@ref(intro-practical), the items on each language's form are adaptations and not translations: They are intended to capture the spirit of the items on the English form rather to replicate them exactly. Nonetheless, when translation equivalents exist on multiple forms we can look at the variability in how quickly they are acquired across languages.
+The trouble is that the precise words that children learn in different languages are (of course) language-specific. Thus, we really want to know whether the *concepts* that are being talked about are the same -- or at least similar. As detailed in the Chapter \@ref(intro-practical), the items on each language's form are adaptations and not translations: They are intended to capture the spirit of the items on the English form rather to replicate them exactly. So conceptual mappings are approximate, rather than exact. Nonetheless, when these approximate translation equivalents appear on multiple forms we can look at the variability in how quickly they are acquired across languages. Thus, we assume for simplicity that *dog*, *chien*, and *perro* name (roughly) the same concept. 
 
 ```{r items-load_consistency_data, eval=FALSE}
 langs <- get_instruments() %>%
@@ -27,7 +27,7 @@ item_data <- map_dfr(1:nrow(items_nested),
                                       administrations = T))
 ```
 
-To estimate the similarity of each item's trajectories, we use a single measure of it's difficulty: age of acquisition (AoA) -- the age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
+To estimate the similarity of each item's trajectory, we use a single measure of its difficulty: age of acquisition (AoA) -- the age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
 
 ```{r items-get_aoas, eval = FALSE}
 understand_items <- item_data %>%
@@ -116,7 +116,7 @@ cutoff_n <- cutoffs %>%
 
 In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not every word appeared on all forms. Figure \@ref(fig:items-uni-lemma-completeness-figure) shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the `r n_distinct(all_aoas$language)` languages. 
 
-```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = "The proportion of words found on a given number of language's CDI forms."}
+```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = "The proportion of words found on a given number of language's CDI forms. The dashed line shows the cutoff value we chose."}
 ggplot(filter(cutoffs, measure == "produces"),
        aes(x = in_langs, y = cum_prop)) +
   geom_line() +
@@ -136,7 +136,7 @@ ggplot(filter(cutoffs, measure == "produces"),
 
 ## The first 10 words
 
-Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(tab:items-top10-production) and \@ref(tab:items-top10-comprehension)). Similar words appeared in the top 10 across languages, especially in children's first productions. These words consisted primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
+Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(tab:items-top10-production) and \@ref(tab:items-top10-comprehension)). Similar words appeared in the top 10 across languages, especially in children's first productions. These words consist primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). 
 
 ```{r items-top10-compute}
 top10 <- all_aoas %>%
@@ -149,7 +149,6 @@ top10 <- all_aoas %>%
   spread(language, uni_lemma) 
 ```
 
-### Production
 ```{r items-top10-production, results="asis"}
 cat(dt_caption("The 10 earliest words that children produce in each language."))
 top10 %>% 
@@ -159,8 +158,8 @@ top10 %>%
   dt(options = list(scrollX = "400px", dom = "t"))
 ```
 
-### Comprehension
 ```{r items-top10-comprehension, results="asis"}
+
 cat(dt_caption("The 10 earliest words that children comprehend in each language."))
 top10 %>% 
   ungroup() %>%
@@ -168,6 +167,8 @@ top10 %>%
   select(-measure, -order) %>%
   dt(options = list(scrollX = "400px", dom = "t"))
 ```
+
+Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
 
 ## Global cross-linguistic similarity 
 
@@ -191,8 +192,6 @@ measure_correlation <- cor.test(wide_means$produces,
 
 ```
 
-Despite these differences between comprehension and production, words reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure below shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages (Figure \@ref(fig:items-understands-and-produces-plots)). The correlation between the two measures was quite high: _r_ = `r round(measure_correlation$estimate, 2)` (_p_ `r printp(measure_correlation$p.value)`). 
-
 
 ```{r items-understands-and-produces-plots, fig.cap = "Correlation between the average age of acquisition in comprehhension and production for each measured word."}
 ggplot(wide_means, aes(x = produces, y = understands, label = uni_lemma)) + 
@@ -203,9 +202,12 @@ ggplot(wide_means, aes(x = produces, y = understands, label = uni_lemma)) +
   theme(legend.position = "none")  
 ```
 
-Taken together, these analyses suggest that the rate at which the words on the CDI, and by inference the processes that underpin them, are highly similar across languages. The source of this similarity is hard to pin down. One possibility is that the difficulty of learning a word is determined predominantly by the complexity of the concept denoted by that word, and thus that variability in linguistic and cultural features play a relatively small role in determining the difficulty of learning a word [@gentner2001]. Alternatively, the primary driver of difficulty could be linguistic, but the dimensions of linguistic variability could be orthogonal to the difficulty of learning. For instance, verbs may be more difficult that nouns because they are relational, and thus that learning nouns makes learning verbs relatively easier than learning verbs makes learning nouns [@gleitman1990]. In this case, the linguistically relevant dimensions would be relatively invariant across languages [@snedeker2007]. Finally, because the words on the CDI are not a random sample of words in each language, it could be that generalization from these analyses overestimates the degree of cross-linguistic similarity.
 
-One way of beginning to distinguish among these possibilities is to look at these cross-linguistic relationships in a less aggregate and more nuanced way. In the remainder of the chapter, we address this problem from two directions: (1) Does similarity in order of acquisition vary with linguistic similarity, and (2) Does similarity in order of acquisition change over development?
+Despite these differences between comprehension and production, words reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure below shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages (Figure \@ref(fig:items-understands-and-produces-plots)). The correlation between the two measures was quite high: _r_ = `r round(measure_correlation$estimate, 2)` (_p_ `r printp(measure_correlation$p.value)`). Taken together, these analyses suggest that the rate at which the words on the CDI, and by inference the processes that underpin them, are highly similar across languages.
+
+The source of this similarity is hard to pin down. One possibility is that the difficulty of learning a word is determined predominantly by the complexity of the concept denoted by that word, and thus that variability in linguistic and cultural features play a relatively small role in determining the difficulty of learning a word [@gentner2001]. Alternatively, the primary driver of difficulty could be linguistic, but the dimensions of linguistic variability could be orthogonal to the difficulty of learning. For instance, verbs may be more difficult that nouns because they are relational, and thus that learning nouns makes learning verbs relatively easier than learning verbs makes learning nouns [@gleitman1990]. In this case, the linguistically relevant dimensions would be relatively invariant across languages [@snedeker2007]. (Finally, because the words on the CDI are not a random sample of words in each language, it could be that generalization from these analyses overestimates the degree of cross-linguistic similarity.) 
+
+In Chapter \@ref(items-prediction) we begin to take up these questions using predictive models. Prior to taking this step, however we consider cross-linguistic ordering more holistically. In the remainder of the chapter, we address this problem from two directions: (1) Does similarity in order of acquisition vary with language-to-language similarity, and (2) Does similarity in order of acquisition change over development?
 
 ## Acquisition similarity and linguistic similarity
 
@@ -524,7 +526,9 @@ lev_tests <- lev_cors %>%
   unnest()
 ```
 
-We also applied this same analysis to the words on the words on the CDI themselves. For each language, we compute the average normalized @levenshtein1966 distance between the word for each of the `r cutoff_n` common words in our analyses. Levenshtein distance is a measure of the minimum number of insertions, deletions, or substitutions required to transform one string into another. For instance, the distance between the Italian and Norwegian words for dog (_cane_ and _hund_) is `r stringdist::stringdist("cane","hund", method = "lv")`. We computed this measure pairwise for all words, and then divided it by the number of characters in the longest word in order to get the edit distance per character (`r stringdist::stringdist("cane","hund", method = "lv") /nchar("hund")` for _cane_ and _hund_). This measure was even more correlated with pairwise acquisition trajectories as similarity computed using the 40 words identified by @holman2008 for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(p.value) %>% printp()`). Because this analysis likely overestimates the dissimilarity of langues written in different scripts--as every word receives a normalized Levenshtein distance of 1 -- we replicated this analysis at the phonemic level. We used `eSpeak` to compute phonetic transcripts of each word and repeated the same analysis on distance between words' phonetic units in the International Phonetic Alphabet [IPA; @decker1999]. These correlations between IPA distance and pairwise age of acquisition trajectories were again reliable although slightly attenuated for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(p.value) %>% printp()`). The robustness of these correlations across a variety of methods suggests that in addition to the high degree of general cross-linguistic similarities in the order of acquisition of words, the dissimilarities between them likely likely reflect reflect differences in the target languages being learned. 
+We also applied this same analysis to the words on the words on the CDI themselves. For each language, we compute the average normalized @levenshtein1966 distance between the word for each of the `r cutoff_n` common words in our analyses. Levenshtein distance is a measure of the minimum number of insertions, deletions, or substitutions required to transform one string into another. For instance, the distance between the Italian and Norwegian words for dog (_cane_ and _hund_) is `r stringdist::stringdist("cane","hund", method = "lv")`. We computed this measure pairwise for all words, and then divided it by the number of characters in the longest word in order to get the edit distance per character (`r stringdist::stringdist("cane","hund", method = "lv") /nchar("hund")` for _cane_ and _hund_). This measure was even more correlated with pairwise acquisition trajectories as similarity computed using the 40 words identified by @holman2008 for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(p.value) %>% printp()`). 
+
+Because this analysis likely overestimates the dissimilarity of langues written in different scripts--as every word receives a normalized Levenshtein distance of 1 -- we replicated this analysis at the phonemic level. We used `eSpeak` to compute phonetic transcripts of each word and repeated the same analysis on distance between words' phonetic units in the International Phonetic Alphabet [IPA; @decker1999]. These correlations between IPA distance and pairwise age of acquisition trajectories were again reliable although slightly attenuated for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(p.value) %>% printp()`). The robustness of these correlations across a variety of methods suggests that in addition to the high degree of general cross-linguistic similarities in the order of acquisition of words, the dissimilarities between them likely likely reflect reflect differences in the target languages being learned. 
 
 In our final analysis, we ask whether similarities in ages of acquisition are constant over the course of acquisition, or whether the similarity across languages changes over development. If variability in acquisition trajectories across languages reflects variability in those languages, we might expect that children's trajectories diverge over the course of language acquisition as the structure of their target language or their cultural milieu play a stronger role in guiding which words are easy or important to learn. Our analyses of the first 10 words above shows striking similarity in the earliest words. Does this similarity decrease for the next 300 words?
 
@@ -597,7 +601,7 @@ write_feather(random_step_cors, "data/items-consistency/random_step_cors.feather
 write_feather(empirical_step_cors, "data/items-consistency/empirical_step_cors.feather")
 ```
 
-```{r items-plot-cors, fig.height=4.5, fig.cap = "Cross-linguistic correlation ages of words' acquisition over the course of language development. Colored lines show empirical correlations, the gray area shows a 95% confidence interval for a randoly shuffled baseline. Especially in production, cross-linguistic similarity declines over the course of language development."}
+```{r items-plot-cors, fig.height=4.5, fig.cap = "Cross-linguistic correlation ages of words' acquisition over the course of language development. Colored lines show empirical correlations, the gray area shows a 95% confidence interval for a randomly shuffled baseline. Especially in production, cross-linguistic similarity declines over the course of language development."}
 empirical_step_cors <-
   read_feather("data/items-consistency/empirical_step_cors.feather") %>%
   mutate(measure = fct_relevel(measure, "understands"))
@@ -615,3 +619,7 @@ ggplot(random_step_cors, aes(x = n, y = correlation)) +
   theme(legend.position = "none") + 
   .scale_colour_discrete()
 ```
+
+Figure \@ref(fig:items-plot-cors) shows the broader pattern of cross-linguistic correlations across successively-larger subsets of the vocabulary, as compared to a random baseline. Especially in the domain of production, we see a level of consistency that substantially exceeds baseline.
+
+<!-- MORE DETAILS, DAN? -->

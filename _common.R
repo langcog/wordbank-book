@@ -4,15 +4,9 @@ library(knitr)
 library(feather)
 library(tidyverse)
 
-# extrafont::loadfonts()
-
-options(#digits = 2,
-        DT.options = list(searching = FALSE,
+options(DT.options = list(searching = FALSE,
                           lengthChange = FALSE))
-                          # autoWidth = TRUE))
-                          # columnDefs = list(list(
-                          #   className = "dt-head-left", targets = "_all"
-                          # ))))
+
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -69,7 +63,7 @@ inst_colours <- insts$colour %>% set_names(insts$instrument)
 # write_feather(instruments, "data/_common/instruments.feather")
 # admins <- get_administration_data(original_ids = TRUE)
 # write_feather(admins, "data/_common/admins.feather")
-items <- get_item_data()
+# items <- get_item_data()
 # write_feather(items, "data/_common/items.feather")
 
 

@@ -55,6 +55,14 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="libs/dt-core-bootstrap-1.10.16/css/dataTables.bootstrap.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-bootstrap-1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="libs/dt-core-bootstrap-1.10.16/js/dataTables.bootstrap.min.js"></script>
+<link href="libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize-0.12.0/selectize.min.js"></script>
 
 
 
@@ -168,13 +176,9 @@
 <li class="chapter" data-level="7.1.3" data-path="gesture.html"><a href="gesture.html#intercorrelation-among-gestures"><i class="fa fa-check"></i><b>7.1.3</b> Intercorrelation among gestures</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="gesture.html"><a href="gesture.html#the-relationship-between-language-and-gesture"><i class="fa fa-check"></i><b>7.2</b> The relationship between language and gesture</a></li>
-<li class="chapter" data-level="7.3" data-path="gesture.html"><a href="gesture.html#gesture-and-demographic-variables"><i class="fa fa-check"></i><b>7.3</b> Gesture and demographic variables</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="items-consistency.html"><a href="items-consistency.html"><i class="fa fa-check"></i><b>8</b> Consistency in Early Vocabulary</a><ul>
-<li class="chapter" data-level="8.1" data-path="items-consistency.html"><a href="items-consistency.html#the-first-10-words"><i class="fa fa-check"></i><b>8.1</b> The first 10 words</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="items-consistency.html"><a href="items-consistency.html#production"><i class="fa fa-check"></i><b>8.1.1</b> Production</a></li>
-<li class="chapter" data-level="8.1.2" data-path="items-consistency.html"><a href="items-consistency.html#comprehension"><i class="fa fa-check"></i><b>8.1.2</b> Comprehension</a></li>
-</ul></li>
+<li class="chapter" data-level="8.1" data-path="items-consistency.html"><a href="items-consistency.html#the-first-10-words"><i class="fa fa-check"></i><b>8.1</b> The first 10 words</a></li>
 <li class="chapter" data-level="8.2" data-path="items-consistency.html"><a href="items-consistency.html#global-cross-linguistic-similarity"><i class="fa fa-check"></i><b>8.2</b> Global cross-linguistic similarity</a></li>
 <li class="chapter" data-level="8.3" data-path="items-consistency.html"><a href="items-consistency.html#acquisition-similarity-and-linguistic-similarity"><i class="fa fa-check"></i><b>8.3</b> Acquisition similarity and linguistic similarity</a></li>
 <li class="chapter" data-level="8.4" data-path="items-consistency.html"><a href="items-consistency.html#consistency-across-development"><i class="fa fa-check"></i><b>8.4</b> Consistency across development</a></li>
@@ -185,10 +189,9 @@
 <li class="chapter" data-level="9.1.2" data-path="items-demographics.html"><a href="items-demographics.html#models"><i class="fa fa-check"></i><b>9.1.2</b> Models</a></li>
 </ul></li>
 <li class="chapter" data-level="9.2" data-path="items-demographics.html"><a href="items-demographics.html#results"><i class="fa fa-check"></i><b>9.2</b> Results</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="items-demographics.html"><a href="items-demographics.html#item-specific-effects"><i class="fa fa-check"></i><b>9.2.1</b> Item-specific effects –&gt;</a></li>
-<li class="chapter" data-level="9.2.2" data-path="items-demographics.html"><a href="items-demographics.html#sex-1"><i class="fa fa-check"></i><b>9.2.2</b> Sex</a></li>
-<li class="chapter" data-level="9.2.3" data-path="items-demographics.html"><a href="items-demographics.html#birth-order-1"><i class="fa fa-check"></i><b>9.2.3</b> Birth order</a></li>
-<li class="chapter" data-level="9.2.4" data-path="items-demographics.html"><a href="items-demographics.html#maternal-education"><i class="fa fa-check"></i><b>9.2.4</b> Maternal education</a></li>
+<li class="chapter" data-level="9.2.1" data-path="items-demographics.html"><a href="items-demographics.html#sex-1"><i class="fa fa-check"></i><b>9.2.1</b> Sex</a></li>
+<li class="chapter" data-level="9.2.2" data-path="items-demographics.html"><a href="items-demographics.html#birth-order-1"><i class="fa fa-check"></i><b>9.2.2</b> Birth order</a></li>
+<li class="chapter" data-level="9.2.3" data-path="items-demographics.html"><a href="items-demographics.html#maternal-education"><i class="fa fa-check"></i><b>9.2.3</b> Maternal education</a></li>
 </ul></li>
 <li class="chapter" data-level="9.3" data-path="items-demographics.html"><a href="items-demographics.html#conclusions-2"><i class="fa fa-check"></i><b>9.3</b> Conclusions</a></li>
 </ul></li>
@@ -376,7 +379,7 @@ Figure 12.8: Developmental trajectory of each time word in each language.
 <div id="color" class="section level3">
 <h3><span class="header-section-number">12.3.2</span> Color</h3>
 <p>Color word acquisition has been a focus of interest at least since early work by <span class="citation">Carey (<a href="references.html#ref-carey1978">1978</a>)</span>’s influential study of “fast mapping.” Although early work suggested that color words were learned almost simultaneously <span class="citation">(Bartlett <a href="references.html#ref-bartlett1977">1977</a>)</span>, more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space <span class="citation">(Wagner, Dobkins, and Barner <a href="references.html#ref-wagner2013">2013</a>)</span>. Adding to the complexity of this issue is substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms <span class="citation">(Bornstein <a href="references.html#ref-bornstein1985">1985</a>)</span>.</p>
-<p>There is tremendous cross-linguistic variation in color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively larger color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was <em>black</em>, <em>blue</em>, <em>green</em>, <em>red</em>, <em>white</em>, <em>yellow</em>.</p>
+<p>There is tremendous cross-linguistic variation in color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively larger color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was <em>black</em>, <em>blue</em>, <em>green</em>, <em>red</em>, <em>white</em>, <em>yellow</em>.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsem-color-words"></span>
 <img src="wordbank-book_files/figure-html/catsem-color-words-1.png" alt="Developmental trajectory of each color word in each language." width="672" />
 <p class="caption">
@@ -469,8 +472,8 @@ Figure 12.12: Developmental trajectory of each logic word in each language.
 </div>
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like <em>red</em> would be much larger than in English.<a href="categories-semantic.html#fnref6" class="footnote-back">↩</a></p></li>
+<ol start="23">
+<li id="fn23"><p>Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like <em>red</em> would be much larger than in English.<a href="categories-semantic.html#fnref23" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -527,6 +530,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

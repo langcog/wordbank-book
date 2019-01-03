@@ -38,12 +38,13 @@ This set of contributions reflects an important guiding principle of our work he
 
 The first chapters of this book provide an overview of the practical and theoretical issues that we cover. Chapter \@ref(intro-theory) gives a broad theoretical overview of our claims and sets up some of the empirical themes that we return to throughout, especially the notion of using the consistency and variability of phenomena to make generalizations about the process of acquisition. Chapter \@ref(intro-practical) then discusses the practicalities of the CDI and the Wordbank project. Chapter \@ref(methods) gives a methodological and descriptive overview of the dataset we analyze throughout. And Chapter \@ref(psychometrics) discusses the psychometric properties of parent report data, addressing questions about the strengths and limitations of this method. 
 
+<div class="figure" style="text-align: center">
+  <span id="fig:preface-outline"></span>
+  <img src="images/outline-graffle.png" alt="test" width="716">
+  <p class="caption">Figure P.1: A graphical outline of the book.</p>
+</div>
 
-```{r preface-outline, fig.cap="A graphical outline of the book."}
-include_graphics("images/outline-graffle.png")
-```
-
-Chapters \@ref(vocabulary) -- \@ref(style) then form the empirical heart of the book. Each applies a particular analysis of interest to our dataset. Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data (see Figure \@ref(fig:preface-outline)). 
+Chapters \@ref(vocabulary) -- \@ref(style) then form the empirical heart of the book. Each applies a particular analysis of interest to our dataset. Although our goal is a full exploration of the phenomena of child language acquisition, the analyses we report are constrained by the structure of the data in Wordbank. At its heart, the individual instrument datasets stored in Wordbank are matrices of item by child data (see Figure [P.1](index.html#fig:preface-outline)).
 
 Considering the data in this way leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocabulary) considers this view of the data, examining developmental change and variability in such data. Then in Chapter \@ref(demographics), we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-culturally valid proxy for socioeconomic status). 
 

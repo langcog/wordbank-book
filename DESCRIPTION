@@ -40,6 +40,5 @@ Imports:
   wordbankr,
   viridis
 Remotes:
-  langcog/langcog,
-  mikabr/ggpirate
+  langcog/langcog
 License: GPL-3

@@ -1,4 +1,4 @@
-###### Scripts to support categories_semantics chapter #######
+###### Scripts to support categories-semantic chapter #######
 
 ## DATA LOADING PLUS CATEGORY-FINDING --------------------------
 
@@ -47,8 +47,8 @@ cat_comp_data <- map2(included_instruments$language,
                       included_instruments$form, get_cat_comp) %>%
   bind_rows()
 
-# write_feather(cat_comp_data, "data/categories_semantics/cat_comp_data.feather")
-save(cat_comp_data, file = "data/categories_semantics/cat_comp_data.Rds")
+# write_feather(cat_comp_data, "data/categories-semantic/cat_comp_data.feather")
+save(cat_comp_data, file = "data/categories-semantic/cat_comp_data.Rds")
 
 ## RESAMPLING AND CACHING CODE  --------------------------
 
@@ -81,7 +81,7 @@ sample_areas <- function(d, nboot = 1000) {
 }
 
 areas <- sample_areas(cat_comp_data, nboot=100)
-write_feather(areas,"data/categories_semantics/sem_vocab_comp_areas.feather")
+write_feather(areas,"data/categories-semantic/sem_vocab_comp_areas.feather")
 
 ## SEMANTIC CATEGORY CACHING  --------------------------
 get_unilemma_trajectories <- function(target_category = NA,
@@ -128,10 +128,10 @@ get_unilemma_trajectories <- function(target_category = NA,
         left_join(cat_items %>%
                     select(num_item_id, definition, language, form, uni_lemma)) %>%
         group_by(uni_lemma, age, language, form) %>%
-        summarise(ci_lower = binom.confint(x = sum(produces), n = n(),
-                                           method = "bayes")$lower,
-                  ci_upper = binom.confint(x = sum(produces), n = n(),
-                                           method = "bayes")$upper,
+        summarise(ci_lower = binom::binom.confint(x = sum(produces), n = n(),
+                                                  method = "bayes")$lower,
+                  ci_upper = binom::binom.confint(x = sum(produces), n = n(),
+                                                  method = "bayes")$upper,
                   mean = mean(produces),
                   n = n())
 
@@ -141,12 +141,12 @@ get_unilemma_trajectories <- function(target_category = NA,
 # cache various
 # time, color, body parts, logic, number
 time_words <- get_unilemma_trajectories(target_category = "time_words")
-write_feather(time_words, "data/categories_semantics/time_words.feather")
+write_feather(time_words, "data/categories-semantic/time_words.feather")
 
 
 body_words <- get_unilemma_trajectories(uni_lemmas = c("arm", "leg", "hand",
                                                        "foot", "finger", "toe") )
-write_feather(body_words, "data/categories_semantics/body_words.feather")
+write_feather(body_words, "data/categories-semantic/body_words.feather")
 
 
 color_words <- get_unilemma_trajectories(uni_lemmas = c("red","blue","green",
@@ -154,7 +154,7 @@ color_words <- get_unilemma_trajectories(uni_lemmas = c("red","blue","green",
                                                         "orange","brown","gray",
                                                         "black","white"),
                                          threshold = 5)
-write_feather(color_words, "data/categories_semantics/color_words.feather")
+write_feather(color_words, "data/categories-semantic/color_words.feather")
 
 
 logic_words <- get_unilemma_trajectories(uni_lemmas = c("no", "some", "all",
@@ -162,10 +162,10 @@ logic_words <- get_unilemma_trajectories(uni_lemmas = c("no", "some", "all",
                                                         "not","because",
                                                         "then","if"),
                                          threshold = 5)
-write_feather(logic_words, "data/categories_semantics/logic_words.feather")
+write_feather(logic_words, "data/categories-semantic/logic_words.feather")
 
 # not enoguh number, hard to map space.
 
 # control group
 animal_words <- get_unilemma_trajectories(target_category = "animals")
-write_feather(animal_words, "data/categories_semantics/animal_words.feather")
+write_feather(animal_words, "data/categories-semantic/animal_words.feather")

@@ -69,7 +69,7 @@ inst_colours <- insts$colour %>% set_names(insts$instrument)
 # write_feather(instruments, "data/_common/instruments.feather")
 # admins <- get_administration_data(original_ids = TRUE)
 # write_feather(admins, "data/_common/admins.feather")
-# items <- get_item_data()
+items <- get_item_data()
 # write_feather(items, "data/_common/items.feather")
 
 

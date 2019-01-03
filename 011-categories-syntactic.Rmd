@@ -129,7 +129,7 @@ get_lang_predictions <- function(lang) {
 }
 ```
 
-```{r catsyn-plot-area-demo, fig.asp=0.4, fig.cap="For American English WS data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits."}
+```{r catsyn-plot-area-demo, fig.cap="For American English WS data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits.", fig.height=3}
 demo_lang <- "English (American)"
 demo_data <- filter(vocab_comp_data, form == "WS", 
                     language == demo_lang) %>%
@@ -153,18 +153,18 @@ diagonal$prop <- diagonal$vocab
 area_poly <- bind_rows(predictions, diagonal) %>%
   mutate(panel = paste(language, "(models)"))
 
-ggplot(predictions, 
-       aes(x = vocab, y = prop)) +
+ggplot(predictions, aes(x = vocab, y = prop)) +
+  facet_grid(. ~ lexical_category) +
+  coord_fixed() +
   geom_point(data = demo_data, aes(x = vocab, prop, col = lexical_category), 
              alpha = .03, size = 0.6) +
-  facet_grid(. ~ lexical_category) +
   geom_line(aes(colour = lexical_category), size = 1.5) +
   geom_polygon(data = filter(area_poly, language == "English"),
                aes(fill = lexical_category), alpha = 0.2) +
   geom_abline(slope = 1, intercept = 0, colour = .grey, linetype = .refline) + 
-  scale_y_continuous(limits = c(0, 1), #breaks = c(),
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                      name = "Proportion of category") +
-  scale_x_continuous(limits = c(0, 1), #breaks = c(),
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                      name = "Vocabulary size") +
   .scale_colour_discrete(guide = FALSE) +
   .scale_fill_discrete(guide = FALSE) 
@@ -238,7 +238,7 @@ Critically, this analysis controls for a number of confounds in previous analyse
 
 We present results of this analysis across languages, beginning with comprehension on WG-type forms and moving to production in WS-type forms. We do not analyze WG production data here. For the most part, production estimates on WG forms are quite low, and hence curves are relatively unconstrained (or determined by a small number of children who are reported to have very large early vocabulary sizes). 
 
-```{r catsyn-base_plot}
+```{r catsyn-base-plot}
 base_plot <- function(input_forms, input_measure) {
   vocab_comp_data %>%
     filter(form %in% input_forms, 
@@ -251,6 +251,7 @@ base_plot <- function(input_forms, input_measure) {
            langform = interaction(language, form, sep = .inst_sep)) %>%
     ggplot(aes(x = vocab, y = prop, colour = lexical_category)) +
     facet_wrap(~langform) +
+    coord_fixed() +
     scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "Proportion of category") +
     scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
@@ -265,8 +266,7 @@ base_plot <- function(input_forms, input_measure) {
 
 ### Comprehension (WG)
 
-
-```{r catsyn-plot-points-wg-comp, fig.asp=1.25, fig.cap="For each language's comprehension data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits."}
+```{r catsyn-plot-points-wg-comp, fig.asp=1.3, fig.cap="For each language's comprehension data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits.", dependson="catsyn-base-plot"}
 base_plot(WGs, "understands") + 
   geom_abline(slope = 1, intercept = 0, colour = .grey, linetype = .refline) + 
   geom_jitter(size = .6, alpha = .1) +
@@ -312,8 +312,7 @@ area_scatter_data <- area_summary %>%
   select(-lexical_category, -variable) %>%
   spread(lex_var, value)
 
-ggplot(area_scatter_data, 
-       aes(x = Nouns_mean, y = Predicates_mean)) + 
+ggplot(area_scatter_data,  aes(x = Nouns_mean, y = Predicates_mean)) +
   geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
   geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
   geom_smooth(method = "lm") + 
@@ -347,7 +346,7 @@ Function words are substantially under-represented across nearly every language 
 
 We next turn to production data from WS-type forms (Figure \@ref(fig:catsyn-plot-points-ws)). We can immediately see the same function-word trend as was visible in comprehension. In addition, in many but not all languages, a noun bias is evident.
 
-```{r catsyn-plot-points-ws, fig.asp=1.2, fig.cap="For each language's production data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits."}
+```{r catsyn-plot-points-ws, fig.asp=1.1, fig.cap="For each language's production data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits.", dependson="catsyn-base-plot"}
 base_plot(WSs, "produces") + 
   geom_abline(slope = 1, intercept = 0, colour = .grey, linetype = .refline) + 
   geom_jitter(size = .6, alpha = .1) +
@@ -487,6 +486,7 @@ vocab_comp_data %>%
            measure = fct_relevel(measure, "understands")) %>%
     ggplot(aes(x = vocab, y = prop, colour = lexical_category)) +
     facet_wrap(~measure, labeller = label_caps) +
+    coord_fixed() +
     scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                        name = "Proportion of category") +
     scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
@@ -508,7 +508,7 @@ What might be the mechanism for these asymmetries? For languages that do not all
 
 Another potential explanation is that form composition relates to bias estimates. For example, a form with more predicates might actually show a *lower* degree of predicate bias -- more predicates on the form would imply that some of those predicates are relatively more difficult (simply because the form designer had "run out" of easy predicates) and hence would not be checked as frequently by parents. We assess this hypothesis in two ways. First, we examine the relationship between predicate bias and predicate representation (making use of predicates because they are a minority on the form). Second, we consider the case of Mandarin where we have data from two forms with different compositions.
 
-```{r catsyn-pred-prod, fig.cap="Relative representation in vocabulary for predicates as a function of proportion of predicates on form for comprehension data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-pred-prod, fig.cap="Relative representation in vocabulary for predicates as a function of proportion of predicates on form for comprehension data in each language, with languages labelled whose proportion of predicates is greater than 0.25 (line ranges indicate bootstrapped 95% confidence intervals)."}
 pred_prod <- filter(area_summary, form %in% WSs, measure == "produces", 
                     lexical_category == "Predicates") %>%
   left_join(filter(items, form %in% WSs) %>% 
@@ -637,16 +637,17 @@ mandarin_areas <- predictions %>%
 
 ggplot(predictions, 
        aes(x = vocab, y = prop)) +
+  facet_grid(form ~ lexical_category) +
+  coord_fixed() +
   geom_point(data = mandarin_all, aes(x = vocab, prop, col = lexical_category), 
              alpha = .03) +
-  facet_grid(form ~ lexical_category) +
   geom_line(aes(colour = lexical_category), size = 1) +
   geom_polygon(data = filter(area_poly, language == "English"),
                aes(fill = lexical_category), alpha = 0.2) +
   geom_abline(slope = 1, intercept = 0, colour = .grey, linetype = .refline) + 
-  scale_y_continuous(limits = c(0, 1), breaks = c(),
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                      name = "") +
-  scale_x_continuous(limits = c(0, 1), breaks = c(),
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                      name = "") +
   .scale_colour_discrete(guide = FALSE) +
   .scale_fill_discrete(guide = FALSE) 

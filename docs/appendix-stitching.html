@@ -47,6 +47,14 @@
 
 
 
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 
 
 
@@ -160,7 +168,6 @@
 <li class="chapter" data-level="7.1.3" data-path="gesture.html"><a href="gesture.html#intercorrelation-among-gestures"><i class="fa fa-check"></i><b>7.1.3</b> Intercorrelation among gestures</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="gesture.html"><a href="gesture.html#the-relationship-between-language-and-gesture"><i class="fa fa-check"></i><b>7.2</b> The relationship between language and gesture</a></li>
-<li class="chapter" data-level="7.3" data-path="gesture.html"><a href="gesture.html#gesture-and-demographic-variables"><i class="fa fa-check"></i><b>7.3</b> Gesture and demographic variables</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="items-consistency.html"><a href="items-consistency.html"><i class="fa fa-check"></i><b>8</b> Consistency in Early Vocabulary</a><ul>
 <li class="chapter" data-level="8.1" data-path="items-consistency.html"><a href="items-consistency.html#the-first-10-words"><i class="fa fa-check"></i><b>8.1</b> The first 10 words</a></li>
@@ -174,10 +181,9 @@
 <li class="chapter" data-level="9.1.2" data-path="items-demographics.html"><a href="items-demographics.html#models"><i class="fa fa-check"></i><b>9.1.2</b> Models</a></li>
 </ul></li>
 <li class="chapter" data-level="9.2" data-path="items-demographics.html"><a href="items-demographics.html#results"><i class="fa fa-check"></i><b>9.2</b> Results</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="items-demographics.html"><a href="items-demographics.html#item-specific-effects"><i class="fa fa-check"></i><b>9.2.1</b> Item-specific effects –&gt;</a></li>
-<li class="chapter" data-level="9.2.2" data-path="items-demographics.html"><a href="items-demographics.html#sex-1"><i class="fa fa-check"></i><b>9.2.2</b> Sex</a></li>
-<li class="chapter" data-level="9.2.3" data-path="items-demographics.html"><a href="items-demographics.html#birth-order-1"><i class="fa fa-check"></i><b>9.2.3</b> Birth order</a></li>
-<li class="chapter" data-level="9.2.4" data-path="items-demographics.html"><a href="items-demographics.html#maternal-education"><i class="fa fa-check"></i><b>9.2.4</b> Maternal education</a></li>
+<li class="chapter" data-level="9.2.1" data-path="items-demographics.html"><a href="items-demographics.html#sex-1"><i class="fa fa-check"></i><b>9.2.1</b> Sex</a></li>
+<li class="chapter" data-level="9.2.2" data-path="items-demographics.html"><a href="items-demographics.html#birth-order-1"><i class="fa fa-check"></i><b>9.2.2</b> Birth order</a></li>
+<li class="chapter" data-level="9.2.3" data-path="items-demographics.html"><a href="items-demographics.html#maternal-education"><i class="fa fa-check"></i><b>9.2.3</b> Maternal education</a></li>
 </ul></li>
 <li class="chapter" data-level="9.3" data-path="items-demographics.html"><a href="items-demographics.html#conclusions-2"><i class="fa fa-check"></i><b>9.3</b> Conclusions</a></li>
 </ul></li>
@@ -370,6 +376,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

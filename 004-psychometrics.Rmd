@@ -322,7 +322,7 @@ Finally, mean discrimination is substantially lower for comprehension relative t
 One hypothesis that we have often speculated about is the question of whether there are special psychometric issues with particular word classes. For example, do parents struggle especially to identify whether children produce or understand function words? 
 
 
-```{r psycho-lexcat, fig.height=6.5, fig.cap="Lexical class effects on difficulty and discrimination for Words and Sentences. The top plot shows individual words plotted by their parameter values, with color representing the lexical class of the words. The bottom plot shows discrimination information in the form of a histogram."}
+```{r psycho-lexcat, fig.height=6.5, fig.cap="Lexical class effects on difficulty and discrimination for Words & Sentences. The top plot shows individual words plotted by their parameter values, with color representing the lexical class of the words. The bottom plot shows discrimination information in the form of a histogram."}
 coefs_4pl <- coefs_4pl %>%
   left_join(items %>% 
                filter(language == "English (American)", 
@@ -360,7 +360,7 @@ gridExtra::grid.arrange(a, b)
 Figure \@ref(fig:psycho-lexcat) shows WS item difficulty and discrimination (as above) and the histogram of discrimination, but broken down by lexical class (color). Many of the easy, non-discriminating items are found in the "other" section. In contrast, the hardest items tend to be function words. These items tend to have lower discrimination on average (`r signif(class_summary$a1[class_summary$lexical_class == "function_words"],2)`) compared with nouns (`r signif(class_summary$a1[class_summary$lexical_class == "nouns"],2)`), adjectives (`r signif(class_summary$a1[class_summary$lexical_class == "adjectives"],2)`), and especially verbs (`r signif(class_summary$a1[class_summary$lexical_class == "verbs"],2)`). Nevertheless, the situation is not dire: most have a discrimination parameter above one. Thus, although function words are not the most discriminative items on the CDI WS, these items still appear to encode valid signal about children's abilities.
 
 
-```{r psycho-lexcat-summary, fig.width=4.5, fig.cap="Mean discrimination values for individual words' in production and comprehension measures from the Words and Gestures form (error bars show SD)."}
+```{r psycho-lexcat-summary, fig.width=4.5, fig.cap="Mean discrimination values for individual words' in production and comprehension measures from the Words & Gestures form (error bars show SD)."}
 coefs_4pl_wg <- coefs_4pl_wg %>%
   left_join(items %>% 
                filter(language == "English (American)", 

@@ -357,6 +357,7 @@ rates <- filtered_rates %>%
   mutate(n_admins = n()) %>%
   filter(n_admins > MINADMINS) 
 
+set.seed(12)
 ids_to_plot <- rates %>%
   pull(original_id) %>%
   unique() %>%

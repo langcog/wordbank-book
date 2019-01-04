@@ -1,7 +1,4 @@
 language: r
-sudo: false
-pandoc_version: 1.19.2.1
-
 cache: packages
 
 before_script:

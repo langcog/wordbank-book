@@ -460,7 +460,7 @@ model_params <- rates %>%
 
 We next conducted the full model comparison analysis that @ganger2004 conducted, over the `r n_distinct(model_params$original_id)` separate longitudinal records included.^[This number consolidates data between WG and WS forms when a child has both, to maximize our use of the available longitudinal data.] In Ganger and Brent's analysis, they used only two models (linear and quadratic), which had the same number of parameters. Accordingly, they compared only the likelihoods of the data under these models. In contrast, we compared a linear function with intercept at 0 (1 parameter), standard linear (2 parameters), quadratic (3 parameter), and logistic (3 parameter) curves. To make up for the difference in parameters, we computed Akaike's Information Criterion (a measure of model goodness of fit, where smaller is better) for each model for each participant. 
 
-Table \@ref(tab:style-aicsummary) shows the proportion of children in each dataset for which different model types fit best. Overall, children were split between models, with some children best fit by the logistic. The linear functions, which were simpler, however, fit more participants better, with the 1-parameter linear model with no intercept best fitting more children than any other. 
+Table \@ref(tab:style-aicsummary) shows the proportion of children in each dataset for which different model types fit best. Overall, children were split between models, with some children best fit by the logistic. The linear functions, which were simpler, however, fit more participants better, with the 1-parameter linear model with no intercept best fitting more children than any other.
 
 ```{r style-aicsummary}
 best_model <- model_params %>%

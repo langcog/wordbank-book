@@ -2,6 +2,7 @@
 
 In Chapter \@ref(vocabulary), we make use of non-parametric measures of variability, especially MADM (mean absolute deviation from the median) rather than the more standard coefficient of variation. In this brief Appendix, we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
 
+Figure \@ref(fig:appvar-ratios-cv) shows coefficient of variation (CV) vs. MADM, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is 1, despite some considerable variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it goes dramatically higher for some individual datasets. We speculate that this is due to floor/ceiling effects and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme fluctuations than CV.
 
 ```{r appvar-vocab_data}
 num_words <- items %>%
@@ -14,9 +15,7 @@ vocab_data <- admins %>%
          mom_ed, birth_order, production, comprehension) %>% 
   left_join(num_words) %>%
   mutate(no_production = n - production)
-
 ```
-
 
 ```{r appvar-madm_normal}
 ratios <- vocab_data %>%
@@ -27,19 +26,17 @@ ratios <- vocab_data %>%
             madm = madm(production), 
             cv = cv(production), 
             d = d(production), 
-            n = n())
+            N = n())
 ```
 
-
-```{r appvar-ratios-cv, fig.cap="Coefficient of Variation and MADM, with each point showing a particular combination of language, form, and age."}
+```{r appvar-ratios-cv, fig.cap="Coefficient of variation and MADM, with each point showing a particular combination of language, form, and age and the line indicating a linear model fit."}
 ggplot(ratios, aes(x = madm, y = cv)) + 
-  geom_point(aes(size = n, col = language), alpha = .3) + 
-  geom_smooth(method = "lm") +
+  coord_fixed() +
+  geom_point(aes(size = N, col = language), alpha = .3) + 
+  geom_smooth(method = "lm", colour = .pal()(1), size = 1.3) +
   ylim(0,3) + xlim(0,3) +
-  geom_abline(lty = 2) +
-  ylab("Coefficient of Variation") + 
+  geom_abline(linetype = .refline, colour = .grey) +
+  ylab("Coefficient of variation") + 
   xlab("MADM") + 
   scale_colour_manual(values = lang_colours, guide = FALSE)
 ```
-
-Figure \@ref(fig:appvar-ratios-cv) shows Coefficient of Variation (CV) vs. MADM, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is 1, despite some considerable variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it goes dramatically higher for some individual datasets. We speculate that this is due to floor/ceiling effect and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme flunctions than CV.

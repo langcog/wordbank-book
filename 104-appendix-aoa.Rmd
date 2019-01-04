@@ -1,6 +1,6 @@
 # Estimating Age of Acquisition {#appendix-aoa}
 
-It is frequently useful to have an estimate of the age at which children produce a particular word with a probability greater than some threshold; these are commonly referred to as the word's age of acquisition [AOA; @goodman2008]. In this Appendix, we compare methods for estimating age of acquisition, using the English Words and Sentences data as a case study. 
+It is frequently useful to have an estimate of the age at which children produce a particular word with a probability greater than some threshold; these are commonly referred to as the word's age of acquisition [AoA; @goodman2008]. In this Appendix, we compare methods for estimating age of acquisition, using the English Words & Sentences data as a case study. 
 
 ```{r appaoa-load_data}
 # eng_ws <- read_feather("data/psychometrics/eng_ws_raw_data.feather")
@@ -10,10 +10,10 @@ load("data/psychometrics/eng_ws_raw_data.Rds")
 ```{r appaoa-means}
 ms <- eng_ws %>%
   group_by(definition, age, category) %>%
-  summarise(prop = mean(value=="produces", na.rm=TRUE), 
-            num_true = sum(value=="produces", na.rm=TRUE), 
-            num_false = sum(value!="produces", na.rm=TRUE), 
-            n = sum(c(num_true,num_false))) %>%
+  summarise(prop = mean(value == "produces", na.rm = TRUE), 
+            num_true = sum(value == "produces", na.rm = TRUE), 
+            num_false = sum(value != "produces", na.rm = TRUE), 
+            n = sum(c(num_true, num_false))) %>%
   filter(!is.na(category))
 ```
 
@@ -29,11 +29,11 @@ The simplest and most obvious measure is to use the empirically-determined first
 
 We initially investigated three model-based methods. Each of these models was fit to data from each word (proportion of children producing at each age) individually, resulting in a continuous curve that can be used to predict AoA more precisely. The three models we examined were:
 
-1. Standard generalized linear model, logistic link (GLM),
-2. Robust GLM, and
-3. Bayesian GLM with hand-tuned prior parameters [@gelman2008].
+1. Standard generalized linear model, logistic link (GLM)
+2. Robust GLM
+3. Bayesian GLM with hand-tuned prior parameters [@gelman2008]
 
-For the Bayesian GLM, we experimented substantially with prior setting in order to incorporate information about the slopes and intercepts we expected for words. We used default (Cauchy) priors over coefficients. We used the empirical distribution of GLM slopes to set a strict prior over the age slopes we expected, while setting a much weaker prior over intercepts. In practice, in larger datasets, only the most extreme words (e.g. "mommy", for which there is a ceiling effect for nearly every age) are affected by this choice. 
+For the Bayesian GLM, we experimented substantially with prior setting in order to incorporate information about the slopes and intercepts we expected for words. We used default (Cauchy) priors over coefficients. We used the empirical distribution of GLM slopes to set a strict prior over the age slopes we expected, while setting a much weaker prior over intercepts. In practice, in larger datasets, only the most extreme words (e.g. *mommy*, for which there is a ceiling effect for nearly every age) are affected by this choice. 
 
 In addition to these models, we investigated a hierarchical Bayesian model with shared distributional components across words. This model appeared to perform similarly to the simple word-based Bayesian model (at least in the presence of sufficient data) and was relatively expensive to fit in terms of computation, so we do not discuss it here. 
 
@@ -77,7 +77,6 @@ rglm_aoas <- ms %>%
   bind_rows
 ```
 
-
 ```{r appaoa-bayes_all}
 fit_bglm <- function(data) {
   model <- arm::bayesglm(cbind(num_true, num_false) ~ age, 
@@ -86,7 +85,7 @@ fit_bglm <- function(data) {
                          prior.scale = c(.01),
                          prior.mean.for.intercept = 0,
                          prior.scale.for.intercept = 2.5,
-                         prior.df=1,
+                         prior.df = 1,
                          data = data)
   aoa <- -model$coefficients[["(Intercept)"]] / model$coefficients[["age"]]
   
@@ -102,8 +101,7 @@ bglm_aoas <- ms %>%
   bind_rows
 ```
 
-```{r appaoa-compare-dist, fig.cap="Histogram of English (American) age of acquisition values as estimated via a variety of statistical methods (panels)."}
-
+```{r appaoa-aoas}
 aoas <- left_join(glm_aoas, empirical_aoas) %>%
   left_join(rglm_aoas) %>%
   left_join(bglm_aoas) %>%
@@ -116,17 +114,21 @@ aoas <- left_join(glm_aoas, empirical_aoas) %>%
                           labels = c("Empirical",
                                      "GLM",
                                      "Robust GLM",
-                                     "Bayesian GLM"))) 
-  
-ggplot(aoas, aes(x = aoa)) + 
-  facet_wrap(~ measure) + 
-  geom_histogram(binwidth = 1) + 
-  xlab("Age of Acquisition")
+                                     "Bayesian GLM")))
 ```
 
-Figure \@ref(fig:appaoa-compare-dist) shows the results of these simulations, in the form of histograms of recovered 50% AoA values. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (N = `r length(unique(eng_ws$data_id))`). In contrast, all three models smooth the distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently. Both the GLM and robust GLM recover two AoAs below zero ("mommy" and "daddy"); the priors of the Bayesian GLM regularize these AoAs to be `r round(filter(aoas, definition == "mommy*", measure == "Bayesian GLM")$aoa)` and `r round(filter(aoas, definition == "daddy*", measure == "Bayesian GLM")$aoa)` months respectively. Further, the Bayesian GLM estimates `r round(mean(filter(aoas, measure == "Bayesian GLM")$aoa >30),2)*100`% of AoAs above 30 months (the max value in the data), while the other two methods estimate slightly fewer: `r round(mean(filter(aoas, measure == "GLM")$aoa >30),2)*100`% and `r round(mean(filter(aoas, measure == "Robust GLM")$aoa >30),2)*100`% respectively. These Bayesian GLM results strike us as *a priori* more reasonable than those returned by the other methods (although they only affect a small minority of words). 
+Figure \@ref(fig:appaoa-compare-dist) shows the results of these simulations, in the form of histograms of recovered 50% AoA values. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (*N* = `r n_distinct(eng_ws$data_id)`). In contrast, all three models smooth the distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently. Both the GLM and robust GLM recover two AoAs below zero (*mommy* and *daddy*); the priors of the Bayesian GLM regularize these AoAs to be `r round(filter(aoas, definition == "mommy*", measure == "Bayesian GLM")$aoa)` and `r round(filter(aoas, definition == "daddy*", measure == "Bayesian GLM")$aoa)` months respectively. Further, the Bayesian GLM estimates `r round(mean(filter(aoas, measure == "Bayesian GLM")$aoa >30),2)*100`% of AoAs above 30 months (the max value in the data), while the other two methods estimate slightly fewer: `r round(mean(filter(aoas, measure == "GLM")$aoa >30),2)*100`% and `r round(mean(filter(aoas, measure == "Robust GLM")$aoa >30),2)*100`% respectively. These Bayesian GLM results strike us as *a priori* more reasonable than those returned by the other methods (although they only affect a small minority of words).
 
-```{r appaoa-sparcity, fig.cap="Recovered AoAs from a sparse subsample (100 children), plotted by the Bayesian GLM AoAs from the full dataset. Left panel shows standard GLM, right panel shows Bayesian GLM. Differences of AoA > 4 months between methods are labeled."}
+```{r appaoa-compare-dist, fig.cap="Histogram of English (American) age of acquisition values as estimated via a variety of statistical methods (panels).", fig.height=6}
+ggplot(aoas, aes(x = aoa)) +
+  facet_wrap(~measure) +
+  geom_histogram(binwidth = 1) +
+  labs(x = "Age of acquisition", y = "Count")
+```
+
+To further test the Bayesian GLM approach, we tested the accuracy of the method in recovering AoAs for much smaller datasets. We did this by taking a subsample of only 100 children from the full English (American) WS dataset. We then fit standard and Bayesian GLMs to this sparse subsample. The resulting AoA estimates are plotted in Figure \@ref(fig:appaoa-sparsity). The Bayesian GLM shows the same minor bias to lower AoAs for hard words that the regular GLM does (a slightly below-diagonal slope), but the GLM shows much noisier estimates for the top and bottom words, suggesting that the regularization from the prior values in the Bayesian model is allowing it to deal with sparse data more effectively.
+
+```{r appaoa-sparsity, fig.cap="Recovered AoAs from a sparse subsample (100 children), plotted by the Bayesian GLM AoAs from the full dataset. Left panel shows standard GLM, right panel shows Bayesian GLM. Differences of AoA > 4 months between methods are labeled."}
 set.seed(12)
 
 ids <- eng_ws %>%
@@ -139,9 +141,9 @@ ids <- eng_ws %>%
 ms_sparse <- eng_ws %>%
   filter(data_id %in% ids) %>%
   group_by(definition, age, category) %>%
-  summarise(prop = mean(value=="produces", na.rm=TRUE),
-            num_true = sum(value=="produces", na.rm=TRUE),
-          num_false = sum(value!="produces", na.rm=TRUE),
+  summarise(prop = mean(value == "produces", na.rm = TRUE),
+            num_true = sum(value == "produces", na.rm = TRUE),
+          num_false = sum(value != "produces", na.rm = TRUE),
             n = sum(c(num_true,num_false))) %>%
   filter(!is.na(category))
 
@@ -159,29 +161,27 @@ glm_aoas_sparse <- ms_sparse %>%
   rename(glm_aoa_sparse = glm_aoa, 
          glm_slope_sparse = glm_slope)
 
-aoas <- left_join(bglm_aoas_sparse, 
-                  bglm_aoas) %>%
-  left_join(glm_aoas_sparse)
+aoas <- bglm_aoas %>%
+  left_join(bglm_aoas_sparse) %>%
+  left_join(glm_aoas_sparse) %>%
+  select(definition, bglm_aoa, glm_aoa_sparse, bglm_aoa_sparse) %>%
+  gather(model, aoa_sparse, glm_aoa_sparse, bglm_aoa_sparse) %>%
+  mutate(model = model %>%
+           fct_relevel("glm_aoa_sparse", "bglm_aoa_sparse") %>%
+           fct_recode("GLM" = "glm_aoa_sparse",
+                      "Bayes GLM" = "bglm_aoa_sparse"),
+         definition = definition %>% str_remove("\\*"))
 
-a <- ggplot(aoas, aes(x = bglm_aoa, y = glm_aoa_sparse)) +
-  geom_point() +
-  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - glm_aoa_sparse) > 4),
-                   aes(label = definition)) +
-  ylab("GLM (sparse data)") +
-  xlab("Bayes GLM (full dataset)") +
-  geom_abline(lty = 2, col = "red")
-
-b <- ggplot(aoas, aes(x = bglm_aoa, y = bglm_aoa_sparse)) +
-  geom_point() +
-  ggrepel::geom_label_repel(data = filter(aoas, abs(bglm_aoa - bglm_aoa_sparse) > 4),
-                   aes(label = definition)) +
-  ylab("Bayes GLM (sparse data)") +
-  xlab("Bayes GLM (full dataset)") +
-  geom_abline(lty = 2, col = "red")
-
-cowplot::plot_grid(a,b)
+ggplot(aoas, aes(x = bglm_aoa, y = aoa_sparse)) +
+  facet_wrap(~model) +
+  coord_fixed() +
+  geom_abline(linetype = .refline, colour = .grey) +
+  geom_point(alpha = 0.3) +
+  ggrepel::geom_label_repel(
+    data = aoas %>% filter(abs(bglm_aoa - aoa_sparse) > 4),
+    aes(label = definition), family = .font, size = 3
+  ) +
+  labs(x = "Full dataset AoA (Bayes GLM)", y = "Sparse dataset AoA")
 ```
-
-To further test the Bayesian GLM approach, we tested the accuracy of the method in recovering AoAs for much smaller datasets. We did this by taking a subsample of only 100 children from the full English (American) WS dataset. We then fit standard and Bayesian GLMs to this sparse subsample. The resulting AoA estimates are plotted in Figure \@ref(fig:appaoa-sparcity). The Bayesian GLM shows the same minor bias to lower AoAs for hard words that the regular GLM does (a slightly below-diagonal slope), but the GLM shows much noisier estimates for the top and bottom words, suggesting that the regularization from the prior values in the Bayesian model is allowing it to deal with sparse data more effectively. 
 
 In sum, our analyses suggest that some sort of Bayesian approach is useful for estimating AoA values. 

@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 rsconnect
-libs/
 wordbank-book.Rmd
 _bookdown_files/
 data/*/_*

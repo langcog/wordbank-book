@@ -534,6 +534,7 @@ In our final analysis, we ask whether similarities in ages of acquisition are co
 
 ## Consistency across development
 
+
 ```{r items-step-corrs}
 step_cor <- function(max_order, meas, mean_aoas) {
   
@@ -551,12 +552,13 @@ step_cor <- function(max_order, meas, mean_aoas) {
     summarise(correlation = mean(correlation)) %>%
     mutate(n = max_order, measure = meas)
 }
+
+MIN_ITEMS <- 5
+
 ```
 
 
 ```{r items-compute-corrs, eval=FALSE}
-MIN_ITEMS <- 5
-
 understands_step_cors <- map_dfr(MIN_ITEMS:max(filter(mean_aoas, 
                                            measure == "understands") %>% pull(order)), 
                               function(x) step_cor(x,"understands", mean_aoas))
@@ -601,7 +603,10 @@ write_feather(random_step_cors, "data/items-consistency/random_step_cors.feather
 write_feather(empirical_step_cors, "data/items-consistency/empirical_step_cors.feather")
 ```
 
+In order to measure change in cross-linguistic consistency over development, we extend the aoa-correlation approach we have used throughout this chapter. For each concept that appeared in at least `r IN_LANGS` languages, we computed its average age of acquisition across all languages in whose CDIs it appeared in both comprehension and production. We then ordered these words from the earliest learned word on average (`r mean_aoas %>% filter(measure == "produces") %>% filter(measure == "produces", aoa == min(aoa)) %>% pull(uni_lemma)` to the latest learned word `r (mean_aoas %>% filter(measure == "produces") %>% filter(measure == "produces", aoa == max(aoa)) %>% pull(uni_lemma))`. For each measure, we then computed the average cross-linguistic in ages of acquisition for each increasingly large set of words starting with `r MIN_ITEMS` words to `r mean_aoas %>% filter(measure == "produces") %>% distinct(uni_lemma) %>% nrow()` words. If the correlation increases over acquisition, we can infer that acquisition trajectories become more similar as more words are learned, and thus that the hardest to learn words are learned in more similarly. In conrast, if the correlation decreases, we can infer that there is children start out learning similar concepts regardless of their native language, but that linguistic and cultural variability plays a greater role in the learning of more complex words.
+
 ```{r items-plot-cors, fig.height=4.5, fig.cap = "Cross-linguistic correlation ages of words' acquisition over the course of language development. Colored lines show empirical correlations, the gray area shows a 95% confidence interval for a randomly shuffled baseline. Especially in production, cross-linguistic similarity declines over the course of language development."}
+
 empirical_step_cors <-
   read_feather("data/items-consistency/empirical_step_cors.feather") %>%
   mutate(measure = fct_relevel(measure, "understands"))
@@ -620,6 +625,12 @@ ggplot(random_step_cors, aes(x = n, y = correlation)) +
   .scale_colour_discrete()
 ```
 
-Figure \@ref(fig:items-plot-cors) shows the broader pattern of cross-linguistic correlations across successively-larger subsets of the vocabulary, as compared to a random baseline. Especially in the domain of production, we see a level of consistency that substantially exceeds baseline.
+Figure \@ref(fig:items-plot-cors) shows these correlations for both comprehension and production over the course of acquisition. In addition, the gray shaded region shows a 95% confidence interval for a random baseline in which the concepts were ordered randomly rather than in average acqusition order. This baseline is important to control for changes in measurement error that arise from changing numbers of concepts in the correlation. For both comprehension and production, the trajectories are reliably above the shuffled baseline, and decrease over the course of acquisition. These results suggest that, indeed, there is significantly more similarity in the earliest learned words than in later learned words cross-linguistically, especially in production. This is exactly the pattern of results we would predict if language and culture produce more variability in the forms, frequencies, and contexts of use of later learned words. 
 
-<!-- MORE DETAILS, DAN? -->
+## Conclusions
+
+Children in all languages and culture learn language, but the languages they learn vary, and the cultures into which they are born may have quite different cultural practices around both language and cognitive development. Nonetheless, the order in which children learn the word for different concepts shows a great degree of cross-linguistic similarity, and dissimilarities are well explained by measureable linguistic dissimilarity.
+
+In addition, we found that the degree of cross-linguistic similarity decreases over the course of acquisition. While the first ten words acquired in each language were highly consistent, the last ten words were quite different. We take these results to indicate a shared core of concepts--e.g., social routines, important people, and some early foods and household animals--that are perhaps especially communicatively important independent of their linguistic realization. As acquisitio unfolds, however, the features that make languages (and cultures) different from each other play an ever increasing role in driving acquisition. In Chapter \@ref(items-demographics), we explore demographic differences in acquisition that help to explain why two children learning the same language may aquire different words at different rates.
+
+

@@ -115,7 +115,7 @@ ggplot(first_gestures_ordered, aes(x = age, y = n, color = value, label = value)
   scale_y_continuous(name = "Proportion of responses")
 ```
 
-For comparison, we collapse the "sometimes" and "often" into a single value, and plot the proportion of children at each age whose parents report that they produce each gesture (Figure \@ref(fig:gesture-first-gesture-binary-figure)). The trajectories look generally smooth and prima facie reasonable, with the potential exception of the _smacklip_ gesture for which there is very little developmental change (this gesture, which corresponds to the vocalization _yum yum_, may be unusual or less stereotyped).
+For comparison, we collapse the "sometimes" and "often" into a single value, and plot the proportion of children at each age whose parents report that they produce each gesture (Figure \@ref(fig:gesture-first-gesture-binary-figure)). The trajectories look generally smooth and prima facie reasonable, with the potential exception of the _smack lips_ gesture for which there is very little developmental change (this gesture, which corresponds to the vocalization _yum yum_, may be unusual or less stereotyped).
 
 ```{r gesture-first_gestures_binary}
 # Get the First Gestures
@@ -310,7 +310,7 @@ intercor_data <- kid_type_data %>%
   summarise(mean = mean(correlation), sd = sd(correlation))
 ```
 
-Given both the similarity and the variability in the developmental trajectories of different gestures, as well as the cross-linguistic variability in first gestures, and a natural next is to quantify the relationship of gestures to each-other. We begin by computing the average intercorrelation between each of these gesture categories. In this analysis, we take gestures in pairs (e.g. Adult Gestures and First Gestures) and ask how the proportion of items that kids know in one predict the proportion of items they know in the other. For American English learning children, the proportion of gestures they know across categories is correlated at _r_ = `r intercor_data %>% filter(language == "English (American)") %>% pull(mean)` --- nearly identical to the value of ~.6 reported by @fenson1994. For comparison, the same intercorrelation computed across categories of words (e.g. "animals" and "places") yield `r word_intercor_data %>% filter(measure == "produces") %>% pull(mean)` for production and `r word_intercor_data %>% filter(measure == "understands") %>% pull(mean)` for comprehension.
+Given both the similarity and the variability in the developmental trajectories of different gestures, as well as the cross-linguistic variability in first gestures, a natural next step is to quantify the relationship of gestures to each-other. We begin by computing the average intercorrelation between each of these gesture categories. In this analysis, we take gestures in pairs (e.g. Adult Gestures and First Gestures) and ask how the proportion of items that kids know in one predict the proportion of items they know in the other. For American English learning children, the proportion of gestures they know across categories is correlated at _r_ = `r intercor_data %>% filter(language == "English (American)") %>% pull(mean)` --- nearly identical to the value of ~.6 reported by @fenson1994. For comparison, the same intercorrelation computed across categories of words (e.g. "animals" and "places") yield `r word_intercor_data %>% filter(measure == "produces") %>% pull(mean)` for production and `r word_intercor_data %>% filter(measure == "understands") %>% pull(mean)` for comprehension.
 
 This cross-category intercorrelation is quite similar cross-linguistically, ranging from `r signif(min(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == min(mean)) %>% pull(language)` to `r signif(max(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == max(mean)) %>% pull(language)`. The full set of intercorrelations is shown in Table \@ref(tab:intercor-table).
 
@@ -405,9 +405,13 @@ age_cor_data %>%
 #   kable()
 ```
 
-
 ## Conclusions
 
+Gestures appear early in young children's communicative repoiteres, with an understanding of the deictic purpose of pointing being found as early as 12-months of age [@liszkowski2007]. The frequency of gesture in children's input--as well as the precociousness of their own prodcutions--are also reliably correlated with their linguistic development [@rowe2009,@brooks2008]. In this Chapter, we extended the analyses developed in @fenson2007 to look at these relationships cross-linguistically using large-scale CDI data.
+
+In the first parts of the chapter, we evaluated the measurement properties of the gesture items, as well as the coherence of the groupings of items on the CDI forms. Our analyses confirm that parents are likely able to report reliably on their children's gesture development. We also found a high degree of consitency in development of different gestures within child--children who learn some gestures early are also likely to learn other gestures early, and a high-degree of cross-linguistic consistency in the age of acquisition of different gestures.
+
+Finally, we examing the relationship between gesture and langauge directly. We found that individual differences in gesture development were highly correlated with language development, and that gesture was more related to comprehension than production. We take these results to mean that precociousness in the gestural domain may be related to crildren's developing understanding of symbolic communication systems, rather than a strong desire to communicate with their caregivers. 
 <!--
 ## Gesture and demographic variables
 

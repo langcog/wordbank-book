@@ -4,15 +4,9 @@ library(knitr)
 library(feather)
 library(tidyverse)
 
-# extrafont::loadfonts()
-
-options(#digits = 2,
-        DT.options = list(searching = FALSE,
+options(DT.options = list(searching = FALSE,
                           lengthChange = FALSE))
-                          # autoWidth = TRUE))
-                          # columnDefs = list(list(
-                          #   className = "dt-head-left", targets = "_all"
-                          # ))))
+
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -34,11 +28,17 @@ theme_update(plot.margin = margin(0, 0, 2, 0, "pt"),
 .ages <- seq(5, 45, 5)
 
 .pal <- ggthemes::ptol_pal
+
 .scale_colour_discrete <- ggthemes::scale_colour_ptol
+.scale_color_discrete <- .scale_colour_discrete
 .scale_fill_discrete <- ggthemes::scale_fill_ptol
+
 .scale_colour_continuous <- viridis::scale_colour_viridis
+.scale_color_continuous <- .scale_colour_continuous
 .scale_fill_continuous <- viridis::scale_fill_viridis
+
 .scale_colour_numerous <- scale_colour_discrete
+.scale_color_numerous <- .scale_colour_numerous
 .scale_fill_numerous <- scale_fill_discrete
 
 source("helper/predictQR.R")

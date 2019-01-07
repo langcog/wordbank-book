@@ -1,8 +1,8 @@
 # Demographic Effects on Vocabulary Size {#demographics}
 
-Chapter \@ref(vocabulary) examined cross-linguistic consistency and variability in the size of children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. In particular, we develop a framework for comparing the magnitude of these effects.
+Chapter \@ref(vocabulary) examined cross-linguistic consistency and variability in the size of children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process --- which will span throughout the book --- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. In particular, we develop a framework for comparing the magnitude of these effects.
 
-One important tension in this chapter reflects many earlier discussions of variability in CDI scores [from @fenson1994; @feldman2000; and @eriksson2012, among others]. While some demographic differences in vocabulary are quite consistent -- substantially so, as it turns out -- the overall proportion of variance in vocabulary that they capture is still relatively limited. We will examine a number of different perspectives on how to quantify this relationship, moving back and forth between emphasizing consistency in differences in the central tendency and emphasizing the limited size of these effects relative to the variability documented in Chapter \@ref(vocabulary).
+One important tension in this chapter reflects many earlier discussions of variability in CDI scores [from @fenson1994; @feldman2000; and @eriksson2012, among others]. While some demographic differences in vocabulary are quite consistent --- substantially so, as it turns out --- the overall proportion of variance in vocabulary that they capture is still relatively limited. We will examine a number of different perspectives on how to quantify this relationship, moving back and forth between emphasizing consistency in differences in the central tendency and emphasizing the limited size of these effects relative to the variability documented in Chapter \@ref(vocabulary).
 
 Our analyses in this chapter are limited to a subset of languages, as demographic data for many contributed datasets were not available. We begin with sex, the variable for which the most analysis has already been done and for which we have the most data, then move on to birth order, and finally, turn to maternal education. Throughout, we focus on earlier comprehension differences from Words & Gestures-type forms and later production differences from Words & Sentences-type forms. For the sake of length, we omit analysis of production data from WG-type forms, since these data are typically sparse.
 
@@ -373,14 +373,16 @@ b2012_summary <- b2012 %>%
 
 Second, @bornstein2012 use a particularly powerful study design to examine stability in early language estimates across different measures. They gathered longitudinal data at 20 and 48 months using a wide range of standardized and parent-report measures, and then use structural equation modeling to model shared variance due to parent report as well as standardized latent language ability at each age. We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered (see Figure \@ref(fig:demo-bornstein-plot)).^[These data are not perfect, we've have double-digitized one point.] As these scores are standardized, we can examine the difference in means and recover the standardized effect size for gender in the data, which is `r round(-diff(b2012_summary$Mean), 2)` standard deviations. Since this measurement is *greater* than that found using the CDIs (the comparable American English measurement was `r round(filter(analyses$WS.production$sex$mmad_summary, language == "English (American)") %>% pull(mmad_mean), 2)`), we doubt that our observed effect is due solely to reporting bias.
 
-```{r demo-bornstein-plot, fig.cap="Latent vocabulary scores from @bornstein2012 by age and sex."}
+```{r demo-bornstein-plot, fig.cap="Latent vocabulary scores from @bornstein2012 by age and sex (crossbars show means and 95% confidence intervals)."}
 b2012 %>%
   gather(time, score, -gender) %>%
   mutate(time = fct_recode(time, "20 months" = "z_20", "48 months" = "z_48")) %>%
   ggplot(aes(x = gender, y = score, colour = gender)) +
     facet_wrap(~time) +
-    ggpirate::geom_pirate(bars = FALSE) +
-    .scale_colour_discrete(name = "") +
+    geom_jitter(width = 0.1, shape = 1, size = 1) +
+    stat_summary(geom = "crossbar", fun.data = mean_se,
+                 fun.args = list(mult = 1.96)) +
+    .scale_colour_discrete(guide = FALSE) +
     labs(x = "", y = "Standardized language score")
 ```
 

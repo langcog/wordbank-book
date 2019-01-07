@@ -18,7 +18,6 @@ bookdown::gitbook:
       all: no
     fontsettings:
       size: 1
-#  df_print: kable
 #bookdown::pdf_book:
 #  includes:
 #    in_header: preamble.tex

@@ -367,7 +367,7 @@ demo_ranef_coded <- demo_ranef %>%
   gather(term, estimate, -language, -measure, -demo, -definition) %>%
   filter(!is.na(estimate)) %>%
   filter(!(term %in% c("(Intercept)", "age"))) %>%
-  mutate(## TODO: do factor recoding automatically
+  mutate(## FIXME: do factor recoding automatically
          term = term %>% fct_recode("Male – Female" = "sexMale",
                                     "Secondary – Below Secondary" = "mom_ed1",
                                     "College and Above – Secondary" = "mom_ed2",
@@ -395,14 +395,15 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
                               label.padding = 0.15,
                               point.padding = unit(0.2, "lines"),
                               arrow = arrow(length = unit(0.01, "npc")),
-                              nudge_y = 1,
-                              family = .font, size = 2.5, fill = "white") +
+                              nudge_y = 1, size = 2.5, fill = "white",
+                              family = .font) +
     .scale_fill_discrete(name = "") +
-    .scale_colour_discrete(guide = FALSE) + 
-    theme(legend.position = "top") + 
-    labs(x = "Coefficient estimate", y = "Number of words") 
-  # title = glue::glue("{demo_labels[[plot_demo]]} ({plot_measure})")
+    .scale_colour_discrete(guide = FALSE) +
+    theme(legend.position = "top") +
+    labs(x = "Coefficient estimate", y = "Number of words")
 }
+
+plot_demo_ranef("sex", "understands")
 ```
 
 
@@ -440,7 +441,7 @@ demo_ranef %>%
   dt()
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Table \@ref(tab:itemsdemo-sex-table-comp) gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
+Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Table \@ref(tab:itemsdemo-sex-table-comp) gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items --- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
 
 ```{r itemsdemo-ranef-plot-sex-prod, dependson="itemsdemo-plot_ranef", fig.height=14, fig.cap=glue::glue("Distribution of sex item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
 plot_demo_ranef("sex", "produces")
@@ -466,14 +467,13 @@ sex_summary <- demo_ranef %>%
   summarise(n = mean(n))
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plot-sex-prod) and Table \@ref(tab:itemsdemo-sex-table-prod) give the same measures for production. There are considerably more words per language with substantial gender biases for production (`r sex_summary$n[sex_summary$measure == "produces"]`) than for comprehension (`r sex_summary$n[sex_summary$measure == "understands"]`). But the content of these is extremely similar. For English, we see a male bias for vehicles and objects associated with traditionally male activities (e.g., sports), and a female bias for genital words and clothing. This pattern is replicated quite robustly across languages, although with varying magnitudes. 
+Figure \@ref(fig:itemsdemo-ranef-plot-sex-prod) and Table \@ref(tab:itemsdemo-sex-table-prod) give the same measures for production. There are considerably more words per language with substantial gender biases for production (`r round(sex_summary$n[sex_summary$measure == "produces"], 2)`) than for comprehension (`r round(sex_summary$n[sex_summary$measure == "understands"], 2)`). But the content of these is extremely similar. For English, we see a male bias for vehicles and objects associated with traditionally male activities (e.g., sports), and a female bias for genital words and clothing. This pattern is replicated quite robustly across languages, although with varying magnitudes. 
 
 In sum, there appear to be two different processes at work in the gender effects we observe. The first is a general shift in the the probability that any word will be produced or understood such that females are slightly more likely to produce it. The average magnitude of this fixed effect is `r signif(mean(filter(demo_coefs_coded, demo == "sex", measure == "produces")$estimate), 2)`. In other words, if a female had a 50% chance of saying a word, a male would on average have a `r signif(boot::inv.logit(mean(filter(demo_coefs_coded, demo == "sex", measure == "produces")$estimate))*100, digits = 2)`% chance of saying it. However, beyond this fixed effect, there are also variable effects for individual words. Most of these effects are small, but a few of them are quite large. For example, if an English-speaking female child had a 50% chance of saying the word _dress_, a male child would have an `r signif(boot::inv.logit(mean(filter(demo_coefs_coded, demo == "sex", measure == "produces")$estimate) + filter(demo_ranef, measure == "produces", demo== "sex",language == "English (American)", definition == "dress (object)")$sexMale)*100, digits = 2)`% chance of saying it. 
 
 ### Birth order
 
 Again following Chapter \@ref(demographics), we consider individual items that are more or less likely in the vocabularies of first-born vs. later-born children. Here we consider both the contrast between second- and first-born children as well as between third- or later-born and second-born children. The number of languages for which we have birth order data is dramatically smaller, however, so conclusions are necessarily more tentative.
-
 
 ```{r itemsdemo-ranef-plot-bo-comp, dependson="itemsdemo-plot_ranef", fig.height=3.5, fig.cap=glue::glue("Distribution of birth order item random effects for comprehension data in each language (most extreme {num_extremes} items are labelled).")}
 plot_demo_ranef("birth_order", "understands")

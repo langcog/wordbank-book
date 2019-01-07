@@ -25,13 +25,13 @@ num_langs <- n_distinct(grammar_summary$language)
 
 ## Introduction
 
-For many children, their first words are spoken in isolation. While these single word utterances sometimes seem to be picking out objects in the world (e.g., *ball!*), others seem to convey more complex ideas or desires (e.g., *up!* for *Mommy, pick me up!*). But by two years of age, many children have acquired a large repertoire of words, and are beginning to use them in two- or three-word combinations (e.g., *Mommy up!* or *kitty sleep here*). These utterances will gradually increase in length and complexity in various ways, forming sentences that increasingly reflect the grammatical structure of their native language (e.g., *Mommy, the kitty is sleeping here*). Children also begin to add more verbs, adjectives and other predicates to their working vocabularies (see Chapter \@ref(categories-syntactic)), and substantively increase their use of prepositions, articles and other closed class forms that do grammatical work, including the productive use of inflectional morphemes (e.g., English past tense *ed* or *ing*).
+For many children, their first words are spoken in isolation. While these single word utterances sometimes seem to be picking out objects in the world (e.g., *ball!*), others seem to convey more complex ideas or desires (e.g., *up!* for *Mommy, pick me up!*). But by two years of age, many children have acquired a large repertoire of words, and are beginning to use them in two- or three-word combinations (e.g., *Mommy up!* or *kitty sleep here*). These utterances will gradually increase in length and complexity in various ways, forming sentences that increasingly reflect the grammatical structure of their native language (e.g., *Mommy, the kitty is sleeping here*). Children also begin to add more verbs, adjectives and other predicates to their working vocabularies (see Chapter \@ref(categories-syntactic)), and substantively increase their use of prepositions, articles and other closed class forms that do grammatical work, including the productive use of inflectional morphemes (e.g., English past tense -*ed* or -*ing*).
 
-Understanding the origins of grammar is critical because children's ability to use morphosyntactically-rich language is thought to reflect the uniquely-human mental machinary that enables speakers to produce novel utterances that have never been heard in the input [@berko1958; @pinker1991]. The questions surrounding the development of grammar are challenging. How do abstract morphosyntactic structures emerge during language learning? What mechanisms underlie the formation of generalizations that support such inferences and allow children to apply them during language production? Does an understanding of the abstract rule-structure of language emerge from the interactions of individual words, or is that structure independently acquired and represented separately?
+Understanding the origins of grammar is critical because children's ability to use morphosyntactically-rich language is thought to reflect the uniquely-human mental machinery that enables speakers to produce novel utterances that have never been heard in the input [@berko1958; @pinker1991]. The questions surrounding the development of grammar are challenging. How do abstract morphosyntactic structures emerge during language learning? What mechanisms underlie the formation of generalizations that support such inferences and allow children to apply them during language production? Does an understanding of the abstract rule-structure of language emerge from the interactions of individual words, or is that structure independently acquired and represented separately?
 
-Broadly speaking, theoretical views on grammatical development generally take one of two forms. On nativist theories like Principles and Parameters [@chomsky1981;@baker2005], grammar emerges independently from lexical knowledge following its own, largely maturational, timetable.  Moreover, grammatical regularities are mentally represented in a format that is distinct from that used by the lexical system. In contrast, according to lexicalist theories, mental representations of morphosyntactic structure generally emerge from graded generalizations on the basis of lexical items, and at least early in development, there may be little or no representation of morphosyntactic rules or regularities *per se* [@tomasello2003, @elman1996]. Even when syntactic structures are eventually represented, these representations are directly related to more concrete lexical structures [@bannard2009].
+Broadly speaking, theoretical views on grammatical development generally take one of two forms. On nativist theories like Principles and Parameters [@chomsky1981;@baker2005], grammar emerges independently from lexical knowledge following its own, largely maturational, timetable.  Moreover, grammatical regularities are mentally represented in a format that is distinct from that used by the lexical system. In contrast, according to lexicalist theories, mental representations of morphosyntactic structure generally emerge from graded generalizations on the basis of lexical items, and at least early in development, there may be little or no representation of morphosyntactic rules or regularities *per se* [@tomasello2003; @elman1996]. Even when syntactic structures are eventually represented, these representations are directly related to more concrete lexical structures [@bannard2009].
 
-Historically, the study of individual differences has been critial to this debate.  While variation in word learning is generally uncontroversial, individual differences in grammatical development are less clearly predicted under a universalist, nativist perspective.  In contrast, lexicalist theories predict that variation in grammatical development should be tightly yoked to variation in lexical development [@bates1999]. Research has shown that, as with lexical development, there is sizeable variation in exactly when and how children move into using more grammatically complex utterances in their everyday speech.  While some children use primarily multi-word phrases and many closed class forms by 24 months, other children are still primarily producing nouns in single word utterances at that same age [e.g., @bates1988; @bates1999].  Moreover, there is also variation in the kinds of multi-word utterances that children produce.  For example, some children build up sentences from individual words (e.g., *want dat!*), whereas other children seem to produce utterances that reflect "unanalyzed" chunks of more complex speech (e.g., *iwantdodat!*).
+Historically, the study of individual differences has been critical to this debate.  While variation in word learning is generally uncontroversial, individual differences in grammatical development are less clearly predicted under a universalist, nativist perspective.  In contrast, lexicalist theories predict that variation in grammatical development should be tightly yoked to variation in lexical development [@bates1999]. Research has shown that, as with lexical development, there is sizable variation in exactly when and how children move into using more grammatically complex utterances in their everyday speech.  While some children use primarily multi-word phrases and many closed class forms by 24 months, other children are still primarily producing nouns in single word utterances at that same age [e.g., @bates1988; @bates1999].  Moreover, there is also variation in the kinds of multi-word utterances that children produce.  For example, some children build up sentences from individual words (e.g., *want dat!*), whereas other children seem to produce utterances that reflect "unanalyzed" chunks of more complex speech (e.g., *iwantdodat!*).
 
 Associations between individual differences in lexical and grammatical development have been robustly substantiated in the literature. In the original norming data from the English CDI: Words & Sentences, children with more sophisticated grammatical productions were also those children with the largest vocabularies [@bates1994]. Using that same dataset, @marchman1994 found that size of verb vocabulary was concurrently related to children's overregularization of past tense inflections (e.g., *daddy goed*), productions that are viewed as a major milestone in the development of grammatical rule-based knowledge. Links between lexical development and grammar have also been reported longitudinally [@bates1988; @bates1997], in late talkers [e.g., @paul1996;@rescorla2000;@rescorla1997;@thal1997], early talkers [@thal1996;@thal1997], and children with neurodevelopmental disorders, such as Williams syndrome [e.g., @singerharris1997]. Similar relationships have also been demonstrated in many other languages, including Slovenian [@marjanovic2013], Hebrew [@maital2000], Icelandic [@thordardottir2002], Italian [@caselli1999;@devescovi2005], Bulgarian [@andonova2015], Finnish [@stolt2009], Spanish [@mariscal2012; @thal2000], and German [@szagun2006]. 
 
@@ -41,7 +41,7 @@ While these studies substantiate that vocabulary and grammar development are str
 
 <!-- ## Goals of the current analyses -->
 
-In this chapter, we explore relations between estimates of children's vocabulary size based on the vocabulary checklist and responses on other sections of the Words and Sentences instruments. Many versions of the instruments provide indices of grammar learning by asking about children's use of inflected forms (e.g., *walked*), children's use of overgeneralizations (e.g., *goed*), and the complexity of their multi-word combinations (e.g., *kitty sleeping* / *kitty is sleeping*).  While many studies have examined associations between lexical and grammatical development crosslinguistically, the scope and power of these early studies were limited, with few opportunities for direct comparisons of the nature or extent of these relations across multiple languages at the same time. In contrast, our data allow analyses of lexical-grammar relations with enhanced statistical power and broader cross-linguistic representation.  
+In this chapter, we explore relations between estimates of children's vocabulary size based on the vocabulary checklist and responses on other sections of the Words & Sentences instruments. Many versions of the instruments provide indices of grammar learning by asking about children's use of inflected forms (e.g., *walked*), children's use of overgeneralizations (e.g., *goed*), and the complexity of their multi-word combinations (e.g., *kitty sleeping* / *kitty is sleeping*).  While many studies have examined associations between lexical and grammatical development cross-linguistically, the scope and power of these early studies were limited, with few opportunities for direct comparisons of the nature or extent of these relations across multiple languages at the same time. In contrast, our data allow analyses of lexical-grammar relations with enhanced statistical power and broader cross-linguistic representation.  
 
 In addition, we explore a hypothesis that was not explicitly tested in these earlier studies: that there remains age-related variance in grammatical development unexplained by vocabulary development. While the overall relationship between grammar and the lexicon provides support for lexicalist theories, the identification of age-related variance would suggest the presence of developmental processes that regulate grammar learning, above and beyond those captured by measures of vocabulary size. Such age-related processes could be either maturational or experiential, and either domain-general (like working memory) or language-specific (like grammatical competency). Importantly, since both nativist and constructivist theories could in principle predict age-linked variance in grammatical development, our goal is not to differentiate these theories, but instead to test this novel prediction and explore its implications for future work on understanding the processes of grammatical development.
 
@@ -50,11 +50,11 @@ An additional contribution of work is that, due to the size of our dataset, we a
 
 ## Methods
 
-In all `r num_langs` languages included in these analyses, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from Words & Sentences type forms, administered to children ages `r min(grammar_summary$age)`-- `r max(grammar_summary$age)` months (most in the 16--30 month range). In addition to the vocabulary checklist items, these forms typically contain a single item asking whether the child is combining words yet at all; Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). 
+In all `r num_langs` languages included in these analyses, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from Words & Sentences type forms, administered to children ages `r min(grammar_summary$age)`--`r max(grammar_summary$age)` months (most in the 16--30 month range). In addition to the vocabulary checklist items, these forms typically contain a single item asking whether the child is combining words yet at all; Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). 
 
 Importantly, each instrument for languages other than English is not just a translation of the English form, but rather was constructed and normed to reflect the lexicon and grammar of that language. Thus, there are substantial differences in the content of these items and their coverage of different morphological and grammatical phenomena. The major commonality is that the form developers believed that they provided a good survey of important developmental phenomena in their language. 
 
-Word Form items can be browsed in the table below:
+Word Form items are shown in Table \@ref(tab:gram-item-table).
 
 ```{r gram-items, eval=FALSE}
 grammar_data_coded <- read_feather("data/grammar/grammar_data_coded.feather")
@@ -66,54 +66,63 @@ grammar_items <- grammar_data_coded %>%
 write_feather(grammar_items, "data/grammar/grammar_items.feather")
 ```
   
-```{r gram-item_tables}
+```{r gram-item-table, results="asis"}
+dt_caption("All Word Form items included in these analyses.")
 grammar_items <- read_feather("data/grammar/grammar_items.feather")
 grammar_items %>%
   filter(coded_type == "word_forms") %>%
-  DT::datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
-            options = list(pageLenth = 20))
+  select(-coded_type) %>%
+  rename(item = definition) %>%
+  dt()
 ```
 
-Complexity items are shown in the table below:
+Complexity items are shown in Table \@ref(tab:gram-complexity-table).
 
-```{r gram-complexity_table}
+```{r gram-complexity-table, results="asis"}
+dt_caption("All Complexity items included in these analyses.")
 grammar_items %>%
   filter(coded_type == "complexity") %>%
-  DT::datatable(rownames = FALSE, filter = "bottom", style = "bootstrap",
-            options = list(pageLenth = 20))
+  select(-coded_type) %>%
+  rename(item = definition) %>%
+  dt()
 ```
 
 To analyze lexical and grammatical development, we derive several measures. Each child's Vocabulary Size is computed as the proportion of words on the corresponding CDI form that the child is reported to produce. Similarly, each child's Word Form score is the proportion of word forms they are reported to produce, and their Complexity score the proportion of complexity items for which they are reported to use the more complex form. We compute all of these quantities as proportions to make the scales comparable across languages.
 
 ## Results
 
-We present four sets of results. First, we show analyses of the "combines" item, which is a binary item in which parents indicate whether their child is combining words. Second, we give analyses of the relationship between vocabulary size and Word Form/Complexity items. Third, we follow up on a pattern found in the "combines" item, namely age-related modulation of the grammar-lexicon relationship. Finally, we investigate the degree to which the age-related pattern is found in individual items. 
+We present four sets of results. First, we show analyses of the "combines" item, which is a binary item in which parents indicate whether their child is combining words. Second, we give analyses of the relationship between vocabulary size and Word Form items and Complexity items. Third, we follow up on a pattern found in the "combines" item, namely age-related modulation of the grammar-lexicon relationship. Finally, we investigate the degree to which the age-related pattern is found in individual items. 
 
 ### Combine
 
-```{r gram-combine_plot}
+```{r gram-combine-compare}
 combine_compare <- grammar_combine %>%
   gather(predictor, value, age, production) %>%
   mutate(predictor = factor(
     predictor, levels = c("age", "production"),
-    labels = c("Age (months)", "Productive vocabulary size")))
+    labels = c("Age (months)", "Productive vocabulary size"))) %>%
+  filter(language != "Slovak")
 
 # slovak combine item is "your child uses 'fancy words' like bubble blower, brush and comb' - so I am excluding it. -MCF
+```
 
-ggplot(filter(combine_compare, language != "Slovak"),
+Figure \@ref(fig:gram-combine-plot) shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))` languages, there is some consistency in the chronological trajectories for this item. By 24 months, around 75% of children are reported to be combining words, though this estimate is substantially earlier in Quebec French. One possibility is that the phrasing of the "combines" item contributes --- some forms (including Quebec French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting.
+
+```{r gram-combine-plot, fig.cap="Trajectory of the Combines item in each language across age (left) and vocabulary size (right)."}
+ggplot(combine_compare,
        aes(x = value, y = positive, colour = language)) +
-  facet_wrap(~predictor, scales = "free_x") +
+  facet_wrap(~predictor, scales = "free_x", switch = "x") +
   geom_smooth(method = "glm", method.args = list(family = "binomial"),
               se = FALSE) +
   scale_colour_manual(values = lang_colours, name = "") +
-  labs(x = "", y = "Combines Words (Probability)") +
-  theme(legend.position = "bottom")
+  labs(x = "", y = "Combines words (probability)") +
+  theme(legend.position = "bottom",
+        strip.placement = "outside")
 ```
-The plot above shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))-1 #slovak` languages, there is some consistency in the chronological trajectories for this item. By 24 months, around 75% of children are reported to be combining words, though this estimate is substantially earlier in Quebec French. One possibility is that the phrasing of the "combines" item contributes -- some forms (including Quebec French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting.  
 
 Vocabulary-related trajectories were more variable, however. In general, children who were marked as combining had vocabularies larger than around 100 words. However, as noted in Chapter \@ref(vocabulary), raw Mandarin vocabulary in the WS form is unusually high, but the "combines" item does not appear to be comparably accelerated. Thus, Mandarin children appear to be producing words only after producing substantially more vocabulary items. On the opposite side, children learning Quebec French and Korean were reported to be combining with quite small vocabularies. 
 
-To investigate the quantitative relationship between word combination (as measured with this item), age, and vocabulary, we fit a linear mixed effects model predicting combination as a function of vocabulary (proportion), age, and their interaction. We also included random intercepts by language and random slopes for both vocabulary and age. Coefficient estimates are shown below:
+To investigate the quantitative relationship between word combination (as measured with this item), age, and vocabulary, we fit a linear mixed effects model predicting combination as a function of vocabulary (proportion), age, and their interaction. We also included random intercepts by language and random slopes for both vocabulary and age. Coefficient estimates are shown in Table \@ref(tab:gram-coef-table).
 
 ```{r gram-combines_lmer, eval=FALSE}
 mod <- lme4::glmer(positive ~ production_prop * age +
@@ -124,16 +133,16 @@ mod <- lme4::glmer(positive ~ production_prop * age +
 save(file = "data/grammar/grammar_combines_model.Rds", mod)
 ```
 
-```{r gram-coef_table}
+```{r gram-coef-table}
 load("data/grammar/grammar_combines_model.Rds")
 
-kable(summary(mod)$coefficients, digits = 3)
+kable(summary(mod)$coefficients, digits = 3,
+      caption = "Coefficient estimates from Combines model.")
 ```
-
 
 This model shows an extremely large effect of vocabulary, with a relatively smaller amount of variance due to age. In addition, there was a substantial negative interaction of vocabulary and age, reflecting that older children were more likely to be combining words, even with less vocabulary. This result parallels others reported below suggesting that there are age-related components in grammatical performance that are unaccounted for by vocabulary. All coefficients were highly significant due to the large amount of data. 
 
-Overall, although there was some cross-linguistic variation -- perhaps due to true variation and perhaps due to idiosyncrasies of individual forms or datasets -- word combination emerged around 24 months and 100 words for most children. 
+Overall, although there was some cross-linguistic variation --- perhaps due to true variation and perhaps due to idiosyncrasies of individual forms or datasets --- word combination emerged around 24 months and 100 words for most children. 
 
 ### Grammar and lexicon relationship
 
@@ -164,39 +173,37 @@ cvs <- vocab_models %>%
             category = "Relations") %>%
   ungroup %>%
   select(-coded_type)
-  
-  
 
 write_feather(cvs, "data/cvs/grammar_lex.feather")
 ```
 
-```{r gram-grammar_data_plot}
+```{r gram-grammar-data-plot}
 plot_vocab_type <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
          aes(x = production_prop, y = prop)) +
+    facet_wrap(~language, ncol = 4) +
+    coord_fixed() +
     geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
-    facet_wrap(~language) +
     geom_smooth(method = "lm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x + 0,
                 size = 1, se = FALSE) +
     geom_text(aes(label = rsq_print), x = 0.15, y = 1, size = 3, family = .font,
               data = filter(vocab_models, coded_type == type)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.5)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.5)) +
     labs(x = "Productive vocabulary size (proportion of items)",
-         y = "Grammar score (proportion of items)",
-         title = type)
+         y = glue::glue("{type} score (proportion of items)"))
 }
 ```
 
-We next examine the correlation between the proportion of Word Form/Complexity items completed and the proportion of vocabulary items completed. First reported by @bates1994, these correlations are extremely robust, and can be observed in essentially all of our datasets. Our first plot shows this relation for Word Form items. We fit linear regressions predicting vocabulary as a function of linear, quadratic, and cubic predictors (subtracting the intercept to ensure that the function passed through the origin). The total $r^2$ for these relationships ranged from `r min(filter(vocab_models, coded_type == "Word Forms")$rsq)` to `r max(filter(vocab_models, coded_type == "Word Forms")$rsq)`.
+We next examine the correlation between the proportion of Word Form and Complexity items completed and the proportion of vocabulary items completed. First reported by @bates1994, these correlations are extremely robust, and can be observed in essentially all of our datasets. Figure \@ref(fig:gram-grammar-plot-wordform) shows this relation for Word Form items. We fit linear regressions predicting vocabulary as a function of linear, quadratic, and cubic predictors (subtracting the intercept to ensure that the function passed through the origin). The total *r*² for these relationships ranged from `r round(min(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)` to `r round(max(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)`.
 
-
-```{r gram-grammar_plot_wordform}
+```{r gram-grammar-plot-wordform, fig.cap="Each child's Word Forms score as a function of their vocabulary size in each language (curves show model fits).", dependson="gram-grammar-data-plot"}
 plot_vocab_type("Word Forms")
 ```
 
-Complexity items show the same relationship, typically with equal or greater strength (depending on data density and number of items). $r^2$ values varied from `r min(filter(vocab_models, coded_type == "Complexity")$rsq)` to `r max(filter(vocab_models, coded_type == "Complexity")$rsq)`.
+Complexity items show the same relationship (Figure \@ref(fig:gram-grammar-plot-complexity)), typically with equal or greater strength (depending on data density and number of items). *r*² values varied from `r round(min(filter(vocab_models, coded_type == "Complexity")$rsq), 2)` to `r round(max(filter(vocab_models, coded_type == "Complexity")$rsq), 2)`.
 
-
-```{r gram-grammar_plot_complexity}
+```{r gram-grammar-plot-complexity, fig.cap="Each child's Complexity score as a function of their vocabulary size in each language (curves show model fits).", fig.height=6, dependson="gram-grammar-data-plot"}
 plot_vocab_type("Complexity")
 ```
 
@@ -246,37 +253,39 @@ grammar_morphosyntax <- grammar_morphosyntax %>%
   mutate(age_group = cut(age, 2, labels = c("younger", "older")))
 ```
 
-```{r gram-grammar_age_plots}
+```{r gram-grammar-age-plots}
 grammar_age_plot <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
          aes(x = production_prop, y = prop, colour = age_group)) +
-    facet_wrap(~language) +
+    facet_wrap(~language, ncol = 4) +
+    coord_fixed() +
     geom_jitter(alpha = 0.1, size = 0.70, shape = 1) +
     geom_line(aes(y = mean_fitted), size = 0.9,
               data = filter(grammar_fits, coded_type == type)) +
-    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+    scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5)) +
+    scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5)) +
     labs(x = "Productive vocabulary size (proportion of items)",
-         y = "Grammar score (proportion of items)",
-         title = type) +
+         y = glue::glue("{type} score (proportion of items)")) +
     .scale_colour_discrete(name = "") +
     theme(legend.position = "top")
 }
 ```
 
-In our next analysis, we follow up on the relationship between age and grammatical ability found in the "combines" analysis above. In that analysis, we noted that less vocabulary was needed for older children to be marked as combining words. We investigate this pattern in the full Word Form/Complexity item set by splitting data from each language by age. We plot the same curves as above, but separately for children older and younger than the median. 
+In our next analysis, we follow up on the relationship between age and grammatical ability found in the "combines" analysis above. In that analysis, we noted that less vocabulary was needed for older children to be marked as combining words. We investigate this pattern in the full Word Form and Complexity item set by splitting data from each language by age. We plot the same curves as above, but separately for children older and younger than the median. 
 
-```{r gram-age_plot_wordforms}
+In essentially every language, for both Word Form items (Figure \@ref(fig:gram-age-plot-wordforms)) and Complexity items (Figure \@ref(fig:gram-age-plot-complexity)), we see a higher curve for older children than younger. This finding is consistent with the idea that older children have less vocabulary per unit grammar (mirroring the negative interaction shown for the "combines" item).
+
+```{r gram-age-plot-wordforms, fig.cap="Each child's Word Forms score as a function of their vocabulary size in each language for younger and older children (curves show model fits)."}
 grammar_age_plot("Word Forms")
 ```
 
-
-```{r gram-age_plot_complexity}
+```{r gram-age-plot-complexity, fig.cap="Each child's Complexity score as a function of their vocabulary size in each language for younger and older children (curves show model fits).", fig.height=7}
 grammar_age_plot("Complexity")
 ```
-In essentially every language, for both Word Form and Complexity items, we see a higher curve for older children than younger. This finding is consistent with the idea that older children have less vocabulary per unit grammar (mirroring the negative interaction shown for the "combines item."
 
-```{r gram-grammar_diffs}
+This pattern is further summarized in Figure \@ref(fig:gram-grammar-diffs), where we show the area under the grammar/lexicon curve for younger and older children. The upward slope of nearly every line demonstrates the consistency of the age effect, which we discuss further below. In addition, there is a trend for age effects to be larger in Complexity rather than Word Forms, suggesting a more syntactic locus for the effect. 
+
+```{r gram-grammar-diffs, fig.cap="Area under model fit curve for Word Forms score and Complexity score as a function of vocabulary size in each language for younger and older children.", fig.height=4.5}
 grammar_areas <- grammar_fits %>%
   group_by(language, instrument, coded_type, age_group) %>%
   summarise(area = sum(mean_fitted * vocab_step, na.rm = TRUE))
@@ -288,12 +297,10 @@ ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
   directlabels::geom_dl(aes(label = language),
           method = list("first.qp", directlabels::dl.trans(x = x - 0.2),
                         cex = 0.7, fontfamily = .font)) +
-  scale_colour_manual(values = lang_colours, guide = FALSE) +
-  labs(x = "", y = "Area of grammar score\n across vocabulary size") +
+  scale_colour_manual(values = inst_colours, guide = FALSE) +
+  labs(x = "", y = "Area of grammar score across vocabulary size") +
   expand_limits(x = 0)
 ```
-
-This pattern is further summarised in the plot above, where we show the area under the grammar/lexicon curvefor younger and older children. The upward slope of nearly every line demonstrates the consistency of the age effect, which we discuss further below. In addition, there is a trend for age effects to be larger in Complexity rather than Word Forms, suggesting a more syntactic locus for the effect. 
 
 ### Individual items
 
@@ -363,29 +370,30 @@ age_effects <- item_effects %>%
          order_item = factor(order_item, levels = order_item))
 ```
 
-In our final analysis, we examine the individual items on the Word Form and Complexity sections. Given the heterogeneous nature of the CDI instruments, particularly in the Complexity sections, we attempted a more fine-grained item-analysis by classifying items as capturing either more morphological or more syntactic phenomena. Items for which the difference between the simple and complex sentences is in the inflection of a noun or verb (such as *doggie kiss me* / *doggie kissed me*) were coded as morphological. The remainder of the items were coded as Syntactic, since they involved the use of some sentence-level syntactic construction (such as *doggie table* / *doggie on table*).
+In our final analysis, we examine the individual items on the Word Form and Complexity sections. Given the heterogeneous nature of the CDI instruments, particularly in the Complexity sections, we attempted a more fine-grained item-analysis by classifying items as capturing either more morphological or more syntactic phenomena. Items for which the difference between the simple and complex sentences is in the inflection of a noun or verb (such as *doggie kiss me* / *doggie kissed me*) were coded as Morphological. The remainder of the items were coded as Syntactic, since they involved the use of some sentence-level syntactic construction (such as *doggie table* / *doggie on table*).
 
-```{r gram-item_effects_plot}
+We then fit logistic regression models with linear, quadratic, and cubic predictors (as above) separately for every item. Figure \@ref(fig:gram-item-effects-plot) shows the age effect coefficient of each item. In general, age effect were smaller for Word Form items, then Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions. 
+
+```{r gram-item-effects-plot, fig.cap="Age effect estimate for each grammar item in each language (ranges indicate 95% confidence intervals).", fig.height=9, fig.width=8}
 ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
   facet_wrap(~language, scales = "free", ncol = 3) +
   geom_pointrange(aes(ymin = estimate - 1.96 * std.error,
-                      ymax = estimate + 1.96 * std.error), fatten = 1.5) +
+                      ymax = estimate + 1.96 * std.error), fatten = 1.4) +
   .scale_colour_discrete(name = "", guide = guide_legend(ncol = 3)) +
-  scale_x_discrete(name = "", breaks = NULL) +
+  scale_x_discrete(breaks = NULL) +
+  labs(x = "", y = "Age effect estimate") +
   theme(legend.position = "bottom")
 ```
-
-We then fit logistic regression models with linear, quaratic, and cubic predictors (as above) separately for every item. The plot above shows the age effect coefficient of each item. In general, age effect were smaller for Word Form items, then Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions. 
 
 <!-- Building on previous analyses that showed a strong relationship between lexical and grammatical development, we added age into this relationship. Across languages, our measures of syntactic development consistently showed greater age modulation than measures of morphological development. Further distinguishing between items that were more reflective of morphology than syntax, we again found greater age effects for more syntactic items. Thus, this analysis provides evidence for a relationship between syntactic development and age _not_ captured by lexical development. -->
 
 ## Discussion
 
-We revisited classic findings on the relationship between grammar and the lexicon, further exploring novel questions regarding the role of age in this relation. Our results provid general support for a lexicalist view, in that, in `r num_langs` languages, variance in vocabulary production strongly aligned with variance in grammar. However, we also estimated additional age-related contributions, specifically contrasting the links to morphological forms vs. syntactic constructions, and for different lexical categories. In general, we find that measures of grammar that are more closely aligned with syntax are modulated by age to a greater extent than those reflecting inflectional morphology.
+We revisited classic findings on the relationship between grammar and the lexicon, further exploring novel questions regarding the role of age in this relation. Our results provide general support for a lexicalist view, in that, in `r num_langs` languages, variance in vocabulary production strongly aligned with variance in grammar. However, we also estimated additional age-related contributions, specifically contrasting the links to morphological forms vs. syntactic constructions, and for different lexical categories. In general, we find that measures of grammar that are more closely aligned with syntax are modulated by age to a greater extent than those reflecting inflectional morphology.
 
-As with the correlations reported in Chapter \@ref(gesture), parent bias is a potential confound for these correlational analyses. If some parents tend to over-report on their child's language than others -- whether for reasons of sensitivity, optimism, greater time spent with the child -- then this over-reporting would likely extend across linguistic domains. Thus, in principle an observed correlation between two sections of a single parent report form could be driven by parent bias acting independently on each section without any connection. 
+As with the correlations reported in Chapter \@ref(gesture), parent bias is a potential confound for these correlational analyses. If some parents tend to over-report on their child's language than others --- whether for reasons of sensitivity, optimism, greater time spent with the child --- then this over-reporting would likely extend across linguistic domains. Thus, in principle an observed correlation between two sections of a single parent report form could be driven by parent bias acting independently on each section without any connection. 
 
-Two studies provide evidence against this deflationary hypothesis. First, @moyle2007 used a variety of instruments to provide evidence for the same relation in both typically-developing and late-talking children. Second, @brinchmann2018 give a similar analysis using cross-lagged structural equation models. Critically their work relied only on direct testing of the child (not parent report) using standardized instruments. In their model, they found a strong correlation between the time-invariant (trait-like) components of vocabulary and grammar ($r = 0.72$). While this correlation is smaller than the correlations we report, it is still quite large -- and it appears in a model that also controls for a number of other relationships. Intriguingly, however, this study suggests that as grammar-lexicon correlations are cross-lagged, grammar to vocabulary links are stronger than vocabulary to grammar links, and neither are that strng This finding suggest that syntactic bootstrapping effects -- as well as correlations driven by shared input may be responsible for the relationship between the two abilities. Regardless, these two studies suggest that reporting bias is very likely not the sole cause of the correlations we observded. 
+Two studies provide evidence against this deflationary hypothesis. First, @moyle2007 used a variety of instruments to provide evidence for the same relation in both typically-developing and late-talking children. Second, @brinchmann2018 give a similar analysis using cross-lagged structural equation models. Critically their work relied only on direct testing of the child (not parent report) using standardized instruments. In their model, they found a strong correlation between the time-invariant (trait-like) components of vocabulary and grammar (_r_ = 0.72). While this correlation is smaller than the correlations we report, it is still quite large --- and it appears in a model that also controls for a number of other relationships. Intriguingly, however, this study suggests that as grammar-lexicon correlations are cross-lagged, grammar to vocabulary links are stronger than vocabulary to grammar links, and neither are that strong This finding suggest that syntactic bootstrapping effects --- as well as correlations driven by shared input may be responsible for the relationship between the two abilities. Regardless, these two studies suggest that reporting bias is very likely not the sole cause of the correlations we observed. 
 
 Our analyses go beyond earlier work by also investigating the relationship of age to vocabulary and grammar. One possibility is that age-related developments are dependent on maturational factors that operate on grammatical development in a domain-specific way, independent of lexical-semantic processes. Another possibility is that age-related effects represent more domain-general learning mechanisms, such as attention or working memory, that provide differential support for sentence-level processes than word-internal ones [@gathercole2013]. Future studies should also explore the extent to which lexical and age-related processes are shaped, either independently or in tandem, by features of the learning environments that children experience [e.g., @weisleder2013;@hoff2017;@brinchmann2018].
 

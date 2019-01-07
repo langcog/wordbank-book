@@ -1,12 +1,12 @@
 # Stitching Across Forms {#appendix-stitching}
 
+Because we use different forms for different ages, there are sometimes good reasons to combine data across forms to get a broader range of ages in a particular analysis. We call this combination "stitching." This appendix provides some motivation for the practice. Figure \@ref(fig:appstitch-example) shows 25 randomly-sampled items from the American English data. To a first approximation, production trajectories line up quite nicely with little or no visible gap between the two instruments. 
 
+```{r appstitch-example, fig.cap="WS and WG proportion production scores for a set of 25 randomly-sampled examples.", fig.height=9, fig.width=8}
 
-```{r appstitch-example, fig.cap="WS and WG proportion production scores for a set of 25 randomly-sampled examples."}
-
-wg_unilemmas <- filter(items, language == "English (American)", 
-                       form == "WG", 
-                       !is.na(uni_lemma)) %>% 
+wg_unilemmas <- filter(items, language == "English (American)",
+                       form == "WG",
+                       !is.na(uni_lemma)) %>%
   pull(uni_lemma)
 
 set.seed(12)
@@ -44,14 +44,12 @@ ggplot(eng_items,
   facet_wrap(~uni_lemma) +
   geom_point(alpha = .5) + 
   # geom_smooth() +
-  .scale_colour_discrete()
+  .scale_colour_discrete(name = "Form") +
+  labs(x = "Age (months)", y = "Productive vocabulary (proportion)") +
+  theme(legend.position = "top")
 ```
 
-Because we use different forms for different ages, there are sometimes good reasons to combine data across forms to get a broader range of ages in a particular analysis. We call this combination "stitching." This appendix provides some motivation for the practice. Figure \@ref(fig:appstitch-example) shows 25 randomly-sampled items from the English (American) data. To a first approximation, production trajectories line up quite nicely with little or no visible gap between the two instruments. 
-
-
-
-<!-- In contrast, this procedure does not work for full percentile ranks -- presumably because of the differences in difif -->
+<!-- In contrast, this procedure does not work for full percentile ranks --- presumably because of the differences in -->
 <!-- We can "stitch" across WS and WG forms to get a fuller picture of production across ages. There are several ways to accomplish this. The simplest is to use proportions for each form.  -->
 <!-- This isn't particularly good. -->
 

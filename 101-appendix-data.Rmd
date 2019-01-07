@@ -1,25 +1,60 @@
 # Individual Datasets {#appendix-data}
 
-This appendix give the specifics of the data represented in each of the languages of the book.  
+This appendix give the contributors and citations for each of the datasets used in this book.
 
-```{r appdata-load}
+```{r appdata-load, cache=FALSE}
 datasets <- jsonlite::fromJSON("misc/datasets.json")
 ```
 
-```{r appdata-print, results="asis"}
-language <- ""
+```{r appdata-print, cache=FALSE, results="asis"}
+lang_datasets <- datasets %>%
+  group_by(instrument_language) %>%
+  nest()
 
-for (i in 1:nrow(datasets)) {
-  dataset <- datasets[i,]
-  
-  if (language != dataset$instrument_language) {
-    language <- dataset$instrument_language
-    cat(sprintf("**%s** \n\n", language))
-  }
-  
-  cat(sprintf("Dataset name: *%s* \n\n* Instrument: %s \n* Contributor: %s\n* Citation: %s\n\n",
-              dataset$name, 
-              dataset$instrument_form, dataset$contributor, dataset$citation))
-}
+map2(lang_datasets$instrument_language, lang_datasets$data, function(lang, df) {
+  c(glue::glue("<h3>{lang}</h3>"), "<ul>",
+    pmap(
+      df %>% select(instrument_form, contributor, citation),
+      function(instrument_form, contributor, citation) {
+        txt <- c(
+          "<li>",
+          glue::glue("<strong>Form</strong>: {instrument_form}"),
+          "<br>",
+          glue::glue("<strong>Contributor</strong>: {contributor}")
+        )
+        if (nchar(citation))
+          txt <- c(txt, "<br>", glue::glue("<strong>Citation</strong>: {citation}"))
+        c(txt, "</li>")
+      }),
+    "</ul>")
+}) %>%
+  unlist() %>%
+  paste(collapse = "\n") %>%
+  cat()
+
+# language <- dataset$instrument_language[1]
+# 
+# for (i in 1:nrow(datasets)) {
+#   dataset <- datasets[i,]
+#   
+#   if (language != dataset$instrument_language) {
+#     language <- dataset$instrument_language
+#     cat("</ul>")
+#     cat(glue::glue("<h3>{language}</h3>"))
+#     cat("<ul>")
+#   }
+#   cat(glue::glue(
+#     "<li><strong>Form</strong>: {dataset$instrument_form}<br>__Contributor__: {dataset$contributor}"
+#   ))
+#   if (nchar(dataset$citation)) cat(glue::glue("<br>__Citation__: {dataset$citation}"))
+#   cat("</li>")
+#   
+#   # cat(glue::glue(
+#   #   "\n\n* __Form__: {dataset$instrument_form} \n    __Contributor__: {dataset$contributor}"
+#   # ))
+#   # if (nchar(dataset$citation)) cat(glue::glue("\n\n    __Citation__: {dataset$citation}"))
+#   # cat(sprintf("Dataset name: *%s* \n\n* Instrument: %s \n* Contributor: %s\n* Citation: %s\n\n",
+#   #             dataset$name, 
+#   #             dataset$instrument_form, dataset$contributor, dataset$citation))
+# }
 ```
-

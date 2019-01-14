@@ -18,3 +18,7 @@ to
 \usepackage[T2A]{fontenc}
 
 7. remove \textbackslash{}begin\{center\} from incorrectly rendered tables
+
+8. remove References label (redundant)
+
+9. change font to 11pt

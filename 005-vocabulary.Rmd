@@ -43,7 +43,7 @@ This schematic reveals a number of patterns that are explored in this and subseq
 
 ### Commonalities across languages
 
-```{r vocab-medians, fig.height=6, fig.cap="Median production using Words & Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
+```{r vocab-medians, fig.height=6, fig.cap="Median production using Words and Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
 lang_ns <- admins %>% 
   group_by(language, form) %>% 
   summarise(n_admins = n())
@@ -76,7 +76,7 @@ Figure \@ref(fig:vocab-medians) shows the median patterns of growth for early pr
 
 This analysis also motivates the decision made in most our large-scale analyses to omit early production from Words & Gestures forms. Many WG forms end at 16--18 months, meaning that the median production is only around 50 words. For analyses of vocabulary composition or predictive modeling, these numbers are often too small to yield reliable and meaningful estimates, although they can be combined with Words & Sentences data (see Appendix \@ref(appendix-stitching)). 
 
-```{r vocab-medians-production-ws, fig.height=6, fig.cap="Median production using Words & Sentences-type forms. Included are only languages where there are more than 200 administrations total."}
+```{r vocab-medians-production-ws, fig.height=6, fig.cap="Median production using Words and Sentences-type forms. Included are only languages where there are more than 200 administrations total."}
 
 ggplot(filter(medians, form %in% WSs , n_admins > 200), 
        aes(x = age, y = production,
@@ -98,7 +98,7 @@ The acceleration in early vocabulary is even clearer when looking at production 
 
 During the period of 24--30 months, we see children beginning to produce a large enough sample of words that curves are leveling out. Presumably this leveling does not reflect a slowing in the rate of acquisition, which most researchers assume continues unabated for many years [@bloom2001]. Instead, it reflects the limitations of the CDI instrument, in that there are many possible "more advanced" words that they could be learning, of which only a small subset are represented on any form.
 
-```{r vocab-medians-comprehension-wg, fig.height=6, fig.cap="Median comprehension using Words & Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
+```{r vocab-medians-comprehension-wg, fig.height=6, fig.cap="Median comprehension using Words and Gestures-type forms. Included are only languages where there are more than 200 administrations total."}
 ggplot(filter(medians, form %in% WGs, n_admins > 200), 
        aes(x = age, y = comprehension,
            col = interaction(language, form, sep = .inst_sep))) + 
@@ -494,7 +494,7 @@ write_feather(mirt_params, "data/vocabulary/mirt_params.feather")
 ```
 
 
-```{r vocab-variability-IRT-slopes, fig.height=7, fig.cap="Standard deviation of latent ability scores from IRT models fit to each Words & Sentences-type dataset. Panels show individual languages. Smoothing lines are linear model fits."}
+```{r vocab-variability-IRT-slopes, fig.height=7, fig.cap="Standard deviation of latent ability scores from IRT models fit to each Words and Sentences-type dataset. Panels show individual languages. Smoothing lines are linear model fits."}
 mirt_params <- read_feather("data/vocabulary/mirt_params.feather")
 
 mirt_sd <- mirt_params %>%

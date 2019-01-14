@@ -274,7 +274,7 @@ One feature of dealing with data from such disparate sources can't be glossed ov
 
 In general, our approach with respect to these data is to embrace the messiness of the data we have. While it is very tempting to remove specific datasets from consideration when they deviate from our expectations, this practice creates a strong circularity in all of our inferences: they will be estimates of variability or consistency stemming from cases where we ourselves have imposed certain consistency standards on our data. While there are some cases where we have a relatively likely explanation close to hand for the pattern we observe in the data, unless we can confirm this pattern externally, we have chosen not to exclude these data. 
 
-```{r methods-russian-animals, fig.cap="Mean proportion children reported to produce each item in the sounds category for Russian Words & Sentences."}
+```{r methods-russian-animals, fig.cap="Mean proportion children reported to produce each item in the sounds category for Russian Words and Sentences."}
 
 russian_animals <- get_instrument_data(language = "Russian", form = "WS", 
                                items = filter(items, 

@@ -374,7 +374,7 @@ In our final analysis, we examine the individual items on the Word Form and Comp
 
 We then fit logistic regression models with linear, quadratic, and cubic predictors (as above) separately for every item. Figure \@ref(fig:gram-item-effects-plot) shows the age effect coefficient of each item. In general, age effect were smaller for Word Form items, then Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions. 
 
-```{r gram-item-effects-plot, fig.cap="Age effect estimate for each grammar item in each language (ranges indicate 95% confidence intervals).", fig.height=9, fig.width=8}
+```{r gram-item-effects-plot, fig.cap="Age effect estimate for each grammar item in each language (ranges indicate 95 percent confidence intervals).", fig.height=9, fig.width=8}
 ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
   facet_wrap(~language, scales = "free", ncol = 3) +
   geom_pointrange(aes(ymin = estimate - 1.96 * std.error,

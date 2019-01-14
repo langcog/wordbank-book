@@ -62,8 +62,7 @@ lang_stats <- instrument_info %>%
          par = produces_age_range,
          una = understands_num_admins, uar = understands_age_range, types, tokens)
 
-kable(lang_stats, format = "html",
-      escape = FALSE, format.args = list(big.mark = ","),
+kable(lang_stats, format.args = list(big.mark = ","),
       caption = "Statistics for data from Wordbank and CHILDES. N indicates number of children.",
       col.names = c("Language", "CDI items", "N", "Ages", "N", "Ages", "Types",
                     "Tokens")) %>%
@@ -148,7 +147,7 @@ extremesdisplay <- extremes %>%
   arrange(Predictor)
   #arrange(desc(row_number()))
 
-kable(extremesdisplay, escape = FALSE, format = "html",
+kable(extremesdisplay, escape = FALSE, 
       caption = "Items with the highest and lowest values for each predictor in English.")
 ```
 

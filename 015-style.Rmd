@@ -650,7 +650,7 @@ ggplot(filter(wg, !(langform %in% c("British Sign Language WG"))),
         legend.text = element_text(size = 6.5))
 ```
 
-```{r style-productivity-coefs, fig.cap="Effect of age on productivity ratio in each language (ranges indicates 95% confidence intervals)."}
+```{r style-productivity-coefs, fig.cap="Effect of age on productivity ratio in each language (ranges indicates 95 percent confidence intervals)."}
 productivity_coefs <- wg %>%
   group_by(language, form) %>%
   do(broom::tidy(lm(productivity ~ age, data = .))) %>%
@@ -670,7 +670,7 @@ ggplot(productivity_coefs,
 However, in nearly every language, to one degree or another, we see some number ratios > .95, indicating that parents are essentially not using "understands" as a separate option. Table \@ref(tab:style-wg-table) shows the proportion of children showing more than 95% productivity. A number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents who are not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages.
 
 ```{r style-wg-table, results="asis"}
-dt_caption("Proportion of administrations in each language for which the productivity ratio is greater than 95%.")
+dt_caption("Proportion of administrations in each language for which the productivity ratio is greater than 95 percent.")
 wg %>%
   group_by(langform) %>%
   summarise(no_comprehension = signif(mean(productivity > .95, na.rm = TRUE), 2)) %>%

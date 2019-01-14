@@ -283,7 +283,7 @@ base_plot(WGs, "understands") +
 Comprehension results are shown in Figure \@ref(fig:catsyn-plot-points-wg-comp) Overall, the largest trend that is visible in these plots is the under-representation of function words, with nouns and predicates appearing quite close to one another. For further comparison, we show summaries of curve areas for each language in Figure \@ref(fig:catsyn-plot-areas-wg). 
 
 
-```{r catsyn-plot-areas-wg, fig.cap="Relative representation in vocabulary compared to chance for nouns and predicates for comprehension data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-plot-areas-wg, fig.cap="Relative representation in vocabulary compared to chance for nouns and predicates for comprehension data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 plot_areas_wg <- filter(area_summary, form %in% WGs, measure == "understands") %>%
          unite(langform, language, form, sep = .inst_sep) %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
@@ -307,7 +307,7 @@ npcor_wg <- cor.test(plot_areas_wg$mean[plot_areas_wg$lexical_category == "Nouns
 
 Nouns are over-represented in many --- but not all --- languages. Portuguese, Turkish, Korean, and Slovak, a set of typologically- and culturally-distinct languages, show slight under representation, with BSL and British English showing the largest over-representation of nouns. Predicates are under-represented in some languages and over-represented in others.
 
-```{r catsyn-prod-vs-comp-vocab-comp-wg, fig.cap="Relative representation in vocabulary of predicates compared with nouns for comprehension data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-prod-vs-comp-vocab-comp-wg, fig.cap="Relative representation in vocabulary of predicates compared with nouns for comprehension data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 area_scatter_data <- area_summary %>%
   filter(form %in% WGs, 
          lexical_category %in% c("Nouns","Predicates"), 
@@ -333,7 +333,7 @@ ggplot(area_scatter_data,  aes(x = Nouns_mean, y = Predicates_mean)) +
 As seen in Figure \@ref(fig:catsyn-prod-vs-comp-vocab-comp-wg), there is a strong anti-correlation between noun and predicate bias measures (_r_(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure). 
 
 
-```{r catsyn-function-words-comp, fig.cap="Relative representation in vocabulary compared to chance for function words for comprehension data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-function-words-comp, fig.cap="Relative representation in vocabulary compared to chance for function words for comprehension data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 ggplot(filter(plot_areas_wg, lexical_category == "Function words"), 
        aes(x = langform, y = mean, colour = lexical_category)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
@@ -362,7 +362,7 @@ base_plot(WSs, "produces") +
 
 Turning to the language summaries (Figure \@ref(fig:catsyn-plot-areas-ws)), we see a larger pattern of variation in nouns and predicate representation. Every language has a relative over-representation of nouns, though the degree of this over-representation varies, with German and Korean especially high, and Mandarin and Cantonese especially low (we return to this trend below). Overall this trend is more extreme and more consistent in production data than comprehension. Predicate representation is both more variable and more negative than we observed for comprehension. Here we see Mandarin and Cantonese are the only two languages with substantial over-representation for predicates.
 
-```{r catsyn-plot-areas-ws, fig.cap="Relative representation in vocabulary compared to chance for nouns and predicates for production data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-plot-areas-ws, fig.cap="Relative representation in vocabulary compared to chance for nouns and predicates for production data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 plot_areas_ws <- filter(area_summary, form %in% WSs, measure == "produces") %>%
          unite(langform, language, form, sep = .inst_sep) %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
@@ -386,7 +386,7 @@ npcor <- cor.test(plot_areas_ws$mean[plot_areas_ws$lexical_category == "Nouns"],
 
 Noun and predicate representation is again anti-correlated (Figure \@ref(fig:catsyn-prod-vs-comp-vocab-prod)), at _r_(`r npcor$parameter`) = `r signif(npcor$estimate,2)`, though this correlation is somewhat weaker than for comprehension. 
 
-```{r catsyn-prod-vs-comp-vocab-prod, fig.cap="Relative representation in vocabulary of predicates compared with nouns for production data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-prod-vs-comp-vocab-prod, fig.cap="Relative representation in vocabulary of predicates compared with nouns for production data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 area_scatter_data <- area_summary %>%
   filter(form %in% WSs, 
          lexical_category %in% c("Nouns","Predicates"), 
@@ -410,7 +410,7 @@ ggplot(area_scatter_data,
 
 The negative representation of function words (Figure \@ref(fig:catsyn-function-words-prod)) is relatively consistent in overall magnitude with that seen in comprehension. Across all languages, children are reported to produce fewer function words than would be expected by chance sampling. 
 
-```{r catsyn-function-words-prod, fig.cap="Relative representation in vocabulary compared to chance for function words for production data in each language (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-function-words-prod, fig.cap="Relative representation in vocabulary compared to chance for function words for production data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 ggplot(filter(plot_areas_ws, lexical_category == "Function words"),
        aes(x = langform, y = mean, colour = lexical_category)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
@@ -514,7 +514,7 @@ What might be the mechanism for these asymmetries? For languages that do not all
 
 Another potential explanation is that form composition relates to bias estimates. For example, a form with more predicates might actually show a *lower* degree of predicate bias --- more predicates on the form would imply that some of those predicates are relatively more difficult (simply because the form designer had "run out" of easy predicates) and hence would not be checked as frequently by parents. We assess this hypothesis in two ways. First, we examine the relationship between predicate bias and predicate representation (making use of predicates because they are a minority on the form). Second, we consider the case of Mandarin where we have data from two forms with different compositions.
 
-```{r catsyn-pred-prod, fig.cap="Relative representation in vocabulary for predicates as a function of proportion of predicates on form for comprehension data in each language, with languages labelled whose proportion of predicates is greater than 0.25 (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsyn-pred-prod, fig.cap="Relative representation in vocabulary for predicates as a function of proportion of predicates on form for comprehension data in each language, with languages labelled whose proportion of predicates is greater than 0.25 (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 pred_prod <- filter(area_summary, form %in% WSs, measure == "produces", 
                     lexical_category == "Predicates") %>%
   left_join(filter(items, form %in% WSs) %>% 

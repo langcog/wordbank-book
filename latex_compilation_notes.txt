@@ -1,0 +1,20 @@
+1. set dev = "png" in _common.R as default chunk option
+
+2. add always_allow_html: yes to Index.Rmd
+
+3. remove & and % from figure captions to keep latex from choking
+
+4. remove all unicode characters (zero width space) from datasets.json
+
+EVERY TIME:
+5. Change path to figures in .tex to be _bookdown_files/ and then the path
+
+6. add cyrillic support by changing:
+
+\usepackage[T1]{fontenc}
+
+to
+
+\usepackage[T2A]{fontenc}
+
+7. remove \textbackslash{}begin\{center\} from incorrectly rendered tables

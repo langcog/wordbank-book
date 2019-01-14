@@ -180,7 +180,7 @@ ggplot(plot_data, aes(x = vocab, y = prop, colour = langform)) +
 
 Because there are so many different languages represented in this analysis, the simplest analysis examines the spread of languages across categories (Figure \@ref(fig:catsem-plot-points-ws)). Somewhat surprisingly, the ordering of categories looks quite similar to what was observed in English. Sounds, Games & Routines, and Body parts are all over-represented. Vehicles, Food & Drink, Animals, and Clothing all are variable across cultures, as is People. Small Household Items, Outside Things, and Furniture & Rooms show variability but overall less bias. Finally, Places To Go and Time Words are both under-represented systematically across all languages. 
 
-```{r catsem-plot-areas, fig.cap="Relative representation in vocabulary compared to chance for categories that tend to be over-represented across languages (line ranges indicate bootstrapped 95% confidence intervals).", fig.width=8, fig.height=8}
+```{r catsem-plot-areas, fig.cap="Relative representation in vocabulary compared to chance for categories that tend to be over-represented across languages (line ranges indicate bootstrapped 95 percent confidence intervals).", fig.width=8, fig.height=8}
 # cat_order <- area_summary %>%
 #   filter(category %in% included_cats) %>%
 #   group_by(category) %>%
@@ -204,7 +204,7 @@ ggplot(aes(x = langform, y = mean, colour = langform)) +
 
 We can zoom in on the most highly over-represented categories (Figure \@ref(fig:catsem-plot-areas)). The highest mean comes from Body Parts, which are over-represented in just about every language. Interestingly, the three datasets with the lowest proportion of Body Parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games & Routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sounds are quite highly variable but almost all positive, with Russian being the outlier. Inspection of these items shows *negative* developmental trajectories for a number of words in the Sounds category. We believe these data are likely an artifact of parents feeling that they should "trade off" with noun labels in the Animals category, and hence items in Sounds category should be discounted. Finally, words in the Vehicles category appear more variable with positive preferences across language families.
 
-```{r catsem-people-places-time, fig.width=8, fig.cap="Relative representation in vocabulary compared to chance for categories that tend to be under-represented or highly variable across languages (line ranges indicate bootstrapped 95% confidence intervals)."}
+```{r catsem-people-places-time, fig.width=8, fig.cap="Relative representation in vocabulary compared to chance for categories that tend to be under-represented or highly variable across languages (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 ggplot(filter(area_summary, 
               form %in% WSs, 
               category %in% c("people","places","time_words")) %>%

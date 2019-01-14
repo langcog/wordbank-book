@@ -7,6 +7,7 @@ library(tidyverse)
 options(DT.options = list(searching = FALSE,
                           lengthChange = FALSE))
 
+
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -16,7 +17,8 @@ opts_chunk$set(
   echo = FALSE,
   cache.lazy = FALSE,
   fig.align = "center",
-  fig.show = "hold"
+  fig.show = "hold",
+  dev = "png"
 )
 
 .font <- "Source Sans Pro"

@@ -373,7 +373,7 @@ b2012_summary <- b2012 %>%
 
 Second, @bornstein2012 use a particularly powerful study design to examine stability in early language estimates across different measures. They gathered longitudinal data at 20 and 48 months using a wide range of standardized and parent-report measures, and then use structural equation modeling to model shared variance due to parent report as well as standardized latent language ability at each age. We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered (see Figure \@ref(fig:demo-bornstein-plot)).^[These data are not perfect, we've have double-digitized one point.] As these scores are standardized, we can examine the difference in means and recover the standardized effect size for gender in the data, which is `r round(-diff(b2012_summary$Mean), 2)` standard deviations. Since this measurement is *greater* than that found using the CDIs (the comparable American English measurement was `r round(filter(analyses$WS.production$sex$mmad_summary, language == "English (American)") %>% pull(mmad_mean), 2)`), we doubt that our observed effect is due solely to reporting bias.
 
-```{r demo-bornstein-plot, fig.cap="Latent vocabulary scores from @bornstein2012 by age and sex (crossbars show means and 95% confidence intervals)."}
+```{r demo-bornstein-plot, fig.cap="Latent vocabulary scores from Bornstein and Putnick (2012) by age and sex (crossbars show means and 95 percent confidence intervals)."}
 b2012 %>%
   gather(time, score, -gender) %>%
   mutate(time = fct_recode(time, "20 months" = "z_20", "48 months" = "z_48")) %>%

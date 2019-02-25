@@ -386,8 +386,8 @@ ggplot(madm_summary_prod, aes(y = language, x = madm_mean, col = form)) +
                              position = ggstance::position_dodgev(height = .2)) + 
   xlim(0,1.5) + 
   # coord_flip() + 
-  xlab("Language") + 
-  ylab("MADM (production 12-24 months)") +
+  ylab("Language") + 
+  xlab("MADM (production 12-24 months)") +
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
   .scale_colour_discrete(name = "Form") +
@@ -427,8 +427,8 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper)) + 
   ylim(0,1.5) + 
   coord_flip() + 
-  ylab("Language") + 
-  xlab("MADM (comprehension)") 
+  xlab("Language") + 
+  ylab("MADM (comprehension)") 
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```

@@ -396,14 +396,12 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
                               point.padding = unit(0.2, "lines"),
                               arrow = arrow(length = unit(0.01, "npc")),
                               nudge_y = 1, size = 2.5, fill = "white",
-                              family = .font) +
+                              family = .uni_font) +
     .scale_fill_discrete(name = "") +
     .scale_colour_discrete(guide = FALSE) +
     theme(legend.position = "top") +
     labs(x = "Coefficient estimate", y = "Number of words")
 }
-
-plot_demo_ranef("sex", "understands")
 ```
 
 

@@ -22,6 +22,7 @@ opts_chunk$set(
 )
 
 .font <- "Source Sans Pro"
+.uni_font <- "Gulim"
 theme_set(theme_mikabr(base_family = .font))
 theme_update(plot.margin = margin(0, 0, 2, 0, "pt"),
              legend.margin = margin(0, 0, 0, 0, "pt"))

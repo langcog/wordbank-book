@@ -47,6 +47,13 @@ theme_update(plot.margin = margin(0, 0, 2, 0, "pt"),
 source("helper/predictQR.R")
 source("helper/stats_funs.R")
 
+# instruments <- get_instruments()
+# write_feather(instruments, "data/_common/instruments.feather")
+# admins <- get_administration_data(original_ids = TRUE)
+# write_feather(admins, "data/_common/admins.feather")
+# items <- get_item_data()
+# write_feather(items, "data/_common/items.feather")
+
 instruments <- read_feather("data/_common/instruments.feather")
 admins <- read_feather("data/_common/admins.feather")
 items <- read_feather("data/_common/items.feather")
@@ -67,14 +74,6 @@ insts <- instruments %>%
   unite(instrument, language, form, sep = .inst_sep, remove = FALSE) %>%
   left_join(langs)
 inst_colours <- insts$colour %>% set_names(insts$instrument)
-
-# instruments <- get_instruments()
-# write_feather(instruments, "data/_common/instruments.feather")
-# admins <- get_administration_data(original_ids = TRUE)
-# write_feather(admins, "data/_common/admins.feather")
-# items <- get_item_data()
-# write_feather(items, "data/_common/items.feather")
-
 
 ### FORM VARIANTS
 WGs <- c("WG", "IC", "Oxford CDI")

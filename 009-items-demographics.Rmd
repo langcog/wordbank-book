@@ -52,11 +52,11 @@ raw_data <- demo_words %>%
   split(.$language) %>%
   map(get_lang_data)
 
-write_feather(bind_rows(raw_data), "data/items-demographics/demo_data.feather")
+write_feather(bind_rows(raw_data), "data/items-demographics/_demo_data.feather")
 ```
 
 ```{r itemsdemo-raw_data_coded, eval=FALSE}
-raw_data <- read_feather("data/items-demographics/demo_data.feather") %>%
+raw_data <- read_feather("data/items-demographics/_demo_data.feather") %>%
   split(.$language)
 
 raw_data_coded <- raw_data %>%
@@ -233,7 +233,7 @@ fit_demo_model <- function(language, measure, demo, demo_data) {
   
   safe_model <- possibly(function() {
     model <- lme4::glmer(group_formula, family = binomial, data = demo_data)
-    save(model, file = glue::glue("data/items-demographics/models/{language}_{measure}_{demo}.Rds"))
+    save(model, file = glue::glue("data/items-demographics/_models/{language}_{measure}_{demo}.Rds"))
     return(model)
   }, otherwise = NULL)
   safe_model()
@@ -245,11 +245,11 @@ cluster <- multidplyr::create_cluster(cores = cores)
 
 demo_groups <- demo_props %>%
   mutate(group = rep(1:cores, length.out = n())) %>%
-  partition(group, cluster = cluster)
+  multidplyr::partition(group, cluster = cluster)
 
 demo_groups %>%
   multidplyr::cluster_library("tidyverse") %>%
-  multidplyr::cluster_library("glue::glue") %>%
+  multidplyr::cluster_library("glue") %>%
   multidplyr::cluster_library("lme4") %>%
   multidplyr::cluster_assign_value("fit_demo_model", fit_demo_model) %>%
   multidplyr::cluster_assign_value("contr_back_diff", contr_back_diff)
@@ -268,7 +268,7 @@ get_coef <- function(model) {
 }
 
 get_ranef <- function(model) {
-  ranef(model)$definition %>% as_tibble(rownames = "definition")
+  lme4::ranef(model)$definition %>% as_tibble(rownames = "definition")
 }
 
 demo_fits <- demo_models %>%
@@ -287,6 +287,42 @@ demo_ranef <- demo_fits %>%
 
 write_feather(demo_coefs, "data/items-demographics/demo_coefs.feather")
 write_feather(demo_ranef, "data/items-demographics/demo_ranef.feather")
+```
+
+```{r itemsdemo-update, eval=FALSE}
+demo_coefs <- read_feather("data/items-demographics/demo_coefs.feather")
+demo_ranef <- read_feather("data/items-demographics/demo_ranef.feather")
+
+update_language <- function(lang) {
+  
+  updated_models <- demo_props %>%
+    filter(language == lang) %>%
+    mutate(model = pmap(list(language, measure, demo, data), fit_demo_model))
+  
+  updated_fits <- updated_models %>%
+    ungroup() %>%
+    filter(!map_lgl(model, is.null)) %>%
+    mutate(coefs = map(model, get_coef),
+           ranef = map(model, get_ranef))
+  
+  updated_coefs <- updated_fits %>%
+    select(language, measure, demo, coefs) %>%
+    unnest()
+  
+  updated_ranef <- updated_fits %>%
+    select(language, measure, demo, ranef) %>%
+    unnest()
+  
+  demo_coefs <- demo_coefs %>%
+    filter(language != lang) %>%
+    bind_rows(updated_coefs)
+  write_feather(demo_coefs, "data/items-demographics/demo_coefs.feather")
+  
+  demo_ranef <- demo_ranef %>%
+    filter(language != lang) %>%
+    bind_rows(updated_ranef)
+  write_feather(demo_ranef, "data/items-demographics/demo_ranef.feather")
+}
 ```
 
 ### Models

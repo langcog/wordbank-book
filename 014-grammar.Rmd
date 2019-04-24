@@ -6,6 +6,8 @@ How does abstract structure emerge during language learning? On some accounts, c
 ```
 
 ```{r gram-load_data}
+vocab_step <- 0.01
+
 grammar_summary <- read_feather("data/grammar/grammar_summary.feather")
 
 grammar_combine <- grammar_summary %>%
@@ -16,8 +18,8 @@ grammar_morphosyntax <- grammar_summary %>%
   filter(coded_type %in% c("complexity", "word_forms")) %>%
   mutate(coded_type = factor(coded_type,
                              levels = c("word_forms", "complexity"),
-                             labels = c("Word Forms", "Complexity"))) %>%
-  filter(language != "French (France)")  # TODO!!!
+                             labels = c("Word Forms", "Complexity"))) #%>%
+  #filter(language != "French (France)")  # TODO!!!
 
 num_langs <- n_distinct(grammar_summary$language)
 ```
@@ -148,8 +150,11 @@ Overall, although there was some cross-linguistic variation --- perhaps due to t
 
 ```{r gram-vocab_models}
 vocab_model <- function(inst_data) {
-  lm(prop ~ I(production_prop ^ 3) + I(production_prop ^ 2) +
-       production_prop + 0, data = inst_data)
+  lm(prop ~ I(production_prop ^ 4) + I(production_prop ^ 3) +
+       I(production_prop ^ 2) + production_prop + 0, data = inst_data)
+  # glm(cbind(positive, negative) ~ production_prop + 0, family = "binomial",
+  #     data = inst_data)
+  # MonoPoly::monpol(prop ~ production_prop + 0, data = inst_data)
 }
 
 vocab_models <- grammar_morphosyntax %>%
@@ -157,9 +162,17 @@ vocab_models <- grammar_morphosyntax %>%
   nest() %>%
   mutate(
     model = map(data, vocab_model),
-    rsq = map_dbl(model, ~summary(.x)$r.squared),
+    rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
     rsq_print = sprintf("r² = %.2f", rsq)
   )
+
+vocabs <- tibble(production_prop = seq(0, 1, vocab_step))
+vocab_fits <- vocab_models %>%
+  mutate(fits = map(model, function(m) {
+    vocabs %>% mutate(fitted_prop = predict(m, newdata = vocabs))
+  })) %>%
+  select(-data, -model) %>%
+  unnest()
 ```
 
 ```{r gram-cvs}
@@ -184,12 +197,12 @@ plot_vocab_type <- function(type) {
     facet_wrap(~language, ncol = 4) +
     coord_fixed() +
     geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
-    geom_smooth(method = "lm", formula = y ~ I(x ^ 3) + I(x ^ 2) + x + 0,
-                size = 1, se = FALSE) +
+    geom_line(aes(y = fitted_prop), size = 1, colour = "blue",
+              data = filter(vocab_fits, coded_type == type)) +
     geom_text(aes(label = rsq_print), x = 0.15, y = 1, size = 3, family = .font,
               data = filter(vocab_models, coded_type == type)) +
-    scale_x_continuous(breaks = seq(0, 1, 0.5)) +
-    scale_y_continuous(breaks = seq(0, 1, 0.5)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.5), limits = c(0, 1)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.5), limits = c(0, 1)) +
     labs(x = "Productive vocabulary size (proportion of items)",
          y = glue::glue("{type} score (proportion of items)"))
 }
@@ -212,16 +225,22 @@ Overall, these data provide strong cross-linguistic support to the contention of
 ### Age effects
 
 ```{r gram-grammar_age_models}
-vocab_step <- 0.01
-
-inst_model <- function(inst_data) {
-  lm(prop ~ I(production_prop ^ 3) * age + I(production_prop ^ 2) * age +
-       production_prop * age + 0, data = inst_data)
+get_inst_model <- function(inst_data) {
+  lm(prop ~ I(production_prop ^ 4) * age + I(production_prop ^ 3) * age +
+       I(production_prop ^ 2) * age + production_prop * age + 0,
+     data = inst_data)
+  # lm(prop ~ I(production_prop ^ 4) * age0 + I(production_prop ^ 3) * age0 +
+  #      I(production_prop ^ 2) * age0 + production_prop * age0 + 0,
+  #    data = inst_data)
+  # glm(cbind(positive, negative) ~ production_prop * age,
+  #          family = "binomial", data = inst_data)
 }
 
-inst_predictions <- function(inst_data, inst_model) {
-  data_shape <- cross_df(list(age = seq(min(inst_data$age), max(inst_data$age)),
-                              production_prop = seq(0, 1, vocab_step)))
+get_inst_predictions <- function(inst_data, inst_model) {
+  # data_shape <- list(age0 = seq(min(inst_data$age0), max(inst_data$age0)),
+  data_shape <- list(age = seq(min(inst_data$age), max(inst_data$age)),
+                     production_prop = seq(0, 1, vocab_step)) %>%
+    cross_df()
   broom::augment(inst_model, newdata = data_shape, type.predict = "response")
 }
 
@@ -229,9 +248,10 @@ grammar_models <- grammar_morphosyntax %>%
   group_by(language, instrument, coded_type) %>%
   nest() %>%
   mutate(
-    model = map(data, inst_model),
-    rsq = map_dbl(model, ~summary(.x)$r.squared),
-    predictions = map2(data, model, inst_predictions)
+    # data = map(data, ~mutate(., age0 = age - min(age))),
+    model = map(data, get_inst_model),
+    rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
+    predictions = map2(data, model, get_inst_predictions)
   )
 
 num_age_admins <- grammar_morphosyntax %>%
@@ -243,10 +263,13 @@ grammar_fits <- grammar_models %>%
   select(language, instrument, coded_type, predictions) %>%
   unnest() %>%
   group_by(language, instrument) %>%
-  mutate(age_group = cut(age, 2, labels = c("younger", "older"))) %>%
+  mutate(age_group = cut(age, 2, labels = c("younger", "older")))
+
+grammar_fits_grouped <- grammar_fits %>%
   left_join(num_age_admins) %>%
+  mutate(n = if_else(is.na(n), 0, as.numeric(n))) %>%
   group_by(language, instrument, coded_type, age_group, production_prop) %>%
-  summarise(mean_fitted = weighted.mean(.fitted, n))
+  summarise(mean_fitted = weighted.mean(.fitted, n, na.rm = TRUE))
 
 grammar_morphosyntax <- grammar_morphosyntax %>%
   group_by(instrument) %>%
@@ -254,6 +277,11 @@ grammar_morphosyntax <- grammar_morphosyntax %>%
 ```
 
 ```{r gram-grammar-age-plots}
+grammar_fits_grouped %>%
+  filter(language == "French (French)", coded_type == "Complexity") %>% View()
+  ggplot(aes(x = production_prop, y = mean_fitted)) +
+    geom_point()
+
 grammar_age_plot <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
          aes(x = production_prop, y = prop, colour = age_group)) +
@@ -261,7 +289,7 @@ grammar_age_plot <- function(type) {
     coord_fixed() +
     geom_jitter(alpha = 0.1, size = 0.70, shape = 1) +
     geom_line(aes(y = mean_fitted), size = 0.9,
-              data = filter(grammar_fits, coded_type == type)) +
+              data = filter(grammar_fits_grouped, coded_type == type)) +
     scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5)) +
     scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5)) +
     labs(x = "Productive vocabulary size (proportion of items)",

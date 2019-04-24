@@ -100,7 +100,7 @@ lemma_completeness <- all_aoas %>%
   group_by(measure, uni_lemma) %>%
   summarise(in_langs = sum(!is.na(aoa))) 
 
-cutoffs <- lemma_completeness%>%
+cutoffs <- lemma_completeness %>%
   group_by(measure, in_langs) %>%
   summarise(n = n()) %>%
   arrange(measure, desc(in_langs)) %>%
@@ -112,26 +112,29 @@ cutoff_n <- cutoffs %>%
   filter(measure == "produces", in_langs == IN_LANGS) %>%
   slice(1) %>%
   pull(cum_n)
+
+cutoffs_prod <- cutoffs %>% filter(measure == "produces")
 ```
 
 In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not every word appeared on all forms. Figure \@ref(fig:items-uni-lemma-completeness-figure) shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the `r n_distinct(all_aoas$language)` languages. 
 
-```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = "The proportion of words found on a given number of language's CDI forms. The dashed line shows the cutoff value we chose."}
-ggplot(filter(cutoffs, measure == "produces"),
-       aes(x = in_langs, y = cum_prop)) +
+```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = glue::glue("The proportion of words found on at least each of a number of languages' CDI forms (e.g. all words appear on at least one form, {filter(cutoffs_prod, in_langs == 2)$n} words appear on at least 2 forms, and so on, with {filter(cutoffs_prod, in_langs == max(in_langs))$n} words appearing on all {max(cutoffs_prod$in_langs)} languages' forms). The dotted line shows the cutoff value we chose ({IN_LANGS}).")}
+ggplot(cutoffs_prod, aes(x = in_langs, y = cum_prop)) +
   geom_line() +
-  scale_x_reverse() +
   geom_segment(aes(x = IN_LANGS, xend = IN_LANGS, y = 0,
                    yend = filter(cutoffs,  measure == "produces", 
                                  in_langs == IN_LANGS) %>% pull(cum_prop)),
-               linetype = "dashed") +
-  geom_segment(aes(x = max(in_langs), xend = IN_LANGS, 
+               linetype = .refline, colour = .grey) +
+  geom_segment(aes(x = 1, xend = IN_LANGS, 
                    y = filter(cutoffs,  measure == "produces", 
                                  in_langs == IN_LANGS) %>% pull(cum_prop),
                    yend = filter(cutoffs,  measure == "produces", 
                                  in_langs == IN_LANGS) %>% pull(cum_prop)),
-                   linetype = "dashed") +
-  labs(x = ("Number of forms"), y = "Cumulative proportion of words")
+                   linetype = .refline, colour = .grey) +
+  scale_x_continuous(expand = c(0, 0), breaks = seq(2, 14, 2)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Number of forms", y = "Proportion of words") +
+  theme(plot.margin = margin(t = 10))
 ```
 
 ## The first 10 words

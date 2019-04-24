@@ -8,4 +8,4 @@
 * Plot axis labels, facet strip labels, legend titles are Sentence case.
 * Math symbols (correlation coefficient, p-value) are italicized, (*r* = 0.4).
 * Latinate phrases are italicized (*a priori*).
-* dashes are " -- "
+* dashes are " -- " (to fix: `sed -i -e 's/ --- / -- /g' *.Rmd`)

@@ -475,7 +475,7 @@ demo_ranef %>%
   dt()
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Table \@ref(tab:itemsdemo-sex-table-comp) gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items --- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
+Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Table \@ref(tab:itemsdemo-sex-table-comp) gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
 
 ```{r itemsdemo-ranef-plot-sex-prod, dependson="itemsdemo-plot_ranef", fig.height=14, fig.cap=glue::glue("Distribution of sex item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
 plot_demo_ranef("sex", "produces")

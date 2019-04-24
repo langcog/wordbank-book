@@ -320,7 +320,7 @@ Moving away from the model-based method above, we can look for a measure of effe
 
 $$d = \frac{\mu_2 - \mu_1}{SD_{pooled}}$$
 
-But, as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components: the difference between medians, divided by the MAD. (We call this the MMAD). 
+But, as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components: the difference between medians, divided by the MAD. (We call this the MMAD; \@ref(appendix-variability) shows that it is comparable to Cohen's $d$ as a measure of effect size). 
 
 Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age (Figure \@ref(fig:demo-mmad-age-plot-sex-wg-comp)). For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability (Figure \@ref(fig:demo-mmad-plot-sex-wg-comp)). The overall median for these `r nrow(analyses$WG.comprehension$sex$mmad_summary)` languages is quite small as well, `r round(median(analyses$WG.comprehension$sex$mmad_summary$mmad_mean),2)`. In summary, there is some evidence for a modest female advantage in comprehension.
 

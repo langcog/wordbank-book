@@ -40,3 +40,18 @@ ggplot(ratios, aes(x = madm, y = cv)) +
   xlab("MADM") + 
   scale_colour_manual(values = lang_colours, guide = FALSE)
 ```
+
+```{r appvar-ratios-d, fig.cap="Cohen's d and MMAD, with each point showing a particular combination of language, form, and age and the line indicating a linear model fit."}
+ggplot(ratios, aes(x = mmad, y = d)) + 
+  geom_point(aes(size = N, col = language), alpha = .3) + 
+  geom_smooth(method = "lm") +
+  ylim(0,3) + xlim(0,3) +
+  geom_abline(lty = 2) +
+  ylab("Cohen's d") + 
+  xlab("MMAD") + 
+  scale_colour_manual(values = lang_colours, guide = FALSE)
+```
+
+ 
+Our second analysis, shown in Figure \@ref(fig:appvar-ratios-cv), is identical except that it plots Cohen's $d$ by MMAD. Each of these is the reciprocal of the related measure plotted above. (For example, $d = \frac{\mu}{\sigma}$ whereas $CV = \frac{\sigma}{\mu}$). Thus, the same relation holds.
+

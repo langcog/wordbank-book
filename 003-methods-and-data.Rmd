@@ -35,6 +35,10 @@ the [`R` package repository](http://github.com/langcog/wordbankr) containing cod
 
 All data uploaded to Wordbank are open and freely available for download, both through the site itself and through the GitHub repository. The site includes only de-identified data that cannot be linked to individual parents and children under US Department of Health and Human Services' "Safe Harbor" standard. Because of these features, the Stanford Institutional Review Board has determined that the Wordbank project does not constitute human subjects research.
 
+### The web interface
+
+Our website, [http://wordbank.stanford.edu]() provides a set of interactive visualizations so that interested readers can explore the data in the database. A tutorial introduction to these visualization apps is given in @frank2016. We developed these apps to allow quick access to basic generalizations about the distribution of vocabulary totals (similar to analyses in Chapters \@ref(vocabulary) and \@ref(demographics)) and to information about individual items. 
+
 ### The `wordbankr` API
 
 An application programming interface (API) is a set of abstractions that allow applications to interact with a resource (e.g., a set of data like Wordbank) through consistent abstractions. Although in principle it is possible to construct raw `SQL` queries to Wordbank, in practice all access is through an `R` API that constructs individual `SQL` calls. This API is distributed to `R` users through the `wordbankr` package, which [is available through CRAN](https://CRAN.R-project.org/package=wordbankr). 
@@ -359,11 +363,7 @@ ggplot(ords, aes(y = language, x = estimate, col = form)) +
   theme(legend.position = "bottom")
 ```
 
-<<<<<<< HEAD:003-methods-and-data.Rmd
-In our first example, Mandarin Words & Sentences data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there show a pronounced Mandarin advantage. As it turns out, this advantage is almost unprecedented relative to other languages. We plot the median production for 24-month olds in Figure \@ref(fig:vocab-ords-mandarin). This figure reveals both how large the Mandarin advantage and the high level of vocabulary reported for Hebrew speakers as well, which is less unusual in raw scores because of the relatively smaller number of items on the Hebrew form. 
-=======
-Looking first at Mandarin Words & Sentences, these data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there show a pronounced Mandarin advantage. As it turns out, this advantage is almost unprecedented relative to other languages. We plot the median production for 24-month olds in Figure \@ref(fig:vocab-ords-mandarin). This figure reveals both how large the Mandarin advantage and the high level of vocabulary reported for Hebrew speakers as well, which is less unusual in raw scores because of the relatively smaller number of items on the Hebrew form. 
->>>>>>> 593a0a58930a73aff88709fbb69b962e22080e87:003-methods.Rmd
+In our first example, Mandarin Words & Sentences, these data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there show a pronounced Mandarin advantage. As it turns out, this advantage is almost unprecedented relative to other languages. We plot the median production for 24-month olds in Figure \@ref(fig:vocab-ords-mandarin). This figure reveals both how large the Mandarin advantage and the high level of vocabulary reported for Hebrew speakers as well (this difference is less striking in raw scores because of the relatively smaller number of items on the Hebrew form). 
 
 To investigate the Mandarin disparities further, @tardif2009 discussed a number of possible explanations, given that the administration and sampling procedures were similar in Mandarin and Cantonese. The children in the Mandarin sample are nearly all monolingual, only (first born) children; but these factors did not account for variation between samples. @tardif2009 therefore, speculate that structural factors regarding Mandarin (e.g., phonological structure relative to Cantonese) might be accounting for the Mandarin advantage.
 

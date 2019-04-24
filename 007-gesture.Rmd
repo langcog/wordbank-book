@@ -314,7 +314,7 @@ Given both the similarity and the variability in the developmental trajectories 
 
 This cross-category intercorrelation is quite similar cross-linguistically, ranging from `r signif(min(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == min(mean)) %>% pull(language)` to `r signif(max(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == max(mean)) %>% pull(language)`. The full set of intercorrelations is shown in Table \@ref(tab:intercor-table).
 
-```{r intercor-table}
+```{r gesture-intercor-table}
 kable(intercor_data, digits = 3, col.names = c("Language", "Mean", "SD"),
       caption = "Summary statistics for intercorrelations between gesture categories for each language.")
 ```

@@ -18,8 +18,8 @@ grammar_morphosyntax <- grammar_summary %>%
   filter(coded_type %in% c("complexity", "word_forms")) %>%
   mutate(coded_type = factor(coded_type,
                              levels = c("word_forms", "complexity"),
-                             labels = c("Word Forms", "Complexity"))) #%>%
-  #filter(language != "French (France)")  # TODO!!!
+                             labels = c("Word Forms", "Complexity"))) %>%
+  filter(language != "French (French)")  # FIXME?
 
 num_langs <- n_distinct(grammar_summary$language)
 ```
@@ -208,7 +208,7 @@ plot_vocab_type <- function(type) {
 }
 ```
 
-We next examine the correlation between the proportion of Word Form and Complexity items completed and the proportion of vocabulary items completed. First reported by @bates1994, these correlations are extremely robust, and can be observed in essentially all of our datasets. Figure \@ref(fig:gram-grammar-plot-wordform) shows this relation for Word Form items. We fit linear regressions predicting vocabulary as a function of linear, quadratic, and cubic predictors (subtracting the intercept to ensure that the function passed through the origin). The total *r*² for these relationships ranged from `r round(min(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)` to `r round(max(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)`.
+We next examine the correlation between the proportion of Word Form and Complexity items completed and the proportion of vocabulary items completed. First reported by @bates1994, these correlations are extremely robust, and can be observed in essentially all of our datasets. Figure \@ref(fig:gram-grammar-plot-wordform) shows this relation for Word Form items. We fit linear regressions predicting Word Form score or Complexity score as a function of linear, quadratic, cubic, and quartic terms of productive vocabulary size (subtracting the intercept to ensure that the function passed through the origin). The total *r*² for these relationships ranged from `r round(min(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)` to `r round(max(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)`.
 
 ```{r gram-grammar-plot-wordform, fig.cap="Each child's Word Forms score as a function of their vocabulary size in each language (curves show model fits).", dependson="gram-grammar-data-plot"}
 plot_vocab_type("Word Forms")
@@ -277,11 +277,6 @@ grammar_morphosyntax <- grammar_morphosyntax %>%
 ```
 
 ```{r gram-grammar-age-plots}
-grammar_fits_grouped %>%
-  filter(language == "French (French)", coded_type == "Complexity") %>% View()
-  ggplot(aes(x = production_prop, y = mean_fitted)) +
-    geom_point()
-
 grammar_age_plot <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
          aes(x = production_prop, y = prop, colour = age_group)) +
@@ -314,7 +309,7 @@ grammar_age_plot("Complexity")
 This pattern is further summarized in Figure \@ref(fig:gram-grammar-diffs), where we show the area under the grammar/lexicon curve for younger and older children. The upward slope of nearly every line demonstrates the consistency of the age effect, which we discuss further below. In addition, there is a trend for age effects to be larger in Complexity rather than Word Forms, suggesting a more syntactic locus for the effect. 
 
 ```{r gram-grammar-diffs, fig.cap="Area under model fit curve for Word Forms score and Complexity score as a function of vocabulary size in each language for younger and older children.", fig.height=4.5}
-grammar_areas <- grammar_fits %>%
+grammar_areas <- grammar_fits_grouped %>%
   group_by(language, instrument, coded_type, age_group) %>%
   summarise(area = sum(mean_fitted * vocab_step, na.rm = TRUE))
 
@@ -400,7 +395,7 @@ age_effects <- item_effects %>%
 
 In our final analysis, we examine the individual items on the Word Form and Complexity sections. Given the heterogeneous nature of the CDI instruments, particularly in the Complexity sections, we attempted a more fine-grained item-analysis by classifying items as capturing either more morphological or more syntactic phenomena. Items for which the difference between the simple and complex sentences is in the inflection of a noun or verb (such as *doggie kiss me* / *doggie kissed me*) were coded as Morphological. The remainder of the items were coded as Syntactic, since they involved the use of some sentence-level syntactic construction (such as *doggie table* / *doggie on table*).
 
-We then fit logistic regression models with linear, quadratic, and cubic predictors (as above) separately for every item. Figure \@ref(fig:gram-item-effects-plot) shows the age effect coefficient of each item. In general, age effect were smaller for Word Form items, then Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions. 
+We then a fit logistic regression separately for every item, predicting whether children produce the item from vocabulary size and age. Figure \@ref(fig:gram-item-effects-plot) shows the age effect coefficient of each item. In general, age effect were smaller for Word Form items, then Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions. 
 
 ```{r gram-item-effects-plot, fig.cap="Age effect estimate for each grammar item in each language (ranges indicate 95 percent confidence intervals).", fig.height=9, fig.width=8}
 ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +

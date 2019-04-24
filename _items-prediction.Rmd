@@ -2,11 +2,12 @@
 pander::panderOptions("round", 2)
 
 data_path <- "data/items-prediction"
-data_files <- list.files(data_path, full.names = TRUE)
+data_files <- list.files(data_path, pattern = "*.RData", full.names = TRUE,
+                         recursive = TRUE)
 for (file in data_files) load(file)
 
 num_langs <- n_distinct(lang_coefs$language)
-predictors <- levels(lang_coefs$term)
+predictors <- unique(lang_coefs$term)
 num_coefs <- length(predictors)
 
 langs_aoa <- unique(lang_coefs$language) %>% str_replace("Quebec", "Quebecois")
@@ -18,29 +19,20 @@ lang_colours_aoa <- lang_colours[names(lang_colours) %in% langs_aoa] %>%
 label_caps <- function(value) {
   if_else(toupper(value) == value, value,
           paste0(toupper(substr(value, 1, 1)),
-                 tolower(substr(value, 2, nchar(value)))))
+                 tolower(substr(value, 2, nchar(value))))) %>%
+    str_replace_all("_", " ")
+}
+
+display_predictors <- function(predictors) {
+  predictors %>%
+    str_replace("num", "number") %>% str_replace("phons", "phonemes") %>%
+    map_chr(label_caps)
 }
 ```
 
-```{r aoapred-coefs}
-display_predictors <- predictors %>%
-  map_chr(~.x %>% str_replace("_", " ") %>% str_replace("num", "number") %>%
-            str_replace("phons", "phonemes") %>% label_caps()) %>%
-  set_names(predictors)
-
-plt_lang_coefs <- lang_coefs %>%
-  mutate(term = term %>%
-           factor(labels = display_predictors[levels(lang_coefs$term)]),
-         signif = if_else(signif, "significant", "non-significant"),
-         language = gsub("(.*) \\(.*\\)", "\\1", language))
-
-mean_lang_coefs <- plt_lang_coefs %>%
-  group_by(term, measure, interaction) %>%
-  summarise(mean_estimate = mean(estimate),
-            n_sig = sum(signif == "significant"))
-
+```{r aoapred-coef_means}
 mean_term_coefs <- lang_coefs %>%
-  filter(interaction == "main effect") %>%
+  filter(effect == "main effect") %>%
   group_by(term) %>%
   summarise(mean_estimate = mean(estimate),
             n_sig = sum(signif),
@@ -48,40 +40,102 @@ mean_term_coefs <- lang_coefs %>%
             n_neg = sum(estimate < 0)) %>%
   arrange(desc(abs(mean_estimate)))
 
-mean_interaction_coefs <- lang_coefs %>%
-  filter(interaction == "interaction with age") %>% #, signif) %>%
-  group_by(term, measure) %>%
+mean_term_measure_coefs <- lang_coefs %>%
+  filter(effect == "main effect") %>%
+  group_by(measure, term) %>%
   summarise(mean_estimate = mean(estimate),
-            #n_sig = sum(signif),
-            n_pos = mean(estimate > 0),
-            n_neg = mean(estimate < 0)) %>%
-  #arrange(desc(abs(mean_estimate)))
-  arrange(desc(n_neg)) %>%
-  filter(n_neg >= 0.9)
+            n_sig = sum(signif),
+            n_pos = sum(estimate > 0),
+            n_neg = sum(estimate < 0)) %>%
+  arrange(desc(abs(mean_estimate)))
 
-mean_term_coef <- function(t) {
- mean_term_coefs %>%
+mean_term_coef <- function(t, r = 2) {
+ coef <- mean_term_coefs %>%
     filter(term == t) %>%
     pull(mean_estimate) %>%
-    round(2)
+    round(r)
+ sprintf("$\\bar{\\beta} = %s$", coef)
 }
 
+mean_term_measure_coef <- function(meas, t) {
+ coef <- mean_term_measure_coefs %>%
+    filter(term == t, measure == meas) %>%
+    pull(mean_estimate) %>%
+    round(2)
+ sprintf("$\\bar{\\beta} = %s$", coef)
+}
+
+most_opposite <- function(ex_terms) {
+  terms <- mean_term_coefs %>%
+    filter(!(term %in% ex_terms)) %>%
+    mutate(larger = map2_dbl(n_pos, n_neg, max))
+  min(terms$larger)
+}
+
+consistent_age <- lang_coefs %>%
+  filter(effect == "interaction with age") %>%
+  group_by(measure, term) %>%
+  summarise(n_pos = sum(estimate > 0),
+            n_neg = sum(estimate < 0)) %>%
+  filter(n_pos >= 9 | n_neg >= 9)
+```
+
+```{r aoapred-coefs}
+coef_order <- mean_term_coefs %>% pull(term)
+
+plt_lang_coefs <- lang_coefs %>%
+  mutate(term = term %>% factor(levels = rev(coef_order)) %>%
+           fct_relabel(display_predictors),
+         signif = if_else(signif, "significant", "non-significant") %>%
+           fct_rev(),
+         language = language %>% str_remove(" \\(.*\\)") %>% as_factor())
+
 plt_lexcat_coefs <- lexcat_coefs %>%
-  mutate(term = term %>%
-           factor(labels = display_predictors[levels(lexcat_coefs$term)]),
-         signif = if_else(signif, "significant", "non-significant"),
+  mutate(term = term %>% factor(levels = rev(coef_order)) %>%
+           fct_relabel(display_predictors),
+         # signif = if_else(signif, "significant", "non-significant"),
          lexical_category = lexical_category %>%
-           fct_relevel("Nouns", "Predicates", "Function words"),
-         language = gsub("(.*) \\(.*\\)", "\\1", language)) %>%
-  filter(interaction == "main effect",
-         !(term %in% c("Valence", "Arousal")))
+           fct_relevel("nouns", "predicates"),
+         language = language %>% str_remove(" \\(.*\\)") %>% as_factor()) %>%
+  mutate_at(vars(contains("signif")),
+            ~if_else(., "significant", "non-significant") %>% fct_rev())
 
-mean_lexcat_coefs <- plt_lexcat_coefs %>%
-  group_by(lexical_category, term, measure, interaction) %>%
-  summarise(mean_estimate = mean(estimate))
+ref_coefs <- plt_lang_coefs %>% filter(language == "English")
 
-ref_coefs <- plt_lang_coefs %>%
-  filter(language == "English", measure == "understands")
+mean_lexcat <- lexcat_coefs %>%
+  group_by(lexical_category, term) %>%
+  summarise(mean_estimate = mean(estimate),
+            n_pos = sum(estimate > 0),
+            n_neg = sum(estimate < 0)) %>%
+  arrange(desc(abs(mean_estimate)))
+
+mean_lexcat_coef <- function(t, lc) {
+ coef <- mean_lexcat %>%
+    filter(term == t, lexical_category == lc) %>%
+    pull(mean_estimate) %>%
+    round(2)
+ sprintf("$\\bar{\\beta} = %s$", coef)
+}
+```
+
+```{r aoapred-consistencies}
+plt_coef_summary <- coef_summary %>%
+  mutate(language = language %>% str_remove(" \\(.*\\)") %>% fct_rev())
+
+plt_baseline_coef_summary <- baseline_coef_summary %>%
+  mutate(language = language %>% str_remove(" \\(.*\\)") %>% fct_rev())
+
+plt_lexcat_coef_summary <- lexcat_coef_summary %>%
+  ungroup() %>%
+  mutate(language = language %>% str_remove(" \\(.*\\)") %>% fct_rev(),
+         lexical_category = lexical_category %>%
+           fct_relevel("nouns", "predicates"))
+
+plt_lexcat_baseline_coef_summary <- lexcat_baseline_coef_summary %>%
+  ungroup() %>%
+  mutate(language = language %>% str_remove(" \\(.*\\)") %>% fct_rev(),
+         lexical_category = lexical_category %>%
+           fct_relevel("nouns", "predicates"))
 
 lexcat_mean_cor <- function(lc) {
   lexcat_coef_summary %>%
@@ -97,7 +151,7 @@ lexcat_mean_cor <- function(lc) {
 # polysemously split uni_lemmas
 poly <- uni_model_data %>%
   ungroup() %>%
-  distinct(language, uni_lemma, words) %>%
+  distinct(language, uni_lemma) %>%
   filter(str_detect(uni_lemma, "\\(.*\\)")) %>%
   mutate(homonym = str_replace(uni_lemma, "(.*) \\(.*\\)", "\\1")) %>%
   group_by(language, homonym) %>%
@@ -129,52 +183,6 @@ in_range <- function(min_langs, max_langs) {
 ```{r aoapred-correlations}
 # pairwise correlations among predictors
 
-# cors <- uni_model_data %>%
-#   split(paste(.$language, .$measure)) %>%
-#   map_df(function(lang_data) {
-#     pred_data <- lang_data %>%
-#       select_(.dots = c("uni_lemma", predictors)) %>%
-#       distinct() %>%
-#       gather_("predictor", "value", predictors) %>%
-#       split(.$predictor)
-#     
-#     map(pred_data, function(pd1) {
-#       map_dbl(pred_data, function(pd2) cor(pd1$value, pd2$value))
-#     }) %>%
-#       as.data.frame() %>%
-#       mutate(predictor1 = row.names(.)) %>%
-#       gather_("predictor2", "cor", predictors) %>%
-#       filter(predictor1 != predictor2) %>%
-#       mutate(language = unique(lang_data$language),
-#              measure = unique(lang_data$measure))
-# 
-#   }) %>%
-#   as_tibble() %>%
-#   mutate(predictors = map2_chr(predictor1, predictor2,
-#                                ~paste(sort(c(.x, .y)), collapse = "|"))) %>%
-#   distinct(language, predictors, cor)
-# 
-# mean_cors <- cors %>%
-#   group_by(predictors) %>%
-#   summarise(mean_cor = mean(cor)) %>%
-#   arrange(desc(abs(mean_cor)))
-# 
-# pair_cor <- function(preds) {
-#   mean_cors %>% filter(predictors == preds) %>% .$mean_cor
-# }
-
-# max_other_cor <- cors %>%
-#   mutate(predictor_pair = paste(predictor1, predictor2)) %>%
-#   filter(!(predictor_pair %in% c("solo_frequency MLU", "MLU solo_frequency"))) %>%
-#   arrange(desc(abs(cor))) %>%
-#   pull(cor) %>%
-#   .[1] %>%
-#   abs()
-```
-
-```{r aoapred-pairwise}
-# pairwise correlations among predictors
-
 predictor_cors <- uni_model_data %>%
   ungroup() %>%
   select(language, uni_lemma, !!predictors) %>%
@@ -184,10 +192,9 @@ predictor_cors <- uni_model_data %>%
   nest() %>%
   mutate(cors = map(data, ~.x %>%
                     widyr::pairwise_cor(predictor, uni_lemma, value,
-                                 upper = FALSE))) %>%
+                                        upper = TRUE))) %>%
   select(-data) %>%
   unnest() %>%
-  arrange(desc(abs(correlation))) %>%
   rename(predictor1 = item1, predictor2 = item2)
 
 mean_predictor_cors <- predictor_cors %>%
@@ -196,11 +203,11 @@ mean_predictor_cors <- predictor_cors %>%
   arrange(desc(abs(mean_cor)))
 
 mean_pair_cor <- function(p1, p2) {
-  mean_predictor_cors %>%
-    filter(predictor1 == p1 & predictor2 == p2 |
-             predictor1 == p2 & predictor2 == p1) %>%
+  pair_cor <- mean_predictor_cors %>%
+    filter(predictor1 == p1 & predictor2 == p2) %>%
     pull(mean_cor) %>%
     round(2)
+  glue::glue("$r = {pair_cor}$")
 }
 ```
 
@@ -223,10 +230,10 @@ predictor_vif <- function(lang_data, predictor) {
 
 vifs <- predictor_data %>%
   mutate(vifs = map(data, function(lang_data) {
-                    data_frame(predictor = predictors,
-                                vif = map_dbl(predictors,
-                                              ~predictor_vif(lang_data, .x)))
-         })) %>%
+    tibble(predictor = predictors,
+           vif = map_dbl(predictors,
+                         ~predictor_vif(lang_data, .x)))
+  })) %>%
   select(-data) %>%
   unnest()
 ```

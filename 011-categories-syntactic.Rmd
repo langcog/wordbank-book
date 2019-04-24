@@ -96,9 +96,17 @@ instruments <- instruments %>%
   select(language, form) %>%
   distinct()
 
-vocab_comp_data <- map2(instruments$language,
-                        instruments$form, get_vocab_comp) %>%
-  bind_rows()
+vocab_comp_data <- map2_df(instruments$language,
+                           instruments$form, get_vocab_comp)
+
+asl <- "American Sign Language"
+asl_forms <- instruments %>% filter(language == asl) %>% pull(form)
+asl_vocab_comp <- map_df(asl_forms, ~get_vocab_comp(asl, .)) %>%
+  mutate(form = "asl_combined")
+WGs <- c(WGs, "asl_combined")
+
+vocab_comp_data <- vocab_comp_data %>%
+  bind_rows(asl_vocab_comp)
 
 write_feather(vocab_comp_data, "data/categories-syntactic/vocab_comp_data.feather")
 ```
@@ -106,6 +114,7 @@ write_feather(vocab_comp_data, "data/categories-syntactic/vocab_comp_data.feathe
 
 ```{r catsyn-sample-sizes, results="asis"}
 vocab_comp_data <- read_feather("data/categories-syntactic/vocab_comp_data.feather")
+WGs <- c(WGs, "asl_combined")
 
 sample_sizes <- vocab_comp_data %>%
   group_by(language, form, measure, lexical_category) %>%

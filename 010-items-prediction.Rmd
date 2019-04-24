@@ -24,7 +24,7 @@ Second, we ask which lexical categories are most influenced by linguistic enviro
 
 ### Acquisition trajectories
 
-Since analyses in this chapter rely on unilemma mappings (see Chapter \@ref(methods)), the set of languages represented is smaller than in other chapters. 
+Since analyses in this chapter rely on unilemma mappings (see Chapter \@ref(methods-and-data)), the set of languages represented is smaller than in other chapters. 
 
 We use data from the items on WG forms for our comprehension measure, and data from the items in common between WG and WS forms for our production measure. Table \@ref(tab:aoapred-lang-stats-table) gives an overview of our acquisition data. Each of the datasets were conducted in contexts in which the particular language was the language of the community, e.g., the Mexican Spanish CDI data were collected in several areas of Mexico; longitudinal administrations were excluded.
 

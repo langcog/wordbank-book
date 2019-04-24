@@ -271,7 +271,7 @@ Several observations emerge: Mandarin and Cantonese WS data are very far towards
 
 ## Individual conceptual items
 
-In this section, we isolate individual items from specific domains of interest. Our approach is to use the "universal lemma" mappings (see Chapter \@ref(methods)) to find matching lexical items across languages. The specific domains we consider are time, color, body parts, and logical words. We also investigated spatial prepositions and number words, but do not include them here. Spatial prepositions present a wide variety of mapping issues since lexical items "cut up" space differently across languages [see e.g., @bowerman1996]. Number words are not found on enough CDI forms to have sufficient data for inclusion. 
+In this section, we isolate individual items from specific domains of interest. Our approach is to use the "universal lemma" mappings (see Chapter \@ref(methods-and-data)) to find matching lexical items across languages. The specific domains we consider are time, color, body parts, and logical words. We also investigated spatial prepositions and number words, but do not include them here. Spatial prepositions present a wide variety of mapping issues since lexical items "cut up" space differently across languages [see e.g., @bowerman1996]. Number words are not found on enough CDI forms to have sufficient data for inclusion. 
 
 
 ```{r catsem-uni-base-plot}

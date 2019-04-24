@@ -54,7 +54,7 @@ Next, we investigate the grouping of items into categories (both syntactic and s
 Chapter \@ref(grammar) explores the relationship between vocabulary growth and the growth of grammar. 
 Finally, Chapter \@ref(style) returns to the question of individual variation using tools built up in previous chapters to quantify differences in the style and trajectory of learning across children.
 
-The book ends with two synthesis chapters. Chapter \@ref(conclusion-consistency) synthesizes observations across languages for the preceding chapters to quantify variability and consistency directly across phenomena. And the concluding chapter, Chapter \@ref(conclusion-scale), considers broadly the question of what the process of language acquisition looks like from the birds-eye view afforded by our data. 
+The book ends with three synthetic chapters. Chapter \@ref(conclusion-consistency) synthesizes observations across languages for the preceding chapters to quantify variability and consistency directly across phenomena. Chapter \@ref(conclusion-scale), considers broadly the question of what the process of language acquisition looks like from the birds-eye view afforded by our data. And Chapter \@ref(conclusion-beyond-cdi) considers methodological morals from our work here and the outlook on measuring children's early language beyond the CDI.
 
 Finally, a number of appendices provide supplemental analyses, validating particular analytic practices that we adopt. 
 

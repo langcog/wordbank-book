@@ -2,7 +2,7 @@
 
 Which words do children learn first? In spite of tremendous individual variation in rate of development [see Chapter \@ref(vocabulary); @fenson1994; @hart1995], the first words that children utter are reported to be quite consistent [@tardif2008]. For example, in English, Mandarin, and Cantonese, babies' first 10 words tended to be about important people in their life (_mom_, _dad_), social routines (_hi_, _uh oh_), animals (_dog_, _duck_), and foods (_milk_, _banana_). This chapter attempts to generalize the analysis reported in @tardif1999, asking more broadly whether words tend to be learned in the same order across languages.
 
-One challenge is that the precise words that children learn in different languages are (of course) language-specific. Thus, we really want to know whether the *concepts* that are being talked about are the same --- or at least similar. As detailed in the Chapter \@ref(intro-practical), the items on each language's form are adaptations and not translations: They are intended to capture the spirit of the items on the English form rather to replicate them exactly. So conceptual mappings are approximate, rather than exact. Nonetheless, when these approximate translation equivalents appear on multiple forms we can look at the variability in how quickly they are acquired across languages. Thus, we assume for simplicity that *dog*, *chien*, and *perro* name (roughly) the same concept. 
+One challenge is that the precise words that children learn in different languages are (of course) language-specific. Thus, we really want to know whether the *concepts* that are being talked about are the same -- or at least similar. As detailed in the Chapter \@ref(intro-practical), the items on each language's form are adaptations and not translations: They are intended to capture the spirit of the items on the English form rather to replicate them exactly. So conceptual mappings are approximate, rather than exact. Nonetheless, when these approximate translation equivalents appear on multiple forms we can look at the variability in how quickly they are acquired across languages. Thus, we assume for simplicity that *dog*, *chien*, and *perro* name (roughly) the same concept. 
 
 ```{r items-load_consistency_data, eval=FALSE}
 langs <- get_instruments() %>%
@@ -27,7 +27,7 @@ item_data <- map_dfr(1:nrow(items_nested),
                                       administrations = T))
 ```
 
-To estimate the similarity of each item's trajectory, we use a single measure of its difficulty: age of acquisition (AoA) --- the age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
+To estimate the similarity of each item's trajectory, we use a single measure of its difficulty: age of acquisition (AoA) -- the age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, with production ages of acquisition estimated by stitching across both forms. Consequently, we analyzed only the `r items %>% unnest() %>% distinct(language) %>% nrow()`  languages for which data for both forms was available.
 
 ```{r items-get_aoas, eval = FALSE}
 understand_items <- item_data %>%
@@ -100,7 +100,7 @@ lemma_completeness <- all_aoas %>%
   group_by(measure, uni_lemma) %>%
   summarise(in_langs = sum(!is.na(aoa))) 
 
-cutoffs <- lemma_completeness%>%
+cutoffs <- lemma_completeness %>%
   group_by(measure, in_langs) %>%
   summarise(n = n()) %>%
   arrange(measure, desc(in_langs)) %>%
@@ -112,26 +112,29 @@ cutoff_n <- cutoffs %>%
   filter(measure == "produces", in_langs == IN_LANGS) %>%
   slice(1) %>%
   pull(cum_n)
+
+cutoffs_prod <- cutoffs %>% filter(measure == "produces")
 ```
 
 In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not every word appeared on all forms. Figure \@ref(fig:items-uni-lemma-completeness-figure) shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the `r n_distinct(all_aoas$language)` languages. 
 
-```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = "The proportion of words found on a given number of language's CDI forms. The dashed line shows the cutoff value we chose."}
-ggplot(filter(cutoffs, measure == "produces"),
-       aes(x = in_langs, y = cum_prop)) +
+```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = glue::glue("The proportion of words found on at least each of a number of languages' CDI forms (e.g. all words appear on at least one form, {filter(cutoffs_prod, in_langs == 2)$n} words appear on at least 2 forms, and so on, with {filter(cutoffs_prod, in_langs == max(in_langs))$n} words appearing on all {max(cutoffs_prod$in_langs)} languages' forms). The dotted line shows the cutoff value we chose ({IN_LANGS}).")}
+ggplot(cutoffs_prod, aes(x = in_langs, y = cum_prop)) +
   geom_line() +
-  scale_x_reverse() +
   geom_segment(aes(x = IN_LANGS, xend = IN_LANGS, y = 0,
                    yend = filter(cutoffs,  measure == "produces", 
                                  in_langs == IN_LANGS) %>% pull(cum_prop)),
-               linetype = "dashed") +
-  geom_segment(aes(x = max(in_langs), xend = IN_LANGS, 
+               linetype = .refline, colour = .grey) +
+  geom_segment(aes(x = 1, xend = IN_LANGS, 
                    y = filter(cutoffs,  measure == "produces", 
                                  in_langs == IN_LANGS) %>% pull(cum_prop),
                    yend = filter(cutoffs,  measure == "produces", 
                                  in_langs == IN_LANGS) %>% pull(cum_prop)),
-                   linetype = "dashed") +
-  labs(x = ("Number of forms"), y = "Cumulative proportion of words")
+                   linetype = .refline, colour = .grey) +
+  scale_x_continuous(expand = c(0, 0), breaks = seq(2, 14, 2)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Number of forms", y = "Proportion of words") +
+  theme(plot.margin = margin(t = 10))
 ```
 
 ## The first 10 words
@@ -528,7 +531,7 @@ lev_tests <- lev_cors %>%
 
 We also applied this same analysis to the words on the words on the CDI themselves. For each language, we compute the average normalized @levenshtein1966 distance between the word for each of the `r cutoff_n` common words in our analyses. Levenshtein distance is a measure of the minimum number of insertions, deletions, or substitutions required to transform one string into another. For instance, the distance between the Italian and Norwegian words for dog (_cane_ and _hund_) is `r stringdist::stringdist("cane","hund", method = "lv")`. We computed this measure pairwise for all words, and then divided it by the number of characters in the longest word in order to get the edit distance per character (`r stringdist::stringdist("cane","hund", method = "lv") /nchar("hund")` for _cane_ and _hund_). This measure was even more correlated with pairwise acquisition trajectories as similarity computed using the 40 words identified by @holman2008 for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "produces", lev_type == "char") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(estimate) %>% round(2)`, p `r filter(lev_tests, measure == "understands", lev_type == "char") %>% pull(p.value) %>% printp()`). 
 
-Because this analysis likely overestimates the dissimilarity of languages written in different scripts--as every word receives a normalized Levenshtein distance of 1 in this case --- we replicated this analysis at the phonemic level. We used `eSpeak` to compute phonetic transcripts of each word and repeated the same analysis on distance between words' phonetic units in the International Phonetic Alphabet [IPA; @decker1999]. These correlations between IPA distance and pairwise age of acquisition trajectories were again reliable although slightly attenuated for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(p.value) %>% printp()`). The robustness of these correlations across a variety of methods suggests that in addition to the high degree of general cross-linguistic similarities in the order of acquisition of words, the dissimilarities between them likely likely reflect reflect differences in the target languages being learned. 
+Because this analysis likely overestimates the dissimilarity of languages written in different scripts--as every word receives a normalized Levenshtein distance of 1 in this case -- we replicated this analysis at the phonemic level. We used `eSpeak` to compute phonetic transcripts of each word and repeated the same analysis on distance between words' phonetic units in the International Phonetic Alphabet [IPA; @decker1999]. These correlations between IPA distance and pairwise age of acquisition trajectories were again reliable although slightly attenuated for both production (_r_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "produces", lev_type == "ipa") %>% pull(p.value) %>% printp()`) and comprehension (_r_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(estimate) %>% round(2)`, _p_ = `r filter(lev_tests, measure == "understands", lev_type == "ipa") %>% pull(p.value) %>% printp()`). The robustness of these correlations across a variety of methods suggests that in addition to the high degree of general cross-linguistic similarities in the order of acquisition of words, the dissimilarities between them likely likely reflect reflect differences in the target languages being learned. 
 
 ## Consistency across development
 

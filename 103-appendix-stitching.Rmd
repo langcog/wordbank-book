@@ -49,7 +49,7 @@ ggplot(eng_items,
   theme(legend.position = "top")
 ```
 
-<!-- In contrast, this procedure does not work for full percentile ranks --- presumably because of the differences in -->
+<!-- In contrast, this procedure does not work for full percentile ranks -- presumably because of the differences in -->
 <!-- We can "stitch" across WS and WG forms to get a fuller picture of production across ages. There are several ways to accomplish this. The simplest is to use proportions for each form.  -->
 <!-- This isn't particularly good. -->
 

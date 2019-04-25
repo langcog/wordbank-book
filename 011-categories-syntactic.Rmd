@@ -53,67 +53,98 @@ items <- items %>%
 ```
 
 ```{r catsyn-vocab_comp_fun}
-get_vocab_comp <- function(input_language, input_form) {
-  # print(paste(input_language,input_form))
+get_vocab_data <- function(input_language, input_form) {
+  print(paste(input_language,input_form))
   
-  lang_vocab_items <- filter(items, 
-                             language == input_language, 
-                             form == input_form) %>%
-    filter(lexical_category %in% c("nouns", "predicates", "function_words"))
+  lang_vocab_items <- items %>%
+    filter(language == input_language, form == input_form,
+           lexical_category %in% c("nouns", "predicates", "function_words"))
   
-  lang_vocab_data <- get_instrument_data(language = input_language,
-                                         form = input_form,
-                                         items = lang_vocab_items$item_id, 
-                                         iteminfo = lang_vocab_items) %>%
+  get_instrument_data(language = input_language,
+                      form = input_form,
+                      items = lang_vocab_items$item_id, 
+                      iteminfo = lang_vocab_items) %>%
     mutate(value = ifelse(is.na(value), "", value),
            produces = value == "produces",
            understands = value == "produces" | value == "understands") %>%
     select(-value) %>%
-    gather(measure, value, produces, understands)
+    gather(measure, value, produces, understands) %>%
+    mutate(num_words = nrow(lang_vocab_items),
+           language = input_language, form = input_form) %>%
+    filter(form %in% WGs | measure == "produces")
+}
+
+get_vocab_comp <- function(lang_vocab_data, group) {
+  group <- rlang::enquo(group)
   
-  num_words <- nrow(lang_vocab_items)
-  
+  num_words <- n_distinct(lang_vocab_data$item_id)
   lang_vocab_summary <- lang_vocab_data %>%
-    group_by(data_id, measure, lexical_category) %>%
+    group_by(data_id, measure, !!group) %>%
     summarise(num_true = sum(value),
-              prop = sum(value) / n())
+              total = n(),
+              prop = num_true / total)
   
   lang_vocab_sizes <- lang_vocab_summary %>%
+    group_by(data_id, measure) %>%
     summarise(vocab_num = sum(num_true),
-              vocab = sum(num_true) / num_words)
+              vocab = vocab_num / num_words)
   
   lang_vocab_summary %>%
     left_join(lang_vocab_sizes) %>%
     mutate(prop_vocab = num_true / vocab_num) %>%
-    select(-num_true) %>%
-    mutate(language = input_language, form = input_form)
+    select(-num_true)
+
 }
 ```
 
 ```{r catsyn-vocab_comp, eval=FALSE}
-instruments <- instruments %>%
-  filter(form %in% c(WSs,WGs)) %>%
+instruments_inc <- instruments %>%
+  filter(form %in% c(WSs, WGs)) %>%
   select(language, form) %>%
   distinct()
 
-vocab_comp_data <- map2_df(instruments$language,
-                           instruments$form, get_vocab_comp)
+vocab_data <- instruments_inc %>%
+  mutate(inst_vocab_data = map2(language, form, get_vocab_data))
 
+vocab_comp_category <- vocab_data %>%
+  mutate(vocab_comp = map(inst_vocab_data, ~get_vocab_comp(., lexical_category)))
+vocab_comp_class <- vocab_data %>%
+  mutate(vocab_comp = map(inst_vocab_data, ~get_vocab_comp(., lexical_class)))
+  
 asl <- "American Sign Language"
+asl_form <- "asl_combined"
 asl_forms <- instruments %>% filter(language == asl) %>% pull(form)
-asl_vocab_comp <- map_df(asl_forms, ~get_vocab_comp(asl, .)) %>%
-  mutate(form = "asl_combined")
-WGs <- c(WGs, "asl_combined")
+asl_vocab_data <- map_df(asl_forms, ~get_vocab_data(asl, .)) %>%
+  mutate(form = asl_form) %>%
+  group_by(language, form) %>%
+  nest(.key = "inst_vocab_data")
 
-vocab_comp_data <- vocab_comp_data %>%
-  bind_rows(asl_vocab_comp)
+asl_vocab_comp_category <- asl_vocab_data %>%
+  mutate(vocab_comp = map(inst_vocab_data, ~get_vocab_comp(., lexical_category)))
+asl_vocab_comp_class <- asl_vocab_data %>%
+  mutate(vocab_comp = map(inst_vocab_data, ~get_vocab_comp(., lexical_class)))
+# WGs <- c(WGs, asl_form)
 
+vocab_comp_category <- vocab_comp_category %>% bind_rows(asl_vocab_comp_category)
+vocab_comp_class <- vocab_comp_class %>% bind_rows(asl_vocab_comp_class)
+
+vocab_comp_data <- vocab_comp_category %>%
+  select(-inst_vocab_data) %>%
+  unnest()
+
+class_data <- vocab_comp_class %>%
+  select(-inst_vocab_data) %>%
+  unnest()
+
+# save(vocab_data, file = "data/categories-syntactic/_vocab_data.RData")
 write_feather(vocab_comp_data, "data/categories-syntactic/vocab_comp_data.feather")
+write_feather(class_data, "data/categories-syntactic/class_data.feather")
 ```
 
 
 ```{r catsyn-sample-sizes, results="asis"}
 vocab_comp_data <- read_feather("data/categories-syntactic/vocab_comp_data.feather")
+class_data <- read_feather("data/categories-syntactic/class_data.feather")
 WGs <- c(WGs, "asl_combined")
 
 sample_sizes <- vocab_comp_data %>%
@@ -194,14 +225,16 @@ poly_area <- function(group_data) {
   return((model$solution %*% c(1/4, 1/3, 1/2) - 0.5)[1])
 }
 
-sample_areas <- function(d, nboot = 1000) {
+sample_areas <- function(d, nboot = 1000, group) {
+  
+  group <- rlang::enquo(group)
   
   counter <- 1
   sample_area <- function(d) {
     d_frame <- d %>%
       group_by(language, form, measure) %>%
       sample_frac(replace = TRUE) %>%
-      group_by(language, form, measure, lexical_category) %>%
+      group_by(language, form, measure, !!group) %>%
       do(area = poly_area(.)) %>%
       mutate(area = area[1]) %>%
       rename_(.dots = setNames("area", counter))
@@ -214,18 +247,20 @@ sample_areas <- function(d, nboot = 1000) {
   areas <- replicate(nboot, sample_area(d), simplify = FALSE)
   
   Reduce(left_join, areas) %>%
-    gather(sample, area, -language, -form, -measure, -lexical_category)
+    gather(sample, area, -language, -form, -measure, -!!group)
 }
 ```
 
 ```{r catsyn-areas_compute, eval=FALSE}
-areas <- sample_areas(vocab_comp_data, 1000)
-write_feather(areas,"data/categories-syntactic/vocab_comp_areas.feather")
+areas <- sample_areas(vocab_comp_data, group = lexical_category)
+class_areas <- sample_areas(class_data, group = lexical_class)
+write_feather(areas, "data/categories-syntactic/vocab_comp_areas.feather")
+write_feather(class_areas, "data/categories-syntactic/class_areas.feather")
 ```
-
 
 ```{r catsyn-areas_read}
 areas <- read_feather("data/categories-syntactic/vocab_comp_areas.feather")
+class_areas <- read_feather("data/categories-syntactic/class_areas.feather")
 ```
 
 ```{r catsyn-area_summary}
@@ -242,7 +277,20 @@ area_summary <- areas %>%
                                               "function_words"),
                                    labels = c("Nouns", "Predicates", 
                                               "Function words")))
-      
+
+pred_classes <- items %>%
+  filter(lexical_category == "predicates") %>%
+  pull(lexical_class) %>%
+  unique()
+pred_area_summary <- class_areas %>%
+  filter(lexical_class %in% pred_classes) %>%
+  group_by(language, form, measure, lexical_class) %>%
+  summarise(mean = mean(area),
+            ci_lower = ci_lower(area),
+            ci_upper = ci_upper(area)) %>%
+  ungroup() %>%
+  mutate(language = factor(language),
+         instrument = paste(language, form, sep = .inst_sep))
 ```
 
 The final step in our method is to capture the overall bias in a particular sample by estimating the difference in area between the curve and the diagonal. If the curve is substantially above the diagonal, this difference will be positive (indicating e.g., a positive noun bias). In contrast, if the curve is below the diagonal, the difference will be negative. To capture uncertainty in this area estimate, we conduct a resampling analysis where we randomly resample the population 1000 times with replacement, then recompute the area measurement. Confidence intervals below are based on this resampling procedure. 
@@ -289,16 +337,16 @@ base_plot(WGs, "understands") +
               size = 1, se = FALSE) 
 ```
 
-Comprehension results are shown in Figure \@ref(fig:catsyn-plot-points-wg-comp) Overall, the largest trend that is visible in these plots is the under-representation of function words, with nouns and predicates appearing quite close to one another. For further comparison, we show summaries of curve areas for each language in Figure \@ref(fig:catsyn-plot-areas-wg). 
-
+Comprehension results are shown in Figure \@ref(fig:catsyn-plot-points-wg-comp) Overall, the largest trend that is visible in these plots is the under-representation of function words, with nouns and predicates appearing quite close to one another. For further comparison, we show summaries of curve areas for each language in Figure \@ref(fig:catsyn-plot-areas-wg).
 
 ```{r catsyn-plot-areas-wg, fig.cap="Relative representation in vocabulary compared to chance for nouns and predicates for comprehension data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
-plot_areas_wg <- filter(area_summary, form %in% WGs, measure == "understands") %>%
-         unite(langform, language, form, sep = .inst_sep) %>%
-         mutate(langform = fct_reorder2(langform, mean, lexical_category, 
-                                        .fun = function (x, y) {
-                                          x[y=="Nouns"]}, .desc=FALSE))
-                
+plot_areas_wg <- area_summary %>%
+  filter(form %in% WGs, measure == "understands") %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
+  mutate(langform = fct_reorder2(langform, mean, lexical_category,
+                                 .fun = function(x, y) x[y == "Nouns"],
+                                 .desc = FALSE))
+
 ggplot(filter(plot_areas_wg, lexical_category != "Function words"), 
        aes(x = langform, y = mean, colour = lexical_category)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
@@ -311,7 +359,7 @@ ggplot(filter(plot_areas_wg, lexical_category != "Function words"),
   ylim(-.15, .15)
 
 npcor_wg <- cor.test(plot_areas_wg$mean[plot_areas_wg$lexical_category == "Nouns"],
-                          plot_areas_wg$mean[plot_areas_wg$lexical_category == "Predicates"])
+                     plot_areas_wg$mean[plot_areas_wg$lexical_category == "Predicates"])
 ```
 
 Nouns are over-represented in many -- but not all -- languages. Portuguese, Turkish, Korean, and Slovak, a set of typologically- and culturally-distinct languages, show slight under representation, with BSL and British English showing the largest over-representation of nouns. Predicates are under-represented in some languages and over-represented in others.
@@ -331,16 +379,15 @@ ggplot(area_scatter_data,  aes(x = Nouns_mean, y = Predicates_mean)) +
   geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
   geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
   geom_smooth(method = "lm") + 
-  ggrepel::geom_label_repel(aes(label=langform), force = 4, alpha = .5,
+  ggrepel::geom_label_repel(aes(label = langform), force = 4, alpha = .5,
                             size = 2.5, family = .font) +
   xlab("Noun bias") +
   ylab("Predicate bias") + 
-  xlim(-.05,.15) + 
-  ylim(-.2,.1)
+  xlim(-.05, .15) + 
+  ylim(-.2, .1)
 ```
 
-As seen in Figure \@ref(fig:catsyn-prod-vs-comp-vocab-comp-wg), there is a strong anti-correlation between noun and predicate bias measures (_r_(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure). 
-
+As seen in Figure \@ref(fig:catsyn-prod-vs-comp-vocab-comp-wg), there is a strong anti-correlation between noun and predicate bias measures (_r_(`r npcor_wg$parameter`) = `r signif(npcor_wg$estimate, 2)`). (This correlation should be interpreted with caution as nouns + predicates + function words are constrained to sum to 1, so some degree of correlation is built into the measure).
 
 ```{r catsyn-function-words-comp, fig.cap="Relative representation in vocabulary compared to chance for function words for comprehension data in each language (line ranges indicate bootstrapped 95 percent confidence intervals)."}
 ggplot(filter(plot_areas_wg, lexical_category == "Function words"), 
@@ -375,8 +422,8 @@ Turning to the language summaries (Figure \@ref(fig:catsyn-plot-areas-ws)), we s
 plot_areas_ws <- filter(area_summary, form %in% WSs, measure == "produces") %>%
          unite(langform, language, form, sep = .inst_sep) %>%
          mutate(langform = fct_reorder2(langform, mean, lexical_category, 
-                                        .fun = function(x, y) {
-                                          x[y=="Nouns"]}, .desc=FALSE))
+                                        .fun = function(x, y) x[y == "Nouns"],
+                                        .desc = FALSE))
                 
 ggplot(filter(plot_areas_ws, lexical_category != "Function words"),
        aes(x = langform, y = mean, colour = lexical_category)) +
@@ -390,7 +437,7 @@ ggplot(filter(plot_areas_ws, lexical_category != "Function words"),
   ylim(-.15, .15)
 
 npcor <- cor.test(plot_areas_ws$mean[plot_areas_ws$lexical_category == "Nouns"],
-                          plot_areas_ws$mean[plot_areas_ws$lexical_category == "Predicates"])
+                  plot_areas_ws$mean[plot_areas_ws$lexical_category == "Predicates"])
 ```
 
 Noun and predicate representation is again anti-correlated (Figure \@ref(fig:catsyn-prod-vs-comp-vocab-prod)), at _r_(`r npcor$parameter`) = `r signif(npcor$estimate,2)`, though this correlation is somewhat weaker than for comprehension. 
@@ -411,7 +458,7 @@ ggplot(area_scatter_data,
   geom_pointrange(aes(ymin = Predicates_ci_lower, ymax = Predicates_ci_upper)) + 
   geom_errorbarh(aes(xmin = Nouns_ci_lower, xmax = Nouns_ci_upper)) +
   geom_smooth(method = "lm") + 
-  ggrepel::geom_label_repel(aes(label=langform), force = 4, alpha = .5,
+  ggrepel::geom_label_repel(aes(label = langform), force = 4, alpha = .5,
                             family = .font, size = 2.5) +
   xlab("Noun bias") +
   ylab("Predicate bias")
@@ -425,13 +472,40 @@ ggplot(filter(plot_areas_ws, lexical_category == "Function words"),
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   facet_wrap(~lexical_category ) +
   geom_hline(yintercept = 0, linetype = .refline, colour = .grey) + 
-  # .scale_colour_discrete(name = "", guide = FALSE) +
   scale_colour_manual(values = .pal()(3)[3], guide = FALSE) +
   coord_flip() + 
   ylab("Relative representation (production)") +
   xlab("") + 
   ylim(-.5, .2)
 ```
+
+### Predicates
+
+As an auxiliary analysis to those above, we break down the predicates category further and examine the bias estimates in production for verbs and adjectives, as shown in Figure\ \@ref(fig:catsyn-plot-areas-verbs) (a handful of languages also have adverbs as part of their predicate set, which we leave off here).
+
+```{r catsyn-plot-areas-verbs}
+plot_pred_areas <- pred_area_summary %>%
+  filter(form %in% WSs, measure == "produces",
+         lexical_class %in% c("verbs", "adjectives")) %>%
+  unite(langform, language, form, sep = .inst_sep) %>%
+  mutate(langform = fct_reorder2(langform, mean, lexical_class,
+                                 .fun = function(x, y) x[y == "verbs"],
+                                 .desc = FALSE),
+         lexical_class = lexical_class %>%
+           fct_recode("Verbs" = "verbs", "Adjectives" = "adjectives") %>%
+           fct_relevel("Verbs", "Adjectives"))
+
+ggplot(plot_pred_areas, aes(x = mean, y = langform)) +
+  facet_wrap(~lexical_class) +
+  ggstance::geom_pointrangeh(aes(xmin = ci_lower, xmax = ci_upper),
+                             colour = .pal()(3)[2]) +
+  geom_vline(xintercept = 0, linetype = .refline, colour = .grey) +
+  xlab("Relative representation (production)") +
+  ylab("") +
+  xlim(-.15, .15)
+```
+
+Much like predicates as a whole, verbs are overrepresented in some languages and underrepresented in others. The largest verb biases can be seen in Mandarin, Cantonese, and Kiswahili. Adjectives tend to be underrepresentated in almost all languages, with Mandarin being the exception.
 
 ### Reliability of bias estimates
 
@@ -694,12 +768,12 @@ age_areas <- vocab_comp_data %>%
 
 age_areas$langform = fct_reorder2(as.factor(age_areas$langform), age_areas$area, 
                                   age_areas$lexical_category, 
-                                        .fun = function(x, y) {
-                                          mean(x[y=="predicates"])}, .desc=FALSE)
-
+                                  .fun = function(x, y) mean(x[y == "predicates"]),
+                                  .desc = FALSE)
 
 ggplot(age_areas, aes(x = langform, y = area, col = age_group)) + 
-  geom_point() + 
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = .refline, colour = .grey) +
   facet_wrap(~lexical_category) +
   coord_flip() +
   .scale_colour_discrete() +

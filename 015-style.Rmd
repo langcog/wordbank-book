@@ -179,8 +179,14 @@ For grammatical complexity scores (Figure \@ref(fig:style-grammar-correlations-c
 ```{r style-grammar-correlations-complexity, fig.cap="Effect of vocabulary-residualized noun bias on complexity score in each language.", fig.width=5.5, fig.height=3.5}
 grammar_coefs <- grammar_summary %>%
   group_by(language, form) %>%
-  do(broom::tidy(glm(cbind(positive, negative) ~ resid_noun_prop, 
-                     family = "binomial", data = .)))  %>%
+  nest() %>%
+  mutate(model = map(data, 
+                     possibly(function (x) {
+                       broom::tidy(glm(cbind(positive, negative) ~ resid_noun_prop, 
+                                       family = "binomial", data = x))}, 
+                       otherwise = data_frame())))  %>%
+  select(-data) %>%
+  unnest() %>%
   filter(term %in% c("resid_noun_prop")) %>%
   mutate(langform = paste(language, form, sep = .inst_sep)) 
 
@@ -200,8 +206,15 @@ We next repeat the analysis of complexity while controlling for age and total pr
 grammar_age_coefs <- grammar_summary %>%
   group_by(language, form) %>%
   mutate(age = scale(age)) %>%
-  do(broom::tidy(glm(cbind(positive, negative) ~  age + production + resid_noun_prop, 
-                    family = "binomial", data = .))) %>%
+  nest() %>%
+  mutate(model = map(data, 
+                     possibly(function (x) {
+                       broom::tidy(glm(cbind(positive, negative) ~ 
+                                         age + production + resid_noun_prop, 
+                                       family = "binomial", data = x))}, 
+                       otherwise = data_frame())))  %>%
+  select(-data) %>%
+  unnest() %>%
   filter(term %in% c("age", "production", "resid_noun_prop")) %>%
   mutate(term = factor(term,
                        labels = c("Age", "Production", "Residual Proportion Nouns"),

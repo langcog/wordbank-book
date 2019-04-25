@@ -1,5 +1,5 @@
 ```{r aoapred-setup} 
-pander::panderOptions("round", 2)
+# pander::panderOptions("round", 2)
 
 data_path <- "data/items-prediction"
 data_files <- list.files(data_path, pattern = "*.RData", full.names = TRUE,

@@ -244,23 +244,34 @@ d_ws_summary <- d_ws %>%
 
 A first question that we can ask using a fitted IRT model is how well individual items relate to children's overall latent abilities. Practically speaking, in these analyses, we use the `mirt` package [@chalmers2012;@chalmers2016] to estimate the parameters of a four-parameter IRT model. As described above, the two-parameter model includes difficulty and discrimination parameters for each item. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds. 
 
-
-
 ```{r psycho-item-individual-ws, fig.cap="Item characteristic curves for a set of individual items from the English WS sample."}
 
-itemplot(
-ggplot(coefs_4pl,  
-       aes(x = a1, y = -d)) + 
-  geom_point(alpha = .3) + 
-  ggrepel::geom_text_repel(data = filter(coefs_4pl, 
-                                abs(a1) > 3.3 | abs(d) > 4), 
-                  aes(label = definition), size = 3, family = .font) + 
-  xlab("Discrimination") + 
-  ylab("Difficulty")
+thetas <- seq(-6,6,.1)
+irt4pl <- function (a, d, g, u, theta = seq(-6,6,.1)) {
+  p = g + (u - g) * boot::inv.logit(a * (theta - d))
+  return(p)
+}
+
+examples <- c("table","mommy*","trash","yesterday")
+iccs <- coefs_4pl %>%
+  filter(definition %in% examples) %>%
+  split(.$definition) %>%
+  map_df(function (d) {
+    return(data_frame(definition = d$definition,
+                      theta = thetas, 
+                      p = irt4pl(d$a1, d$d, d$g, d$u, thetas)))
+  })
+
+ggplot(iccs,  
+       aes(x = theta, y = p)) + 
+  geom_line() + 
+  facet_wrap(~definition) + 
+  xlab("Ability") + 
+  ylab("Probability of production")
 ```
 
 
-First, we examine some individual item curves. 
+First, we examine some individual item curves. Figure \@ref(fig:psycho-item-individual-ws) shows four representative 4-parameter item characteristic curves. Each plots the probability of production by a range of latent ability scores. *Mommy* is produced by children at all abilities and is relatively uninformative about ability. In contrast, *table* and *trash* are both of moderate difficulty, but *table* is more informative because it has a steeper slope and a higher asymptote. Some children apparently do not say *trash* even if they say many other words (as it has a low upper asymptote, around .8); perhaps they say *garbage* instead. Finally, *yesterday* is more difficult overall and has a quite low upper asymptote -- in our sample many high vocabulary children still did not produce this word. Generally, items with steeper slopes and higher upper asymptotes are considered more diagnostic of ability and hence more desirable. 
 
 
 ```{r psycho-items-ws, fig.cap="Words (points), plotted by their difficulty and discrimination parameters, as recovered by the 4-parameter IRT model (see text). Outliers are labeled."}
@@ -276,7 +287,7 @@ ggplot(coefs_4pl,
 
 <!-- Our goal in this first analysis is simply to examine parameter estimates across individuals and items.  -->
 
-Figure \@ref(fig:psycho-items-ws) shows item discrimination and difficulty across the full set of items, with outlying items labeled. Difficulty refers to the latent ability necessary for a child to produce an item, on average. Discrimination refers to how well an item discriminates between children of lower and higher ability (as judged by their performance on other items). For example, the word *table* is spoken by just about half of the children in the sample. Hence, asking whether a child says *table* is a good way to guess whether they are in the top or bottom half of the distribution.
+We now examine these properties across the whole instrument. Figure \@ref(fig:psycho-items-ws) shows item discrimination and difficulty across the full set of items, with outlying items labeled. Difficulty refers to the latent ability necessary for a child to produce an item, on average. Discrimination refers to how well an item discriminates between children of lower and higher ability (as judged by their performance on other items). For example, the word *table* is spoken by just about half of the children in the sample. Hence, asking whether a child says *table* is a good way to guess whether they are in the top or bottom half of the distribution.
 
 In contrast, visual inspection shows a long tail of items with limited discrimination and low difficulty (e.g., *mommy*, *ball*, *bye*, etc.). These are clearly those items that are produced by nearly all of the children in the sample -- they do not discriminate because they are passed by all children in the sample. If the only goal of the instrument were discrimination of different ability levels, they could likely be removed. But, as discussed above, these items tend to be included for completeness (and so the WS instrument is a strict superset of the WG instrument, which is used with younger children). 
 

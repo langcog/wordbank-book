@@ -481,9 +481,9 @@ ggplot(filter(plot_areas_ws, lexical_category == "Function words"),
 
 ### Predicates
 
-As an auxiliary analysis to those above, we break down the predicates category further and examine the bias estimates in production for verbs and adjectives, as shown in Figure\ \@ref(fig:catsyn-plot-areas-verbs) (a handful of languages also have adverbs as part of their predicate set, which we leave off here).
+As an auxiliary analysis to those above, we break down the predicates category further and examine the bias estimates in production for verbs and adjectives, as shown in Figure\ \@ref(fig:catsyn-plot-areas-preds) (a handful of languages also have adverbs as part of their predicate set, which we leave off here).
 
-```{r catsyn-plot-areas-verbs}
+```{r catsyn-plot-areas-preds, fig.cap="TODO"}
 plot_pred_areas <- pred_area_summary %>%
   filter(form %in% WSs, measure == "produces",
          lexical_class %in% c("verbs", "adjectives")) %>%

@@ -20,10 +20,11 @@ bookdown::gitbook:
       all: no
     fontsettings:
       size: 1
-
-#bookdown::pdf_book:
-#  includes:
-#    in_header: preamble.tex
-#  latex_engine: pdflatex
-#  citation_package: natbib
-#  keep_tex: yes
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: lualatex
+  citation_package: natbib
+  keep_tex: yes
+  base_format: mitpress::mitpress_linguistics
+  dev: "png"

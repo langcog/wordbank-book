@@ -20,3 +20,7 @@ data/*/_*
 *.fot
 *.cb
 *.cb2
+*.bbl
+*.blg
+*.tex
+*.pdf

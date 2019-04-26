@@ -18,7 +18,8 @@ opts_chunk$set(
   cache.lazy = FALSE,
   fig.align = "center",
   fig.show = "hold",
-  dev = "png"
+  dev = "png",
+  out.width = "\\linewidth"
 )
 
 .font <- "Source Sans Pro"

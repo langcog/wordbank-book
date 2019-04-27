@@ -329,9 +329,9 @@ update_language <- function(lang) {
 
 There are a number of complementary methods to estimate individual item effects. In Chapter \@ref(demographics), we explored a simple, non-parametric approach to estimating demographic effects across groups. Here we are interested in estimating these effects for individual items, and thus data are sparser for each individual item. Thus, it is more effective to use a multi-level, model-based analysis in which demographic effects are estimated simultaneously at the level of all items and specifically for individual items. 
 
-In particular, we use a mixed-effects logistic regression to predict how many children produce/understand items from their age and their level for a given demographic variable, with a random effect for item. A model of this type is fit separately to the data for each language and demographic measure. For example, the model for birth order would be specified as:
+In particular, we use a mixed-effects logistic regression to predict how many children produce/understand items from their age and their level for a given demographic variable, with random effects for item. A model of this type is fit separately to the data for each language and demographic measure. For example, the model for birth order would be specified as:
 ```
-cbind(num_true, num_false) ~ (age + birth_order | item) + age + birth_order
+prop ~ (age + birth_order | item) + age + birth_order
 ```
 
 For each demographic variable, we specify the contrasts such that their coefficient compares each level of the variable to the previous level. For example, the coefficients for birth order reflect the overall difference between second-born children as compared to first-born and the overall difference between third- (and later-) born as compared to second-born. The items' random slopes for each demographic indicate for each individual item, the contribution to those same differences over the main effect.
@@ -438,6 +438,28 @@ plot_demo_ranef <- function(plot_demo, plot_measure) {
     theme(legend.position = "top") +
     labs(x = "Coefficient estimate", y = "Number of words")
 }
+
+top <- 10
+tops <- demo_ranef_coded %>%
+  select(language, measure, demo, definition, term, estimate) %>%
+  mutate(neg_estimate = -estimate) %>%
+  rename(positive = estimate, negative = neg_estimate) %>%
+  gather(direction, estimate, positive, negative) %>%
+  group_by(language, measure, demo, term, direction) %>%
+  top_n(top, estimate) %>%
+  arrange(desc(estimate)) %>%
+  mutate(rank = 1:n(),
+         definition = str_remove(definition, " \\(.*\\)$"))
+
+top_table <- function(meas, dem, dir, bias) {
+  tops %>%
+    ungroup() %>%
+    filter(measure == meas, demo == dem, direction == dir) %>%
+    select(rank, language, definition) %>%
+    spread(language, definition) %>%
+    select(-rank) %>%
+    kable(caption = glue::glue("Top {top} most {bias}-biased words in each language."))
+}
 ```
 
 
@@ -463,16 +485,9 @@ As shown in Chapter \@ref(demographics), there is a highly consistent advantage 
 plot_demo_ranef("sex", "understands")
 ```
 
-```{r itemsdemo-sex-table-comp, results="asis"}
-cat(dt_caption(glue::glue("Sex item random effects with magnitude at least {tab_thres} for comprehension data in each language.")))
-demo_ranef %>%
-  filter(!is.na(sexMale), 
-         measure == "understands", 
-         abs(sexMale) > tab_thres) %>%
-  mutate(male_advantage = signif(sexMale, 2)) %>%
-  select(language, item = definition, male_advantage) %>%
-  arrange(language, desc(male_advantage)) %>%
-  dt()
+```{r itemsdemo-sex-table-comp}
+top_table("understands", "sex", "positive", "male")
+top_table("understands", "sex", "negative", "female")
 ```
 
 Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Table \@ref(tab:itemsdemo-sex-table-comp) gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
@@ -481,16 +496,9 @@ Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for
 plot_demo_ranef("sex", "produces")
 ```
 
-```{r itemsdemo-sex-table-prod, results="asis"}
-cat(dt_caption(glue::glue("Sex-based item random effects with magnitude at least {tab_thres} for production data in each language.")))
-demo_ranef %>%
-  filter(!is.na(sexMale), 
-         measure == "produces", 
-         abs(sexMale) > tab_thres) %>%
-  mutate(male_advantage = signif(sexMale, 2)) %>%
-  select(language, item = definition, male_advantage) %>%
-  arrange(language, desc(male_advantage)) %>%
-  dt()
+```{r itemsdemo-sex-table-prod}
+top_table("produces", "sex", "positive", "male")
+top_table("produces", "sex", "negative", "female")
 ```
 
 ```{r itemsdemo-sex_summary}

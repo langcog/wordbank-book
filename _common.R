@@ -11,6 +11,7 @@ options(DT.options = list(searching = FALSE,
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
+  error = FALSE,
   comment = "#>",
   collapse = TRUE,
   cache = TRUE,
@@ -101,3 +102,5 @@ dt <- function(data, cnames = label_caps(colnames(data)), ...) {
     ...
   )
 }
+
+kable <- function(...) knitr::kable(..., booktabs = TRUE, linesep = "")

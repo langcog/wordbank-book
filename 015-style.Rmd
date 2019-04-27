@@ -262,13 +262,12 @@ filter(vc_pred, form %in% WSs,
                                                  "Sixth","Seventh","Eighth"))) %>%
   ggplot(aes(x = age, y = noun_prop, col = birth_order, group = birth_order)) + 
   geom_point(alpha = .05) + 
-  geom_smooth() + 
+  geom_smooth(se = FALSE) + 
   facet_wrap(~language) + 
   xlab("Age (months)") + 
   ylab("Proportion nouns") + 
   .scale_colour_discrete(name = "Birth Order") + 
   theme(legend.position = "bottom")
-
 ```
 
 We first examined uncorrected vocabulary composition by birth order. Figure \@ref(fig:style-sibs-vocab-comp) shows this analysis. There is a trend for young children (15--20 months) to show slightly "nounier" vocabularies -- consistent with @nelson1973's observation -- but this trend is very small and not observed in all languages. 
@@ -290,7 +289,7 @@ filter(resid_vc_pred, form %in% WSs,
                                                  "Sixth","Seventh","Eighth"))) %>%
   ggplot(aes(x = age, y = resid_noun_prop, col = birth_order, group = birth_order)) + 
   geom_point(alpha = .05) + 
-  geom_smooth() + 
+  geom_smooth(se = FALSE) + 
   facet_wrap(~language) + 
   xlab("Age (months)") + 
   ylab("Residualized noun proportion") + 

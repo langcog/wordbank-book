@@ -149,26 +149,28 @@ top10 <- all_aoas %>%
   slice(1:10) %>%
   select(-aoa, -num_item_id, -in_langs) %>%
   mutate(order = 1:n()) %>%
-  spread(language, uni_lemma) 
+  spread(language, uni_lemma)
 ```
 
-```{r items-top10-production, results="asis"}
-cat(dt_caption("The 10 earliest words that children produce in each language."))
-top10 %>% 
+```{r items-top10-production}
+# row_langs <- 5
+top10 %>%
   ungroup() %>%
   filter(measure == "produces") %>%
   select(-measure, -order) %>%
-  dt(options = list(scrollX = "400px", dom = "t"))
+#   mutate(row = floor((as.numeric(as_factor(language)) - 1) / row_langs) + 1) %>%
+#   split(.$row) %>%
+#   map(~.x %>% spread(language, uni_lemma) %>% select(-measure, -order, -row) %>%
+#         kable() %>% print())
+  kable(caption = "The 10 earliest words that children produce in each language.")
 ```
 
-```{r items-top10-comprehension, results="asis"}
-
-cat(dt_caption("The 10 earliest words that children comprehend in each language."))
-top10 %>% 
+```{r items-top10-comprehension}
+top10 %>%
   ungroup() %>%
   filter(measure == "understands") %>%
   select(-measure, -order) %>%
-  dt(options = list(scrollX = "400px", dom = "t"))
+  kable(caption = "The 10 earliest words that children comprehend in each language.")
 ```
 
 Unfortunately, we cannot determine if the greater consistency found in early production is a real regularity about children's lexical development, or is instead a measurement artifact arising from the greater difficulty of reporting on a child's comprehension (see Chapter \@ref(psychometrics)).
@@ -206,7 +208,7 @@ ggplot(wide_means, aes(x = produces, y = understands, label = uni_lemma)) +
 ```
 
 
-Despite these differences between comprehension and production, words that are reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure below shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages (Figure \@ref(fig:items-understands-and-produces-plots)). The correlation between the two measures was quite high: _r_ = `r round(measure_correlation$estimate, 2)` (_p_ `r printp(measure_correlation$p.value)`). Taken together, these analyses suggest that the rate at which the words on the CDI, and by inference the processes that underpin them, are highly similar across languages.
+Despite these differences between comprehension and production, words that are reported to be acquired early in one are also generally reported to be acquired early in the other. The Figure \@ref(fig:items-understands-and-produces-plots) shows the relationship between the mean age of acquisition in production and the mean age of acquisition of the each of these `r cutoff_n` words across the `r n_distinct(all_aoas$language)` languages. The correlation between the two measures was quite high: _r_ = `r round(measure_correlation$estimate, 2)` (_p_ `r printp(measure_correlation$p.value)`). Taken together, these analyses suggest that the rate at which the words on the CDI, and by inference the processes that underpin them, are highly similar across languages.
 
 The source of this similarity is hard to pin down. One possibility is that the difficulty of learning a word is determined predominantly by the complexity of the concept denoted by that word, and thus that variability in linguistic (e.g., phonological and syntactic complexity) and cultural (e.g., styles of parental interaction with children) features play a relatively small role in determining the difficulty of learning a word [@gentner2001]. Alternatively, the primary driver of difficulty could be linguistic, but the dimensions of linguistic variability could be orthogonal to the difficulty of learning. For instance, verbs may be more difficult than nouns because they are relational, and thus learning nouns makes learning verbs relatively easier than learning verbs makes learning nouns [@gleitman1990]. In this case, the linguistically relevant dimensions would be relatively invariant across languages [@snedeker2007]. (Finally, because the words on the CDI are not a random sample of words in each language, it could be that generalization from these analyses overestimates the degree of cross-linguistic similarity.) 
 

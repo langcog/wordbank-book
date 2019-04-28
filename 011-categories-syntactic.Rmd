@@ -1,11 +1,9 @@
----
-output:
-  word_document: default
-  html_document: default
----
-# Vocabulary Composition: Syntactic Categories^[An earlier version of this work was reported to the Boston University Conference on Language Development in 2015 by Braginsky, Marchman, Yurovsky, & Frank.] {#categories-syntactic}
+# Vocabulary Composition: Syntactic Categories {#categories-syntactic}
 
-This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we quantify the degree of bias for or against verbs and closed-class words across many different languages. This chapter deals primarily with the aggregate trends across the population, but in Chapter \@ref(style), we consider variation of this sort within individuals. 
+Note:
+  ~ *An earlier version of this work was presented at the Boston University Conference on Language Development in 2015.*
+
+This chapter focuses on splitting vocabulary data into syntactic categories and analyzing consistency and variability across languages in the acquisition of these. We quantify the “noun bias” across languages. In addition, we quantify the degree of bias for or against verbs and closed-class words across many different languages. This chapter deals primarily with the aggregate trends across the population, but in Chapter \@ref(style), we consider variation of this sort within individuals.
 
 ## Introduction
 
@@ -21,7 +19,7 @@ include_graphics("images/bates1994.png")
 
 A different way to capture these same trends is shown in \@ref(fig:catsyn-prop) (also reprinted from @bates1994). Here, each of the categories of words is plotted as a function of the opportunities on the checklist, again as a function of total vocabulary size. Shown in this way, the curves reflect when in development children are reported to produce half of the words in each of the categories, as represented by the solid horizontal line.  For example, it is easy to see that 50 % of the nouns have been checked (on average) when total vocabulary is between 200 to 300 words, whereas, 50% of the predicates are reported (on average) when overall vocabulary size falls between 300 and 450 words.  Finally, closed-class opportunities do not reach the 50% mark until total vocabulary falls between 500 and 600 words.
 
-```{r catsyn-prop, fig.cap="Figure 3 from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary, using proportions of total opportunities in each category. Horizontal line represents the point at which 50% of the items are chosen on average for each category."}
+```{r catsyn-prop, fig.cap="Figure 3 from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary, using proportions of total opportunities in each category. Horizontal line represents the point at which 50\\% of the items are chosen on average for each category."}
 include_graphics("images/bates1994.png")
 ```
 

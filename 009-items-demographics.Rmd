@@ -1,4 +1,7 @@
-# Demographic Variation in Individual Words^[An earlier version of the gender analyses below was presented to the Boston University Conference on Language Development in 2016] {#items-demographics}
+# Demographic Variation in Individual Words {#items-demographics}
+
+Note:
+  ~ *The analyses below were presented at the 2019 Biennial Meeting of the Society for Research in Child Development; an earlier version of the gender analyses was presented at the Boston University Conference on Language Development in 2016.*
 
 In Chapter \@ref(demographics), we documented demographic differences in total vocabulary size, that is, how many different words can a child comprehend or produce? But where do these differences come from? Concretely, if girls say more words than boys, *which words* do they say? Is it the case that they simply more likely to be producing each word with some probability, or are there individual words that are more likely to be produced? Or, are both true? In this chapter, we consider the possibility that individual words carry one or more demographic signals. We assess which words are learned differentially earlier or later by girls vs. boys, by first-born vs. later-born children, and by children with different levels of maternal education. 
 

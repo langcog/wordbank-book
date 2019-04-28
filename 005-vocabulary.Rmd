@@ -569,7 +569,7 @@ p100 %>%
   group_by(response) %>%
   summarise(`25th` = min(age[prob >= .25]),
             `75th` = min(age[prob >= .75]), 
-            `Range (months)` = `75th percentile` - `25th percentile`, 
+            `Range (months)` = `75th` - `25th`, 
             `Range (prop)` = `Range (months)` / min(age[prob >= .5])) %>%
   arrange(`Range (months)`) %>%
   rename(Response = response) %>%

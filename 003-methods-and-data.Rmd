@@ -1,4 +1,7 @@
-# Methods and Data^[Some material in this chapter is adapted from @frank2016.] {#methods-and-data}
+# Methods and Data {#methods-and-data}
+
+Note:
+  ~ *Some material in this chapter is adapted from @frank2016.*
 
 We begin by introducing the structure of our dataset and the database that contains it. In the second section, we give some descriptive information on the datasets included in the database. 
 

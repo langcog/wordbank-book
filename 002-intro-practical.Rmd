@@ -1,5 +1,7 @@
-# Practical Foundations^[Some material in this chapter is adapted from @frank2016 and @marchman2017.] {#intro-practical}
+# Practical Foundations {#intro-practical}
 
+Note:
+  ~ *Some material in this chapter is adapted from @frank2016 and @marchman2017.*
 
 Almost uniquely in cognitive development, early language learning offers an opportunity to study both consistency and variability in a single phenomenon. Often researchers interested in consistency have measured theoretically-important, carefully-chosen phenomena using small convenience samples that suffice to show a proof-of-concept but do not provide information about variability. In contrast, work on variability between individuals has often focused on larger samples with more reliable tasks, that -- perhaps as a consequence of their reliability -- are less tightly linked to a particular theoretical construct of interest. And these constructs may depart from the ecological task that is of principal interest [@cronbach1955]. 
 

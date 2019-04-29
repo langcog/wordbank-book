@@ -20,6 +20,7 @@ opts_chunk$set(
   fig.align = "center",
   fig.show = "hold",
   dev = "png",
+  dpi = 300,
   out.width = "\\linewidth"
 )
 

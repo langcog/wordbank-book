@@ -13,7 +13,7 @@ lang_datasets <- datasets %>%
 
 ```{r appdata-print, cache=FALSE, results="asis"}
 map2(lang_datasets$instrument_language, lang_datasets$data, function(lang, df) {
-  c(glue::glue("\n\n### [lang] {-}\n\n", .open = "[", .close = "]"),
+  c(glue::glue("\n\n#### [lang] {-}\n\n", .open = "[", .close = "]"),
     pmap(
       df %>% select(instrument_form, contributor, citation),
       function(instrument_form, contributor, citation) {

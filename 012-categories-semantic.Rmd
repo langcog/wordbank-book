@@ -362,7 +362,8 @@ body_words <- read_feather("data/categories-semantic/body_words.feather")
 plot_unis(body_words)
 ```
 
-Words for Body Parts (Figure \@ref(fig:catsem-body-words)) are produced very early by most children, and variance is quite low across languages (with the exception of a few terms in Cantonese and Cypriot Greek). One interesting pattern that is visible in these data is the ordering of *hand* and *foot* before *leg* and *arm*, perhaps due to the fact that these particular body parts are more central to the activities in which young children engage.
+Words for Body Parts (Figure \@ref(fig:catsem-body-words)) are produced very early by most children, and variance is quite low across languages (with the exception of a few terms in Cantonese and Cypriot Greek). One interesting pattern that is visible in these data is the ordering of *hand* and *foot* before *leg* and *arm*. Interestingly, Cantonese is probably variant here because *hand* and *leg* are monomorphemic (and written with single characters) while *foot* and *arm* in Cantonese are morphological compounds. 
+
 
 ### Logic
 

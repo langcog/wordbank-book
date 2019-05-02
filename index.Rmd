@@ -80,3 +80,5 @@ Major thanks are also due to the MacArthur-Bates CDI Advisory Board, especially 
 Thanks to Danielle Kellier for substantial work importing data and maintaining the Wordbank website, as well as updating the universal lemma mappings. Initial programming work was done by Ranjay Krishna, and some database imports were performed by Elise Sugarman.  
 
 Thanks to NSF Award #1528526, "Wordbank: An Open Repository for Developmental Vocabulary Data" for financial support of the Wordbank project as well as to the Stanford Psychology Department for a small seed funding award that supported the initial development of the site. 
+
+This book benefited from thoughtful comments by Philip Dale and Eve Clark, as well as comments on Chapter 11 by Dedre Gentner.  

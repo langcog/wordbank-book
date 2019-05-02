@@ -4,8 +4,7 @@ Throughout this manuscript we have attempted to gain the broadest possible under
 
 ## Limitations of the CDI
 
-the CDI has limitations that we've discussed - and it's also overkill for some research
-we think that "new journaling" - e.g. wordful, speechome, seedlings - has a lot of potential
+the CDI has limitations that we've discussed - and it's also overkill for some research we think that "new journaling" - e.g. wordful, speechome, seedlings - has a lot of potential
 there's a missing role for in-the-moment interaction (clark), online interpretation (fernald & marchman), and for more longitudinal tracking
 but the promise of "bigger data" psychology is bigger than the CDI - and the approach to consistency and variability is more general as well
 

@@ -240,14 +240,14 @@ In summary, differences between languages in the sheer number of words reported 
 
 ## Variability between individuals
 
-```{r vocab-production_ws}
+```{r vocab-production_ws, results='hide'}
 ws_prod_data <- vocab_data %>%
   filter(form %in% WSs) %>%
   mutate(mean = production / n)
 
 ws_prod_models <- ws_prod_data %>%
   split(.$language) %>%
-  map(fit_gcrq) 
+  map(fit_gcrq)
 
 ws_prod_preds <- ws_prod_data %>%
   group_by(language, age) %>%
@@ -388,7 +388,7 @@ ggplot(madm_summary_prod, aes(y = language, x = madm_mean, col = form)) +
                              position = ggstance::position_dodgev(height = .2)) + 
   xlim(0,1.5) + 
   # coord_flip() + 
-  ylab("Language") + 
+  ylab("") + 
   xlab("MADM (production 12-24 months)") +
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
@@ -429,7 +429,7 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   geom_pointrange(aes(ymin = madm_ci_lower, ymax = madm_ci_upper)) + 
   ylim(0,1.5) + 
   coord_flip() + 
-  xlab("Language") + 
+  xlab("") + 
   ylab("MADM (comprehension)") 
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
@@ -564,18 +564,16 @@ p100 <- vocab_data %>%
 #   ylab("Probability") + xlab("Age (months)")
 ```
 
-```{r vocab-walking-comparison-2, results="asis"}
-cat(dt_caption("Comparison of language milestones with walking, in terms of month at which a percentile ranking is achieved."))
+```{r vocab-walking-comparison-2}
 p100 %>%
   group_by(response) %>%
-  summarise(`25th percentile` = min(age[prob >= .25]),
-            `75th percentile` = min(age[prob >= .75]), 
-            `Range (months)` = `75th percentile` - `25th percentile`, 
-            `Range (proportion)` = `Range (months)` / min(age[prob >=.5])) %>%
+  summarise(`25th` = min(age[prob >= .25]),
+            `75th` = min(age[prob >= .75]), 
+            `Range (months)` = `75th` - `25th`, 
+            `Range (prop)` = `Range (months)` / min(age[prob >= .5])) %>%
   arrange(`Range (months)`) %>%
   rename(Response = response) %>%
-  dt(options = list(dom = "t")) %>%
-  DT::formatRound(columns = "Range (proportion)", digits = 2)
+  kable(caption = "Comparison of language milestones with walking, in terms of month at which a percentile ranking is achieved.", digits = 2)
 ```
 
 Table \@ref(tab:vocab-walking-comparison-2) shows the 25th and 75th percentiles for walking and several language milestone behaviors. The spread of achieving walking (defined as taking a step independently) is quite tight with a mean of 12.9 months and a spread of only a month between 25th and 75th percentile. Very early language comprehension and production are relatively similar with 2 and 3 month spreads. In contrast, production and comprehension at a higher level has quite a large spread in comparison to walking (even as a percentage of age). 

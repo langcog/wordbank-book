@@ -11,6 +11,7 @@ options(DT.options = list(searching = FALSE,
 opts_chunk$set(
   message = FALSE,
   warning = FALSE,
+  error = FALSE,
   comment = "#>",
   collapse = TRUE,
   cache = TRUE,
@@ -18,7 +19,9 @@ opts_chunk$set(
   cache.lazy = FALSE,
   fig.align = "center",
   fig.show = "hold",
-  dev = "png"
+  dev = "png",
+  dpi = 300,
+  out.width = "\\linewidth"
 )
 
 .font <- "Source Sans Pro"
@@ -100,3 +103,5 @@ dt <- function(data, cnames = label_caps(colnames(data)), ...) {
     ...
   )
 }
+
+kable <- function(...) knitr::kable(..., booktabs = TRUE, linesep = "")

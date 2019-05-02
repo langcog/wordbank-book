@@ -4,57 +4,32 @@ This appendix give the contributors and citations for each of the datasets used 
 
 ```{r appdata-load, cache=FALSE}
 datasets <- jsonlite::fromJSON("misc/datasets.json")
+
+lang_datasets <- datasets %>%
+  group_by(instrument_language) %>%
+  nest() %>%
+  arrange(instrument_language)
 ```
 
 ```{r appdata-print, cache=FALSE, results="asis"}
-lang_datasets <- datasets %>%
-  group_by(instrument_language) %>%
-  nest()
-
 map2(lang_datasets$instrument_language, lang_datasets$data, function(lang, df) {
-  c(glue::glue("<h3>{lang}</h3>"), "<ul>",
+  c(glue::glue("\n\n#### [lang] {-}\n\n", .open = "[", .close = "]"),
     pmap(
       df %>% select(instrument_form, contributor, citation),
       function(instrument_form, contributor, citation) {
         txt <- c(
-          "<li>",
-          glue::glue("<strong>Form</strong>: {instrument_form}"),
-          "<br>",
-          glue::glue("<strong>Contributor</strong>: {contributor}")
+          glue::glue("* __Form__: {instrument_form}  "),
+          glue::glue("  __Contributor__: {contributor}")
         )
-        if (nchar(citation))
-          txt <- c(txt, "<br>", glue::glue("<strong>Citation</strong>: {citation}"))
-        c(txt, "</li>")
-      }),
-    "</ul>")
+        if (nchar(citation)) {
+          txt[2] <- paste0(txt[2], "  ")
+          txt <- c(txt, glue::glue("  __Citation__: {citation}"))
+        }
+        return(txt)
+      })
+  )
 }) %>%
   unlist() %>%
   paste(collapse = "\n") %>%
   cat()
-
-# language <- dataset$instrument_language[1]
-# 
-# for (i in 1:nrow(datasets)) {
-#   dataset <- datasets[i,]
-#   
-#   if (language != dataset$instrument_language) {
-#     language <- dataset$instrument_language
-#     cat("</ul>")
-#     cat(glue::glue("<h3>{language}</h3>"))
-#     cat("<ul>")
-#   }
-#   cat(glue::glue(
-#     "<li><strong>Form</strong>: {dataset$instrument_form}<br>__Contributor__: {dataset$contributor}"
-#   ))
-#   if (nchar(dataset$citation)) cat(glue::glue("<br>__Citation__: {dataset$citation}"))
-#   cat("</li>")
-#   
-#   # cat(glue::glue(
-#   #   "\n\n* __Form__: {dataset$instrument_form} \n    __Contributor__: {dataset$contributor}"
-#   # ))
-#   # if (nchar(dataset$citation)) cat(glue::glue("\n\n    __Citation__: {dataset$citation}"))
-#   # cat(sprintf("Dataset name: *%s* \n\n* Instrument: %s \n* Contributor: %s\n* Citation: %s\n\n",
-#   #             dataset$name, 
-#   #             dataset$instrument_form, dataset$contributor, dataset$citation))
-# }
 ```

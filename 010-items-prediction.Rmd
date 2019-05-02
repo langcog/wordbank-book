@@ -1,4 +1,7 @@
-# Predictive Models of the Acquisition of Individual Words^[The contents of this chapter are lightly adapted from @braginsky2018.] {#items-prediction}
+# Predictive Models of the Acquisition of Individual Words {#items-prediction}
+
+Note:
+  ~ *The contents of this chapter are lightly adapted from @braginsky2019.*
 
 As discussed in Chapter \@ref(intro-theory), one classic approach to word learning focuses on the specific mechanisms that children bring to bear on the learning problem. For example, across many laboratory experiments, a variety of mechanisms have been identified as plausible drivers of early word learning, including co-occurrence based and cross-situational word learning [@schwartz1983;@yu2007]; social cue use [@baldwin1993]; and syntactic bootstrapping [@gleitman1990;@mintz2003]. The individual contribution of each of these mechanisms has been difficult to assess.
 
@@ -62,8 +65,7 @@ lang_stats <- instrument_info %>%
          par = produces_age_range,
          una = understands_num_admins, uar = understands_age_range, types, tokens)
 
-kable(lang_stats, format = "html", escape = FALSE,
-      format.args = list(big.mark = ","),
+kable(lang_stats, escape = FALSE, format.args = list(big.mark = ","),
       caption = "Statistics for data from Wordbank and CHILDES. N indicates number of children.",
       col.names = c("Language", "CDI items", "N", "Ages", "N", "Ages", "Types",
                     "Tokens")) %>%
@@ -222,7 +224,7 @@ ggplot(plt_lang_coefs, aes(x = estimate, y = term, colour = term)) +
 
 **Consistency.** Apart from valence and arousal, all other predictors have the same the direction of effect in all or almost all languages and measures (at least `r most_opposite(c("arousal", "valence"))` of the `r num_langs * 2`). Thus, across languages, words are likely to be understood and produced by more children if they are more frequent, shorter, more concrete, more frequently the only word in an utterance, more associated with babies, more frequently the final word in an utterance, and appear in shorter utterances.
 
-Additionally, there is considerable consistency in the magnitudes of predictors across languages. A priori it could have been the case that different languages have wildly different effects of various factors (due to linguistic or cultural differences), but this pattern is not what we observe. Instead, there is more consistency in the correlations between coefficients across languages than would be expected by chance. As shown in Figure\ \ref{fig:aoapred-consistency}, each language's mean pairwise correlation with other languages' coefficients (i.e., the correlation of coefficients for English with coefficients for Russian, for Spanish, and so on) is outside of bootstrapped estimates in a randomized baseline created by shuffling predictor coefficients within language. The pairwise correlations are more consistent for production (mean `r mean(filter(plt_coef_summary, measure == "produces")$mean_cor)`) than for comprehension (mean `r mean(filter(plt_coef_summary, measure == "understands")$mean_cor)`), in which French and Russian effects are more idiosyncratic.
+Additionally, there is considerable consistency in the magnitudes of predictors across languages. _A priori_ it could have been the case that different languages have wildly different effects of various factors (due to linguistic or cultural differences), but this pattern is not what we observe. Instead, there is more consistency in the correlations between coefficients across languages than would be expected by chance. As shown in Figure\ \ref{fig:aoapred-consistency}, each language's mean pairwise correlation with other languages' coefficients (i.e., the correlation of coefficients for English with coefficients for Russian, for Spanish, and so on) is outside of bootstrapped estimates in a randomized baseline created by shuffling predictor coefficients within language. The pairwise correlations are more consistent for production (mean `r mean(filter(plt_coef_summary, measure == "produces")$mean_cor)`) than for comprehension (mean `r mean(filter(plt_coef_summary, measure == "understands")$mean_cor)`), in which French and Russian effects are more idiosyncratic.
 
 ```{r aoapred-consistency, fig.width=6, fig.height=3, fig.align='center', fig.cap="Correlations of coefficient estimates between languages. Each point represents the mean of one language's coefficients' correlation with each other language's coefficients, with the vertical line indicating the overall mean across languages. The shaded region and line show a bootstrapped 95\\% confidence interval of a randomized baseline where predictor coefficients are shuffled within language."}
 ggplot(plt_coef_summary, aes(x = mean_cor, y = language)) +

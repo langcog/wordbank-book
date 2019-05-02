@@ -270,21 +270,16 @@ demo_mmad_cap <- function(form, measure, advantage) {
 }
 ```
 
-```{r demo-table-fun}
-demo_table <- function(demo_str, form, measure, ...) {
-  cat(dt_caption(glue::glue("Interaction term between age and {tolower(demo_label(demo_str))} for {form} {measure} data in each language.")))
+```{r demo-int-plot}
+demo_int_plot <- function(demo_str, form, measure) {
   demo_data <- analyses[[paste(form, measure, sep = ".")]][[demo_str]]
   demo_data$model_summary %>%
     filter(!is.na(beta)) %>%
-    mutate(p = map_chr(p, printp)) %>%
-    arrange(desc(beta)) %>%
-    dt(cnames = c("Language", "Form", "β", "<em>p</em>"), escape = FALSE,
-       options(columnDefs = list(
-         list(class = "dt-right", targets = c(2, 3)),
-         list(class = "dt-head-left", targets = c(0, 1)),
-         list(class = "dt-head-right", targets = c(2, 3)))
-       ), ...) %>%
-    DT::formatRound(columns = "beta", digits = 4)
+    mutate(language = fct_reorder(language, beta)) %>%
+  ggplot(aes(x = beta, y = language)) +
+    geom_point() +
+    geom_vline(xintercept = 0, linetype = .refline, colour = .grey) +
+    labs(x = glue::glue("Interaction between age and {tolower(demo_label(demo_str))}"), y = "")
 }
 ```
 
@@ -310,17 +305,17 @@ Visual inspection of the data suggest limited sex differences, but a female adva
 demo_data_plot(sex, "WG", "comprehension")
 ```
 
-We can examine the statistical models to get a clearer picture. For each language, the robust generalized linear model predicts vocabulary size (number of words understood out of the total) predicted by age and the interaction of age and sex. We specified this simple model so that the coefficient estimate for the age by sex interaction (as shown in Table \@ref(tab:demo-table-sex-wg-comp)) provides a convenient summary of the difference in vocabulary growth across groups. Despite the small magnitudes of the coefficients, `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WG.comprehension$sex$model_summary)` languages had a female advantage. In contrast, only `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta < 0))` showed a male advantage and the remainder did not show a significant sex by age interaction.
+We can examine the statistical models to get a clearer picture. For each language, the robust generalized linear model predicts vocabulary size (number of words understood out of the total) predicted by age and the interaction of age and sex. We specified this simple model so that the coefficient estimate for the age by sex interaction (as shown in Figure \@ref(fig:demo-int-sex-wg-comp)) provides a convenient summary of the difference in vocabulary growth across groups. Despite the small magnitudes of the coefficients, `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WG.comprehension$sex$model_summary)` languages had a female advantage. In contrast, only `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta < 0))` showed a male advantage and the remainder did not show a significant sex by age interaction.
 
-```{r demo-table-sex-wg-comp, results="asis", dependson="demo-table-fun"}
-demo_table("sex", "WG", "comprehension")
+```{r demo-int-sex-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and sex for WG comprehension data in each language."}
+demo_int_plot("sex", "WG", "comprehension")
 ```
 
 Moving away from the model-based method above, we can look for a measure of effect size (similar to that used in the previous chapter). Effect size quantifies the size of the difference between groups in terms of the variability, producing a scale-free measure of difference that is appropriate for comparison across languages. Normally we would use a measure like Cohen's _d_ here, where
 
 $$d = \frac{\mu_2 - \mu_1}{SD_{pooled}}$$
 
-But, as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components: the difference between medians, divided by the MAD. (We call this the MMAD; \@ref(appendix-variability) shows that it is comparable to Cohen's $d$ as a measure of effect size). 
+But, as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components: the difference between medians, divided by the MAD. (We call this the MMAD; Appendix \@ref(appendix-variability) shows that it is comparable to Cohen's $d$ as a measure of effect size). 
 
 Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age (Figure \@ref(fig:demo-mmad-age-plot-sex-wg-comp)). For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability (Figure \@ref(fig:demo-mmad-plot-sex-wg-comp)). The overall median for these `r nrow(analyses$WG.comprehension$sex$mmad_summary)` languages is quite small as well, `r round(median(analyses$WG.comprehension$sex$mmad_summary$mmad_mean),2)`. In summary, there is some evidence for a modest female advantage in comprehension.
 
@@ -334,14 +329,14 @@ demo_mmad_plot(sex, "WG", "comprehension", "female")
 
 ### Production (WS)
 
-We next turn to production data on the Words & Sentences instrument, which we expect to be much more informative regarding production (see Figure \@ref(fig:demo-data-plot-sex-ws-prod). Visual inspection confirms differences in almost every case, and an analysis of the fitted models (see Table \@ref(tab:demo-table-sex-ws-prod)) shows that `r nrow(filter(analyses$WS.production$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WS.production$sex$model_summary)` languages show a statistically significant female advantage!
+We next turn to production data on the Words & Sentences instrument, which we expect to be much more informative regarding production (see Figure \@ref(fig:demo-data-plot-sex-ws-prod). Visual inspection confirms differences in almost every case, and an analysis of the fitted models (see Figure \@ref(fig:demo-int-sex-ws-prod)) shows that `r nrow(filter(analyses$WS.production$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WS.production$sex$model_summary)` languages show a statistically significant female advantage!
 
 ```{r demo-data-plot-sex-ws-prod, fig.height=7, fig.cap=demo_data_cap('sex', 'WS', 'production'), dependson="demo-plot-funs"}
 demo_data_plot(sex, "WS", "production")
 ```
 
-```{r demo-table-sex-ws-prod, results="asis", dependson="demo-table-fun"}
-demo_table("sex", "WS", "production")
+```{r demo-int-sex-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and sex for WS production data in each language."}
+demo_int_plot("sex", "WS", "production")
 ```
 
 We next turn to the MMAD effect size measure (see Figure \@ref(fig:demo-mmad-age-plot-sex-ws-prod) and Figure \@ref(fig:demo-mmad-plot-sex-ws-prod)). Here we see a relatively consistent difference across ages with perhaps a slight downward trend in effect size. This downward trend might be a function of ceiling effects on the form, however, as seen in the model-fit curves above for, e.g., Danish. When variability is limited by the form ceiling, effect size estimates will necessarily be depressed. The median female advantage is `r round(median(analyses$WS.production$sex$mmad_summary$mmad_mean),2)`, substantially larger than that seen in early comprehension and somewhat larger than that seen in early production (perhaps due to floor effects early on).
@@ -399,14 +394,14 @@ Here, we can examine birth order effects in early vocabulary comprehension and p
 
 ### Comprehension (WG)
 
-We perform the same set of analyses as for sex, shown in Figure \@ref(fig:demo-data-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-plot-birth-order-wg-comp), and Table \@ref(tab:demo-table-birth-order-wg-comp).
+We perform the same set of analyses as for sex, shown in Figure \@ref(fig:demo-data-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-plot-birth-order-wg-comp), and Figure \@ref(fig:demo-int-birth-order-wg-comp).
 
 ```{r demo-data-plot-birth-order-wg-comp, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WG', 'comprehension'), dependson="demo-plot-funs"}
 demo_data_plot(birth_order, "WG", "comprehension")
 ```
 
-```{r demo-table-birth-order-wg-comp, results="asis", dependson="demo-table-fun"}
-demo_table("birth_order", "WG", "comprehension", options = list(dom = "t"))
+```{r demo-int-birth-order-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WG production data in each language."}
+demo_int_plot("birth_order", "WG", "comprehension")
 ```
 
 ```{r demo-mmad-age-plot-birth-order-wg-comp, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'comprehension', 'first-born'), dependson="demo-plot-funs"}
@@ -419,15 +414,14 @@ demo_mmad_plot(birth_order, "WG", "comprehension", "first-born")
 
 ### Production (WS)
 
-The parallel set of analyses for WS Production data are shown in Figure \@ref(fig:demo-data-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-plot-birth-order-ws-prod), and Table \@ref(tab:demo-table-birth-order-ws-prod).
+The parallel set of analyses for WS Production data are shown in Figure \@ref(fig:demo-data-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-plot-birth-order-ws-prod), and Figure \@ref(fig:demo-int-birth-order-ws-prod).
 
 ```{r demo-data-plot-birth-order-ws-prod, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WS', 'production'), dependson="demo-plot-funs"}
 demo_data_plot(birth_order, "WS", "production")
 ```
 
-```{r demo-table-birth-order-ws-prod, results="asis", dependson="demo-table-fun"}
-demo_table("birth_order", "WS", "production",
-           options = list(pageLength = "20", dom = "t"))
+```{r demo-int-birth-order-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WS production data in each language."}
+demo_int_plot("birth_order", "WS", "production")
 ```
 
 ```{r demo-mmad-age-plot-birth-order-ws-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WS', 'production', 'first-born'), dependson="demo-plot-funs"}
@@ -447,21 +441,20 @@ We can only speculate as to the cause of birth-order related differences in earl
 
 From health to education, children from lower socioeconomic status (SES) backgrounds tend to be at higher risk for a variety of negative developmental outcomes, compared to their higher-SES peers [@bradley2002]. A large literature documents specific relations between SES and children’s early language abilities, especially oral vocabulary, which is in turn related to outcomes when children begin formal education [e.g., @hart1995; @hoff2003; @fernald2013].  The parent report method allows the assessment of the influence of SES on vocabulary outcomes earlier in development than is possible with direct assessments.  Using the CDI Words & Sentences form, @arriaga1998 compared the language skills in 103 very low-income toddlers with a sample of middle-income toddlers from the @fenson2007 norming sample, matched on age and sex. They found that the vocabulary production scores for the low-income group were consistently about 30% lower than those for the middle-income group.  The size of these effects suggest that differences in SES are evident from the earliest phases of language development. 
 
-Environmental explanations of these SES effects are often given in terms of indirect factors that affect life opportunities or experiences, such as nutrition and access to health care, as well as more direct factors that impact daily life, such as smoking during pregnancy, or access to quality child care.  One well-studied factor is the quality of the interactions that caregivers spend in interactions with their young children, with studies showing that talk from caregivers mediates the effects of SES on child outcomes [e.g., @weisleder2013; @hoff2003].  Alternatively, even early language shows a significant genetic component, raising the possibility that SES-vocabulary links may instead be genetically mediated [@hayiou-thomas2012].  That is, parents of higher-SES backgrounds may use language more extensively and at a higher level due to their genetic endowment, which is then passed on to their children.  Some initial DNA-based evidence for a genetic component to the SES-language link is provided by @trzaskowski2014. 
+Environmental explanations of these SES effects are often given in terms of indirect factors that affect life opportunities or experiences, such as nutrition and access to health care, as well as more direct factors that impact daily life, such as smoking during pregnancy, or access to quality child care.  One well-studied factor is the quality of the interactions that caregivers spend in interactions with their young children, with studies showing that talk from caregivers mediates the effects of SES on child outcomes [e.g., @weisleder2013; @hoff2003].  Alternatively, even early language shows a significant genetic component, raising the possibility that SES-vocabulary links may instead be genetically mediated [@hayiou-thomas2012].  That is, parents of higher-SES backgrounds may use language more extensively and at a higher level due to their genetic endowment, which is then passed on to their children.  Some initial DNA-based evidence for a genetic component to the SES-language link is provided by @trzaskowski2014.
 
 In the current dataset, we have the opportunity to explore the extent of these effects across several language communities. While different language communities may differ in their distributions along the SES gradient, cross-language comparisons may nevertheless shed light on the factors that lead to relations between SES and children’s vocabulary outcomes. On the one hand, relatively constant relations across language communities that vary widely in indirect and direct factors that shape learning would provide *prima facie* support for genetic explanations. In contrast, a greater degree of cross-language variability would point to the origins of SES effects in aspects of children’s early environments that vary with SES to differing degrees across countries [e.g., @lfernald2012].  Here, we use maternal education as a proxy for SES, following previous work suggesting that maternal education is strongly related to SES variation, particularly early in development [@bornstein2003; @hoff2003].
 
 ### Comprehension (WG)
 
-We again perform the same set of analyses, shown in Figure \@ref(fig:demo-data-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-plot-mom-ed-wg-comp), and Table \@ref(tab:demo-table-mom-ed-wg-comp).
+We again perform the same set of analyses, shown in Figure \@ref(fig:demo-data-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-plot-mom-ed-wg-comp), and Figure \@ref(fig:demo-int-mom-ed-wg-comp).
 
 ```{r demo-data-plot-mom-ed-wg-comp, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WG', 'comprehension'), dependson="demo-plot-funs"}
 demo_data_plot(mom_ed, "WG", "comprehension")
 ```
 
-```{r demo-table-mom-ed-wg-comp, results="asis", dependson="demo-table-fun"}
-demo_table("mom_ed", "WG", "comprehension",
-           options = list(pageLength = "20", dom = "t"))
+```{r demo-int-mom-ed-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WG comprehension data in each language."}
+demo_int_plot("mom_ed", "WG", "comprehension")
 ```
 
 ```{r demo-mmad-age-plot-mom-ed-wg-comp, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'comprehension', 'college-educated'), dependson="demo-plot-funs"}
@@ -474,15 +467,14 @@ demo_mmad_plot(mom_ed, "WG", "comprehension", "college-educated")
 
 ### Production (WS)
 
-The next analyses are shown in Figure \@ref(fig:demo-data-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-plot-mom-ed-ws-prod), and Table \@ref(tab:demo-table-mom-ed-ws-prod).
+The next analyses are shown in Figure \@ref(fig:demo-data-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-plot-mom-ed-ws-prod), and Figure \@ref(fig:demo-int-mom-ed-ws-prod).
 
 ```{r demo-data-plot-mom-ed-ws-prod, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WS', 'production'), dependson="demo-plot-funs"}
 demo_data_plot(mom_ed, "WS", "production")
 ```
 
-```{r demo-table-mom-ed-ws-prod, results="asis", dependson="demo-table-fun"}
-demo_table("mom_ed", "WS", "production",
-           options = list(pageLength = "20", dom = "t"))
+```{r demo-int-mom-ed-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WS production data in each language."}
+demo_int_plot("mom_ed", "WS", "production")
 ```
 
 ```{r demo-mmad-age-plot-mom-ed-ws-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WS', 'production', 'college-educated'), dependson="demo-plot-funs"}

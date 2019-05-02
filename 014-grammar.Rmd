@@ -417,7 +417,7 @@ ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
 
 <!-- Building on previous analyses that showed a strong relationship between lexical and grammatical development, we added age into this relationship. Across languages, our measures of syntactic development consistently showed greater age modulation than measures of morphological development. Further distinguishing between items that were more reflective of morphology than syntax, we again found greater age effects for more syntactic items. Thus, this analysis provides evidence for a relationship between syntactic development and age _not_ captured by lexical development. -->
 
-## Longitudinal relationships between grammar and the lexicon
+## Longitudinal relationships
 
 ```{r gram-long-data-dallas}
 longitudinal_admins <- admins %>% 
@@ -502,7 +502,7 @@ norway_wide <- filter(norway, original_id %in% include) %>%
 
 In our next set of analyses, we take advantage of the presence of longitudinal data in two languages (Norwegian, and American English) to investigate the relationship between vocabulary size and grammatical ability, as operationalized by average Complexity score. As mentioned above, this relationship has been the subject of a variety of previous investigations using longitudinal data [@dionne2003;@moyle2007;@perez-leroux2012;@hoff2017;@brinchmann2018], but outcomes have been contradictory. Given the heterogeneity of these studies, results could differ for a variety of reasons, including the language background of the participants, the target age range of the study (which ranged from 2 -- 6), and the nature of the specific models being fit to the data. 
 
-```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", fig.width=4}
+```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", fig.width=2}
 include_graphics("images/ri-clpm.png")
 ```
 
@@ -601,7 +601,7 @@ semPlot::semPaths(dallas_plot, what="est",
 
 ```
 
-Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar were large and significant ($\beta_{p1-c2} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est,2)`$, $p = `r `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue,2)`$, $\beta_{p2-c3} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est,2)`$, $p = `r `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue,2)`$). These were consistently higher than estimates from grammar to vocabulary (which were both small and non-significant).
+Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar were large and significant ($\beta_{p1-c2} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue,2)`$, $\beta_{p2-c3} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue,2)`$). These were consistently higher than estimates from grammar to vocabulary (which were both small and non-significant).
 
 ```{r grammar-clpm-norway}
 clpm_norway <-

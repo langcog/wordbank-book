@@ -1,6 +1,15 @@
 <!-- THESE CHUNKS DO STUFF THAT IS USED IN PSYCHOMETRICS -->
 
 ```{r psycho-fit_irt_ws}
+library(mirt) # requires package loading, not just referencing. 
+
+load("data/psychometrics/eng_ws_raw_data.Rds")
+
+d_ws <- eng_ws %>%
+  mutate(produces = value == "produces") %>%
+  filter(!is.na(category)) %>%
+  select(data_id, produces,age, production, sex, definition) 
+
 d_wide_ws <- d_ws %>%
   mutate(produces = as.numeric(produces)) %>%
   select(definition, produces, data_id) %>%
@@ -27,9 +36,23 @@ fscores_4pl <- data_frame(data_id = rownames(d_mat_ws),
 save(file = "data/psychometrics/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
 ```
 
+```{r psycho-fit_irt_3pl}
+mod_3pl <- mirt::mirt(d_mat_ws, 1, itemtype='3PL', verbose=TRUE)
+
+coefs_3pl <- as_data_frame(coef(mod_3pl, simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_3pl, simplify = TRUE)$items))
+fscores_3pl <- data_frame(data_id = rownames(d_mat_ws), 
+                             ability = fscores(mod_3pl, method = "MAP")[,1])
+
+save(file = "data/psychometrics/eng_ws_mod_3pl.Rds", "mod_3pl","fscores_3pl", "coefs_3pl")
+
+#note that 3PL fits better overall (AIC/BIC) but it seems theoretically unreasonable - we really want a u parameter for many of the items and so it is useful to fit one!
+```
+
+
 
 ```{r psycho-prod_comp_wg}
-eng_wg <- read_feather("data/psychometrics/eng_wg_data.feather")
+load("data/psychometrics/eng_wg_raw_data.Rds")
 
 d_wg <- eng_wg %>%
   mutate(produces = value == "produces", 
@@ -84,6 +107,9 @@ save(file = "data/psychometrics/eng_wg_mods_4pl.Rds",
      "coefs_4pl_wg_produces",
      "coefs_4pl_wg_understands")
 ```
+
+
+
 
 <!-- PSYCHOMETRICS PLOTS NOT INCLUDED  -->
 

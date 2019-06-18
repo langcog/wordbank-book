@@ -1,6 +1,6 @@
 # Measurement Properties of the CDI {#psychometrics}
 
-```{r gram-prep_data, child="_psychometrics.Rmd", eval=FALSE}
+```{r psycho-prep_data, child="_psychometrics.Rmd", eval=FALSE}
 ```
 
 Many researchers are initially shocked to hear that one of the most important methods for studying child language is parent report. Yet, as we argued in Chapter \@ref(intro-practical), alternative methods like naturalistic observation or lab experiments can be biased, and are quite costly to revisit at scale. Thus, the goal of this chapter is to revisit the strengths and weaknesses of parent report in depth, since the remainder of our book depends on the use of CDI data. 
@@ -242,13 +242,13 @@ d_ws_summary <- d_ws %>%
 ### Measurement properties of individual WS items
 
 
-A first question that we can ask using a fitted IRT model is how well individual items relate to children's overall latent abilities. Practically speaking, in these analyses, we use the `mirt` package [@chalmers2012;@chalmers2016] to estimate the parameters of a four-parameter IRT model. As described above, the two-parameter model includes difficulty and discrimination parameters for each item. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds. 
+A first question that we can ask using a fitted IRT model is how well individual items relate to children's overall latent abilities. Practically speaking, in these analyses, we use the `mirt` package [@chalmers2012;@chalmers2016] to estimate the parameters of a four-parameter IRT model. As described above, the two-parameter model includes difficulty and discrimination parameters for each item. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds.^[We experimented with a variety of different model types but chose to adopt the four-parameter model because it provides upper bounds on item performance, which help us reason about those items that are not yet universally known by the older children in our sample. It is an interesting theoretical question for further work whether these limits should be modeled as upper bounds rather simply estimating them to be learned beyond the range covered by the model; this latter option is theoretically more appealing but technically more complex.]
 
 ```{r psycho-item-individual-ws, fig.cap="Item characteristic curves for a set of individual items from the English WS sample."}
 
 thetas <- seq(-6,6,.1)
 irt4pl <- function (a, d, g, u, theta = seq(-6,6,.1)) {
-  p = g + (u - g) * boot::inv.logit(a * (theta - d))
+  p = g + (u - g) * boot::inv.logit(a * (theta + d))
   return(p)
 }
 
@@ -271,8 +271,7 @@ ggplot(iccs,
 ```
 
 
-First, we examine some individual item curves. Figure \@ref(fig:psycho-item-individual-ws) shows four representative 4-parameter item characteristic curves. Each plots the probability of production by a range of latent ability scores. *Mommy* is produced by children at all abilities and is relatively uninformative about ability. In contrast, *table* and *trash* are both of moderate difficulty, but *table* is more informative because it has a steeper slope and a higher asymptote. Some children apparently do not say *trash* even if they say many other words (as it has a low upper asymptote, around .8); perhaps they say *garbage* instead. Finally, *yesterday* is more difficult overall and has a quite low upper asymptote -- in our sample many high vocabulary children still did not produce this word. Generally, items with steeper slopes and higher upper asymptotes are considered more diagnostic of ability and hence more desirable. 
-
+First, we examine some individual item curves. Figure \@ref(fig:psycho-item-individual-ws) shows four representative 4-parameter item characteristic curves. Each plots the probability of production by a range of latent ability scores. *Mommy* is produced by children at all abilities and is relatively uninformative about ability. In contrast, *table* and *trash* are both of moderate difficulty, but *table* is more informative because it has a steeper slope and a slightly higher asymptote. Some children apparently do not say *trash* even if they say many other words (as it has a low upper asymptote, around .8); perhaps they say *garbage* instead. Finally, *yesterday* is more difficult overall and has a quite low upper asymptote -- in our sample many high vocabulary children still did not produce this word. Generally, items with steeper slopes and higher upper asymptotes are considered more diagnostic of ability and hence more desirable. 
 
 ```{r psycho-items-ws, fig.cap="Words (points), plotted by their difficulty and discrimination parameters, as recovered by the 4-parameter IRT model (see text). Outliers are labeled."}
 ggplot(coefs_4pl,  

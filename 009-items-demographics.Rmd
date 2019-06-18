@@ -558,6 +558,60 @@ demo_ranef %>%
 
 The same general patterns are present in the production data (Figure \@ref(fig:itemsdemo-ranef-plot-bo-prod) and Table \@ref(tab:itemsdemo-bo-table-produces)), with further evidence that having elder siblings appears to be related exposure to sweets, at least in some cultures: _popsicle_, _donut_, and _candy_ all appear now in the English data, and _tyggegummi_ (gum) and several soda- and candy-related words appear in the Norwegian data. (_Hate_ also appears in the English data, suggesting some emotional expressions due to having a sibling). We interpret this pattern with caution, however, as birth order is likely partially confounded with socio-economic status, and so later-born children might also be from low-SES families who have more environmental exposure to "junk foods" like soda and candy.
 
+One further interesting claim has been made in the literature regarding effects of birth order on language development. @oshima-takane1996 reported that second-born children learn second-person personal pronouns (e.g., *you*) earlier, likely due to the disambiguating effect of having siblings addressed using such pronouns in overheard speech. We examined this pattern in our own American English data in Figure \@ref(fig:itemsdemo-props-plot-pronouns) and found that there was a smaller first-born advantage for *me* and *mine* than average (and smaller than for *my*, *you*, and *your*). *Prima facie*, This finding is less consistent with a global increase in second-person disambiguation than with laterborn children needing to assert "mine" to declare ownership. 
+
+```{r itemsdemo-props-plot-pronouns, dependson="itemsdemo-plot_props", fig.height=5, fig.cap="Developmental trajectories for personal pronouns in American English words by birth order."}
+
+pronouns <- c("me", "my", "mine", "you","your", "yours")
+
+ plot_demo_props[["birth_order"]] %>%
+    filter(measure == "produces", definition %in% pronouns, 
+           language == "English (American)") %>%
+    mutate(total = num_true + num_false) %>%
+    ggplot(aes(x = unscaled_age, y = prop, colour = birth_order)) +
+      facet_wrap(~uni_lemma) +
+      geom_smooth(aes(weight = total), se = FALSE, size = 0.8, method = "glm",
+                  method.args = list(family = "binomial")) +
+      .scale_colour_discrete() +
+      labs(x = "Age (months)", y = glue::glue("Proportion Production"),
+           colour = demo_labels[["birth_order"]]) +
+      lims(y = c(0, 1)) +
+      theme(legend.position = "top")
+```
+
+
+```{r itemsdemo-plot-pronouns, fig.height=5, fig.cap="Histogram showing item random effects for personal pronouns by birth order, across languages. Red line marks zero, blue line marks the mean, blue band shows a 95\\% confidence interval."}
+
+pronoun_ranef <- demo_ranef %>%
+  left_join(select(items, language, definition, uni_lemma)) %>%
+  filter(!is.na(birth_order1), !is.na(birth_order2),
+         measure == "produces", 
+         uni_lemma %in% pronouns) %>%
+  mutate(secondborn_advantage = signif(birth_order1, 2),
+         laterborn_advantage = signif(birth_order2, 2)) %>%
+  select(language, item = definition, Translation = uni_lemma,
+         secondborn_advantage, laterborn_advantage) 
+  
+ms <- pronoun_ranef %>%
+  group_by(Translation) %>%
+  multi_boot_standard(col = "secondborn_advantage")
+
+ggplot() + 
+  geom_histogram(data = pronoun_ranef, 
+       aes(x = secondborn_advantage), binwidth = .05) + 
+  geom_vline(xintercept = 0, lty = 2, col = "red") + 
+  geom_rect(data = ms, 
+               aes(xmin = ci_lower, xmax = ci_upper, 
+                   ymin = 0, ymax = Inf), fill = "blue", alpha = .3) + 
+  geom_vline(data = ms, 
+             aes(xintercept = mean), lty = 2, col = "blue") + 
+  facet_wrap(~Translation) + 
+  ylab("Secondborn advantage")
+
+```
+
+Examining the data across languages in Figure \@ref(fig:itemsdemo-plot-pronoun), we see a similar pattern. *Me*, *my*, and *mine* are all learned earlier for second-born children than first-born. In contrast, *you* and *your*, while numerically positive, have confidence intervals that overlap with zero. These data thus support the hypothesis that first-person possessives are learned slightly earlier for laterborn children (perhaps related to property conflicts, e.g. "that's mine!"). 
+
 ### Maternal education
 
 Our next set of analyses of demographic influences on individual words examines vocabulary items that are differentially present in the vocabulary of children with lower maternal education. As noted in Chapter \@ref(demographics), there are substantial cross-linguistic differences in how large the overall socioeconomic stratification is. For example, we observe large differences in children's vocabulary size in the English (American) data, with children of less educated mothers reporting substantially lower production vocabulary. 

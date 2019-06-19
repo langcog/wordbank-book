@@ -25,6 +25,7 @@ Imports:
   Hmisc,
   knitr,
   kableExtra,
+  laavan,
   langcog,
   lme4,
   lmerTest,

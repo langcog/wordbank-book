@@ -1,9 +1,9 @@
 # Morphology, Grammar, and the Lexicon {#grammar}
 
 Note:
-  ~ *An earlier version of these analyses was first reported in @braginsky2015.*
+  ~ *An earlier version of some of these analyses was first reported in @braginsky2015.*
 
-How does abstract structure emerge during language learning? On some accounts, children's early syntax emerges from direct generalizations from particular lexical items, while on others, syntactic structure is acquired independently and follows its own timetable. CDI data can help us decide between these two views. In this chapter, we summarize the state of grammatical development across languages (noting the challenges posed by radically different representations of grammar across CDI forms). We also replicate and generalize analyses linking grammatical generalization to children’s vocabulary size. We end by investigating the idea that that age modulates the relationship between grammar and the lexicon.
+How does abstract structure emerge during language learning? On some accounts, children's early syntax emerges from direct generalizations from particular lexical items, while on others, syntactic structure is acquired independently and follows its own timetable. CDI data can help us decide between these two views. In this chapter, we summarize the state of grammatical development across languages (noting the challenges posed by radically different representations of grammar across CDI forms). We also replicate and generalize analyses linking grammatical generalization to children’s vocabulary size. We end by pursuing two relatively more novel direcvtions. First, we investigate the idea that that age modulates the relationship between grammar and the lexicon. Second, we use structural equation modeling to evaluate the directionality of this relationship. 
 
 ```{r gram-prep_data, child="_grammar_lex.Rmd", eval=FALSE}
 ```
@@ -38,6 +38,8 @@ Broadly speaking, theoretical views on grammatical development generally take on
 
 Historically, the study of individual differences has been critical to this debate.  While variation in word learning is generally uncontroversial, individual differences in grammatical development do not illuminate core processes of acquisition under a universalist, nativist perspective.  In contrast, lexicalist theories predict that variation in grammatical development is significant, in that such variation should be tightly yoked to variation in lexical development [@bates1999]. Research has shown that, as with lexical development, there is sizable variation in exactly when and how children move into using more grammatically complex utterances in their everyday speech.  While some children use primarily multi-word phrases and many closed class forms by 24 months, other children are still primarily producing nouns in single word utterances at that same age [e.g., @bates1988; @bates1999].  Moreover, there is also variation in the kinds of multi-word utterances that children produce.  For example, some children build up sentences from individual words (e.g., *want dat!*), whereas other children seem to produce utterances that reflect "unanalyzed" chunks of more complex speech (e.g., *iwantdodat!*).
 
+### Correlations between grammar and the lexicon
+
 Associations between individual differences in lexical and grammatical development have been robustly substantiated in the literature. In the original norming data from the English CDI: Words & Sentences, children with more sophisticated grammatical productions were also those children with the largest vocabularies [@bates1994]. Using that same dataset, @marchman1994 found that size of verb vocabulary was concurrently related to children's overregularization of past tense inflections (e.g., *daddy goed*), productions that are viewed as a major milestone in the development of grammatical rule-based knowledge. Links between lexical development and grammar have also been reported longitudinally [@bates1988; @bates1997], in late talkers [e.g., @paul1996;@rescorla2000;@rescorla1997;@thal1997], early talkers [@thal1996;@thal1997], Spanish-English bilinguals [@marchman2004], and children with neurodevelopmental disorders, such as Williams syndrome [e.g., @singerharris1997]. Similar relationships have also been demonstrated in many other languages, including Slovenian [@marjanovic2013], Hebrew [@maital2000], Icelandic [@thordardottir2002], Italian [@caselli1999;@devescovi2005], Bulgarian [@andonova2015], Finnish [@stolt2009], Spanish [@mariscal2012; @thal2000], and German [@szagun2006]. 
 
 Finally, and perhaps most intriguingly, in behavior genetic studies of monozygotic and dizygotic twins, the relation between lexical and grammatical level has been found to be strongly heritable [@dale2000; @dionne2003]. In other words, even though genetic factors contribute relatively modestly to each aspect of language as assessed individually, the genetic factors that influence lexical growth are the same as those that influence grammatical growth, perhaps operating in a bidirectional manner.
@@ -48,18 +50,21 @@ In contrast, other proposals suggest that the process of learning words involves
 
 Recently, a literature has developed using longitudinal models to assess the directionality of these relations. Such studies use cross-lagged models to investigate whether vocabulary size at earlier time-points predicts grammar at later times and vice versa. These models provide a perspective on growth over time that can help describe the directionality of the relationship, even though they do not allow for causal inferences about that directionality [@rogosa1980]. Unfortunately, studies using such methods have come to very different conclusions, perhaps owing to the different models and datasets the have used. In one study, @perez-leroux2012 found relations from  vocabulary size to grammar in 3--5 year-old Spanish speakers. In contrast, @brinchmann2018 found relations in the opposite direction, with stronger paths from grammar to vocabulary in a sample of 4--6 year-old Norwegian children. And using data from Spanish-English bilingual 2.5 -- 4 year-olds, @hoff2017 found limited evidence for direct relationships between growth in grammar and vocabulary, and proposed that the observed relations were actually the result of third-variable explanations, perhaps from common input to both systems [@hoff2017]. Thus, the evidence at present is complex and unresolved.
 
+### The current analyses 
+
 In this chapter, we explore relations between estimates of children's vocabulary size based on the vocabulary checklist and responses on other sections of the Words & Sentences instruments. Many versions of the instruments provide indices of grammar learning by asking about children's use of inflected forms (e.g., *walked*) and overgeneralizations (e.g., *goed*), as well as the complexity of their multi-word combinations (e.g., *kitty sleeping* / *kitty is sleeping*).  While many studies have examined associations between lexical and grammatical development cross-linguistically, the scope and power of these early studies were limited, with few opportunities for direct comparisons of the nature or extent of these relations across multiple languages at the same time. In contrast, our data allow analyses of lexical-grammar relations with enhanced statistical power and broader cross-linguistic representation.  
 
 In addition, we explore a hypothesis that has not been explicitly tested in these earlier studies: that there remains age-related variance in grammatical development unexplained by vocabulary development. While the overall relationship between grammar and the lexicon provides support for lexicalist theories, the identification of age-related variance would suggest the presence of developmental processes that regulate grammar learning, above and beyond those captured by measures of vocabulary size. Such age-related processes could be either maturational or experiential, and either domain-general (like working memory) or language-specific (like grammatical competency). Importantly, since both nativist and constructivist theories could in principle predict age-linked variance in grammatical development, our goal is not to differentiate these theories, but instead to test this novel prediction and explore its implications for future work on understanding the processes of grammatical development.
 
-Further, we fit autoregressive cross-lag panel models to longitudinal data from two datasets, using a variant on the standard model that accounts for stable trait differences between individuals [@hamaker2015]. While they do not provide conclusive evidence about the nature of developmental links between grammar and the lexicon [cf. @rogosa1980], these models provide suggestive evidence that -- at least for young children -- vocabulary drives grammatical growth, rather than vice versa.
+Further, addressing the question of directionality in the relationship between grammar and the lexicon, we fit structural equation models to longitudinal data from two datasets. We use a variant on the standard autoregressive cross-lag panel model that accounts for stable trait differences between individuals [@hamaker2015]. While such models do not provide conclusive evidence about the nature of developmental links between grammar and the lexicon [cf. @rogosa1980], they nevertheless provide suggestive evidence that -- at least for young children -- vocabulary drives grammatical growth, rather than vice versa.
 
-An final contribution of work is that, due to the size of our dataset, we are able to make more fine-grained distinctions than the initial cut between grammar and the lexicon. In particular, we distinguish morphology from multi-word syntax, since morphological generalizations might be more specifically dependent on vocabulary size than those requiring more global, sentence-level syntactic regularities. <!--Similarly, we distinguish age-related contributions to different parts of the vocabulary. Lexical items like verbs and even more so function words require some syntactic information to learn [@gleitman1990] and hence might be more linked to age-related factors that extend beyond vocabulary size.-->
+A final contribution of work is that, due to the size of our dataset, we are able to make more fine-grained distinctions than the initial cut between grammar and the lexicon. In particular, we distinguish morphology from multi-word syntax, since morphological generalizations might be more specifically dependent on vocabulary size than those requiring more global, sentence-level syntactic regularities. <!--Similarly, we distinguish age-related contributions to different parts of the vocabulary. Lexical items like verbs and even more so function words require some syntactic information to learn [@gleitman1990] and hence might be more linked to age-related factors that extend beyond vocabulary size.-->
 
 
 ## Methods
 
-In all `r num_langs` languages included in these analyses, the CDI forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from Words & Sentences type forms, administered to children ages `r min(grammar_summary$age)`--`r max(grammar_summary$age)` months (most in the 16--30 month range). In addition to the vocabulary checklist items, these forms typically contain a single item asking whether the child is combining words yet at all and ask parents to provide examples of the child's three longest sentences that have been heard recently.  There is also a Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). 
+<!-- In all `r num_langs` languages included in these analyses, t -->
+CDI typically forms contain both vocabulary checklists and other questions relevant to the child's linguistic development. All of the data reported here come from Words & Sentences type forms, administered to children ages `r min(grammar_summary$age)`--`r max(grammar_summary$age)` months (most in the 16--30 month range). In addition to the vocabulary checklist items, these forms typically contain a single item asking whether the child is combining words yet at all and ask parents to provide examples of the child's three longest sentences that have been heard recently.  There is also a Word Form section, which asks whether the child produces each of around 30 morphologically inflected forms of nouns and verbs (e.g., _feet_, _ran_); and a Complexity section, which asks whether the child's speech is most similar to the syntactically simpler or more complex versions of around 40 sentences (e.g., _two foot / two feet_, _there a kitty / there's a kitty_). 
 
 Importantly, each instrument for languages other than English is not just a translation of the English form, but rather was constructed and normed to reflect the nature and early development of the lexicon and grammar of that language. Thus, there are substantial differences in the content of these items and their coverage of different morphological and grammatical phenomena. The major commonality is that the form developers have attempted to provide a comprehensive and representative survey of important developmental phenomena in their language. 
 
@@ -95,8 +100,9 @@ grammar_items %>%
   rename(item = definition) %>%
   dt()
 ```
+Even moreso than many parts of the CDI, responses to individual word form and grammatical complexity items should be interpreted with caution. Such items have not been validated as extensively as other parts of the CDI.^[At the risk of some circularity, we note that given the high degree of correlation with vocabulary (shown below), grammatical complexity items should inherit some presupposition of reliability and validity.] In addition, children's early speech is thought to be inconsistent from a grammatical perspective, occasionally alternating word orders beyond the standard word order of the language [e.g., @bowerman1973]. This last point goes double for word forms, which are often highly variable within individuals [@marcus1992]. Finally, word forms like "went" may be used by the child appropriately to denote motion without understanding the temporal marking that distinguishes it from the less-frequent "go."
 
-To analyze lexical and grammatical development, we derive several measures. Each child's Vocabulary Size is computed as the proportion of words on the corresponding CDI form that the child is reported to produce. Similarly, each child's Word Form score is the proportion of word forms they are reported to produce, and their Complexity score the proportion of complexity items for which they are reported to use the more complex form. We compute all of these quantities as proportions to make the scales comparable across languages.
+Keeping these caveats in mind, to analyze lexical and morphosyntactic development, we derive several measures. Each child's Vocabulary Size is computed as the proportion of words on the corresponding CDI form that the child is reported to produce. Similarly, each child's Word Form score is the proportion of word forms they are reported to produce, and their Complexity score the proportion of complexity items for which they are reported to use the more complex form. We compute all of these quantities as proportions to make the scales comparable across languages. Note that different analyses often incorporate different amounts of data due to the presence or absence of specific sections (or data from those sections) in particular language datasets. 
 
 ## Results
 
@@ -419,97 +425,23 @@ ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
 
 ## Longitudinal relationships
 
-```{r gram-long-data-dallas}
-longitudinal_admins <- admins %>% 
-  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
-  group_by(langform, original_id) %>% 
-  count() %>% 
-  filter(n > 1) 
 
-# get marchman dallas data
-dallas <- admins %>%
-  filter(original_id %in% longitudinal_admins$original_id, 
-         language %in% "English (American)", source_name == "Marchman (Dallas)",
-         form == "WS") %>%
-  group_by(original_id, language, source_name) %>%
-  mutate(n_admins = n()) %>%
-  filter(n_admins > 1) %>%
-  left_join(select(grammar_summary, data_id, coded_type, prop) %>%
-              filter(coded_type == "complexity") %>%
-              rename(complexity = prop) %>%
-              select(-coded_type)) %>%
-  mutate(time_point = case_when(age < 21 ~ "t1",
-                                age >= 21 & age <= 26 ~ "t2",
-                                age > 26 ~ "t3"), 
-         production = production / 680) %>%
-  ungroup() %>%
-  select(original_id, time_point, production, complexity) 
-
-include_dallas <- dallas %>%
-  group_by(original_id) %>%
-  summarise(n = n(), 
-            n_unique = length(unique(time_point))) %>%
-  ungroup() %>%
-  filter((n == 3 & n_unique == 3) | (n==2 & n_unique == 2)) %>%
-  pull(original_id)
-  
-dallas_wide <- filter(dallas, original_id %in% include_dallas) %>%
-  gather(variable, value, production, complexity) %>%
-  unite(vtime, variable, time_point) %>%
-  spread(vtime, value) 
-```
-
-
-```{r grammar-long-data-dallas}
-norway <- admins %>%
-  filter(original_id %in% longitudinal_admins$original_id, 
-         language %in% "Norwegian",
-         form == "WS") %>%
-  group_by(original_id, language, source_name) %>%
-  mutate(n_admins = n()) %>%
-  filter(n_admins > 1) %>%
-  left_join(select(grammar_summary, data_id, coded_type, prop) %>%
-              filter(coded_type == "complexity") %>%
-              rename(complexity = prop) %>%
-              select(-coded_type)) %>%
-  mutate(time_point = case_when(age < 18 ~ "t1",
-                                age < 20 ~ "t2",
-                                age < 22 ~ "t3",
-                                age < 24 ~ "t4",
-                                age < 26 ~ "t5",
-                                age < 28 ~ "t6",
-                                age < 30 ~ "t7",
-                                age < 32 ~ "t8",
-                                age < 34 ~ "t9",
-                                age < 37 ~ "t10"), # very few 36mos
-         production = production / 731) %>%
-  ungroup() %>%
-  select(original_id, time_point, production, complexity) 
-
-include <- norway %>%
-  group_by(original_id) %>%
-  summarise(n = n(), 
-            n_unique = length(unique(time_point))) %>%
-  ungroup() %>%
-  filter(n == n_unique & n > 1) %>%
-  pull(original_id)
-  
-norway_wide <- filter(norway, original_id %in% include) %>%
-  gather(variable, value, production, complexity) %>%
-  unite(vtime, variable, time_point) %>%
-  spread(vtime, value) 
-```
 
 In our next set of analyses, we take advantage of the presence of longitudinal data in two languages (Norwegian, and American English) to investigate the relationship between vocabulary size and grammatical ability, as operationalized by average Complexity score. As mentioned above, this relationship has been the subject of a variety of previous investigations using longitudinal data [@dionne2003;@moyle2007;@perez-leroux2012;@hoff2017;@brinchmann2018], but outcomes have been contradictory. Given the heterogeneity of these studies, results could differ for a variety of reasons, including the language background of the participants, the target age range of the study (which ranged from 2 -- 6), and the nature of the specific models being fit to the data. 
 
-```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", fig.width=2}
+```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", fig.height=5}
 include_graphics("images/ri-clpm.png")
 ```
 
-
 Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences [@rogosa1980], it is a convenient way to estimate temporal precedence in the relationships between variables measured over mulitple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual -- as clearly the case for language-related measures -- these models are mis-specified, since they assume that the *only* source of consistency between individuals is temporal autocorrelation [@hamaker2015]. To address this issue, @hamaker2015 propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure \@ref(fig:grammar-ri-clpm). This is the approach used by @brinchmann2018, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below. 
 
+```{r grammar-ri-clpm-data}
+load("data/grammar/clpms.Rds")
+```
+
 We include data from two different longitudinal datasets. The first is a group of children from a study conducted by Virginia Marchman with English-speaking children in Dallas, TX (N = `r length(unique(dallas$original_id))`). The *Marchman (Dallas)* dataset includes children with data from three waves of data collection centered around 18, 24, and 30 months; we included children if they contributed to two waves (N = `r sum(3-rowSums(is.na(dallas_wide[,2:4])) == 2)`) or all three waves (N = `r sum(3-rowSums(is.na(dallas_wide[,2:4])) == 3)`), for a total of `r nrow(dallas_wide)` children. The offsets between waves varied somewhat in these data but for simplicity, we split all administrations into three time points: 18--21 months, 22--25 months, and 26--30 months.
+
+The second dataset is a large group of longitudinal administrations in the Norwegian normative data, including a total of `r length(unique(norway$original_id))` children. These children were invited to complete multiple CDIs online at a remove of one or more months, with many parents completing two and a small number completing 10 or more. For purposes of discrete analysis, we binned these continuous data into two-month waves from 18--35 months (a small number of 36-month-olds were included in the oldest wave). We then included children with two or more administrations, each falling in a different wave (N = `r nrow(norway_wide)`). Table \@ref(tab:grammar-norway-table) shows the distribution of how many observations are available for children across different waves.
 
 ```{r grammar-norway-table}
 norway_wide %>%
@@ -525,68 +457,9 @@ norway_wide %>%
       col.names = c("N observations", "N")) 
 ```
 
-The second dataset is a large group of longitudinal administrations in the Norwegian normative data, including a total of `r length(unique(norway$original_id))` children. These children were invited to complete multiple CDIs online at a remove of one or more months, with many parents completing two and a small number completing 10 or more. For purposes of discrete analysis, we binned these continuous data into two-month waves from 18--35 months (a small number of 36-month-olds were included in the oldest wave). We then included children with two or more administrations, each falling in a different wave (N = `r nrow(norway_wide)`). Table \@ref(tab:grammar-norway-table) shows the distribution of how many observations are available for children across different waves.
-
-
-```{r grammar-clpm-dallas}
-# https://jflournoy.github.io/2017/10/20/riclpm-lavaan-demo/
-clpm_dallas <-
-'
-kappa =~ 1*production_t1 + 1*production_t2 + 1*production_t3
-omega =~ 1*complexity_t1 + 1*complexity_t2 + 1*complexity_t3
-
-production_t1 ~ mu1*1 #intercepts
-production_t2 ~ mu2*1
-production_t3 ~ mu3*1
-complexity_t1 ~ pi1*1
-complexity_t2 ~ pi2*1
-complexity_t3 ~ pi3*1
-
-#latent vars for AR and cross-lagged effects
-p1 =~ 1*production_t1 #each factor loading set to 1
-p2 =~ 1*production_t2
-p3 =~ 1*production_t3
-c1 =~ 1*complexity_t1
-c2 =~ 1*complexity_t2
-c3 =~ 1*complexity_t3
-
-kappa ~~ kappa #variance
-omega ~~ omega #variance
-kappa ~~ omega #covariance
-
-p3 ~ alpha3*p2 + beta3*c2
-p2 ~ alpha2*p1 + beta2*c1
-
-c3 ~ delta3*c2 + gamma3*p2
-c2 ~ delta2*c1 + gamma2*p1
-
-p1 ~~ p1 #variance
-p2 ~~ u2*p2
-p3 ~~ u3*p3
-c1 ~~ c1 #variance
-c2 ~~ v2*c2
-c3 ~~ v3*c3
-
-p1 ~~ c1 #p1 and q1 covariance
-p2 ~~ c2 #p2 and q2 covariance
-p3 ~~ c3 #p2 and q2 covariance'
-
-clpm_fit_dallas <- lavaan::lavaan(clpm_dallas, data = dallas_wide,
-                        missing = 'ML', #for the missing data!
-                        int.ov.free = F,
-                        int.lv.free = F,
-                        auto.fix.first = F,
-                        auto.fix.single = F,
-                        auto.cov.lv.x = F,
-                        auto.cov.y = F,
-                        auto.var = F)
-# lavaan::summary(clpm_fit_dallas)
-```
-
-
 Using these two datasets, we fit RI-CLPM models.^[We gratefully acknowledge code from [https://jflournoy.github.io/2017/10/20/riclpm-lavaan-demo/]().] These models measure the magnitude of the reciprocal relationships between grammar and vocabulary over time. Coefficient weights on the paths between latent grammar and vocabulary are then interpretable as temporal influences. Following the RI-CLPM specification in @hamaker2015, we posited latent variables $\kappa$ and $\omega$ that describe stability in vocabulary and grammar, respectively. 
 
-```{r grammar-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. P variables indicate production, while C variables indicate grammatical complexity."}
+```{r grammar-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. P variables indicate production, while C variables indicate grammatical complexity.", fig.height=4}
 dallas_plot <- semPlot::semPlotModel(clpm_fit_dallas)
 semPlot::semPaths(dallas_plot, what="est",
                   intercepts = FALSE,
@@ -603,125 +476,9 @@ semPlot::semPaths(dallas_plot, what="est",
 
 Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar were large and significant ($\beta_{p1-c2} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue,2)`$, $\beta_{p2-c3} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue,2)`$). These were consistently higher than estimates from grammar to vocabulary (which were both small and non-significant).
 
-```{r grammar-clpm-norway}
-clpm_norway <-
-'
-kappa =~ 1*production_t1 + 1*production_t2 + 1*production_t3 + 1*production_t4 + 1*production_t5 + 1*production_t6 + 1*production_t7 + 1*production_t8 + 1*production_t9 + 1*production_t10
-omega =~ 1*complexity_t1 + 1*complexity_t2 + 1*complexity_t3 + 1*complexity_t4 + 1*complexity_t5 + 1*complexity_t6 + 1*complexity_t7 + 1*complexity_t8 + 1*complexity_t9 + 1*complexity_t10
-
-production_t1 ~ mu1*1 #intercepts
-production_t2 ~ mu2*1
-production_t3 ~ mu3*1
-production_t4 ~ mu4*1
-production_t5 ~ mu5*1
-production_t6 ~ mu6*1
-production_t7 ~ mu7*1
-production_t8 ~ mu8*1
-production_t9 ~ mu9*1
-production_t10 ~ mu10*1
-complexity_t1 ~ pi1*1
-complexity_t2 ~ pi2*1
-complexity_t3 ~ pi3*1
-complexity_t4 ~ pi4*1
-complexity_t5 ~ pi5*1
-complexity_t6 ~ pi6*1
-complexity_t7 ~ pi7*1
-complexity_t8 ~ pi8*1
-complexity_t9 ~ pi9*1
-complexity_t10 ~ pi10*1
-
-kappa ~~ kappa #variance
-omega ~~ omega #variance
-kappa ~~ omega #covariance
-
-#latent vars for AR and cross-lagged effects
-p1 =~ 1*production_t1 #each factor loading set to 1
-p2 =~ 1*production_t2
-p3 =~ 1*production_t3
-p4 =~ 1*production_t4
-p5 =~ 1*production_t5
-p6 =~ 1*production_t6
-p7 =~ 1*production_t7
-p8 =~ 1*production_t8
-p9 =~ 1*production_t9
-p10 =~ 1*production_t10
-c1 =~ 1*complexity_t1
-c2 =~ 1*complexity_t2
-c3 =~ 1*complexity_t3
-c4 =~ 1*complexity_t4
-c5 =~ 1*complexity_t5
-c6 =~ 1*complexity_t6
-c7 =~ 1*complexity_t7
-c8 =~ 1*complexity_t8
-c9 =~ 1*complexity_t9
-c10 =~ 1*complexity_t10
-
-p10 ~ alpha10*p9 + beta10*c9
-p9 ~ alpha9*p8 + beta9*c8
-p8 ~ alpha8*p7 + beta8*c7
-p7 ~ alpha7*p6 + beta7*c6
-p6 ~ alpha6*p5 + beta6*c5
-p5 ~ alpha5*p4 + beta5*c4
-p4 ~ alpha4*p3 + beta4*c3
-p3 ~ alpha3*p2 + beta3*c2
-p2 ~ alpha2*p1 + beta2*c1
-
-c10 ~ delta10*c9 + gamma10*p9
-c9 ~ delta9*c8 + gamma9*p8
-c8 ~ delta8*c7 + gamma8*p7
-c7 ~ delta7*c6 + gamma7*p6
-c6 ~ delta6*c5 + gamma6*p5
-c5 ~ delta5*c4 + gamma5*p4
-c4 ~ delta4*c3 + gamma4*p3
-c3 ~ delta3*c2 + gamma3*p2
-c2 ~ delta2*c1 + gamma2*p1
-
-p1 ~~ p1 #variance
-p2 ~~ u2*p2
-p3 ~~ u3*p3
-p4 ~~ u4*p4
-p5 ~~ u5*p5
-p6 ~~ u6*p6
-p7 ~~ u7*p7
-p8 ~~ u8*p8
-p9 ~~ u9*p9
-p10 ~~ u10*p10
-c1 ~~ c1 #variance
-c2 ~~ v2*c2
-c3 ~~ v3*c3
-c4 ~~ v4*c4
-c5 ~~ v5*c5
-c6 ~~ v6*c6
-c7 ~~ v7*c7
-c8 ~~ v8*c8
-c9 ~~ v9*c9
-c10 ~~ v10*c10
 
 
-p1 ~~ c1 #p1 and q1 covariance
-p2 ~~ c2 
-p3 ~~ c3
-p4 ~~ c4
-p5 ~~ c5
-p6 ~~ c6
-p7 ~~ c7
-p8 ~~ c8
-p9 ~~ c9
-p10 ~~ c10'
-
-clpm_fit_norway <- lavaan::lavaan(clpm_norway, data = norway_wide,
-                        missing = 'ML', #for the missing data!
-                        int.ov.free = F,
-                        int.lv.free = F,
-                        auto.fix.first = F,
-                        auto.fix.single = F,
-                        auto.cov.lv.x = F,
-                        auto.cov.y = F,
-                        auto.var = F)
-#lavaan::summary(clpm_fit_norway)
-```
-
-```{r grammar-norway-plot, fig.cap="RI-CLPM model fit to Norwegian data. Plotting conventions are as above."}
+```{r grammar-norway-plot, fig.cap="RI-CLPM model fit to Norwegian data. Plotting conventions are as above.", fig.height=5}
 norway_plot <- semPlot::semPlotModel(clpm_fit_norway)
 semPlot::semPaths(norway_plot, what="est", 
                   structural = FALSE, 

@@ -1,7 +1,7 @@
 # Predictive Models of the Acquisition of Individual Words {#items-prediction}
 
 Note:
-  ~ *The contents of this chapter are lightly adapted from @braginsky2019.*
+  ~ *The contents of this chapter are (lightly) adapted from @braginsky2019.*
 
 As discussed in Chapter \@ref(intro-theory), one classic approach to word learning focuses on the specific mechanisms that children bring to bear on the learning problem. For example, across many laboratory experiments, a variety of mechanisms have been identified as plausible drivers of early word learning, including co-occurrence based and cross-situational word learning [@schwartz1983;@yu2007]; social cue use [@baldwin1993]; and syntactic bootstrapping [@gleitman1990;@mintz2003]. The individual contribution of each of these mechanisms has been difficult to assess.
 

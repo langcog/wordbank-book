@@ -123,3 +123,268 @@ grammar_summary <- grammar_data_coded %>%
 
 write_feather(grammar_summary, "data/grammar/grammar_summary.feather")
 ```
+
+
+<!-- **************************** SEM MODELS ******************************** -->
+
+```{r gram-long-data-dallas}
+longitudinal_admins <- admins %>% 
+  mutate(langform = paste(language, form, sep = .inst_sep)) %>%
+  group_by(langform, original_id) %>% 
+  count() %>% 
+  filter(n > 1) 
+
+# get marchman dallas data
+dallas <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% "English (American)", source_name == "Marchman (Dallas)",
+         form == "WS") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1) %>%
+  left_join(select(grammar_summary, data_id, coded_type, prop) %>%
+              filter(coded_type == "complexity") %>%
+              rename(complexity = prop) %>%
+              select(-coded_type)) %>%
+  mutate(time_point = case_when(age < 21 ~ "t1",
+                                age >= 21 & age <= 26 ~ "t2",
+                                age > 26 ~ "t3"), 
+         production = production / 680) %>%
+  ungroup() %>%
+  select(original_id, time_point, production, complexity) 
+
+include_dallas <- dallas %>%
+  group_by(original_id) %>%
+  summarise(n = n(), 
+            n_unique = length(unique(time_point))) %>%
+  ungroup() %>%
+  filter((n == 3 & n_unique == 3) | (n==2 & n_unique == 2)) %>%
+  pull(original_id)
+  
+dallas_wide <- filter(dallas, original_id %in% include_dallas) %>%
+  gather(variable, value, production, complexity) %>%
+  unite(vtime, variable, time_point) %>%
+  spread(vtime, value) 
+```
+
+
+```{r grammar-long-data-dallas}
+norway <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% "Norwegian",
+         form == "WS") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1) %>%
+  left_join(select(grammar_summary, data_id, coded_type, prop) %>%
+              filter(coded_type == "complexity") %>%
+              rename(complexity = prop) %>%
+              select(-coded_type)) %>%
+  mutate(time_point = case_when(age < 18 ~ "t1",
+                                age < 20 ~ "t2",
+                                age < 22 ~ "t3",
+                                age < 24 ~ "t4",
+                                age < 26 ~ "t5",
+                                age < 28 ~ "t6",
+                                age < 30 ~ "t7",
+                                age < 32 ~ "t8",
+                                age < 34 ~ "t9",
+                                age < 37 ~ "t10"), # very few 36mos
+         production = production / 731) %>%
+  ungroup() %>%
+  select(original_id, time_point, production, complexity) 
+
+include <- norway %>%
+  group_by(original_id) %>%
+  summarise(n = n(), 
+            n_unique = length(unique(time_point))) %>%
+  ungroup() %>%
+  filter(n == n_unique & n > 1) %>%
+  pull(original_id)
+  
+norway_wide <- filter(norway, original_id %in% include) %>%
+  gather(variable, value, production, complexity) %>%
+  unite(vtime, variable, time_point) %>%
+  spread(vtime, value) 
+```
+
+
+```{r grammar-clpm-dallas}
+# https://jflournoy.github.io/2017/10/20/riclpm-lavaan-demo/
+clpm_dallas <-
+'
+kappa =~ 1*production_t1 + 1*production_t2 + 1*production_t3
+omega =~ 1*complexity_t1 + 1*complexity_t2 + 1*complexity_t3
+
+production_t1 ~ mu1*1 #intercepts
+production_t2 ~ mu2*1
+production_t3 ~ mu3*1
+complexity_t1 ~ pi1*1
+complexity_t2 ~ pi2*1
+complexity_t3 ~ pi3*1
+
+#latent vars for AR and cross-lagged effects
+p1 =~ 1*production_t1 #each factor loading set to 1
+p2 =~ 1*production_t2
+p3 =~ 1*production_t3
+c1 =~ 1*complexity_t1
+c2 =~ 1*complexity_t2
+c3 =~ 1*complexity_t3
+
+kappa ~~ kappa #variance
+omega ~~ omega #variance
+kappa ~~ omega #covariance
+
+p3 ~ alpha3*p2 + beta3*c2
+p2 ~ alpha2*p1 + beta2*c1
+
+c3 ~ delta3*c2 + gamma3*p2
+c2 ~ delta2*c1 + gamma2*p1
+
+p1 ~~ p1 #variance
+p2 ~~ u2*p2
+p3 ~~ u3*p3
+c1 ~~ c1 #variance
+c2 ~~ v2*c2
+c3 ~~ v3*c3
+
+p1 ~~ c1 #p1 and q1 covariance
+p2 ~~ c2 #p2 and q2 covariance
+p3 ~~ c3 #p2 and q2 covariance'
+
+clpm_fit_dallas <- lavaan::lavaan(clpm_dallas, data = dallas_wide,
+                        missing = 'ML', #for the missing data!
+                        int.ov.free = F,
+                        int.lv.free = F,
+                        auto.fix.first = F,
+                        auto.fix.single = F,
+                        auto.cov.lv.x = F,
+                        auto.cov.y = F,
+                        auto.var = F)
+# lavaan::summary(clpm_fit_dallas)
+```
+
+
+```{r grammar-clpm-norway}
+clpm_norway <-
+'
+kappa =~ 1*production_t1 + 1*production_t2 + 1*production_t3 + 1*production_t4 + 1*production_t5 + 1*production_t6 + 1*production_t7 + 1*production_t8 + 1*production_t9 + 1*production_t10
+omega =~ 1*complexity_t1 + 1*complexity_t2 + 1*complexity_t3 + 1*complexity_t4 + 1*complexity_t5 + 1*complexity_t6 + 1*complexity_t7 + 1*complexity_t8 + 1*complexity_t9 + 1*complexity_t10
+
+production_t1 ~ mu1*1 #intercepts
+production_t2 ~ mu2*1
+production_t3 ~ mu3*1
+production_t4 ~ mu4*1
+production_t5 ~ mu5*1
+production_t6 ~ mu6*1
+production_t7 ~ mu7*1
+production_t8 ~ mu8*1
+production_t9 ~ mu9*1
+production_t10 ~ mu10*1
+complexity_t1 ~ pi1*1
+complexity_t2 ~ pi2*1
+complexity_t3 ~ pi3*1
+complexity_t4 ~ pi4*1
+complexity_t5 ~ pi5*1
+complexity_t6 ~ pi6*1
+complexity_t7 ~ pi7*1
+complexity_t8 ~ pi8*1
+complexity_t9 ~ pi9*1
+complexity_t10 ~ pi10*1
+
+kappa ~~ kappa #variance
+omega ~~ omega #variance
+kappa ~~ omega #covariance
+
+#latent vars for AR and cross-lagged effects
+p1 =~ 1*production_t1 #each factor loading set to 1
+p2 =~ 1*production_t2
+p3 =~ 1*production_t3
+p4 =~ 1*production_t4
+p5 =~ 1*production_t5
+p6 =~ 1*production_t6
+p7 =~ 1*production_t7
+p8 =~ 1*production_t8
+p9 =~ 1*production_t9
+p10 =~ 1*production_t10
+c1 =~ 1*complexity_t1
+c2 =~ 1*complexity_t2
+c3 =~ 1*complexity_t3
+c4 =~ 1*complexity_t4
+c5 =~ 1*complexity_t5
+c6 =~ 1*complexity_t6
+c7 =~ 1*complexity_t7
+c8 =~ 1*complexity_t8
+c9 =~ 1*complexity_t9
+c10 =~ 1*complexity_t10
+
+p10 ~ alpha10*p9 + beta10*c9
+p9 ~ alpha9*p8 + beta9*c8
+p8 ~ alpha8*p7 + beta8*c7
+p7 ~ alpha7*p6 + beta7*c6
+p6 ~ alpha6*p5 + beta6*c5
+p5 ~ alpha5*p4 + beta5*c4
+p4 ~ alpha4*p3 + beta4*c3
+p3 ~ alpha3*p2 + beta3*c2
+p2 ~ alpha2*p1 + beta2*c1
+
+c10 ~ delta10*c9 + gamma10*p9
+c9 ~ delta9*c8 + gamma9*p8
+c8 ~ delta8*c7 + gamma8*p7
+c7 ~ delta7*c6 + gamma7*p6
+c6 ~ delta6*c5 + gamma6*p5
+c5 ~ delta5*c4 + gamma5*p4
+c4 ~ delta4*c3 + gamma4*p3
+c3 ~ delta3*c2 + gamma3*p2
+c2 ~ delta2*c1 + gamma2*p1
+
+p1 ~~ p1 #variance
+p2 ~~ u2*p2
+p3 ~~ u3*p3
+p4 ~~ u4*p4
+p5 ~~ u5*p5
+p6 ~~ u6*p6
+p7 ~~ u7*p7
+p8 ~~ u8*p8
+p9 ~~ u9*p9
+p10 ~~ u10*p10
+c1 ~~ c1 #variance
+c2 ~~ v2*c2
+c3 ~~ v3*c3
+c4 ~~ v4*c4
+c5 ~~ v5*c5
+c6 ~~ v6*c6
+c7 ~~ v7*c7
+c8 ~~ v8*c8
+c9 ~~ v9*c9
+c10 ~~ v10*c10
+
+
+p1 ~~ c1 #p1 and q1 covariance
+p2 ~~ c2 
+p3 ~~ c3
+p4 ~~ c4
+p5 ~~ c5
+p6 ~~ c6
+p7 ~~ c7
+p8 ~~ c8
+p9 ~~ c9
+p10 ~~ c10'
+
+clpm_fit_norway <- lavaan::lavaan(clpm_norway, data = norway_wide,
+                        missing = 'ML', #for the missing data!
+                        int.ov.free = F,
+                        int.lv.free = F,
+                        auto.fix.first = F,
+                        auto.fix.single = F,
+                        auto.cov.lv.x = F,
+                        auto.cov.y = F,
+                        auto.var = F)
+#lavaan::summary(clpm_fit_norway)
+```
+
+```{r}
+save(file = "data/grammar/clpms.Rds", list= c("dallas_wide", "norway_wide", 
+     "clpm_fit_dallas", "clpm_fit_norway"))
+```
+

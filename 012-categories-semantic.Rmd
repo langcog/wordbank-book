@@ -149,7 +149,7 @@ ggplot(predictions, aes(x = vocab, y = prop)) +
 
 Many of the results of this analysis for English are expected. Sounds items are heavily over-represented, as are Body Parts, Games & Routines, and to a slightly lesser extent, Toys, Animals, and Vehicles. These particular biases are likely related to particular parenting practices, cultural emphases (for example, on animal names), and young children's' idiosyncratic interests. For a more in-depth examination of the consistencies in very early vocabulary, see Chapter \@ref(items-consistency); for more detail on what makes particular words easier or harder to learn, see Chapter \@ref(items-prediction). 
 
-The largest *under*-representation across categories is Time Words. This pattern is consistent with a body of work on children's acquisition of the semantics of time words that suggests that children struggle with understanding these complex terms through age five [@tillman2015;@tillman2017]. 
+The largest *under*-representation across categories is Time Words. This pattern is consistent with a body of work on children's acquisition of the semantics of time words that suggests that children struggle with understanding these complex terms through age five [@harner1975;@tillman2015;@tillman2017]. 
 
 We next turn to how this pattern varies across languages. 
 
@@ -362,7 +362,7 @@ body_words <- read_feather("data/categories-semantic/body_words.feather")
 plot_unis(body_words)
 ```
 
-Words for Body Parts (Figure \@ref(fig:catsem-body-words)) are produced very early by most children, and the variance is quite low across languages (with the exception of a few terms in Cantonese and Cypriot Greek). One interesting pattern that is visible in these data is the ordering of *hand* and *foot* before *leg* and *arm*. Interestingly, Cantonese is probably variant here because *hand* and *leg* are monomorphemic (and written with single characters) while *foot* and *arm* in Cantonese are morphological compounds. 
+Across languages, body parts have been claimed as lexical universals: that is, nearly every language provides terms for naming the body [@andersen1978]. Despite this consistency, there is substantial cross-linguistic variation in exactly which body parts are named, reflecting different segmentation of body forms (e.g., some languages name both *hand* and *arm* while others have a single word for both) [@majid2010]. In our data, Words for Body Parts (Figure \@ref(fig:catsem-body-words)) are produced very early by most children, and the variance is quite low across languages (with the exception of a few terms in Cantonese and Cypriot Greek).  One interesting pattern that is visible in these data is the ordering of *hand* and *foot* before *leg* and *arm*. Cantonese is probably variant here because *hand* and *leg* are monomorphemic (and written with single characters) while *foot* and *arm* in Cantonese are morphological compounds. 
 
 ### Logic
 
@@ -372,7 +372,9 @@ logic_unis <- unique(logic_words$uni_lemma)
 plot_unis(logic_words)
 ```
 
-Finally, we examine words for logical operators (Figure \@ref(fig:catsem-logic-words)). The only items that are available across significant samples of languages are `r glue::glue("_{logic_unis}_")`. The negative words are learned early, with an ordering consistent with @bellugi1967 and @pea1982. *No* is very early, and *not* later. Interestingly, the quantifiers are not ordered as shown by @katsos2016 in a massive cross-linguistic study. In that study -- as well as in our own work in English [@horowitz2017] -- *all* was found to be understood better than *none*. In contrast, here we tend to find *none* is learned earlier than *all* and definitely learned earlier than *some*. One possibility is that these uses are only found in a restricted set of cases. Another is that contextualized production of negation is simpler than de-contextualized comprehension, as we have found in some of our work on the comprehension of negation in context [@nordmeyer2014;@nordmeyer2018].
+Finally, we examine words for logical operators (Figure \@ref(fig:catsem-logic-words)). The only items that are available across significant samples of languages are `r glue::glue("_{logic_unis}_")`. One important caveat that applies especially here (although of course to other words as well) is that children may produce many of these words with meanings that are quite different from those they take in adult language. To take just one example, there is a large literature investigating the semantics and pragmatics of "some" in children's language [see e.g., @barner2011].
+
+Keeping this caveat in mind, negative words are learned early, with an ordering consistent with @bellugi1967 and @pea1982. *No* is very early, and *not* later. Interestingly, the quantifiers are not ordered as shown by @katsos2016 in a massive cross-linguistic study. In that study -- as well as in our own work in English [@horowitz2017] -- *all* was found to be understood better than *none*. In contrast, here we tend to find *none* is learned earlier than *all* and definitely learned earlier than *some*. One possibility is that these uses are only found in a restricted set of cases. Another is that contextualized production of negation is simpler than de-contextualized comprehension, as we have found in some of our work on the comprehension of negation in context [@nordmeyer2014;@nordmeyer2018].
 
 ### Category variability
 

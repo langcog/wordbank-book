@@ -94,7 +94,8 @@ More generally, we are curious about how the range of variation we observed here
 
 ## Learning processes
 
-In Chapter \@ref(intro-theory), we introduced the idea of "process universals." These cannot be universals of content as all of the content being reported by parents filling CDI forms is language-specific. Instead, the idea of process universals is that there are processes that operate in different language context to produce the observed pattern of phenomena. These processes could be -- but need not be -- learner-internal. They could also operate at the level of the child-caregiver dyad, for example. What more can we say about them from the perspective of the discussion above?
+In Chapter \@ref(intro-theory), we introduced the idea of "process universals."
+These cannot be universals of content as all of the content being reported by parents filling CDI forms is language-specific. Instead, similar to @slobin1973's "operating principles," the idea of process universals is that there are processes that operate in different language contexts to produce the observed pattern of phenomena [cf. @clark1977]. We stress, however, that unlike operating principeles, our process universals need not be -- learner-internal. They could also operate at the level of the child-caregiver dyad, for example. What more can we say about them from the perspective of the discussion above?
 
 As we have stressed throughout, the connections between the broad trends and tendencies that we observed and any specific learner- or dyad-level process are weak, at best. Many different processes can likely lead to the same outcome, thus the linkages we make here are abductive rather than deductive. Further, as with many abductive arguments, some amount of evidential weight is given to the prior probability of the theoretical proposal. Bearing all that in mind, we highlight three process-level connections that appear consistent with our data. 
 

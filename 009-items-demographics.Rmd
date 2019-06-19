@@ -537,7 +537,7 @@ demo_ranef %>%
   dt()
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plot-bo-comp) and Table \@ref(tab:itemsdemo-bo-table-comp) again represent random effects coefficients for particular items in comprehension. In general, there are few surprises here: the words for _brother_ and _sister_ are much more likely for second-born children to understand, and even more likely for later-born children. The Norwegian data additionally show a few other words that second- and later-born children might be more likely to be exposed to via their siblings, including _skole_ (school) and _sukkertøy_ (sweets, hard candy).
+Figure \@ref(fig:itemsdemo-ranef-plot-bo-comp) and Table \@ref(tab:itemsdemo-bo-table-comp) again represent random effects coefficients for particular items in comprehension. In general, there are few surprises here: the words for _brother_ and _sister_ are much more likely for second-born children to understand, and even more likely for later-born children.^[Of course, children could be marked as understanding a term like _brother_ even without a true understanding of its relational structure!] The Norwegian data additionally show a few other words that second- and later-born children might be more likely to be exposed to via their siblings, including _skole_ (school) and _sukkertøy_ (sweets, hard candy).
 
 ```{r itemsdemo-ranef-plot-bo-prod, dependson="itemsdemo-plot_ranef", fig.height=6, fig.cap=glue::glue("Distribution of birth order item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
 plot_demo_ranef("birth_order", "produces")

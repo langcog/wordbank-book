@@ -791,9 +791,11 @@ In sum, we did not find strong support for effects of form composition or age on
 
 This chapter presented a comprehensive examination of the issue of biases for and against particular syntactic categories in acquisition. Building on earlier work by @bates1994, we created a quantitative measure of noun, predicate, and function word bias and examined variability in these measures across languages. Overall, a number of generalizations emerged regarding the composition of early vocabulary development. 
 
-* Nearly every language showed a positive bias for nouns in children's early vocabularies, though the degree of this bias varied. 
-* Every language showed a substantial bias against the early acquisition of function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency in the ambient language (see Chapter \@ref(items-prediction)). This bias was larger, on average, than biases in type of content words. 
-* In children's early comprehension vocabularies, there was variability in the degree of predicate representation; in early production vocabularies, as has previously been reported, languages were mostly biased against predicates. There were a few notable exceptions among the East Asian languages. 
+Nearly every language showed a positive bias for nouns in children's early vocabularies, though the degree of this bias varied. And further, every language showed a substantial bias against the early acquisition of function words, supporting the generalization that these are acquired much later than content words, despite their typically higher frequency in the ambient language (see Chapter \@ref(items-prediction)). This bias was larger, on average, than either noun or predicate biases. 
+
+In children's early comprehension vocabularies, there was variability in the degree of predicate representation; in early production vocabularies, as has previously been reported, languages were mostly biased against predicates. There were a few notable exceptions among the East Asian languages. 
+
+
 * Measures of bias in production and comprehension were not highly correlated with one another, especially for predicates and function words. There are likely many causes of these, but greater predicate comprehension compared with production appears to be one likely possible explanation. 
 
 

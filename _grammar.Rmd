@@ -384,7 +384,7 @@ clpm_fit_norway <- lavaan::lavaan(clpm_norway, data = norway_wide,
 ```
 
 ```{r}
-save(file = "data/grammar/clpms.Rds", list= c("dallas_wide", "norway_wide", 
+save(file = "data/grammar/clpms.Rds", list= c("dallas","norway", "dallas_wide", "norway_wide", 
      "clpm_fit_dallas", "clpm_fit_norway"))
 ```
 

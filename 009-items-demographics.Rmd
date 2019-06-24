@@ -488,20 +488,26 @@ As shown in Chapter \@ref(demographics), there is a highly consistent advantage 
 plot_demo_ranef("sex", "understands")
 ```
 
-```{r itemsdemo-sex-table-comp}
+```{r itemsdemo-sex-table-comp-male}
 top_table("understands", "sex", "positive", "male")
+```
+
+```{r itemsdemo-sex-table-comp-female}
 top_table("understands", "sex", "negative", "female")
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Table \@ref(tab:itemsdemo-sex-table-comp) gives the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
+Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution for comprehension, and Tables \@ref(tab:itemsdemo-sex-table-comp-male) and \@ref(tab:itemsdemo-sex-table-comp-female) give the items outside of the .5 logistic units threshold, across all languages. These are almost exclusively traditionally gendered items -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
 
 ```{r itemsdemo-ranef-plot-sex-prod, dependson="itemsdemo-plot_ranef", fig.height=14, fig.cap=glue::glue("Distribution of sex item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
 plot_demo_ranef("sex", "produces")
 ```
 
-```{r itemsdemo-sex-table-prod}
+```{r itemsdemo-sex-table-prod-male}
 top_table("produces", "sex", "positive", "male")
-top_table("produces", "sex", "negative", "female")
+```
+
+```{r itemsdemo-sex-table-prod-female}
+top_table("produces", "sex", "positive", "male")
 ```
 
 ```{r itemsdemo-sex_summary}
@@ -512,7 +518,7 @@ sex_summary <- demo_ranef %>%
   summarise(n = mean(n))
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plot-sex-prod) and Table \@ref(tab:itemsdemo-sex-table-prod) give the same measures for production. There are considerably more words per language with substantial gender biases for production (M = `r round(sex_summary$n[sex_summary$measure == "produces"], 2)`) than for comprehension (M = `r round(sex_summary$n[sex_summary$measure == "understands"], 2)`). But the content of these gender biases is extremely similar across language. For English, we see a male bias for vehicles and objects associated with traditionally male activities (e.g., sports), and a female bias for genital words and clothing. This pattern is replicated quite robustly across languages, although with varying magnitudes. 
+Figure \@ref(fig:itemsdemo-ranef-plot-sex-prod) and Tables \@ref(tab:itemsdemo-sex-table-prod-male) and \@ref(tab:itemsdemo-sex-table-prod-female) give the same measures for production. There are considerably more words per language with substantial gender biases for production (M = `r round(sex_summary$n[sex_summary$measure == "produces"], 2)`) than for comprehension (M = `r round(sex_summary$n[sex_summary$measure == "understands"], 2)`). But the content of these gender biases is extremely similar across language. For English, we see a male bias for vehicles and objects associated with traditionally male activities (e.g., sports), and a female bias for genital words and clothing. This pattern is replicated quite robustly across languages, although with varying magnitudes. 
 
 In sum, there appear to be two different processes at work in the gender effects we observe. The first is a general shift in the probability that any word will be produced or understood such that females are slightly more likely to produce it. The average magnitude of this fixed effect is `r signif(mean(filter(demo_coefs_coded, demo == "sex", measure == "produces")$estimate), 2)`. In other words, if a female had a 50% chance of saying a word, a male would on average have a `r signif(boot::inv.logit(mean(filter(demo_coefs_coded, demo == "sex", measure == "produces")$estimate))*100, digits = 2)`% chance of saying it. However, beyond this fixed effect, there are also variable effects for individual words. Most of these effects are small, but a few of them are quite large. For example, if an English-speaking female child had a 50% chance of saying the word _dress_, a male child would have a `r signif(boot::inv.logit(mean(filter(demo_coefs_coded, demo == "sex", measure == "produces")$estimate) + filter(demo_ranef, measure == "produces", demo== "sex",language == "English (American)", definition == "dress (object)")$sexMale)*100, digits = 2)`% chance of saying it. 
 
@@ -610,7 +616,7 @@ ggplot() +
 
 ```
 
-Examining the data across languages in Figure \@ref(fig:itemsdemo-plot-pronoun), we see a similar pattern. *Me*, *my*, and *mine* are all learned earlier for second-born children than first-born. In contrast, *you* and *your*, while numerically positive, have confidence intervals that overlap with zero. These data thus support the hypothesis that first-person possessives are learned slightly earlier for laterborn children (perhaps related to property conflicts, e.g. "that's mine!"). 
+Examining the data across languages in Figure \@ref(fig:itemsdemo-plot-pronouns), we see a similar pattern. *Me*, *my*, and *mine* are all learned earlier for second-born children than first-born. In contrast, *you* and *your*, while numerically positive, have confidence intervals that overlap with zero. These data thus support the hypothesis that first-person possessives are learned slightly earlier for laterborn children (perhaps related to property conflicts, e.g. "that's mine!"). 
 
 ### Maternal education
 

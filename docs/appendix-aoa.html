@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning</title>
-  <meta name="description" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning>
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning />
+  <meta property="og:title" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -17,18 +16,18 @@
   <meta name="github-repo" content="langcog/wordbank-book" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning />
+  <meta name="twitter:title" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning" />
   
   
   
 
-<meta name="author" content="Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky">
+<meta name="author" content="Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="appendix-stitching.html">
@@ -49,7 +48,7 @@
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.5/datatables.js"></script>
+<script src="libs/datatables-binding-0.7/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
@@ -201,7 +200,7 @@
 </ul></li>
 <li class="chapter" data-level="11" data-path="categories-syntactic.html"><a href="categories-syntactic.html"><i class="fa fa-check"></i><b>11</b> Vocabulary Composition: Syntactic Categories</a><ul>
 <li class="chapter" data-level="11.1" data-path="categories-syntactic.html"><a href="categories-syntactic.html#introduction"><i class="fa fa-check"></i><b>11.1</b> Introduction</a></li>
-<li class="chapter" data-level="11.2" data-path="methods-and-data.html"><a href="methods-and-data.html#methods-and-data"><i class="fa fa-check"></i><b>11.2</b> Methods and data</a></li>
+<li class="chapter" data-level="11.2" data-path="categories-syntactic.html"><a href="categories-syntactic.html#methods-and-data-1"><i class="fa fa-check"></i><b>11.2</b> Methods and data</a></li>
 <li class="chapter" data-level="11.3" data-path="categories-syntactic.html"><a href="categories-syntactic.html#results-2"><i class="fa fa-check"></i><b>11.3</b> Results</a><ul>
 <li class="chapter" data-level="11.3.1" data-path="categories-syntactic.html"><a href="categories-syntactic.html#comprehension-wg-3"><i class="fa fa-check"></i><b>11.3.1</b> Comprehension (WG)</a></li>
 <li class="chapter" data-level="11.3.2" data-path="categories-syntactic.html"><a href="categories-syntactic.html#production-ws-3"><i class="fa fa-check"></i><b>11.3.2</b> Production (WS)</a></li>
@@ -304,13 +303,13 @@
             <section class="normal" id="section-">
 <div id="appendix-aoa" class="section level1">
 <h1><span class="header-section-number">D</span> Estimating Age of Acquisition</h1>
-<p>It is frequently useful to have an estimate of the age at which children produce a particular word with a probability greater than some threshold; these are commonly referred to as the word’s age of acquisition <span class="citation">(AoA; J. Goodman, Dale, and Li <a href="references.html#ref-goodman2008">2008</a>)</span>. In this Appendix, we compare methods for estimating age of acquisition, using the English Words &amp; Sentences data as a case study.</p>
-<p>The simplest and most obvious measure is to use the empirically-determined first month at which the proportion producing a word exceeds the threshold (we will use 50% of children producing as our threshold in all subsequent discussion, following previous literature <span class="citation">(J. Goodman, Dale, and Li <a href="references.html#ref-goodman2008">2008</a>)</span>. This approach is simple, but results in the exclusion of a large number of words. Of the total, 11% do not reach this rate by the ceiling of the form and must be discarded. Further, this method is very sensitive to sparse data. A dataset with highly clustered data will show clustered AoAs. For example, in the Swedish data, there are 307 22-month-olds and 0 21-month-olds. Thus, there will be no 21-month AoAs in this dataset. For these reasons, a model-based approach is likely to be more robust.</p>
+<p>It is frequently useful to have an estimate of the age at which children produce a particular word with a probability greater than some threshold; these are commonly referred to as the word’s age of acquisition <span class="citation">(AoA; Goodman, Dale, and Li <a href="references.html#ref-goodman2008">2008</a>)</span>. In this Appendix, we compare methods for estimating age of acquisition, using the English Words &amp; Sentences data as a case study.</p>
+<p>The simplest and most obvious measure is to use the empirically-determined first month at which the proportion producing a word exceeds the threshold (we will use 50% of children producing as our threshold in all subsequent discussion, following previous literature <span class="citation">(Goodman, Dale, and Li <a href="references.html#ref-goodman2008">2008</a>)</span>. This approach is simple, but results in the exclusion of a large number of words. Of the total, 11% do not reach this rate by the ceiling of the form and must be discarded. Further, this method is very sensitive to sparse data. A dataset with highly clustered data will show clustered AoAs. For example, in the Swedish data, there are 307 22-month-olds and 0 21-month-olds. Thus, there will be no 21-month AoAs in this dataset. For these reasons, a model-based approach is likely to be more robust.</p>
 <p>We initially investigated three model-based methods. Each of these models was fit to data from each word (proportion of children producing at each age) individually, resulting in a continuous curve that can be used to predict AoA more precisely. The three models we examined were:</p>
 <ol style="list-style-type: decimal">
 <li>Standard generalized linear model, logistic link (GLM)</li>
 <li>Robust GLM</li>
-<li>Bayesian GLM with hand-tuned prior parameters <span class="citation">(A. Gelman et al. <a href="references.html#ref-gelman2008">2008</a>)</span></li>
+<li>Bayesian GLM with hand-tuned prior parameters <span class="citation">(Gelman et al. <a href="references.html#ref-gelman2008">2008</a>)</span></li>
 </ol>
 <p>For the Bayesian GLM, we experimented substantially with prior setting in order to incorporate information about the slopes and intercepts we expected for words. We used default (Cauchy) priors over coefficients. We used the empirical distribution of GLM slopes to set a strict prior over the age slopes we expected, while setting a much weaker prior over intercepts. In practice, in larger datasets, only the most extreme words (e.g. <em>mommy</em>, for which there is a ceiling effect for nearly every age) are affected by this choice.</p>
 <p>In addition to these models, we investigated a hierarchical Bayesian model with shared distributional components across words. This model appeared to perform similarly to the simple word-based Bayesian model (at least in the presence of sufficient data) and was relatively expensive to fit in terms of computation, so we do not discuss it here.</p>
@@ -390,7 +389,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

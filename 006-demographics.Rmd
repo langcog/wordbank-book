@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Demographic Effects on Vocabulary Size {#demographics}
 
 Chapter \@ref(vocabulary) examined cross-linguistic consistency and variability in the size of children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods-and-data) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. In particular, we develop a framework for comparing the magnitude of these effects.
@@ -226,7 +231,7 @@ demo_data_plot <- function(demo, form, measure) {
                        name = "Age (months)") +
     scale_y_continuous(breaks = c(0, .5, 1), limits = c(0, 1), 
                        name = glue::glue("Median {measure}")) +
-    theme(legend.position = "bottom",
+    theme(legend.position = "top",
           strip.text.x = element_text(size = 7)) + 
     scale_size(guide = FALSE)
 }
@@ -303,7 +308,7 @@ We begin by examining data from WG-type forms using comprehension measures. Figu
 Visual inspection of the data suggest limited sex differences, but a female advantage is present in some languages (most pronounced in Korean, Latvian, and Hebrew). Note that many authors do not find gender differences in early comprehension. For example, using an overlapping 12 language dataset, @eriksson2012 concluded that there were no major comprehension differences. And in an earlier study, @feldman2000 also did not find gender differences in comprehension using a large, relatively representative American dataset, though this study included data only from younger children (10--13 months).
 
 ```{r demo-data-plot-sex-wg-comp, fig.height=7, fig.cap=demo_data_cap('sex', 'WG', 'comprehension'), dependson="demo-plot-funs"}
-demo_data_plot("sex", "WG", "comprehension")
+demo_data_plot(sex, "WG", "comprehension")
 ```
 
 We can examine the statistical models to get a clearer picture. For each language, the robust generalized linear model predicts vocabulary size (number of words understood out of the total) predicted by age and the interaction of age and sex. We specified this simple model so that the coefficient estimate for the age by sex interaction (as shown in Figure \@ref(fig:demo-int-sex-wg-comp)) provides a convenient summary of the difference in vocabulary growth across groups. Despite the small magnitudes of the coefficients, `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WG.comprehension$sex$model_summary)` languages had a female advantage. In contrast, only `r nrow(filter(analyses$WG.comprehension$sex$model_summary, p < .05, beta < 0))` showed a male advantage and the remainder did not show a significant sex by age interaction.
@@ -333,7 +338,7 @@ demo_mmad_plot("sex", "WG", "comprehension", "female")
 We next turn to production data on the Words & Sentences instrument, which we expect to be much more informative regarding production (see Figure \@ref(fig:demo-data-plot-sex-ws-prod). Visual inspection confirms differences in almost every case, and an analysis of the fitted models (see Figure \@ref(fig:demo-int-sex-ws-prod)) shows that `r nrow(filter(analyses$WS.production$sex$model_summary, p < .05, beta > 0))` of `r nrow(analyses$WS.production$sex$model_summary)` languages show a statistically significant female advantage!
 
 ```{r demo-data-plot-sex-ws-prod, fig.height=7, fig.cap=demo_data_cap('sex', 'WS', 'production'), dependson="demo-plot-funs"}
-demo_data_plot("sex", "WS", "production")
+demo_data_plot(sex, "WS", "production")
 ```
 
 ```{r demo-int-sex-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and sex for WS production data in each language."}
@@ -400,7 +405,7 @@ Here, we can examine birth order effects in early vocabulary comprehension and p
 We perform the same set of analyses as for sex, shown in Figure \@ref(fig:demo-data-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-birth-order-wg-comp), Figure \@ref(fig:demo-mmad-plot-birth-order-wg-comp), and Figure \@ref(fig:demo-int-birth-order-wg-comp).
 
 ```{r demo-data-plot-birth-order-wg-comp, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WG', 'comprehension'), dependson="demo-plot-funs"}
-demo_data_plot("birth_order", "WG", "comprehension")
+demo_data_plot(birth_order, "WG", "comprehension")
 ```
 
 ```{r demo-int-birth-order-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WG production data in each language."}
@@ -420,7 +425,7 @@ demo_mmad_plot("birth_order", "WG", "comprehension", "first-born")
 The parallel set of analyses for WS Production data are shown in Figure \@ref(fig:demo-data-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-plot-birth-order-ws-prod), and Figure \@ref(fig:demo-int-birth-order-ws-prod).
 
 ```{r demo-data-plot-birth-order-ws-prod, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WS', 'production'), dependson="demo-plot-funs"}
-demo_data_plot("birth_order", "WS", "production")
+demo_data_plot(birth_order, "WS", "production")
 ```
 
 ```{r demo-int-birth-order-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WS production data in each language."}
@@ -453,7 +458,7 @@ In the current dataset, we have the opportunity to explore the extent of these e
 We again perform the same set of analyses, shown in Figure \@ref(fig:demo-data-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-plot-mom-ed-wg-comp), and Figure \@ref(fig:demo-int-mom-ed-wg-comp).
 
 ```{r demo-data-plot-mom-ed-wg-comp, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WG', 'comprehension'), dependson="demo-plot-funs"}
-demo_data_plot("mom_ed", "WG", "comprehension")
+demo_data_plot(mom_ed, "WG", "comprehension")
 ```
 
 ```{r demo-int-mom-ed-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WG comprehension data in each language."}
@@ -473,7 +478,7 @@ demo_mmad_plot("mom_ed", "WG", "comprehension", "college-educated")
 The next analyses are shown in Figure \@ref(fig:demo-data-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-plot-mom-ed-ws-prod), and Figure \@ref(fig:demo-int-mom-ed-ws-prod).
 
 ```{r demo-data-plot-mom-ed-ws-prod, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WS', 'production'), dependson="demo-plot-funs"}
-demo_data_plot("mom_ed", "WS", "production")
+demo_data_plot(mom_ed, "WS", "production")
 ```
 
 ```{r demo-int-mom-ed-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WS production data in each language."}

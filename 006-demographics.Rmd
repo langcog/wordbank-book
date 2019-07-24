@@ -1,8 +1,7 @@
 ---
 output: html_document
-editor_options: 
-  chunk_output_type: console
 ---
+
 # Demographic Effects on Vocabulary Size {#demographics}
 
 Chapter \@ref(vocabulary) examined cross-linguistic consistency and variability in the size of children's reported vocabulary.  In this chapter, we follow up these analyses by beginning the process -- which will span throughout the book -- of attempting to understand the nature and sources of these differences. In particular, we take advantage of the sample diversity described in Chapter \@ref(methods-and-data) to explore differences in the median trajectory of vocabulary growth within demographic groups, focusing on three variables that are relatively available in our data: sex, maternal education, and birth order. In particular, we develop a framework for comparing the magnitude of these effects.
@@ -291,7 +290,7 @@ demo_int_plot <- function(demo_str, form, measure) {
 
 ## Sex
 
-Our first analysis examines how vocabulary development differs by children's sex.^[Throughout, we will assume that parents report on children's assigned sex at birth, rather than their gender identity.] The literature on cognitive differences due to sex is vast, controversial in many places, and difficult to summarize [see @miller2014 for a useful recent review]. Focusing on development, @maccoby1974 began the enterprise of systematizing and summarizing gender differences. Their conclusions were largely deflationary but did suggest some differences in aggression and verbal ability (which were suggested to emerge in the period of early adolescence). This latter claim is most relevant for our analysis, but has been controversial as well. 
+Our first analysis examines how vocabulary development differs by children's sex/gender.^[Throughout, we will assume that parents report on children's assigned sex at birth, rather than their gender identity. In the absence of any data that would tease apart the biological, psychological, and social aspects of sex and gender, we use interchangeably the terms sex/gender, female/girl, and male/boy.] The literature on cognitive differences due to sex is vast, controversial in many places, and difficult to summarize [see @miller2014 for a useful recent review]. Focusing on development, @maccoby1974 began the enterprise of systematizing and summarizing gender differences. Their conclusions were largely deflationary but did suggest some differences in aggression and verbal ability (which were suggested to emerge in the period of early adolescence). This latter claim is most relevant for our analysis, but has been controversial as well. 
 
 Using meta-analytic tools, @hyde1988 found that differences in verbal ability were minimal, but more recent studies have suggested consistent verbal ability differences. For example, @stoet2013 found differences in reading ability across nations in a massive elementary education dataset (the PISA assessment), with variance in the magnitude of difference, but with girls very consistently showing an advantage. Similarly, @robinson2011 reported consistent differences in reading ability (favoring girls) at the onset of kindergarten in a nationally-representative US sample. A weak prediction from this literature is thus a modest but consistent female advantage in early vocabulary.
 

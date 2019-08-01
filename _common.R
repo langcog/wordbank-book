@@ -31,6 +31,8 @@ theme_update(plot.margin = margin(0, 0, 2, 0, "pt"),
              legend.margin = margin(0, 0, 0, 0, "pt"))
 .grey <- "grey70"
 .refline <- "dotted"
+.coef_line <- element_line(colour = .grey, size = 0.1)
+
 .ages <- seq(5, 45, 5)
 
 .pal <- ggthemes::ptol_pal

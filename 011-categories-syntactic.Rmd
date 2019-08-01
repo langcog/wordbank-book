@@ -348,7 +348,7 @@ plot_areas <- function(area_data, measure) {
     scale_y_discrete(breaks = area_data$order,
                      labels = area_data$langform) +
     labs(x = glue::glue("Relative representation ({measure})"), y = "") +
-    theme(panel.grid.major.y = element_line(colour = .grey, size = 0.1),
+    theme(panel.grid.major.y = .coef_line,
           axis.text.y = element_text(size = rel(0.8)))
 }
 
@@ -483,7 +483,7 @@ ggplot(plot_pred_areas, aes(y = order, x = mean)) +
   scale_y_discrete(breaks = plot_pred_areas$order,
                    labels = plot_pred_areas$langform) +
   labs(x = glue::glue("Relative representation (production)"), y = "") +
-  theme(panel.grid.major.y = element_line(colour = .grey, size = 0.1),
+  theme(panel.grid.major.y = .coef_line,
         axis.text.y = element_text(size = rel(0.8)))
 ```
 
@@ -730,7 +730,7 @@ ggplot(age_areas, aes(x = area, y = id, colour = age_group)) +
   guides(colour = guide_legend(title.position = "top", title.hjust = 0.5)) +
   labs(y = "", x = "Relative representation", colour = "Age group") +
   theme(legend.position = "top",
-        panel.grid.major.y = element_line(colour = .grey, size = 0.1),
+        panel.grid.major.y = .coef_line,
         axis.text.y = element_text(size = rel(0.8)))
 ```
 

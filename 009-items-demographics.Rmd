@@ -390,7 +390,7 @@ plot_demo_fixed <- function(dem) {
     guides(colour = guide_legend(nrow = 1)) +
     labs(x = "Odds ratio (fixed effect)", y = "") +
     theme(legend.position = "top", legend.direction = "vertical", legend.justification = c(0, 0),
-          panel.grid.major.y = element_line(colour = .grey, size = 0.1))
+          panel.grid.major.y = .coef_line)
   
 }
 ```

@@ -93,17 +93,17 @@ label_caps <- as_labeller(function(value) {
     str_replace_all("_", " ")
 })
 
-dt_caption <- function(caption) {
-  glue::glue('<table> <caption> (#tab:{opts_current$get("label")}) {caption} </caption> </table>')
-}
-
-dt <- function(data, cnames = label_caps(colnames(data)), ...) {
-  DT::datatable(
-    data = data,
-    rownames = FALSE,
-    colnames = cnames,
-    ...
-  )
-}
+# dt_caption <- function(caption) {
+#   glue::glue('<table> <caption> (#tab:{opts_current$get("label")}) {caption} </caption> </table>')
+# }
+#
+# dt <- function(data, cnames = label_caps(colnames(data)), ...) {
+#   DT::datatable(
+#     data = data,
+#     rownames = FALSE,
+#     colnames = cnames,
+#     ...
+#   )
+# }
 
 kable <- function(...) knitr::kable(..., booktabs = TRUE, linesep = "")

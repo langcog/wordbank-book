@@ -50,7 +50,8 @@ included_cats <- filtered_freqs %>% pull(category)
 included_labels <- filtered_freqs %>% pull(category_label)
 ```
 
-In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., Animals or Body Parts). As Figure \@ref(fig:catsem-items) shows, while some semantic categories are shared across many instruments, there are others that are quite rare (many corresponding to specific categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories-syntactic), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, Action Words and Descriptive Words tend to be broad predicate classes without as much clear semantic differentiation; the semantics of function words is difficult to characterize). This filtering step leaves `r length(included_labels)` categories: `r included_labels`. Samples included in this analysis are shown in Table \@ref(tab:catsem-sample-sizes). 
+In these analyses, we take advantage of the fact that CDI forms are typically structured into semantic categories (e.g., Animals or Body Parts). As Figure \@ref(fig:catsem-items) shows, while some semantic categories are shared across many instruments, there are others that are quite rare (many corresponding to specific categories that are of interest in particular languages). We focus on those semantic categories with greater representation in the data. Further, to avoid duplicating our analysis in Chapter \@ref(categories-syntactic), we focus on those semantic categories that fall into "nouns" and "other" lexical classes. (In general, Action Words and Descriptive Words tend to be broad predicate classes without as much clear semantic differentiation; the semantics of function words is difficult to characterize). This filtering step leaves `r length(included_labels)` categories: `r included_labels`.
+<!-- Samples included in this analysis are shown in Table \@ref(tab:catsem-sample-sizes).  -->
 
 
 ```{r catsem-script, eval=FALSE}
@@ -82,15 +83,12 @@ area_summary <- areas %>%
 area_summary_ordered <- area_summary %>%
   mutate(category_label = fct_reorder(category_label, mean))
 
-sample_sizes <- cat_comp_data %>%
-  group_by(language, form, measure, category) %>%
-  summarise(n = n()) %>%
-  ungroup() %>%
-  select(language, form, n) %>%
-  distinct() 
-
-cat(dt_caption("Number of CDI administrations in every instrument included in these analyses."))
-sample_sizes %>% dt()
+# sample_sizes <- cat_comp_data %>%
+#   group_by(language, form, measure, category) %>%
+#   summarise(n = n()) %>%
+#   ungroup() %>%
+#   select(language, form, n) %>%
+#   distinct() 
 ```
 
 

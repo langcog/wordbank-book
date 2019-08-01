@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Individual Variation in Vocabulary {#style}
 
 > Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development. If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994]
@@ -703,7 +708,7 @@ wg <- filter(admins, form %in% WGs) %>%
   mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   mutate(langform = langform %>%
            fct_reorder(productivity, 
-                       fun = function(x) mean(x, na.rm = TRUE), .desc = FALSE))
+                       .fun = function(x) mean(x, na.rm = TRUE), .desc = FALSE))
 
 # wg$langform <- fct_reorder(factor(wg$langform), wg$productivity, 
 #                            fun = function(x) mean(x, na.rm = TRUE), .desc = FALSE)
@@ -740,25 +745,26 @@ productivity_coefs <- wg %>%
   filter(term == "age") %>%
   ungroup %>%
   mutate(langform = fct_reorder(paste(language, form, sep = .inst_sep),
-                                estimate, fun = mean))
+                                estimate, .fun = mean))
 
-ggplot(productivity_coefs, 
-       aes(x = langform, y = estimate)) + 
+ggplot(productivity_coefs, aes(x = langform, y = estimate)) +
+  geom_hline(yintercept = 0, linetype = .refline, colour = .grey) +
   geom_pointrange(aes(ymin = estimate - 1.96 * std.error,
-                      ymax = estimate + 1.96 * std.error)) + 
+                      ymax = estimate + 1.96 * std.error)) +
   coord_flip() +
   labs(x = "", y = "Coefficient estimate")
 ```
 
-However, in nearly every language, to one degree or another, we see some children with productivity ratios > .95. Table \@ref(tab:style-wg-table) shows the proportion of children showing more than 95% productivity. A number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents who are not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages.
+However, in nearly every language, to one degree or another, we see some children with productivity ratios > .95. Figure \@ref(fig:style-wg-props) shows the proportion of children showing more than 95% productivity. A number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents who are not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet despite that they appear to have an outsized effect on our estimates of the development of productivity ratios across languages.
 
-```{r style-wg-table, results="asis"}
-dt_caption("Proportion of administrations in each language for which the productivity ratio is greater than 95 percent.")
+```{r style-wg-props, fig.cap="Percentage of administrations in each language for which the productivity ratio is greater than 95\\%."}
 wg %>%
   group_by(langform) %>%
-  summarise(no_comprehension = signif(mean(productivity > .95, na.rm = TRUE), 2)) %>%
-  arrange(desc(no_comprehension)) %>%
-  dt(cnames = c("Instrument", "Proportion"))
+  summarise(no_comprehension = mean(productivity > .95, na.rm = TRUE) * 100) %>%
+  ggplot(aes(x = no_comprehension, y = fct_reorder(langform, no_comprehension))) +
+    geom_point() +
+    scale_x_continuous(labels = function(breaks) paste0(breaks, "%")) +
+    labs(x = "Percentage of administrations with productivity ratio > 95%", y = "")
 ```
 
 In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of developing instructions for parents that more effectively convey the concept of what it means for a child to "understand" a word. Outside of these concerns, while there very well may be reliable variation in the comprehension-production ratio across children, we unfortunately do not have access to independent signals that could validate this quantity.

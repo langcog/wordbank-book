@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Methods and Data {#methods-and-data}
 
 Note:
@@ -81,7 +86,6 @@ Wordbank also includes some other forms that do not fit into this schema, includ
 Table \@ref(tab:methods-overview) shows an overview of the instruments in Wordbank.
 
 ```{r methods-overview, results="asis"}
-cat(dt_caption("Overview of the available instruments in the Wordbank dataset."))
 items %>%
   group_by(language, form) %>%
   summarise(items = n(),
@@ -89,7 +93,8 @@ items %>%
             categories = n_distinct(category)) %>%
   left_join(instruments) %>%
   select(language, form, categories, items, words, age_min, age_max) %>%
-  dt()
+  kable(caption = "Overview of the available instruments in the Wordbank dataset.",
+        col.names = label_caps(colnames(.)))
 ```
 
 The number of administrations available is highly variable across instruments and languages, however. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages.

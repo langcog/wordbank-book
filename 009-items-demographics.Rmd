@@ -1,12 +1,13 @@
 ---
-output: html_document
+editor_options:
+  chunk_output_type: console
 ---
 # Demographic Variation in Individual Words {#items-demographics}
 
 Note:
   ~ *The analyses below were presented at the 2019 Biennial Meeting of the Society for Research in Child Development; an earlier version of the gender analyses was presented at the Boston University Conference on Language Development in 2016.*
 
-In Chapter \@ref(demographics), we documented demographic differences in total vocabulary size, that is, how many different words can a child comprehend or produce? But where do these differences come from? Concretely, if girls say more words than boys, *which words* do they say? Is it the case that they simply more likely to be producing each word with some probability, or are there individual words that are more likely to be produced? Or, are both true? In this chapter, we consider the possibility that individual words carry one or more demographic signals. We assess which words are learned differentially earlier or later by girls vs. boys, by first-born vs. later-born children, and by children with different levels of maternal education. 
+In Chapter \@ref(demographics), we documented demographic differences in total vocabulary size, that is, how many different words can a child comprehend or produce. But where do these differences come from? Concretely, if girls say more words than boys, *which words* do they say? Is it the case that they are simply more likely to be producing each word with some relatively uniform probability, or are there individual words that they are much more likely to produce? In this chapter, we consider the possibility that individual words carry one or more demographic signals. We assess which words are learned differentially earlier or later by girls vs. boys, by first-born vs. later-born children, and by children with different levels of maternal education. 
 
 ```{r itemsdemo-params}
 sample_cutoff <- 50
@@ -152,11 +153,11 @@ save(demo_props, file = "data/items-demographics/demo_props.Rds")
 
 ### Data
 
-Various subsets of the datasets in Wordbank are coded for one or more demographic variables. Here, we examine the child's birth order, level of maternal education, and sex/gender^[Throughout, we will assume that parents report on children's assigned sex at birth, rather than their gender identity. In the absence of any data that would tease apart the biological, psychological, and social aspects of sex and gender, we use interchangeably the terms sex/gender, female/girl, and male/boy.]. For these analyses, we extract all of the instruments with demographically coded data and combine them into two datasets: comprehension from WG forms, and production from both WG and WS forms. (We use the "by item stitching" approach described in Appendix \@ref(appendix-stitching)). 
+Various subsets of the datasets in Wordbank are coded for one or more demographic variables. Here, we examine the child's birth order, level of maternal education, and sex/gender^[Throughout, we will assume that parents report on children's assigned sex at birth, rather than their gender identity. In the absence of any data that would tease apart the biological, psychological, and social aspects of sex and gender, we use interchangeably the terms sex/gender, female/girl, and male/boy.]. For these analyses, we extract all of the instruments with demographically coded data and combine them into two datasets: comprehension from WG forms, and production from both WG and WS forms (using the "by item stitching" approach described in Appendix \@ref(appendix-stitching)). 
 
-This approach creates six different analyses, one for each combination of demographic variable and measure. We exclude a language from a given analysis if it has fewer than `r sample_cutoff` children for that demographic variable and measure. The demographic variables are coded into the values First / Second / Third+ for birth order, Below Secondary / Secondary / College and Above for maternal education, and Female / Male for assigned sex at birth.
+This approach creates six different analyses, one for each combination of measure (comprehension/production) demographic variable. The demographic variables are coded into the values First / Second / Third+ for birth order, Below Secondary / Secondary / College and Above for maternal education, and Female / Male for assigned sex at birth. We exclude a language from a given analysis if it has fewer than `r sample_cutoff` children for that measure and each level of that demographic variable.
 
-Each dataset yields a trajectory for each word, created by smoothing the number of children that are reported to understand or produce the word over age. These trajectories can be computed separately for each value of the demographic variable. For example, Figure \@ref(fig:itemsdemo-props-plot-item) illustrates the trajectories for some sample items in English for production data split by birth order. Note that the word _brother_ is spoken much later by first-born children than by later-born children, whereas _green_ is spoken much later by later-born children.  And, the word _dog_ is produced only slightly later for later-born children than by first- or second-born children. Averaging all of these trajectories together reproduces the general demographic achievement curves reported in Chapter \@ref(demographics). 
+Each dataset yields a trajectory for each word, created by smoothing the number of children that are reported to understand or produce the word over age. These trajectories can be computed separately for each value of the demographic variable. For example, Figure \@ref(fig:itemsdemo-props-plot-item) illustrates the trajectories for some sample items in English for production data split by birth order. Note that the word _brother_ is spoken much earlier by second-born and third-born children than by first-born children, while _green_ is spoken much earlier by first-born children.  And the word _dog_ is produced only slightly earlier by first-born or second-born children than by later-born children. Averaging all of these trajectories together reproduces the general demographic achievement curves reported in Chapter \@ref(demographics). 
 
 ```{r itemsdemo-plot_props}
 load("data/items-demographics/demo_props.Rds")
@@ -321,9 +322,9 @@ update_language <- function(lang) {
 
 There are a number of complementary methods to estimate individual item effects. In Chapter \@ref(demographics), we explored a simple, non-parametric approach to estimating demographic effects across groups. Here we are interested in estimating these effects for individual items, and thus data are sparser for each individual item. Thus, it is more effective to use a multi-level, model-based analysis in which demographic effects are estimated simultaneously at the level of all items and specifically for individual items. 
 
-In particular, we use a mixed-effects logistic regression to predict how many children produce/understand items from their age and their level for a given demographic variable, with random effects for item. A model of this type is fit separately to the data for each language and demographic measure. For example, for the birth order, the production data set for a given language gives us the proportions of first-born, second-born, and later-born children who are reported to produce each item at each age. The model is then specified as:
+In particular, we use mixed-effects logistic regression to predict whether children produce/understand each item from their age and their level for a given demographic variable, with random effects of age and demographic variable by item. A model of this type is fit separately to the data for each language and demographic measure, specified as:
 ```
-prop ~ (age + birth_order | item) + age + birth_order
+produces ~ (age + birth_order | item) + age + birth_order
 ```
 
 For each demographic variable, we specify the contrasts such that their coefficient compares each level of the variable to the previous level. For example, the coefficients for birth order reflect the overall difference between first-born children as compared to second-born children and the overall difference between second-born children as compared to later-born children. The items' random slopes for each demographic indicate for each individual item, the contribution to those same differences over the main effect.
@@ -386,10 +387,10 @@ plot_demo_fixed <- function(dem) {
     ggstance::geom_pointrangeh(aes(xmin = ci_lower, xmax = ci_upper)) +
     scale_x_continuous(breaks = coef_breaks, labels = round(exp(coef_breaks), 2)) +
     scale_y_discrete(breaks = plot_coefs$group, labels = plot_coefs$language) +
-    scale_colour_manual(values = term_colours, name = dem) +
-    guides(colour = guide_legend(nrow = 1)) +
+    scale_colour_manual(values = term_colours, name = "") +
     labs(x = "Odds ratio (fixed effect)", y = "") +
-    theme(legend.position = "top", legend.direction = "vertical", legend.justification = c(0, 0),
+    theme(legend.position = "top", legend.direction = "horizontal", legend.justification = c(0, 0),
+          legend.margin = margin(b = -10, unit = "pt"),
           panel.grid.major.y = .coef_line)
   
 }
@@ -422,44 +423,109 @@ cis <- demo_ranef_coded %>%
             ci_upper_exp = ci_upper(exp_estimate))
 ```
 
-```{r itemsdemo-plot_ranef, dependson="itemsdemo-demo_ranef"}
-num_extremes <- 2
+```{r itemsdemo-plot_ranef-old, dependson="itemsdemo-demo_ranef"}
+# num_extremes <- 2
+# 
+# plot_demo_ranef <- function(plot_demo, plot_measure) {
+#   
+#   demo_data <- demo_ranef_coded %>%
+#     filter(measure == plot_measure, demo == plot_demo) %>%
+#     mutate(definition = str_remove(definition, " \\(.*\\)$"))
+#   
+#   demo_labelled <- bind_rows(
+#     demo_data %>% group_by(language, term) %>% top_n(num_extremes, estimate),
+#     demo_data %>% group_by(language, term) %>% top_n(num_extremes, -estimate)
+#   )
+#   
+#   plot_breaks <- exp_breaks(2, 3)
+# 
+#   ggplot(demo_data, aes(x = estimate, y = term, fill = term)) +
+#     facet_wrap(vars(language), ncol = 4) +
+#     geom_vline(xintercept = 0, colour = .grey, alpha = 0.6) +
+#     ggridges::geom_density_ridges(alpha = .5, scale = 0.9) +
+#     ggrepel::geom_label_repel(aes(label = definition, colour = term),
+#                               data = demo_labelled,
+#                               segment.size = 0.3,
+#                               label.padding = 0.15,
+#                               point.padding = unit(0.2, "lines"),
+#                               arrow = arrow(length = unit(0.01, "npc")),
+#                               nudge_y = 0.2,
+#                               size = 2.5, fill = "white",
+#                               family = .uni_font) +
+#     scale_x_continuous(breaks = plot_breaks, labels = round(exp(plot_breaks), 2)) +
+#     scale_y_discrete(expand = expand_scale(mult = c(0, 0.01))) +
+#     scale_colour_manual(values = term_colours, guide = FALSE) +
+#     scale_fill_manual(values = term_colours, name = "") +
+#     guides(fill = guide_legend(direction = "vertical", reverse = TRUE)) +
+#     labs(x = "Odds ratio", y = "") +
+#     theme(axis.text.y = element_blank(),
+#           axis.ticks.y = element_blank(),
+#           legend.position = "top")
+# 
+# }
+```
 
-plot_demo_ranef <- function(plot_demo, plot_measure) {
+```{r itemsdemo-plot_ranef, dependson="itemsdemo-demo_ranef"}
+demo_combined <- demo_ranef_coded %>%
+  mutate(demo = demo %>%
+           fct_relevel("sex", "birth_order", "mom_ed") %>%
+           fct_recode("Birth order" = "birth_order",
+                      "Maternal education" = "mom_ed",
+                      "Sex" = "sex")) %>%
+  select(language, measure, demo, term, definition, estimate) %>%
+  rename(estimate_ranef = estimate) %>%
+  left_join(demo_coefs_coded %>% select(language, measure, demo, term, estimate) %>% rename(estimate_fixed = estimate)) %>%
+  mutate(estimate = estimate_fixed + estimate_ranef)
+
+plot_demo_ranef <- function(plot_demo, plot_measure, lims = c(-1, 1)) {
   
-  demo_data <- demo_ranef_coded %>%
+  demo_data <- demo_combined %>%
     filter(measure == plot_measure, demo == plot_demo) %>%
     mutate(definition = str_remove(definition, " \\(.*\\)$"))
   
-  demo_labelled <- bind_rows(
-    demo_data %>% group_by(language, term) %>% top_n(num_extremes, estimate),
-    demo_data %>% group_by(language, term) %>% top_n(num_extremes, -estimate)
-  )
-  
   plot_breaks <- exp_breaks(2, 3)
+  plot_labels <- demo_data %>%
+    distinct(language, term) %>%
+    mutate(term = fct_drop(term)) %>%
+    filter(term == levels(term)[length(levels(term))])
 
-  ggplot(demo_data, aes(x = estimate, y = term, fill = term)) +
-    facet_wrap(vars(language), ncol = 4) +
+  plt <- ggplot(demo_data,
+                aes(x = estimate, y = fct_rev(language), fill = term)) +
+    coord_cartesian(clip = "off") +
     geom_vline(xintercept = 0, colour = .grey, alpha = 0.6) +
-    ggridges::geom_density_ridges(alpha = .5, scale = 0.9) +
-    ggrepel::geom_label_repel(aes(label = definition, colour = term),
-                              data = demo_labelled,
-                              segment.size = 0.3,
-                              label.padding = 0.15,
-                              point.padding = unit(0.2, "lines"),
-                              arrow = arrow(length = unit(0.01, "npc")),
-                              nudge_y = 0.2,
-                              size = 2.5, fill = "white",
-                              family = .uni_font) +
-    scale_x_continuous(breaks = plot_breaks, labels = round(exp(plot_breaks), 2)) +
+    ggridges::geom_density_ridges(quantile_lines = TRUE, quantiles = 2,
+                                  alpha = .5, panel_scaling = FALSE) +
+    # ggridges::geom_density_ridges(aes(height = ..density..), stat = "density",
+    #                               alpha = .5, scale = 0.95) +
+    scale_x_continuous(expand = c(0.01, 0), breaks = plot_breaks,
+                       labels = round(exp(plot_breaks), 2), limits = lims) +
     scale_y_discrete(expand = expand_scale(mult = c(0, 0.01))) +
-    scale_colour_manual(values = term_colours, guide = FALSE) +
-    scale_fill_manual(values = term_colours, name = "") +
-    guides(fill = guide_legend(direction = "vertical", reverse = TRUE)) +
+    scale_fill_manual(values = term_colours, guide = FALSE) +
     labs(x = "Odds ratio", y = "") +
     theme(axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
-          legend.position = "top")
+          legend.position = "top",
+          panel.border = element_blank(),
+          strip.text.y = element_blank())
+  
+  if (n_distinct(demo_data$term) > 1) {
+    plt +
+      facet_grid(rows = vars(language), cols = vars(term), scales = "free_y",
+                 drop = TRUE) +
+      geom_text(aes(label = language), x = -1, hjust = 0.5, vjust = 0,
+                nudge_y = 1, family = .font, data = plot_labels) +
+      theme(strip.text.x = element_text(face = "bold"))
+  } else {
+    plt +
+      facet_wrap(vars(language), scales = "free_y", drop = TRUE, ncol = 4,
+                 dir = "v") +
+      # geom_text(aes(label = language), x = -1, y = Inf, hjust = 0, vjust = 0,
+      #           nudge_y = -10,
+      #           family = .font, data = plot_labels) +
+      # theme(strip.text.x = element_blank())
+      theme(strip.text.x = element_text(hjust = 0, size = rel(0.8),
+                                        margin = margin(b = 2, unit = "pt")))
+  }
 
 }
 ```
@@ -475,7 +541,8 @@ tops <- demo_ranef_coded %>%
   top_n(num_tops, estimate) %>%
   arrange(measure, language, demo, term, desc(estimate)) %>%
   mutate(rank = row_number(), exp_estimate = exp(estimate)) %>%
-  separate(term, c("numerator", "denominator"), sep = " : ", remove = FALSE) %>%
+  separate(term, c("numerator", "denominator"), sep = " : ",
+           remove = FALSE) %>%
   mutate(effect = if_else(direction == "positive",
                           glue::glue("{numerator} > {denominator}"),
                           glue::glue("{denominator} > {numerator}")))
@@ -489,32 +556,96 @@ dir_codes <- list(
              "Higher maternal education biased" = "positive")
 )
 
-top_plot <- function(dem, meas, nc = 4) {
-  tops %>%
+top_plots <- function(plot_demo, plot_measure, max_rows = 5) {
+  plt_tops <- tops %>%
     ungroup() %>%
-    filter(measure == meas, demo == dem) %>%
+    filter(measure == plot_measure, demo == plot_demo) %>%
     select(-measure, -demo) %>%
     mutate(definition = str_remove(definition, " \\(.*\\)$"),
            direction = direction %>%
              fct_relevel("negative", "positive") %>%
-             fct_recode(!!!dir_codes[[dem]])) %>%
-    ggplot(aes(x = effect, y = rank, colour = term)) +
-      facet_wrap(~language + direction, scales = "free", ncol = nc) +
-      geom_text(aes(label = sprintf("%.1f", exp_estimate)), colour = .grey, hjust = "right",
-                nudge_x = -.25, family = .font, size = 2.25) +
-      geom_text(aes(label = definition), family = .uni_font, hjust = "left", size = 2.5,
-                nudge_x = -.2) +
-      scale_colour_manual(values = term_colours, guide = FALSE) +
-      scale_x_discrete(position = "top") +
-      scale_y_reverse() +
-      labs(x = "") +
-      theme_mikabr(base_size = 10, base_family = .font) +
-      theme(axis.text.y = element_blank(), axis.title.y = element_blank(),
-            axis.ticks = element_blank(), panel.border = element_blank(),
-            strip.placement = "outside",
-            strip.text = element_text(face = "bold", margin = margin(b = 3)),
-            axis.text.x = element_text(size = rel(0.7)))
+             fct_recode(!!!dir_codes[[plot_demo]]))
+  
+  if (n_distinct(plt_tops$effect) <= n_distinct(plt_tops$direction)) {
+    max_rows <- max_rows * 2
+  }
+  plt_tops %>%
+    group_by(language) %>%
+    nest() %>%
+    mutate(i = rep(1:ceiling((nrow(.) / max_rows)),
+                   each = max_rows)[1:nrow(.)]) %>%
+    unnest() %>%
+    group_by(i) %>%
+    nest() %>%
+    mutate(rows = ceiling(map_int(data, nrow) / 40),
+           plt = map(data, function(plt_section) {
+             plt <- ggplot(plt_section,
+                           aes(x = effect, y = rank, colour = term)) +
+               geom_text(aes(label = sprintf("%.1f", exp_estimate)),
+                         colour = .grey, hjust = "right",
+                         nudge_x = -.25, family = .font, size = 2.25) +
+               geom_text(aes(label = definition), family = .uni_font,
+                         hjust = "left", size = 2.5, nudge_x = -.2) +
+               scale_colour_manual(values = term_colours, guide = FALSE) +
+               scale_x_discrete(position = "top") +
+               scale_y_reverse() +
+               labs(x = "") +
+               theme_mikabr(base_size = 10, base_family = .font) +
+               theme(axis.text.y = element_blank(),
+                     axis.title.y = element_blank(),
+                     axis.ticks = element_blank(),
+                     panel.border = element_blank(),
+                     strip.placement = "outside",
+                     strip.text = element_text(face = "bold",
+                                               margin = margin(b = 3)),
+                     axis.text.x = element_text(size = rel(0.7)))
+             
+             if (n_distinct(plt_tops$effect) > n_distinct(plt_tops$direction)) {
+               plt +
+                 facet_wrap(~language + direction, scales = "free", ncol = 2)
+             } else {
+               plt +
+                 facet_wrap(~language, scales = "free", ncol = 2)
+             }
+           }))
 }
+```
+
+```{r, results="asis"}
+# lang_top_table <- function(plot_demo, plot_measure) {
+#   
+#   plt_tops <- tops %>%
+#     ungroup() %>%
+#     filter(measure == plot_measure, demo == plot_demo) %>%
+#     select(-measure, -demo) %>%
+#     mutate(definition = str_remove(definition, " \\(.*\\)$"),
+#            direction = direction %>%
+#              fct_relevel("negative", "positive") %>%
+#              fct_recode(!!!dir_codes[[plot_demo]])) %>%
+#     group_by(language) %>%
+#     nest()
+#   
+#   walk2(plt_tops$data, plt_tops$language, function(lang_data, lang) {
+#   wide_tops <- lang_data %>%
+#     select(direction, effect, exp_estimate, definition) %>%
+#     group_by(direction) %>%
+#     nest() %>%
+#     mutate(data = map(data, ~.x %>% group_by(effect) %>% nest() %>% spread(effect, data) %>% unnest(.sep = ","))) %>%
+#     spread(direction, data) %>%
+#     unnest(.sep = ",")
+#   
+#   directions <- names(wide_tops) %>% str_split(",") %>% map_chr(~.[1]) %>% unique()
+#   effects <- names(wide_tops) %>% str_split(",") %>% map_chr(~.[2]) %>% unique()
+#   wide_tops %>%
+#     kable(col.names = rep("", 8), digits = 1) %>%
+#     kableExtra::add_header_above(set_names(rep(2, 4), effects)) %>%
+#     kableExtra::add_header_above(set_names(rep(4, 2), directions)) %>%
+#     kableExtra::add_header_above(set_names(8, lang)) %>%
+#     cat()
+#   })
+# }
+# 
+# lang_top_table("birth_order", "produces")
 ```
 
 ```{r itemsdemo-thresholds}
@@ -579,7 +710,7 @@ min_item <- function(lang, meas, dem, trm) {
 
 The primary target of our analysis are the item random effects for each demographic variable, indicating our best estimate of the specific effect of a particular demographic on a particular item. These item random effects factor out the fixed, main effect of the demographic (the effects we reported in Chapter \@ref(demographics)), thus they are centered at zero. But the magnitude and direction of each item random effect can be interpreted as the contribution of belonging to a certain demographic group to the probability of knowing that particular item, over and above the overall contribution of the demographic group itself and the item itself.
 
-One interesting question is the extent to which extreme items differ. Figure \@ref(fig:itemsdemo-demo-ranef-distrib) shows the distribution of demographic random effects across all languages and measures, using a quantile-quantile (QQ) plot. In QQ plots, points on a diagonal line indicate conformity to the standard normal distribution, while deviations suggest differences in distributional form. Looking at the resulting plot yields a broad, low-slope diagonal (a normal distribution) with skewed tails. Further, the majority of coefficients are within a very tight range: 95% of the item effects (across all languages, measures, and demographic factors) are within (`r cis$ci_lower_exp`, `r cis$ci_upper_exp`), i.e. the odds for a child in one demographic group knowing the word are not more than `r min(1/cis$ci_lower_exp, cis$ci_upper_exp)` times higher than for another group, for 95% of words. Thus, as hypothesized, all of the action is in the tails of the distribution: a few words vary substantially in how often they are produced according to some demographic feature.
+One interesting question is the extent to which extreme items differ. Figure \@ref(fig:itemsdemo-demo-ranef-distrib) shows the distribution of demographic random effects across all languages and measures, using a quantile-quantile (QQ) plot. Points on a diagonal line indicate conformity to the standard normal distribution, while deviations suggest differences in distributional form. Looking at the resulting plot yields a broad, low-slope diagonal (a normal distribution) with skewed tails. Further, the majority of coefficients are within a very tight range: 95% of the item effects (across all languages, measures, and demographic factors) are within (`r signif(cis$ci_lower_exp, 2)`, `r signif(cis$ci_upper_exp, 2)`), i.e. the odds for a child in one demographic group knowing the word are not more than `r signif(min(1/cis$ci_lower_exp, cis$ci_upper_exp))` times higher than for another group, for 95% of words. Thus, as hypothesized, all of the action is in the tails of the distribution: a few words vary substantially in how often they are produced according to some demographic feature.
 
 ```{r itemsdemo-demo-ranef-distrib, dependson="itemsdemo-demo_ranef", fig.height=3, fig.cap="Quantiles of item random effects compared to theoretical quantiles of a normal distribution."}
 demo_ranef_coded %>%
@@ -599,30 +730,42 @@ In the following subsections, we examine the coefficients and their distribution
 
 ### Sex
 
-As shown in Chapter \@ref(demographics) and reflected here in Figure \@ref(fig:iitemsdemo-demo-coefs-sex), there is a highly consistent advantage for girls in language production. This advantage is slightly less pronounced for comprehension but still present. Independently of this advantage, we also see specific items emerge as understood differentially for boys or girls. 
+As shown in Chapter \@ref(demographics) and reflected here in Figure \@ref(fig:itemsdemo-demo-coefs-sex), there is a highly consistent advantage for girls in language production. This advantage is slightly less pronounced for comprehension but still present. Independently of this advantage, we also see specific items emerge as understood differentially for boys or girls. 
 
 ```{r itemsdemo-demo-coefs-sex, fig.height=8, fig.width=8, dependson="itemsdemo-demo_coefs_plot", fig.cap="Main effect of sex for each language and measure."}
 plot_demo_fixed("Sex")
 ```
 
-Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution of item effects for comprehension, and Figure \@ref(fig:itemsdemo-tops-sex-comp) shows the top `r num_tops` items most biased in each direction, in each languages. These are almost exclusively traditionally gendered items of clothing and toys -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
+Figure \@ref(fig:itemsdemo-ranef-plots-sex-comp) gives the full distribution of item effects for comprehension, and Figure \@ref(fig:itemsdemo-tops-sex-comp-2) shows the top `r num_tops` items most biased in each direction, in each languages. These are almost exclusively traditionally gendered items of clothing and toys -- for English, for example, the words with a substantial male advantage are vehicle-related and _hammer_, while the female advantage words are _purse_ and _necklace_. Thus, our first impression is that these tend to be specific content items associated with gendered play. 
 
-```{r itemsdemo-ranef-plots-sex-comp, dependson="itemsdemo-plot_ranef", fig.height=10, fig.cap=glue::glue("Distribution of sex item random effects for comprehension data in each language (most extreme {num_extremes} items are labelled).")}
-plot_demo_ranef("sex", "understands")
+```{r itemsdemo-ranef-plots-sex-comp, dependson="itemsdemo-plot_ranef", fig.height=5, out.width="80%", fig.cap=glue::glue("Distribution of sex item random effects for comprehension data in each language.")}
+plot_demo_ranef("Sex", "understands")
 ```
 
-```{r itemsdemo-tops-sex-comp, dependson="itemsdemo-tops_ranef", fig.height=18, fig.cap=glue::glue("Top {num_tops} most sex biased words in each language for comprehension data.")}
-top_plot("sex", "understands")
+```{r itemsdemo-tops-sex-comp-1, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("sex", "understands")$rows[[1]], fig.cap=""}
+top_plots("sex", "understands")$plt[[1]]
 ```
 
-Figures \@ref(fig:itemsdemo-ranef-plot-sex-prod) and \@ref(fig:itemsdemo-tops-sex-prod) give the same measures for production. There are considerably more words per language with large gender biases (at least `r exp(threshold)` times higher in either direction) for production (M = `r 100*signif(threshold_prop("produces", "sex"), 3)`%) than for comprehension (M = `r 100*signif(threshold_prop("understands", "sex"), 3)`%). The content of these gender biases is extremely similar across language. For English, we see the largest biases in each direction for genital terms, male biases for vehicles and objects associated with traditionally male activities (e.g., sports), and a female bias for female-coded clothing and toys. This pattern is replicated quite robustly across languages, although with varying magnitudes.
-
-```{r itemsdemo-ranef-plot-sex-prod, dependson="itemsdemo-plot_ranef", fig.height=14, fig.cap=glue::glue("Distribution of sex item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
-plot_demo_ranef("sex", "produces")
+```{r itemsdemo-tops-sex-comp-2, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("sex", "understands")$rows[[2]], fig.cap=glue::glue("Top {num_tops} most sex biased words in each language for comprehension data."), fig.pos="t"}
+top_plots("sex", "understands")$plt[[2]]
 ```
 
-```{r itemsdemo-tops-sex-prod, dependson="itemsdemo-tops_ranef", fig.height=26, fig.cap=glue::glue("Top {num_tops} most sex biased words in each language for production data.")}
-top_plot("sex", "produces")
+Figures \@ref(fig:itemsdemo-ranef-plot-sex-prod) and \@ref(fig:itemsdemo-tops-sex-prod-3) give the same measures for production. There are considerably more words per language with large gender biases (at least `r exp(threshold)` times higher in either direction) for production (mean over languages `r 100*signif(threshold_prop("produces", "sex"), 3)`%) than for comprehension (mean over languages `r 100*signif(threshold_prop("understands", "sex"), 3)`%). The content of these gender biases is extremely similar across language. For English, we see the largest biases in each direction for genital terms, the largest male biases for vehicles and objects associated with traditionally male activities (e.g., sports), and the largest female biases for female-coded clothing and toys. This pattern is replicated quite robustly across languages, although with varying magnitudes.
+
+```{r itemsdemo-ranef-plot-sex-prod, dependson="itemsdemo-plot_ranef", fig.height=7, out.width="80%", fig.cap=glue::glue("Distribution of sex item random effects for production data in each language.")}
+plot_demo_ranef("Sex", "produces")
+```
+
+```{r itemsdemo-tops-sex-prod-1, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("sex", "produces")$rows[[1]], fig.cap=""}
+top_plots("sex", "produces")$plt[[1]]
+```
+
+```{r itemsdemo-tops-sex-prod-2, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("sex", "produces")$rows[[2]], fig.cap=""}
+top_plots("sex", "produces")$plt[[2]]
+```
+
+```{r itemsdemo-tops-sex-prod-3, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("sex", "produces")$rows[[3]], fig.cap=glue::glue("Top {num_tops} most sex biased words in each language for production data."), fig.pos="t"}
+top_plots("sex", "produces")$plt[[3]]
 ```
 
 In sum, there appear to be two different processes at work in the gender effects we observe. The first is a general shift in the probability that _any_ word will be produced or understood such that girls are slightly more likely to produce or understand it than boys. The average magnitude of this fixed effect across languages is `r signif(effect("understands", "Sex", "Female : Male"), 2)` for comprehension and `r signif(effect("produces", "Sex", "Female : Male"), 2)` for production. In other words, if a male child had a 50% chance of saying a word (odds 1:1), a female child would on average have `r signif(effect("produces", "Sex", "Female : Male"), 2)` times higher odds of saying it, i.e. a `r 100*signif(apply_effect(0.5, effect("produces", "Sex", "Female : Male")), 2)`% chance. However, beyond this fixed effect, there are also variable effects for individual words. Most of these effects are small, but a few of them are quite large. For example, if an English-speaking male child has a 50% chance of saying the word _dress_, a female child would have a `r 100*signif(apply_effect(0.5, effect_item("English (American)", "produces", "sex", "Female : Male", "dress (object)")), 2)`% chance; if a female child has a 50% chance of saying the word _hammer_, a male child would have a `r 100*signif(apply_effect(0.5, 1 / effect_item("English (American)", "produces", "sex", "Female : Male", "hammer")), 2)`% chance.
@@ -637,22 +780,26 @@ plot_demo_fixed("Birth order")
 
 Figures \@ref(fig:itemsdemo-ranef-plot-bo-comp) and \@ref(fig:itemsdemo-tops-bo-comp) again represent random effects coefficients for particular items in comprehension. In general, there are few surprises here: the words for _brother_ and _sister_ are much more likely for second-born children to understand, and even more likely for later-born children.^[Of course, children could be marked as understanding a term like _brother_ even without a true understanding of its relational structure!] Several languages additionally show a few other words that second-born and later-born children might be more likely to be exposed to via their siblings, such as _school_ in English and Norwegian (_skole_).
 
-```{r itemsdemo-ranef-plot-bo-comp, dependson="itemsdemo-plot_ranef", fig.height=3.5, fig.cap=glue::glue("Distribution of birth order item random effects for comprehension data in each language (most extreme {num_extremes} items are labelled).")}
-plot_demo_ranef("birth_order", "understands")
+```{r itemsdemo-ranef-plot-bo-comp, dependson="itemsdemo-plot_ranef", fig.height=4, fig.width=5, out.width="50%", fig.cap=glue::glue("Distribution of birth order item random effects for comprehension data in each language.")}
+plot_demo_ranef("Birth order", "understands")
 ```
 
-```{r itemsdemo-tops-bo-comp, dependson="itemsdemo-tops_ranef", fig.height=8, fig.cap=glue::glue("Top {num_tops} most sex biased words in each language for comprehension data.")}
-top_plot("birth_order", "understands", 2)
+```{r itemsdemo-tops-bo-comp, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("birth_order", "understands")$rows[[1]], fig.cap=glue::glue("Top {num_tops} most birth order biased words in each language for comprehension data.")}
+top_plots("birth_order", "understands")$plt[[1]]
 ```
 
-The same general patterns are present in the production data (Figures \@ref(fig:itemsdemo-ranef-plot-bo-prod) and \@ref(fig:itemsdemo-tops-bo-prod)), with further evidence that having elder siblings appears to be related exposure to sweets, at least in some cultures: _popsicle_, _donut_, and _candy_ all appear now in the English data, and _tyggegummi_ (gum) and several soda- and candy-related words appear in the Norwegian data. _Hate_ also appears in the English data, suggesting some emotional expressions due to having a sibling. We interpret this pattern with caution, however, as birth order is likely partially confounded with socioeconomic status, and so later-born children might also be from low-SES families who have more environmental exposure to "junk foods" like soda and candy.
+The same general patterns are present in the production data (Figures \@ref(fig:itemsdemo-ranef-plot-bo-prod) and \@ref(fig:itemsdemo-tops-bo-prod-2)), with additional evidence that having elder siblings appears to be related exposure to sweets, at least in some cultures: _popsicle_, _donut_, and _candy_ all appear in the English data, and _tyggegummi_ (gum) and several soda- and candy-related words appear in the Norwegian data. _Hate_ also appears in the English data, suggesting some emotional expressions due to having a sibling. We interpret this pattern with caution, however, as birth order is likely partially confounded with socioeconomic status, and so later-born children might also be from low-SES families who have more environmental exposure to "junk foods" like soda and candy.
 
-```{r itemsdemo-ranef-plot-bo-prod, dependson="itemsdemo-plot_ranef", fig.height=6, fig.cap=glue::glue("Distribution of birth order item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
-plot_demo_ranef("birth_order", "produces")
+```{r itemsdemo-ranef-plot-bo-prod, dependson="itemsdemo-plot_ranef", fig.height=7, fig.width=5, out.width="50%", fig.cap=glue::glue("Distribution of birth order item random effects for production data in each language.")}
+plot_demo_ranef("Birth order", "produces")
 ```
 
-```{r itemsdemo-tops-bo-prod, dependson="itemsdemo-tops_ranef", fig.height=14, fig.cap=glue::glue("Top {num_tops} most birth order biased words in each language for production data.")}
-top_plot("birth_order", "produces", 2)
+```{r itemsdemo-tops-bo-prod-1, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("birth_order", "produces")$rows[[1]], fig.cap=""}
+top_plots("birth_order", "produces")$plt[[1]]
+```
+
+```{r itemsdemo-tops-bo-prod-2, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("birth_order", "produces")$rows[[2]], fig.cap=glue::glue("Top {num_tops} most birth order biased words in each language for production data."), fig.pos="t"}
+top_plots("birth_order", "produces")$plt[[2]]
 ```
 
 ```{r itemdemo-bo-examples}
@@ -663,9 +810,9 @@ bo_min <- min_item("English (American)", "produces", "birth_order", "First : Sec
 bo_min_effect <- effect_item("English (American)", "produces", "birth_order", "First : Second", bo_min)
 ```
 
-In sum, averaged across languages, a given word has lower odds of being understood by a first-born child than a second-born child (by `r signif(effect("understands", "Birth order", "First : Second"), 2)`) and higher odds of being understood by a second-born child than a later-born child (by `r signif(effect("understands", "Birth order", "Second : Third+"), 2)`). It also has higher odds of being produced by both first-born compared to second-born (by `r signif(effect("produces", "Birth order", "First : Second"), 2)`) and second-born compared to later-born (by `r signif(effect("produces", "Birth order", "First : Second"), 2)`). Moreover, individual items show particularly large differences by birth order: in American English, a first-born child having a 50% chance of saying the word _`r bo_max`_ corresponds to a second-born child-born child having a `r 100*signif(apply_effect(0.5, bo_max_effect), 2)`% chance of saying it; conversely, a second-born child having a 50% chance of saying the word _`r bo_min`_ corresponds to a first-born child-born child having a `r 100*signif(apply_effect(0.5, 1/bo_min_effect), 2)`% chance of saying it.
+In sum, averaged across languages, a given word has lower odds of being understood by a first-born child than a second-born child (by `r signif(effect("understands", "Birth order", "First : Second"), 2)`) and higher odds of being understood by a second-born child than a later-born child (by `r signif(effect("understands", "Birth order", "Second : Third+"), 2)`). It also has higher odds of being produced by both first-born compared to second-born (by `r signif(effect("produces", "Birth order", "First : Second"), 2)`) and second-born compared to later-born (by `r signif(effect("produces", "Birth order", "First : Second"), 2)`). Additionally, individual items show particularly large differences by birth order: in American English, a first-born child having a 50% chance of saying the word _`r bo_max`_ corresponds to a second-born child-born child having a `r 100*signif(apply_effect(0.5, bo_max_effect), 2)`% chance of saying it; conversely, a second-born child having a 50% chance of saying the word _`r bo_min`_ corresponds to a first-born child-born child having a `r 100*signif(apply_effect(0.5, 1/bo_min_effect), 2)`% chance of saying it.
 
-One further interesting claim has been made in the literature regarding effects of birth order on language development. @oshima-takane1996 reported that second-born children learn second-person personal pronouns (e.g., *you*) earlier, likely due to the disambiguating effect of having siblings addressed using such pronouns in overheard speech. We examined this pattern in our own American English data in Figure \@ref(fig:itemsdemo-props-plot-pronouns) and found that there was a smaller first-born advantage for *me* and *mine* than average (and smaller than for *my*, *you*, and *your*). *Prima facie*, this finding is less consistent with a global increase in second-person disambiguation than with later-born children needing to assert "mine" to declare ownership. 
+A specific claim has been made in the literature regarding effects of birth order on language development -- @oshima-takane1996 reported that second-born children learn second-person personal pronouns (e.g., *you*) earlier, likely due to the disambiguating effect of having siblings addressed using such pronouns in overheard speech. We examined this pattern in our own American English data in Figure \@ref(fig:itemsdemo-props-plot-pronouns) and found that there was a smaller first-born advantage for *me* and *mine* than average (and smaller than for *my*, *you*, and *your*). *Prima facie*, this finding is less consistent with a global increase in second-person disambiguation than with later-born children needing to assert "mine" to declare ownership. 
 
 ```{r itemsdemo-props-plot-pronouns, dependson="itemsdemo-plot_props", fig.height=5, fig.cap="Developmental trajectories for personal pronouns in American English words by birth order."}
 pronouns <- c("me", "my", "mine", "you","your", "yours")
@@ -687,7 +834,7 @@ plot_demo_props[["birth_order"]] %>%
 
 Examining the data across languages in Figure \@ref(fig:itemsdemo-plot-pronouns), we see a similar pattern. *Me*, *my*, and *mine* are all learned earlier for second-born children than first-born. In contrast, *you* and *your*, while numerically positive, have confidence intervals that overlap with zero. These data thus support the hypothesis that first-person possessives are learned slightly earlier for later-born children (perhaps related to property conflicts, e.g. "that's mine!").
 
-```{r itemsdemo-plot-pronouns, fig.height=1.5, fig.cap="Histogram showing item random effects for personal pronouns by birth order, across languages. Red line marks zero, blue line marks the mean, blue band shows a 95\\% confidence interval."}
+```{r itemsdemo-plot-pronouns, fig.height=1.5, fig.cap="Histogram showing item random effects for personal pronouns by birth order, with each point representing the effect in a given language.Red lines marks no effect, blue lines marks the mean, and blue bands shows bootstrapped 95\\% confidence intervals."}
 pronoun_ranef <- demo_ranef_coded %>%
   filter(demo == "birth_order", measure == "produces", str_detect(term, "First")) %>%
   mutate(estimate = -estimate) %>%
@@ -718,32 +865,32 @@ ggplot() +
 
 ### Maternal education
 
-Our final set of analyses of demographic influences on individual words examines vocabulary items that are differentially present in the vocabulary of children with lower maternal education. As noted in Chapter \@ref(demographics), there are substantial cross-linguistic differences in how large the overall socioeconomic stratification is. For example, we observe large differences in children's vocabulary size in the American English data, with children of less educated mothers reporting substantially lower production vocabulary. Fixed effects from this analyses are shown in Figure \@ref(fig:itemsdemo-demo-coefs-me), which reveals that children with higher levels of maternal education generally have larger productive vocabularies, but surprisingly, smaller vocabularies. Again this is possibly due to the reporting biases discussed in Chapter \@ref(demographics).
+Our final set of analyses of demographic influences on individual words examines vocabulary items that are differentially present in the vocabulary of children with differing levels of maternal education. As noted in Chapter \@ref(demographics), there are substantial cross-linguistic differences in how large the overall socioeconomic stratification is. For example, we observe large differences in children's vocabulary size in the American English data, with children of less educated mothers reporting substantially lower production vocabulary. Fixed effects from this analyses are shown in Figure \@ref(fig:itemsdemo-demo-coefs-me), which reveals that children with higher levels of maternal education generally have larger productive vocabularies, but perhaps surprisingly, smaller vocabularies. Again this is possibly due to the reporting biases discussed in Chapter \@ref(demographics).
 
 ```{r itemsdemo-demo-coefs-me, fig.height=5, fig.width=8, dependson="itemsdemo-demo_coefs_plot", fig.cap="Main effect of maternal education for each language and measure."}
 plot_demo_fixed("Maternal education")
 ```
 
-Figures \@ref(fig:itemsdemo-ranef-plots-me-comp) and \@ref(fig:itemsdemo-tops-me-comp) show comprehension results. Many more words are strongly affected by maternal education for American English than for other languages: `r 100*signif(threshold_lang("English (American)", "understands", "mom_ed"), 2)`% of American English words have effects of at least `r exp(threshold)` times in either direction, as compared to `r 100*signif(threshold_prop("understands", "mom_ed"), 2)`% averaged over languages. This finding is consistent with the idea that there may be more substantial maternal education effects in this dataset more generally.
+Figures \@ref(fig:itemsdemo-ranef-plots-me-comp) and \@ref(fig:itemsdemo-tops-me-comp) show item random effects for comprehension. Many more words are strongly affected by maternal education for American English than for other languages: `r 100*signif(threshold_lang("English (American)", "understands", "mom_ed"), 2)`% of American English words have effects of at least `r exp(threshold)` times in either direction, as compared to `r 100*signif(threshold_prop("understands", "mom_ed"), 2)`% averaged over languages. This finding is consistent with the idea that there may be more substantial maternal education effects in this dataset more generally.
 
-The words that are more likely to be understood by children of college-educated and secondary-educated mothers are often animal-related and may speculatively be related to reading books about animals (since these farm animals are not prominent in most children's experience). _Read_ is also on this list, perhaps related to reading practices (or the perception of the importance of these practices). Negatively linked words include _cake_ (supporting the speculation above with reference to birth order) and a number of other items that are perhaps harder to interpret as being SES-linked.
+The words that are more likely to be understood by children of college-educated and secondary-educated mothers are often animal-related (e.g., Danish _får_ [sheep], _tiger_; English _cow_, _quack quack_) and may speculatively be related to reading books about animals (since most of these animals are not prominent in most children's experience). Some of the largest differences are for _read_ in English and _livro_ [book] in Portuguese, perhaps also related to reading practices (or the perception of the importance of these practices). Negatively linked words include some kinship terms (e.g., Danish _faster_ and _moster_ [aunt], _morbror_ and _fabror_ [uncle]; English _aunt_, _uncle_, _brother_), common sweets (e.g., English _candy_; Portuguese _chupa-chupa_ [brand of lollipop]; Spanish _soda_), and money-related words (e.g., Danish _småpenge_ [small change]; English _money_, _penny_).
 
-```{r itemsdemo-ranef-plots-me-comp, dependson="itemsdemo-plot_ranef", fig.height=3.5, fig.cap=glue::glue("Distribution of maternal education item random effects for comprehension data in each language (most extreme {num_extremes} items are labelled).")}
-plot_demo_ranef("mom_ed", "understands")
+```{r itemsdemo-ranef-plots-me-comp, dependson="itemsdemo-plot_ranef", fig.height=4, fig.width=5, out.width="50%", fig.cap=glue::glue("Distribution of maternal education item random effects for comprehension data in each language.")}
+plot_demo_ranef("Maternal education", "understands")
 ```
 
-```{r itemsdemo-tops-me-comp, dependson="itemsdemo-tops_ranef", fig.height=8, fig.cap=glue::glue("Top {num_tops} most maternal education biased words in each language for comprehension data.")}
-top_plot("mom_ed", "understands", 2)
+```{r itemsdemo-tops-me-comp, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("mom_ed", "understands")$rows[[1]], fig.cap=glue::glue("Top {num_tops} most maternal education biased words in each language for production data.")}
+top_plots("mom_ed", "understands")$plt[[1]]
 ```
 
-Production data show a similar but more extreme picture (Figures \@ref(fig:itemsdemo-ranef-plot-me-prod) and \@ref(fig:itemsdemo-tops-me-prod)), with an even larger number of words linked to maternal education in American English (`r 100*signif(threshold_lang("English (American)", "produces", "mom_ed"), 2)`). Examination of the English data suggests that animal vocabulary is again more prevalent for the children of more educated parents (as are babysitters). Again supporting the link between birth order and maternal education, _brother_ is less common for the children of more highly educated moms, as are _candy_, _gum_, and _soda_. And, as for comprehension, the most substantial link to maternal education is found in the American English sample.
+Production data show a similar but more extreme picture (Figures \@ref(fig:itemsdemo-ranef-plot-me-prod) and \@ref(fig:itemsdemo-tops-me-prod)), with an even larger number of words linked to maternal education in American English (`r 100*signif(threshold_lang("English (American)", "produces", "mom_ed"), 2)`%). Across languages, animal vocabulary is again more prevalent for children of more educated mothers (e.g., Danish _zebra_; English _sheep_; Portuguese _hipopótamo_), as is _babysitter's name_. Children of less education mothers are again more likely to say words for relatives (e.g., Czech _bráška_ [brother]; Danish _oldefar_ [great-grandfather]), junk foods (e.g., English _gum_, _candy_, _soda_), and money (e.g. German _arm_ [poor]; Spanish _dinero_ [money]), along with other harder to categorize items.
 
-```{r itemsdemo-ranef-plot-me-prod, dependson="itemsdemo-plot_ranef", fig.cap=glue::glue("Distribution of maternal education item random effects for production data in each language (most extreme {num_extremes} items are labelled).")}
-plot_demo_ranef("mom_ed", "produces")
+```{r itemsdemo-ranef-plot-me-prod, dependson="itemsdemo-plot_ranef", fig.height=6, fig.width=5, out.width="50%", fig.cap=glue::glue("Distribution of maternal education item random effects for production data in each language")}
+plot_demo_ranef("Maternal education", "produces", c(-1, 1.5))
 ```
 
-```{r itemsdemo-tops-me-prod, dependson="itemsdemo-tops_ranef", fig.height=12, fig.cap=glue::glue("Top {num_tops} most maternal education biased words in each language for production data.")}
-top_plot("mom_ed", "produces", 2)
+```{r itemsdemo-tops-me-prod, dependson="itemsdemo-tops_ranef", fig.height=2*top_plots("mom_ed", "produces")$rows[[1]], fig.cap=glue::glue("Top {num_tops} most maternal education biased words in each language for production data.")}
+top_plots("mom_ed", "produces")$plt[[1]]
 ```
 
 

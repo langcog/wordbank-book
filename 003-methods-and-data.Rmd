@@ -53,7 +53,7 @@ An application programming interface (API) is a set of abstractions that allow a
 
 We developed this package, `wordbankr`, to provide a simple and flexible API for the Wordbank dataset [@frank2016], and our current book depends on it heavily. The package provides a consistent set of function calls for retrieving data from the underlying database, for example `get_instruments` and `get_administrations` to retrieve all or subsections of these tables, respectively. We do not describe the package in depth here, since it is described in our previous paper and in its [online documentation](https://github.com/langcog/wordbankr).
 
-### "Unilemmas": cross-linguistic conceptual mappings
+### "Unilemmas": cross-linguistic conceptual mappings {#unilemmas}
 
 As described in Chapter \@ref(intro-practical), it is sometimes useful to (cautiously) compare the developmental trajectory for a single concept across multiple languages. To facilitate these comparisons, we created "unilemmas," cross-linguistic mappings from lexical items to single (English) forms that stand for a particular conceptual abstraction. Some lexical items are represented on only one or a handful of instruments, but there are many that are common across a large number of instruments, leading to an opportunity for cross-linguistic comparison. 
 

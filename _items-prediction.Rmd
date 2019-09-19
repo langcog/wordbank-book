@@ -60,7 +60,7 @@ mean_term_coef <- function(t, r = 2) {
     filter(term == t) %>%
     pull(mean_estimate) %>%
     round(r)
- sprintf("$\\bar{\\beta} = %s$", coef)
+ sprintf("$\\bar{\\beta} =$ %s", coef)
 }
 
 mean_term_measure_coef <- function(meas, t) {
@@ -68,7 +68,7 @@ mean_term_measure_coef <- function(meas, t) {
     filter(term == t, measure == meas) %>%
     pull(mean_estimate) %>%
     round(2)
- sprintf("$\\bar{\\beta} = %s$", coef)
+ sprintf("$\\bar{\\beta} =$ %s", coef)
 }
 
 most_opposite <- function(ex_terms) {
@@ -120,7 +120,7 @@ mean_lexcat_coef <- function(t, lc) {
     filter(term == t, lexical_category == lc) %>%
     pull(mean_estimate) %>%
     round(2)
- sprintf("$\\bar{\\beta} = %s$", coef)
+ sprintf("$\\bar{\\beta} =$ %s", coef)
 }
 ```
 
@@ -144,12 +144,13 @@ plt_lexcat_baseline_coef_summary <- lexcat_baseline_coef_summary %>%
            fct_relevel("nouns", "predicates"))
 
 lexcat_mean_cor <- function(lc) {
-  lexcat_coef_summary %>%
+  lexcat_cor <- lexcat_coef_summary %>%
     group_by(lexical_category) %>%
     summarise(mean_cor = mean(mean_cor)) %>%
     filter(lexical_category == lc) %>%
     pull(mean_cor) %>%
     round(2)
+  sprintf("$\\bar{r} =$ %s", lexcat_cor)
 }
 ```
 
@@ -213,7 +214,7 @@ mean_pair_cor <- function(p1, p2) {
     filter(predictor1 == p1 & predictor2 == p2) %>%
     pull(mean_cor) %>%
     round(2)
-  glue::glue("$r = {pair_cor}$")
+  sprintf("$\\bar{r} =$ %s", pair_cor)
 }
 ```
 

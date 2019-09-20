@@ -73,12 +73,15 @@ langs <- instruments %>%
   arrange(language) %>%
   mutate(colour = pal(n()))
 lang_colours <- langs$colour %>% set_names(langs$language)
+lang_colours["French (Québécois)"] <- lang_colours["French (Quebecois)"]
 
 insts <- instruments %>%
   select(language, form) %>%
   unite(instrument, language, form, sep = .inst_sep, remove = FALSE) %>%
   left_join(langs)
 inst_colours <- insts$colour %>% set_names(insts$instrument)
+inst_colours["French (Québécois) WG"] <- inst_colours["French (Quebecois) WG"]
+inst_colours["French (Québécois) WS"] <- inst_colours["French (Quebecois) WS"]
 
 ### FORM VARIANTS
 WGs <- c("WG", "IC", "Oxford CDI")

@@ -105,3 +105,4 @@ dt <- function(data, cnames = label_caps(colnames(data)), ...) {
 }
 
 kable <- function(...) knitr::kable(..., booktabs = TRUE, linesep = "")
+

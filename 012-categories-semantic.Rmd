@@ -223,6 +223,67 @@ We end by considering People, Places To Go, and Time Words (Figure \@ref(fig:cat
 
 In contrast to the heterogeneity in People words, words in Places To Go and, especially, Time Words were almost uniformly under-represented in children's vocabulary. As noted above, time is known to be conceptually difficult for children. Interestingly, though, less has been written about children's understanding of geographical vocabulary. Time words offer a number of conceptual challenges in terms of mapping an ordered set of durations (second < minute < hour < day, etc.) to a set of concepts that do not map cleanly onto perceptual experience. In some sense, many of the same conceptual difficulties hold true for larger locational/geographical hierarchies (neighborhood < city < state < country). Or alternatively, the under-representation of places in children's early vocabulary may simply reflect the relative lack of diversity of their experiences with some of the items that traditionally populate this section (e.g., _beach_, _camping_, _church_, _circus_ to name the first four). See Chapter \@ref(psychometrics) for some evidence that _camping_ especially may be variable in children's experiences.
 
+## Category variability
+
+Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22--26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. Table \@ref(tab:catsem-cat-var) gives the coefficient of variation for each category.
+
+```{r}
+ms <- area_summary %>%
+  filter(category %in% included_cats) %>%
+  group_by(category_label) %>%
+  summarise(cv = cv(mean), 
+            sem = cv_sem(mean),
+            gei0 = gei(mean, 0), 
+            gei1 = gei(mean, 1), 
+            gei2 = gei(mean, 2), 
+            sd = sd(mean), 
+            mean = mean(mean), 
+            n = n()) %>%
+  arrange(sd) 
+
+ggplot(ms, aes(x = mean, y = cv)) + geom_point()
+```
+
+
+```{r catsem-cat-var}
+animal_words <- read_feather("data/categories-semantic/animal_words.feather")
+
+cat_var <- bind_rows(time_words %>% mutate(category = "time"),
+                     body_words %>% mutate(category = "body"),
+                     color_words %>% mutate(category = "color"), 
+                     logic_words %>% mutate(category = "logic"), 
+                     animal_words %>% mutate(category = "animals")) %>%
+  filter(age > 21, age < 27) %>%
+  group_by(category, uni_lemma, language) %>%
+  summarise(mean = mean(mean)) %>% # average across ages
+  group_by(category, uni_lemma) %>%
+  summarise(cv = cv(mean), 
+            sem = cv_sem(mean), 
+            n = n()) %>%
+  group_by(category) %>%
+  summarise(cv = mean(cv), 
+            sem = mean(sem), 
+            n = mean(n)) %>%
+  mutate(category = category %>% str_to_title())
+
+cat_var %>%
+  kable(digits = 2, col.names = c("Category", "CV", "SEM", "N"),
+        caption = "Mean coefficient of variation for each semantic category.")
+```
+
+The acquisition of words from the Body Parts, like that for Animals, category is highly consistent across languages. In contrast, color words, logic words, and time words are far less consistent cross-linguistically. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
+
+```{r catsem-cvs}
+cvs <- cat_var %>%
+  mutate(signature = paste("Bias for",category), 
+         measure = "produces") %>%
+  ungroup() %>%
+  mutate(category = "Composition")
+
+write_feather(cvs,"data/cvs/semantic_comp.feather")
+```
+
+
 ### Dimensionality reduction
 
 ```{r catsem-princomp}
@@ -376,53 +437,9 @@ Finally, we examine words for logical operators (Figure \@ref(fig:catsem-logic-w
 
 Keeping this caveat in mind, negative words are learned early, with an ordering consistent with @bellugi1967 and @pea1982. *No* is very early, and *not* later. Interestingly, the quantifiers are not ordered as shown by @katsos2016 in a massive cross-linguistic study. In that study -- as well as in our own work in English [@horowitz2017] -- *all* was found to be understood better than *none*. In contrast, here we tend to find *none* is learned earlier than *all* and definitely learned earlier than *some*. One possibility is that these uses are only found in a restricted set of cases. Another is that contextualized production of negation is simpler than de-contextualized comprehension, as we have found in some of our work on the comprehension of negation in context [@nordmeyer2014;@nordmeyer2018].
 
-### Category variability
-
-Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22--26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. Table \@ref(tab:catsem-cat-var) gives the coefficient of variation for each category.
-
-```{r catsem-cat-var}
-animal_words <- read_feather("data/categories-semantic/animal_words.feather")
-
-cat_var <- bind_rows(time_words %>% mutate(category = "time"),
-                     body_words %>% mutate(category = "body"),
-                     color_words %>% mutate(category = "color"), 
-                     logic_words %>% mutate(category = "logic"), 
-                     animal_words %>% mutate(category = "animals")) %>%
-  filter(age > 21, age < 27) %>%
-  group_by(category, uni_lemma, language) %>%
-  summarise(mean = mean(mean)) %>% # average across ages
-  group_by(category, uni_lemma) %>%
-  summarise(cv = cv(mean), 
-            sem = cv_sem(mean), 
-            n = n()) %>%
-  group_by(category) %>%
-  summarise(cv = mean(cv), 
-            sem = mean(sem), 
-            n = mean(n)) %>%
-  mutate(category = category %>% str_to_title())
-
-cat_var %>%
-  kable(digits = 2, col.names = c("Category", "CV", "SEM", "N"),
-        caption = "Mean coefficient of variation for each semantic category.")
-```
-
-The acquisition of words from the Body Parts, like that for Animals, category is highly consistent across languages. In contrast, color words, logic words, and time words are far less consistent cross-linguistically. These effects are likely somewhat affected by floor and ceiling effects, but inspection of individual items confirms the robustness of the general conclusion.
-
-```{r catsem-cvs}
-cvs <- cat_var %>%
-  mutate(signature = paste("Bias for",category), 
-         measure = "produces") %>%
-  ungroup() %>%
-  mutate(category = "Composition")
-
-write_feather(cvs,"data/cvs/semantic_comp.feather")
-```
-
-
 ## Discussion
 
 In these exploratory analyses, we have considered representation of different semantic categories across the different languages in our dataset. We found some surprising consistencies. Words from the Places to Go and Words About Time categories were under-represented, while words from the Sounds, Games & Routines, and Body Parts categories were over-represented. These results converge with our analyses in Chapter \@ref(items-consistency) in suggesting that there are certain semantic categories that are quite common in children's earliest language, and with our analyses in Chapter \@ref(items-prediction) in suggesting that there may be specific domains that parents associate with small children.
 
 The consistencies we observed were also contrasted with some areas of greater variability. For example, the preference for words from the Vehicles, Clothing, and Animals categories appeared to be a somewhat coherent dimension in our data, with many (northern) European languages higher on this dimension than non-European languages. Still, substantial caution is necessary in interpreting these results as the sample of non-European languages is small. 
-
 Finally, we found that acquisition of complex conceptual words reflecting colors, time, and logical constructs was highly variable across languages. For these more complex conceptual domains, order of acquisition may depend on specific cultural practices that goven the use and teaching of these words (e.g., for color) or the linguistic structures of the target language (e.g., for logical words). 

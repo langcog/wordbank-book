@@ -31,6 +31,8 @@ theme_update(plot.margin = margin(0, 0, 2, 0, "pt"),
              legend.margin = margin(0, 0, 0, 0, "pt"))
 .grey <- "grey70"
 .refline <- "dotted"
+.coef_line <- element_line(colour = .grey, size = 0.1)
+
 .ages <- seq(5, 45, 5)
 
 .pal <- ggthemes::ptol_pal
@@ -71,12 +73,15 @@ langs <- instruments %>%
   arrange(language) %>%
   mutate(colour = pal(n()))
 lang_colours <- langs$colour %>% set_names(langs$language)
+lang_colours["French (Québécois)"] <- lang_colours["French (Quebecois)"]
 
 insts <- instruments %>%
   select(language, form) %>%
   unite(instrument, language, form, sep = .inst_sep, remove = FALSE) %>%
   left_join(langs)
 inst_colours <- insts$colour %>% set_names(insts$instrument)
+inst_colours["French (Québécois) WG"] <- inst_colours["French (Quebecois) WG"]
+inst_colours["French (Québécois) WS"] <- inst_colours["French (Quebecois) WS"]
 
 ### FORM VARIANTS
 WGs <- c("WG", "IC", "Oxford CDI")
@@ -91,18 +96,18 @@ label_caps <- as_labeller(function(value) {
     str_replace_all("_", " ")
 })
 
-dt_caption <- function(caption) {
-  glue::glue('<table> <caption> (#tab:{opts_current$get("label")}) {caption} </caption> </table>')
-}
-
-dt <- function(data, cnames = label_caps(colnames(data)), ...) {
-  DT::datatable(
-    data = data,
-    rownames = FALSE,
-    colnames = cnames,
-    ...
-  )
-}
+# dt_caption <- function(caption) {
+#   glue::glue('<table> <caption> (#tab:{opts_current$get("label")}) {caption} </caption> </table>')
+# }
+#
+# dt <- function(data, cnames = label_caps(colnames(data)), ...) {
+#   DT::datatable(
+#     data = data,
+#     rownames = FALSE,
+#     colnames = cnames,
+#     ...
+#   )
+# }
 
 kable <- function(...) knitr::kable(..., booktabs = TRUE, linesep = "")
 

@@ -223,7 +223,7 @@ In contrast to the heterogeneity in People words, words in Places To Go and, esp
 
 ## Category variability
 
-Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22--26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. Table \@ref(tab:catsem-cat-var) gives the coefficient of variation for each category.
+Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22--26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. We do this as follows: we first average the level of production across ages and then across lexical items, we then compute the CV across these averages to obtain a category-level CV. Reported Ns are for the average number of contributing languages. We additionally add a CV estimate words from the Animals category for the sake of comparison. Table \@ref(tab:catsem-cat-var) gives the coefficient of variation for each category.
 
 ```{r}
 ms <- area_summary %>%
@@ -309,13 +309,8 @@ Our next analysis of these data takes an exploratory dimensionality-reduction ap
 
 Standard PCA requires datasets without missing data, so we removed languages with missing categories. This analysis thus includes `r nrow(areas_matrix_clean)` language/form combinations and `r ncol(areas_matrix_clean)` categories. (We exclude words from Sounds because of the issue with Russian in this category and other missing data). 
 
-Figure \@ref(fig:catsem-pca-autoplot-data) and Figure \@ref(fig:catsem-pca-autoplot-loadings) show the data projected into the space of the first two principal components and the loadings of semantic categories on these two components, respectively. 
+Figure \@ref(fig:catsem-pca-autoplot-loadings) and Figure \@ref(fig:catsem-pca-autoplot-data) show the loadings of semantic categories on these two components and the data projected into the space of the first two principal components, respectively. 
 
-```{r catsem-pca-autoplot-data, fig.cap="First two principal components for each language."}
-ggfortify:::autoplot.pca_common(pcs, label.repel = TRUE,
-                                loadings.label.repel = TRUE,
-                                label.family = .font)
-```
 
 ```{r catsem-pca-autoplot-loadings, fig.cap="Loadings of each semantic category."}
 ggfortify:::autoplot.pca_common(pcs, loadings = TRUE, loadings.label = TRUE, 
@@ -324,6 +319,12 @@ ggfortify:::autoplot.pca_common(pcs, loadings = TRUE, loadings.label = TRUE,
                                 loadings.colour = .grey,
                                 loadings.label.colour = "black",
                                 loadings.label.family = .font)
+```
+
+```{r catsem-pca-autoplot-data, fig.cap="First two principal components for each language."}
+ggfortify:::autoplot.pca_common(pcs, label.repel = TRUE,
+                                loadings.label.repel = TRUE,
+                                label.family = .font)
 ```
 
 Several observations emerge: Mandarin and Cantonese WS data are very far towards the direction of people (indicating that these datasets are unusual in this respect). Second, Kiswahili and Kigiriama are especially far in the direction of Outside and Places To Go words, perhaps consistent with the datasets being collected in rural and semi-rural areas. Many Northern European datasets (as well as Korean) are clustered at the far left, with high scores on Vehicles, Clothing, and Animals. Overall, this analysis reveals some interesting structure, but care should be taken not to over-interpret. In particular, within culture differences (e.g., Mandarin TC vs. Mandarin WS) are as large in size as between-culture differences.
@@ -370,10 +371,9 @@ As discussed above, the semantics of time words are very challenging for childre
 plot_unis(time_words)
 ```
 
-Figure \@ref(fig:catsem-time-words) shows trajectories for these lexical items across languages, sorted by difficulty. Because *night* is typically signaled by darkness, it is perceptually very concrete and likely easier than other time words. Similarly, *now* seems relatively more straightforward given that it has a common imperative meaning in sentences like "give me that right now." In contrast, the latest-acquired is *yesterday*, which is highly abstract and requires a sort of "mental time travel" in thinking retrospectively beyond the "here and now" [@busby2005].  While *tomorrow* shares those same features, it does not appear to pose similar challenges for children in these data. 
+Figure \@ref(fig:catsem-time-words) shows trajectories for these lexical items across languages, sorted by difficulty. Because *night* is typically signaled by darkness, it is perceptually very concrete and likely easier than other time words. Similarly, *now* seems relatively more straightforward given that it has a common imperative meaning in sentences like "give me that right now." In contrast, the latest-acquired is *yesterday*, which is highly abstract and requires a sort of "mental time travel" in thinking retrospectively beyond the "here and now" [@busby2005].  While *tomorrow* shares those same features, it appears to be learned earlier than *yesterday* on average, whether due to frequency or other factors.  
 
 ### Color
-
 
 Color word acquisition has been a focus of interest at least since early work by @carey1978's influential study of "fast mapping." Although early work suggested that color words were learned almost simultaneously [@bartlett1977], more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space [@wagner2013]. Adding to the complexity of this issue are the substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms [@bornstein1985].
 
@@ -383,13 +383,13 @@ color_words <- read_feather("data/categories-semantic/color_words.feather")
 color_unis <- unique(color_words$uni_lemma)
 ```
 
-There is tremendous cross-linguistic variation in color vocabulary [@kay2009]. We take advantage of the fact that most of the languages in our dataset have relatively large color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.^[Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like _red_ would be much larger than in English.] Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was `r glue::glue("_{color_unis}_")`.
+There is tremendous cross-linguistic variation in the overall level of color vocabulary [@kay2009]. We take advantage of the fact that most of the languages in our dataset have relatively large color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.^[Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like _red_ would be much larger than in English.] Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was `r glue::glue("_{color_unis}_")`.
 
 ```{r catsem-color-words, fig.cap="Developmental trajectory of each color word in each language.", fig.height=7, dependson="catsem-uni-base-plot"}
 plot_unis(color_words)
 ```
 
-In this set of words (Figure \@ref(fig:catsem-color-words)), we see that *red* is typically the first learned, although there is substantial variability in when it is learned. It is followed by *yellow*, *blue*, and *green*, with *black* and *white* following behind, consistent with reports by @wagner2013. 
+In contrast to the variability in overall level, the sequence of learning is fairly consistent across languages. In this set of words (Figure \@ref(fig:catsem-color-words)), we see that *red* is typically the first learned, although there is substantial variability in when it is learned. It is followed by *yellow*, *blue*, and *green*, with *black* and *white* following behind, consistent with reports by @wagner2013. (See @yurovsky2015sign for an account of factors involved in color word learning).
 
 ```{r catsem-color-langs-words, fig.cap="Mean developmental trajectory of color words in each language."}
 color_langs <- color_words %>%

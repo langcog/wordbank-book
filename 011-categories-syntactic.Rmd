@@ -536,7 +536,7 @@ cors <- consistency %>%
 
 This analysis is conducted with only `r cors$parameter[1]` languages and hence has relatively low power (despite the many thousands of children necessary to carry it out). Nevertheless, it raises some important questions. A number of explanations are consistent with the data:
 
-1. Bias differs between comprehension and production, such that differences are related to type of response. 
+1. Lexical category bias differs between comprehension and production, perhaps because of different mechanisms at work acquiring words for comprehension vs. production (but see Chapter \@ref(items-prediction) for some evidence against this claim). 
 
 2. Estimates of bias are influenced by the composition of specific forms, so much so that WS- and WG-type forms yield radically different estimates of bias.
 

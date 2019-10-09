@@ -250,7 +250,8 @@ vocab_models <- grammar_morphosyntax %>%
   mutate(
     model = map(data, vocab_model),
     rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
-    rsq_print = sprintf("r² = %.2f", rsq)
+    # rsq_print = sprintf("italic(r)² = %.2f", rsq)
+    rsq_print = sprintf("italic(r)^2 == %.2f", rsq)
   )
 
 vocabs <- tibble(production_prop = seq(0, 1, vocab_step))
@@ -286,7 +287,8 @@ plot_vocab_type <- function(type) {
     geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
     geom_line(aes(y = fitted_prop), size = 1.2, colour = .pal()(1),
               data = filter(vocab_fits, coded_type == type)) +
-    geom_text(aes(label = rsq_print), x = 0.15, y = 0.95, size = 3, family = .font,
+    geom_text(aes(label = rsq_print), x = 0.15, y = 0.95, size = 3,
+              family = .font, parse = TRUE,
               data = filter(vocab_models, coded_type == type)) +
     scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
                        breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
@@ -318,15 +320,11 @@ get_inst_model <- function(inst_data) {
   lm(prop ~ I(production_prop ^ 4) * age + I(production_prop ^ 3) * age +
        I(production_prop ^ 2) * age + production_prop * age + 0,
      data = inst_data)
-  # lm(prop ~ I(production_prop ^ 4) * age0 + I(production_prop ^ 3) * age0 +
-  #      I(production_prop ^ 2) * age0 + production_prop * age0 + 0,
-  #    data = inst_data)
   # glm(cbind(positive, negative) ~ production_prop * age,
   #          family = "binomial", data = inst_data)
 }
 
 get_inst_predictions <- function(inst_data, inst_model) {
-  # data_shape <- list(age0 = seq(min(inst_data$age0), max(inst_data$age0)),
   data_shape <- list(age = seq(min(inst_data$age), max(inst_data$age)),
                      production_prop = seq(0, 1, vocab_step)) %>%
     cross_df()
@@ -337,7 +335,6 @@ grammar_models <- grammar_morphosyntax %>%
   group_by(language, instrument, coded_type) %>%
   nest() %>%
   mutate(
-    # data = map(data, ~mutate(., age0 = age - min(age))),
     model = map(data, get_inst_model),
     rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
     predictions = map2(data, model, get_inst_predictions)
@@ -365,6 +362,21 @@ grammar_morphosyntax <- grammar_morphosyntax %>%
   mutate(age_group = cut(age, 2, labels = c("younger", "older")))
 ```
 
+```{r gram-grammar-age-groups}
+age_group_models <- grammar_morphosyntax %>%
+  group_by(instrument) %>%
+  mutate(age_group = cut(age, 2, labels = c("younger", "older"))) %>%
+  group_by(language, instrument, coded_type, age_group) %>%
+  nest() %>%
+  mutate(model = map(data, vocab_model),
+         rsq = map_dbl(model, ~summary(.x)$adj.r.squared))
+
+age_group_fits <- age_group_models %>%
+  mutate(predictions = map(model, ~broom::augment(., newdata = vocabs))) %>%
+  select(-data, -model) %>%
+  unnest()
+```
+
 ```{r gram-grammar-age-plots}
 grammar_age_plot <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
@@ -372,8 +384,10 @@ grammar_age_plot <- function(type) {
     facet_wrap(~language, ncol = 4) +
     coord_fixed() +
     geom_jitter(alpha = 0.1, size = 0.70, shape = 1) +
-    geom_line(aes(y = mean_fitted), size = 0.9,
-              data = filter(grammar_fits_grouped, coded_type == type)) +
+    # geom_line(aes(y = mean_fitted), size = 0.9,
+    #           data = filter(grammar_fits_grouped, coded_type == type)) +
+    geom_line(aes(y = .fitted), size = 0.9,
+              data = filter(age_group_fits, coded_type == type)) +
     scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
                        breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
                        name = "Productive vocabulary size (proportion of items)") +
@@ -400,9 +414,10 @@ grammar_age_plot("Complexity")
 This pattern is further summarized in Figure \@ref(fig:gram-grammar-diffs), where we show the area under the grammar/lexicon curve for younger and older children. The upward slope from younger to older of nearly every line demonstrates the consistency of the age effect, which we discuss further below. In addition, there is a trend for age effects to be larger in Complexity items compared to Word Forms, suggesting that factors beyond vocabulary size have a larger effect on syntax than on morphology.
 
 ```{r gram-grammar-diffs, fig.cap="Area under model fit curve for Word Forms score and Complexity score as a function of vocabulary size in each language for younger and older children.", fig.height=4.5}
-grammar_areas <- grammar_fits_grouped %>%
+grammar_areas <- age_group_fits %>%
   group_by(language, instrument, coded_type, age_group) %>%
-  summarise(area = sum(mean_fitted * vocab_step, na.rm = TRUE))
+  summarise(area = sum(.fitted * vocab_step, na.rm = TRUE))
+#   summarise(area = sum(mean_fitted * vocab_step, na.rm = TRUE))
 
 ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
   facet_wrap(~coded_type) +
@@ -419,34 +434,59 @@ ggplot(grammar_areas, aes(x = age_group, y = area, colour = instrument)) +
 ### Individual items
 
 ```{r gram-item_models, eval=FALSE}
-item_age_model <- function(item_data) {
-  glm(value ~ age + 0, data = item_data, family = "binomial")
-}
-
-item_vocab_model <- function(item_data) {
-  glm(value ~ production_prop + 0, data = item_data, family = "binomial")
-}
+# item_age_model <- function(item_data) {
+#   glm(value ~ age + 0, data = item_data, family = "binomial")
+# }
+# 
+# item_vocab_model <- function(item_data) {
+#   glm(value ~ production_prop + 0, data = item_data, family = "binomial")
+# }
+# 
+# item_age_vocab_model <- function(item_data) {
+#   glm(value ~ production_prop + age + 0, data = item_data, family = "binomial")
+# }
 
 item_age_vocab_model <- function(item_data) {
-  glm(value ~ production_prop + age + 0, data = item_data, family = "binomial")
+  glm(value ~ production_prop * age, data = item_data, family = "binomial")
 }
+
+# d <- gdc %>% filter(str_detect(definition, "doggie on table"))
+# m <- glm(value ~ production_prop * age, data = d, family = "binomial")
+# summary(m)
+# broom::augment(m, type.predict = "response") %>%
+#   ggplot(aes(x = production_prop, y = .fitted, colour = factor(age))) + geom_line()
 
 item_models <- grammar_data_coded %>%
   filter(!is.na(value), coded_type != "word_endings") %>%
+  # group_by(language, form) %>%
+  # mutate(age0 = age - min(age)) %>%
   group_by(language, form, coded_type, item_id, definition) %>%
   nest() %>%
-  mutate(age_model = map(data, item_age_model),
-         vocab_model = map(data, item_vocab_model),
+  mutate(#age_model = map(data, item_age_model),
+         #vocab_model = map(data, item_vocab_model),
          age_vocab_model = map(data, item_age_vocab_model))
 
+item_fits <- item_models %>%
+  mutate(age_vocabs = map(data, function(df) {
+    cross_df(list(production_prop = seq(0, 1, vocab_step),
+                  age = min(df$age):max(df$age)))
+  }),
+  fits = map2(age_vocab_model, age_vocabs, function(avm, av) {
+    broom::augment(avm, newdata = av, type.predict = "response")
+  })) %>%
+  select(-data, -age_vocab_model) %>%
+  unnest()
+
 item_effects <- item_models %>%
-  gather(model_predictors, model, age_model, vocab_model, age_vocab_model) %>%
+  # gather(model_predictors, model, age_model, vocab_model, age_vocab_model) %>%
+  gather(model_predictors, model, age_vocab_model) %>%
   mutate(coefs = map(model, broom::tidy),
          AIC = map_dbl(model, AIC),
          converged = map_lgl(model, ~.x$converged)) %>%
   select(-data, -model) %>%
   unnest()
 
+write_feather(item_fits, "data/grammar/item_fits.feather")
 write_feather(item_effects, "data/grammar/item_effects.feather")
 
 # model_comp <- item_effects %>%
@@ -466,9 +506,11 @@ complexity_cats <- items %>%
   distinct(language, form, item_id, complexity_category)
 
 age_effects <- item_effects %>%
-  filter(converged, model_predictors == "age_vocab_model", term == "age") %>%
+  filter(term != "(Intercept)", coded_type != "combine") %>%
+  # filter(converged, model_predictors == "age_vocab_model", term == "production_prop:age") %>%
   left_join(complexity_cats) %>%
   mutate(
+    signif = p.value < 0.05,
     coded_type = if_else(
       !is.na(complexity_category) & nchar(complexity_category) > 0,
       complexity_category, coded_type),
@@ -476,27 +518,83 @@ age_effects <- item_effects %>%
       coded_type,
       levels = c("combine", "word_forms", "morphology", "syntax", "complexity"),
       labels = c("Combine", "Word Forms", "Complexity (morphological)",
-                 "Complexity (syntactic)", "Complexity (unknown)"))
+                 "Complexity (syntactic)", "Complexity (other)")),
+      term = term %>%
+           fct_recode("\nAge" = "age",
+                      "\nVocabulary size" = "production_prop",
+                      "Interaction between age\n and vocabulary size" = "production_prop:age")
   ) %>%
+  group_by(language) %>%
+  filter(n_distinct(coded_type) > 1) %>%
   ungroup() %>%
-  arrange(language, form, estimate) %>%
-  mutate(order_item = paste(language, item_id, sep = "_"),
+  arrange(language, form, term, desc(estimate)) %>%
+  mutate(order_item = paste(language, term, item_id, sep = "_"),
          order_item = factor(order_item, levels = order_item))
+
+age_effect_means <- age_effects %>%
+  group_by(language, coded_type, term) %>%
+  summarise(mean_estimate = mean(estimate))
 ```
 
-In our next analysis, we examine the individual items on the Word Form and Complexity sections. Given the heterogeneous nature of the CDI instruments, particularly in the Complexity sections, we attempted a more fine-grained item-analysis by classifying items as capturing either more morphological or more syntactic phenomena. Items for which the difference between the simple and complex sentences is in the inflection of a noun or verb (such as *doggie kiss me* vs. *doggie kissed me*) were coded as Morphological. The remainder of the items were coded as Syntactic, since they involved the use of some sentence-level syntactic construction (such as *doggie table* vs. *doggie on table*).
+In our next analysis, we examine the individual items on the Word Form and Complexity sections. Given the heterogeneous nature of the CDI instruments, particularly in the Complexity sections, we attempted a more fine-grained item-analysis by classifying items as capturing either more morphological or more syntactic phenomena. Items for which the difference between the simple and complex sentences is in the inflection of a noun or verb (such as *kitty go away* / *kitty went away*) were coded as Morphological. Items were coded as Syntactic if they involved the use of some sentence-level syntactic construction (such as *you fix it* / *can you fix it*). Some languages' items involved a mix of the two or otherwise didn't fit into this dichotomy, in which they were coded as Other.
 
-We then a fit logistic regression separately for every item, predicting whether children produced the item from vocabulary size and age. Figure \@ref(fig:gram-item-effects-plot) shows the age effect coefficient of each item. In general, age effects are smallest for Word Form items, larger for Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions. 
+We then a fit logistic regression separately for every item, predicting whether children produced the item from vocabulary size and age. Figure \@ref(fig:gram-item-effects-demo) shows the resulting model fits for two example items. For both items, children with larger vocabulary sizes are more likely to produce it than children with smaller vocabulary sizes (the curves have positive slopes), and older children are more to produce it than younger children (the older curves are higher than the younger curves). For the item on the left, the interaction between vocabulary size and age is very small (all the curves have roughly the same slope), while for the item on the right this interaction is large (the older curve is much steeper than the younger curve, indicating that at larger vocabulary sizes the advantage for older children is larger).
 
-```{r gram-item-effects-plot, fig.cap="Age effect estimate for each grammar item in each language (ranges indicate 95 percent confidence intervals).", fig.height=9, fig.width=8}
-ggplot(age_effects, aes(x = order_item, y = estimate, colour = coded_type)) +
-  facet_wrap(~language, scales = "free", ncol = 3) +
-  geom_pointrange(aes(ymin = estimate - 1.96 * std.error,
-                      ymax = estimate + 1.96 * std.error), fatten = 1.4) +
-  .scale_colour_discrete(name = "", guide = guide_legend(ncol = 3)) +
-  scale_x_discrete(breaks = NULL) +
-  labs(x = "", y = "Age effect estimate") +
-  theme(legend.position = "bottom")
+Figure \@ref(fig:gram-item-effects-plot) shows for each item, the coefficients of vocabulary size, age, and their interaction. In general, age effects are smallest for Word Form items, larger for Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions.
+
+```{r gram-item-effects-demo, fig.cap="Model fits for two example items."}
+item_fits <- read_feather("data/grammar/item_fits.feather")
+
+demo_items <- c("kitty go away / kitty went away", "you fix it / can you fix it")
+item_fits %>%
+  filter(definition %in% demo_items) %>%
+  mutate(age_extremes = case_when(age == max(age) ~ "oldest",
+                                  age == min(age) ~ "youngest")) %>%
+ggplot(aes(x = production_prop, y = .fitted, colour = factor(age))) +
+  facet_wrap(~definition) +
+  coord_equal() +
+  geom_line() +
+  directlabels::geom_dl(aes(label = age_extremes),
+                        method = list("last.points", directlabels::dl.trans(x = x + 0.1),
+                                      fontfamily = .font, cex = 0.7)) +
+  .scale_colour_numerous(guide = FALSE) +
+  scale_x_continuous(limits = c(0, 1.2), breaks = seq(0, 1, 0.25)) +
+  labs(x = "Vocabulary size (proportion of items)",
+       y = "Model fit probability of producing")
+```
+
+```{r gram-item-effects-plot, fig.cap="Coefficient estimates (as log odds ratio) for each grammar item in each language. Line segments indicate means effect for category.", fig.height=14, fig.width=8}
+term_plot <- function(term_data) {
+  term_name <- unique(term_data$term)
+  ggplot(term_data, aes(colour = coded_type)) +
+    facet_wrap(~language, scales = "free", ncol = 1, strip.position = "right") +
+    geom_vline(xintercept = 0, linetype = .refline, colour = .grey) +
+    geom_rug(aes(x = mean_estimate), sides = "t", length = unit(0.1, "npc"),
+             size = 1, data = age_effect_means %>% filter(term == term_name)) +
+    geom_point(aes(y = order_item, x = estimate, shape = signif), size = 1.2) +
+    .scale_colour_discrete(name = "") +
+    guides(colour = guide_legend(nrow = 2)) +
+    scale_y_discrete(breaks = NULL) +
+    scale_shape_manual(values = c(21, 19), guide = FALSE) +
+    labs(y = "", x = "", title = term_name) +
+    theme(plot.title = element_text(hjust = 0.5, size = rel(0.8)),
+          legend.direction = "horizontal", legend.justification = "center",
+          legend.box.just = "top")
+}
+term_plots <- age_effects %>%
+  split(.$term) %>%
+  map(term_plot)
+
+term_plots[-length(term_plots)] <- map(term_plots[-length(term_plots)], ~. + theme(strip.text = element_blank()))
+term_plots[[2]] <- term_plots[[2]] + labs(x = "Effect on production of item")
+legend <- cowplot::get_legend(term_plots[[1]])
+term_plots <- map(term_plots, ~. + guides(colour = FALSE))
+
+cowplot::plot_grid(
+  cowplot::plot_grid(NULL, legend, nrow = 1),
+  cowplot::plot_grid(term_plots[[1]], term_plots[[2]], term_plots[[3]], nrow = 1),
+  ncol = 1, rel_heights = c(0.1, 1), align = "hv") %>%
+  cowplot::ggdraw()
 ```
 
 <!-- Building on previous analyses that showed a strong relationship between lexical and grammatical development, we added age into this relationship. Across languages, our measures of syntactic development consistently showed greater age modulation than measures of morphological development. Further distinguishing between items that were more reflective of morphology than syntax, we again found greater age effects for more syntactic items. Thus, this analysis provides evidence for a relationship between syntactic development and age _not_ captured by lexical development. -->

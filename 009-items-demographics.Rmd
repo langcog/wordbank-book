@@ -572,6 +572,7 @@ top_plots <- function(plot_demo, plot_measure, max_rows = 5) {
   plt_tops %>%
     group_by(language) %>%
     nest() %>%
+    ungroup() %>%
     mutate(i = rep(1:ceiling((nrow(.) / max_rows)),
                    each = max_rows)[1:nrow(.)]) %>%
     unnest() %>%

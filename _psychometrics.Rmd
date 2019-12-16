@@ -3,7 +3,7 @@
 ```{r psycho-fit_irt_ws}
 library(mirt) # requires package loading, not just referencing. 
 
-load("data/psychometrics/eng_ws_raw_data.Rds")
+base::load("data/psychometrics/eng_ws_raw_data.Rds")
 
 d_ws <- eng_ws %>%
   mutate(produces = value == "produces") %>%
@@ -25,34 +25,61 @@ rownames(d_mat_ws) <- d_wide_ws$data_id
 
 # Requires no empty rows - `personfit` doesn't work with `removeEmptyRows=TRUE` even though the model fit will work that way. 
 d_mat_ws <- d_mat_ws[complete.cases(d_mat_ws),]
+```
 
-mod_4pl <- mirt(d_mat_ws, 1, itemtype='4PL', verbose=TRUE)
 
-coefs_4pl <- as_data_frame(coef(mod_4pl, simplify = TRUE)$items) %>%
-  mutate(definition = rownames(coef(mod_4pl, simplify = TRUE)$items))
-fscores_4pl <- data_frame(data_id = rownames(d_mat_ws), 
-                             ability = fscores(mod_4pl, method = "MAP")[,1])
-
-save(file = "data/psychometrics/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", "coefs_4pl")
+```{r psycho-models_12pl}
+mod_1pl <- mirt(d_mat_ws, 1, itemtype='Rasch', verbose=TRUE)
+mod_2pl <- mirt(d_mat_ws, 1, itemtype='2PL', verbose=TRUE)
+save(file = "data/psychometrics/eng_ws_mod_12_pl.Rds",
+     "mod_1pl", "mod_2pl")
 ```
 
 ```{r psycho-fit_irt_3pl}
 mod_3pl <- mirt::mirt(d_mat_ws, 1, itemtype='3PL', verbose=TRUE)
 
-coefs_3pl <- as_data_frame(coef(mod_3pl, simplify = TRUE)$items) %>%
+coefs_3pl <- as_tibble(coef(mod_3pl, simplify = TRUE)$items) %>%
   mutate(definition = rownames(coef(mod_3pl, simplify = TRUE)$items))
-fscores_3pl <- data_frame(data_id = rownames(d_mat_ws), 
+fscores_3pl <- as_tibble(data_id = rownames(d_mat_ws), 
                              ability = fscores(mod_3pl, method = "MAP")[,1])
 
-save(file = "data/psychometrics/eng_ws_mod_3pl.Rds", "mod_3pl","fscores_3pl", "coefs_3pl")
+save(file = "data/psychometrics/eng_ws_mod_3pl.Rds", "mod_3pl","fscores_3pl", 
+     "coefs_3pl")
 
 #note that 3PL fits better overall (AIC/BIC) but it seems theoretically unreasonable - we really want a u parameter for many of the items and so it is useful to fit one!
+```
+
+```{r psycho-4pl_coefs}
+coefs_4pl <- as_tibble(coef(mod_4pl, simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_4pl, simplify = TRUE)$items))
+fscores_4pl <- tibble(data_id = rownames(d_mat_ws), 
+                             ability = fscores(mod_4pl, method = "MAP")[,1])
+
+save(file = "data/psychometrics/eng_ws_mod_4pl.Rds", "mod_4pl","fscores_4pl", 
+     "coefs_4pl")
+```
+
+```{r psycho-2pl_coefs}
+coefs_2pl <- as_tibble(coef(mod_2pl, simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_2pl, simplify = TRUE)$items))
+fscores_2pl <- tibble(data_id = rownames(d_mat_ws), 
+                             ability = fscores(mod_2pl, method = "MAP")[,1])
+
+save(file = "data/psychometrics/eng_ws_mod_2pl.Rds", "mod_2pl","fscores_2pl", 
+     "coefs_2pl")
+```
+
+
+```{r psycho-models_comparison}
+anova(mod_1pl, mod_2pl)
+anova(mod_2pl, mod_3pl)
+anova(mod_3pl, mod_4pl)
 ```
 
 
 
 ```{r psycho-prod_comp_wg}
-load("data/psychometrics/eng_wg_raw_data.Rds")
+base::load("data/psychometrics/eng_wg_raw_data.Rds")
 
 d_wg <- eng_wg %>%
   mutate(produces = value == "produces", 
@@ -89,7 +116,28 @@ rownames(d_mat_wg_understands) <- d_wide_wg_understands$data_id
 
 d_mat_wg_produces <- d_mat_wg_produces[complete.cases(d_mat_wg_produces) & rowSums(d_mat_wg_produces) > 0,]
 d_mat_wg_understands <- d_mat_wg_understands[complete.cases(d_mat_wg_understands) & rowSums(d_mat_wg_understands) > 0,]
+```
 
+```{r psycho-wg_2pl}
+mod_2pl_wg_produces <- mirt(d_mat_wg_produces, 1, itemtype='2PL', verbose=TRUE)
+mod_2pl_wg_understands <- mirt(d_mat_wg_understands, 1, itemtype='2PL', verbose=TRUE)
+
+coefs_2pl_wg_produces <- as_data_frame(coef(mod_2pl_wg_produces, 
+                                            simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_2pl_wg_produces, simplify = TRUE)$items))
+
+coefs_2pl_wg_understands <- as_data_frame(coef(mod_2pl_wg_understands, 
+                                            simplify = TRUE)$items) %>%
+  mutate(definition = rownames(coef(mod_2pl_wg_understands, simplify = TRUE)$items))
+
+save(file = "data/psychometrics/eng_wg_mods_2pl.Rds", 
+     "mod_2pl_wg_produces",
+     "mod_2pl_wg_understands",
+     "coefs_2pl_wg_produces",
+     "coefs_2pl_wg_understands")
+```
+
+```{r psycho-wg_4pl}
 mod_4pl_wg_produces <- mirt(d_mat_wg_produces, 1, itemtype='4PL', verbose=TRUE)
 mod_4pl_wg_understands <- mirt(d_mat_wg_understands, 1, itemtype='4PL', verbose=TRUE)
 

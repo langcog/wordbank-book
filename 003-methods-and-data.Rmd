@@ -18,9 +18,9 @@ Why use a database to store vocabulary data? Consider the standard format of raw
 include_graphics("images/itembychild.png")
 ```
 
-Each row is a child, each column gives a variable -- either a demographic variable or the result of a particular word being administered to a particular child. Although this format is useful for homogeneous administrations of a single instrument, it cannot accommodate multiple instruments, multiple languages, or datasets with different sources or kinds of demographic information. Consolidating data across different instruments is very difficult in this format, and tracking data on children with multiple longitudinal administrations of a single instrument must also be done in an ad-hoc manner. The move to a database format allows far more flexible and programmatic handling of heterogeneous data structures from different sources.
+Each row is a child, each column gives a variable -- either a demographic variable or the response of the parent on a particular item. Although this format is useful for homogeneous administrations of a single instrument, it cannot accommodate multiple instruments, multiple languages, or datasets with different sources or kinds of demographic information. Consolidating data across different instruments is very difficult, and tracking data on children with multiple longitudinal administrations of a single instrument must also be done in an ad-hoc manner. The move to a database format allows far more flexible and programmatic handling of heterogeneous data structures from different sources.
 
-Further, as information about particular entities becomes available -- for example, cross-linguistic mappings of lexical items -- this information can be added in a way that preserves previous analyses. In a tabular format, such functionality is not guaranteed, and changes to the structure of the dataset will necessarily break previous analyses. A database, especially when supplemented with an appropriate application programming interface (API, see below), can solve this problem elegantly. 
+Further, as information about particular entities becomes available -- for example, cross-linguistic mappings of lexical items -- this information can be added in a way that preserves previous analyses. In a tabular format, such functionality is not guaranteed, and changes to the structure of the dataset will necessarily break code for previous analyses. A database, especially when supplemented with an appropriate application programming interface (API, see below), can solve this problem elegantly. 
 
 ### Database architecture 
 
@@ -30,22 +30,22 @@ A relational database such as Wordbank is at its heart an ontology: a set of ent
 + **Item**: A particular question on an instrument. A specific word like *dog* is our canonical CDI item, but other items include questions about gestures, morphological and syntactic complexity, and other aspects of early language or behavior.
 + **Administration**: A particular instance of an instrument being given to a child, with an associated child age and source (the contributing lab).
 + **Child**: A unique individual, with associated demographics. 
-+ **Language**: A particular language or language community for which a CDI instrument has been adapted. Note that this definition of language distinguishes e.g. American and British English.
++ **Language**: A particular language or language community for which a CDI instrument has been adapted. Note that this definition of language distinguishes e.g. American and British English; in the text of the book we use the phrase "language or dialect," but this label is too clunky for a variable name.
 
 These entities are related by two primary groups of tables in Wordbank. The *common* tables store data that is shared between CDI instruments, including information about *administrations* (individual instances of a form being filled out for a child), and *items* (words and other questions on a form). Then the *instrument* tables store the item-by-item response data for particular CDI instruments. We currently include all items on CDI instruments, including questions about communication, gesture, morphology, and grammar (though in quite a few of the datasets that we archive these non-vocabulary questions have not been digitized so data on these are sparse at present; see e.g., Chapters \@ref(gesture) and \@ref(grammar)).
 
-Wordbank is designed so that it can accommodate data from a wide variety of instruments, both within and across languages. Indeed, at the time of rendering, the site includes data from `r nrow(admins)` administrations of the CDI across `r length(unique(instruments$language))` different languages and `r nrow(instruments)` different instruments.
+Wordbank is designed so that it can accommodate data from a wide variety of instruments, both within and across languages. Indeed, at the time of rendering, the site includes data from `r nrow(admins)` administrations of the CDI across `r length(unique(instruments$language))` different languages or dialects and `r nrow(instruments)` different instruments (much though not all of this larger number comes from having available both younger- and older-child focused forms in each language/dialect).
 
 ### Implementation
 
 Wordbank is constructed using free, open-source tools. The database is a standard `MySQL` database, managed using `Python` and `Django`. All code for Wordbank is hosted in GitHub repositories, with the [primary site repository](http://github.com/langcog/wordbank) containing data and database code, 
 the [`R` package repository](http://github.com/langcog/wordbankr) containing code for the API, and the [book repository](http://github.com/langcog/wordbank-book) containing the code and text for this manuscript. 
 
-All data uploaded to Wordbank are open and freely available for download, both through the site itself and through the GitHub repository. The site includes only de-identified data that cannot be linked to individual parents and children under US Department of Health and Human Services' "Safe Harbor" standard. Because of these features, the Stanford Institutional Review Board has determined that the Wordbank project does not constitute human subjects research.
+All data uploaded to Wordbank are open and freely available for download, both through the site itself and through the GitHub repository. The site includes only de-identified data that cannot be linked to individual parents and children under US Department of Health and Human Services' "Safe Harbor" standard. Because of these features, the Stanford Institutional Review Board determined that the Wordbank project does not constitute regulated human subjects research.
 
 ### The web interface
 
-Our website, [http://wordbank.stanford.edu]() provides a set of interactive visualizations so that interested readers can explore the data in the database. A tutorial introduction to these visualization apps is given in @frank2016. We developed these apps to allow quick access to basic generalizations about the distribution of vocabulary totals (similar to analyses in Chapters \@ref(vocabulary) and \@ref(demographics)) and to information about individual items. 
+Our website, [http://wordbank.stanford.edu]() provides a set of interactive visualizations so that interested readers can explore the data in the database. A tutorial introduction to these visualization apps is given in @frank2016. We developed these apps to allow quick access to basic generalizations about the distribution of vocabulary totals (similar to analyses in Chapters \@ref(vocabulary) and \@ref(demographics)) and to information about individual items (similar to Chapter \@ref(items-consistency)). 
 
 ### The `wordbankr` API
 
@@ -57,7 +57,7 @@ We developed this package, `wordbankr`, to provide a simple and flexible API for
 
 As described in Chapter \@ref(intro-practical), it is sometimes useful to (cautiously) compare the developmental trajectory for a single concept across multiple languages. To facilitate these comparisons, we created "unilemmas," cross-linguistic mappings from lexical items to single (English) forms that stand for a particular conceptual abstraction. Some lexical items are represented on only one or a handful of instruments, but there are many that are common across a large number of instruments, leading to an opportunity for cross-linguistic comparison. 
 
-Unilemmas were created for particular instruments by following a two-step procedure. First, using a pool of English unilemmas, we proposed candidate mappings for each lexical item on a form. This first step was often accomplished by a non-native speaker using translation resources and the context of the form (e.g., that an item occurs in the "animal sounds" section). Second, we recruited a linguistically-sophisticated native speaker of the language (often a psychologist or linguist), provided them with the candidate unilemma list, and asked them to review this list item by item and suggest corrections and amendments.^[The specific direction they were given was: "We're looking for the best English translation of these words. These are words that are among the first words that children learn, so your translation should be closest to the meaning of the word as it would be used by a young child (say, under 3 years old). For cases when there are two equally good English words, put both. If you don't think there is a good translation into a reasonable English word that a kid might know, you can leave the alternative translation blank."] 
+Unilemmas were created for particular instruments by following a two-step procedure. First, using a pool of English unilemmas, we proposed candidate mappings for each lexical item on a form. This first step was often accomplished by a non-native speaker using translation resources and the context of the form (e.g., that an item occurs in the "animal sounds" section). Second, we recruited a linguistically-sophisticated native speaker of the language (often though not always a psychologist or linguist), provided them with the candidate unilemma list, and asked them to review this list item by item and suggest corrections and amendments.^[The specific direction they were given was: "We're looking for the best English translation of these words. These are words that are among the first words that children learn, so your translation should be closest to the meaning of the word as it would be used by a young child (say, under 3 years old). For cases when there are two equally good English words, put both. If you don't think there is a good translation into a reasonable English word that a kid might know, you can leave the alternative translation blank."] 
 
 Not every instrument has unilemma mappings, but they are currently available, at least partially, for `r sum(instruments$unilemma_coverage > 0)` out of the `r nrow(instruments)` instruments.
 
@@ -69,7 +69,7 @@ Despite these issues, months are the currency of language development research, 
 
 ## Datasets
 
-This section gives a broad overview of the data we have available. Unlike projects in which data are collected by the organizers, in our work here, we rely on the kindness of others in contributing data that are often years or decades old. Some datasets come via an email containing well-curated tabular data; others were contributed in more idiosyncratic formats or even on paper. One dataset was even retrieved by one of us from a doorstep several hours drive away, in the form of a paper bag full of old paper forms. Thus, the amount and type of meta-data available for some datasets is limited. For example, we have limited demographic information for some datasets and only vocabulary -- not complexity or gesture -- items for others. In many cases we do not have full details of instructions and administration for a particular dataset. This section gives an overview of data availability and some demographic comparisons of the samples. Specifics of each dataset -- to the extent that they are available -- are given in Appendix \@ref(appendix-data). 
+This section gives a broad overview of the data we have available. Unlike projects in which data are collected by the organizers, in our work here, we rely on the kindness of others in contributing data that are often years or decades old. Some datasets come via an email containing well-curated tabular data; others were contributed in more idiosyncratic formats or even on paper. One dataset was even retrieved by one of us from a doorstep several hours drive away, in the form of a paper bag full of paper forms. Thus, the amount and type of meta-data available for some datasets is limited. For example, we have limited demographic information for some datasets and only vocabulary -- not complexity or gesture -- items for others. In many cases we do not have full details of instructions and administration for a particular dataset. This section gives an overview of data availability and some demographic comparisons of the samples. Specifics of each dataset -- to the extent that they are available -- are given in Appendix \@ref(appendix-data). 
 
 ### Data provenance
 
@@ -81,7 +81,7 @@ Each of these datasets is then imported to the database by creating a custom imp
 
 Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments similar to the original Words & Gestures (WG, "infant") / Words & Sentences (WS, "toddler") format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable by the researchers constructing the adaptation). 
 
-Wordbank also includes some other forms that do not fit into this schema, including short forms and vocabulary questionnaires. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age-range. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these forms in analyses where WS and WG data are included. 
+Wordbank also includes some other forms that do not fit into this schema. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age range. We group this form with WG forms because it measures comprehension. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these checklist forms in analyses where WS and WG data are included, grouping them by their target age range. 
 
 Table \@ref(tab:methods-overview) shows an overview of the instruments in Wordbank.
 
@@ -97,7 +97,7 @@ items %>%
         col.names = label_caps(colnames(.)))
 ```
 
-The number of administrations available is highly variable across instruments and languages, however. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages.
+The number of administrations available is highly variable across instruments and languages, however. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages. We have fewer WG administrations than WS forms for essentially all languages/dialects. 
 
 ```{r methods-admins, fig.cap="Log-scaled number of administrations for each instrument."}
 admins_grouped <- admins %>%
@@ -122,9 +122,9 @@ ggplot(admin_summary, aes(x = language, y = n, col = form)) +
   theme(legend.position = "bottom")
 ```
 
-These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-represented. Figure \@ref(fig:methods-map) indicates which countries' languages are represented.
+These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-/un-represented. Figure \@ref(fig:methods-map) indicates which countries have their population represented in the dataset.
 
-```{r methods-map, fig.cap="World map with countries shaded whose dominant language is represented in the dataset.", fig.height=3.6}
+```{r methods-map, fig.cap="World map shaded for those countries whose population is represented in the dataset.", fig.height=3.6}
 # write_csv(data.frame(unique(instruments$language)), "data/methods/languages_countries.csv")
 
 languages_countries <- read_csv("data/methods/languages_countries.csv")
@@ -163,7 +163,7 @@ Data in the dataset were gathered between the beginning of the first CDI norming
 
 We have limited direct evidence about the effects of particular administration details on the overall results, although some early studies found comparable results across mail-in and personal administration [@jackson-maldonado1993]. Such evidence would require random assignment of parents to administration method rather than, e.g., a comparison of administration methods across different populations in which there are obvious sample-related confounds. Nevertheless, the CDI community has amassed a substantial set of anecdotal experiences. For example, improper administration or limited instructions can result in over- or under-reporting, especially with respect to comprehension [see e.g., @feldman2000]. 
 
-In one trial we conducted using electronic administration, we found that basic written instructions were misinterpreted by some proportion of parents (as evinced by an atypical number of floor and ceiling responses). This proportion appeared to decrease when we made an attempt to simplify and illustrate the instructions that we gave. Such experiences suggest -- congruent with the general warnings above -- that caution is warranted in interpreting absolute comparisons between different populations where there are also differences in administration style. 
+In one trial we conducted using electronic administration, we found that basic written instructions were misinterpreted by some proportion of parents (as evinced by an atypical number of floor and ceiling responses). This proportion appeared to decrease when we made an attempt to simplify and illustrate the instructions that we gave. Such experiences suggest -- congruent with the general warnings above -- that caution is warranted in interpreting absolute comparisons between different populations where there are also differences in administration style. We return to questions about administration in our final chapter, Chapter \@ref(conclusion-beyond-cdi).
 
 ### Demographic details
 
@@ -200,7 +200,7 @@ ggplot(filter(gender_counts, sex == "Female"),
         legend.position = "bottom")
 ```
 
-Sex proportions tend to be quite close to .5, with a few exceptions for small datasets. Several WG datasets (e.g., British Sign Language, Russian, Italian, Quebec French) have more males than would be expected by chance. This pattern is important because (as we will investigate in Chapter \@ref(demographics)), there are systematic differences in vocabulary size between boys and girls, and so sample differences in gender will lead to absolute differences in mean vocabulary size. 
+Sex proportions tend to be quite close to .5, with a few exceptions for small datasets. Several WG datasets (e.g., British Sign Language, Russian, Italian, Quebec French) have more males than might be expected by chance. This pattern is important because (as we will investigate in Chapter \@ref(demographics)), there are systematic differences in vocabulary size between boys and girls, and so sample differences in gender will lead to absolute differences in mean vocabulary size. 
 
 ```{r methods-momed, fig.cap="Proportions of children with each level of maternal education for each instrument."}
 momed_counts <- admins %>%
@@ -222,7 +222,7 @@ ggplot(momed_counts,
   .scale_fill_discrete(name = "Maternal education") 
 ```
 
-Although we have maternal education data for far fewer datasets, there are also substantial differences between datasets on this variable (we will also return to this issue again in Chapter \@ref(demographics)). Analyses of this variable are complicated by different reporting formats, so for example the German and Mexican Spanish datasets have no separate categorization for graduate education. That said, even for datasets with the most fine-grained maternal education breakdown, we see substantial differences.
+Although we have maternal education data for far fewer datasets, there are also substantial differences between datasets on this variable (we will also return to this issue again in Chapter \@ref(demographics)). Analyses of this variable are complicated by different reporting formats: for example the German and Mexican Spanish datasets have no separate categorization for graduate education. That said, even for datasets with the most fine-grained maternal education breakdown, we see substantial differences in distribution.
 
 ```{r methods-ord, fig.cap="Proportions of children with each value of birth order for each instrument."}
 ord_counts <- admins %>%
@@ -244,7 +244,7 @@ ggplot(ord_counts,
   .scale_fill_discrete(name = "Birth order") 
 ```
 
-Finally, when we examine birth order, we also see differences in the proportion of children who are first- vs. later-born. The majority of the German sample is first-born, while the Czech sample has many more second children, for example. 
+Finally, when we examine birth order, we also see differences in the proportion of children who are first- vs. later-born. The majority of the French sample is first-born, while the Czech sample has many more second children, for example. 
 
 In summary, our samples differ substantially in their demographic makeup. Presumably, these differences are due both to the composition of the societies being sampled as well as to the sampling procedure employed by the researchers. 
 
@@ -278,7 +278,7 @@ ggplot(filter(longitudinal, `Number of administrations` != "1") %>%
   xlab("")
 ```
 
-In general, this aspect of our data is a consequence of the fact that, for normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the more extensive Norwegian and English longitudinal data in Chapter \@ref(style), however.
+In general, this aspect of our data is a consequence of the fact that, for normative datasets, pure cross-sectional data collection is used to ensure statistical independence between datapoints. Thus, we must typically settle for using the large amount of available cross-sectional data to average out individual variability. We do use the more extensive Norwegian and English longitudinal data in Chapters \@ref(grammar) and \@ref(style), however.
 
 ### Difficult datasets
 
@@ -307,9 +307,9 @@ ggplot(russian_animal_means,
   ylab("Median production")
 ```
 
-One small example of this kind of situation comes from the Russian dataset. Although -- as we will explore in depth -- nearly every individual item in every dataset shows a positive developmental slope (indicating learning over time), Russian animal sounds are a distinctive exception, as shown in Figure \@ref(fig:methods-russian-animals). Every item in this category *decreases* developmentally in a very consistent and reliable way. What happened? One possibility is that this set of items was reverse coded (and so it should be asymptoting at three years). Another possibility is that Russian parents treat these as "baby words" that a three-year-old would not or should not produce (e.g., rather than saying *oink* they should say *pig*.) We can speculate but we will likely never know. 
+One example of this kind of situation comes from the Russian dataset. Although -- as we will explore in depth -- nearly every individual item in every dataset shows a positive developmental slope (indicating learning over time), Russian animal sounds are a distinctive exception, as shown in Figure \@ref(fig:methods-russian-animals). Every item in this category *decreases* developmentally in a very consistent and reliable way. What happened? One possibility is that this set of items was reverse coded (and so it should be asymptoting at three years). Another possibility is that Russian parents treat these as "baby words" that a three-year-old would not or should not produce (e.g., rather than saying *oink* they should say *pig*.) We can speculate but we will likely never know. 
 
-Extending more broadly (and presaging the discussion in Chapter \@ref(vocabulary), our analyses have revealed two datasets that show large disparities not just in a single category but in the pattern of overall vocabulary sizes: Mandarin (Beijing) Words & Sentences production and Mandarin (Taiwain) Words & Sentences comprehension. 
+Extending more broadly (and presaging the discussion in Chapter \@ref(vocabulary)), our analyses have revealed two datasets that show large disparities not just in a single category but in the pattern of overall vocabulary sizes: Mandarin (Beijing) Words & Sentences production and Mandarin (Taiwain) Words & Sentences comprehension. 
 
 ```{r vocab-ords-mandarin, fig.cap="Median production vocabulary for 24-month-olds, with total item scores shown in the left panel and proportions on the right. Scores are sorted by total item score. To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months."}
 num_words <- items %>%
@@ -395,10 +395,10 @@ ggplot(taiwan_comp_data,
   theme(legend.position = "bottom")
 ```
 
-Turning to Mandarin (Taiwanese) comprehension scores, we see that they are relatively flat and show very high medians very early in development. Deeper inspection of the full distributional pattern (Figure \@ref(fig:vocab-taiwan-comprehension)) suggests that there is relatively little developmental change in comprehension scores on this dataset. In contrast, production, seen above, appears to follow a more typical pattern. In our experience, this pattern results from parents who do not understand what is being asked on the comprehension section of a form; sometimes they report whether they think a child has heard a particular word, or whether they respond to language in more general ways. We have observed a population of "over-responders" of this sort in a number of self-report contexts -- often they are parents of very young children who appear loathe to return a form having checked essentially no items at all. But such an explanation is only speculation.
+Turning to Mandarin (Taiwanese) comprehension scores, we see that they are relatively flat and show very high medians very early in development. Deeper inspection of the full distributional pattern (Figure \@ref(fig:vocab-taiwan-comprehension)) suggests that there is relatively little developmental change in comprehension scores on this dataset. In contrast, production appears to follow a more typical pattern. In our experience, this pattern results from parents who do not understand what is being asked on the comprehension section of a form; sometimes they report whether they think a child has heard a particular word, or whether they respond to language in more general ways. We have observed a population of "over-responders" of this sort in a number of self-report contexts -- often they are parents of very young children who appear loathe to return a form having checked essentially no items at all. But such an explanation is only speculation.
 
-These are a few examples, but in fact there are quite a number of "difficult datasets" in one way or another. While we have offered some tentative explanations of a few features, these are necessarily post hoc and rely on our assumption that they *should* be relatively similar to other datasets from other cultures and with other forms. Thus, in our further analyses we choose not to omit these data but instead consider them as a caution on making strong inferences from variability rather than from consistency. As we discussed in Chapter \@ref(intro-theory), variability may be caused by a wide variety of sources; it is consistency which is somewhat more surprising. 
+We could give other examples. There are quite a number of "difficult datasets" in one way or another in Wordbank. While we have offered some tentative explanations of a few features, these are necessarily post hoc and rely on our assumption that they *should* be relatively similar to other datasets from other cultures and with other forms. Thus, in our further analyses we choose not to omit these data but instead consider them as a caution on making strong inferences from variability rather than from consistency. As we discussed in Chapter \@ref(intro-theory), variability may be caused by a wide variety of sources; it is consistency which is all the more surprising in the face of this sort of variation. 
 
-### Conclusions
+<!-- ### Conclusions -->
 
-The strength of the Wordbank framework is that it allows access to CDI data in a consistent format, such that analyses can be applied uniformly. Yet we must not allow this ease to blind us to the difficulties of comparing across measurements that are gathered using different forms, under different administration conditions, and from convenience samples in different countries and cultures using different sampling schemes. Each of these differences has the potential to complicate cross-linguistic comparisons. We will return to each throughout the book.
+<!-- The strength of the Wordbank framework is that it allows access to CDI data in a consistent format, such that analyses can be applied uniformly. Yet we must not allow this ease to blind us to the difficulties of comparing across measurements that are gathered using different forms, under different administration conditions, and from convenience samples in different countries and cultures using different sampling schemes. Each of these differences has the potential to complicate cross-linguistic comparisons. We will return to each throughout the book. -->

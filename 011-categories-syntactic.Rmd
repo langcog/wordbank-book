@@ -38,7 +38,7 @@ Other researchers have framed the "noun bias" in terms of universals about what 
 
 @gentner1982 also considered and ruled out other explanations, including word frequency and word order. We investigate the role of word frequency in more detail in Chapter \@ref(items-prediction), but note here that predicates and function words are often *more* frequent than nouns, not less. With respect to word order, verbs might be predicted to be less salient in subject-verb-object (SVO) languages than subject-object-verb (SOV) languages. Gentner found no evidence for differences in noun bias by word order, however. 
 
-Another reason that nouns might be easier than verbs for young children is that nouns tend to be less morphologically complex than verbs [e.g., @tardif1997]. For example, in many languages, nouns are typically marked for number, case, and gender, whereas, verbs are more likely to carry tense information. In English, at least, verbs might also be harder to learn because they tend to occur in sentence-medial position (rather than sentence final), which make verbs less salient in the input that children hear [@slobin1985; @caselli1995].
+Another reason that nouns might be easier than verbs for young children is that nouns tend to be less morphologically complex than verbs [e.g., @tardif1997]. For example, in many languages, nouns are typically marked for number, case, and gender, while verbs are likely to additionally carry tense information. In English, at least, verbs might also be harder to learn because they tend to occur in sentence-medial position (rather than sentence final), which make verbs less salient in the input that children hear [@slobin1985; @caselli1995].
 
 Finally, differences in children's acquisition of nouns vs. verbs might result from differences in the contexts in which children hear nouns vs. verbs in the speech from caregivers [e.g., @choi1995; @tardif1999; cf. @gentner1982]. Several researchers have examined what caregivers talk about using naturalistic data of caregiver-child interactions. For example, caregivers in some cultures tend to emphasize the names for people or things in the world, spending a great deal of time providing labels and "names for things" for their children. In other cultures, caregivers do so much less frequently, instead focusing on the actions in which those objects or people engage [e.g., @fernald1993; @gopnik1996]. These differences in input to children can influence which words are salient for children, and hence, which words they are most likely to learn.
 
@@ -57,7 +57,7 @@ Each CDI form contains a mixture of words in different classes. As in Chapter \@
 include_graphics("images/vocab_comp_schematic.png")
 ```
 
-We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms, like the one used in the British English TEDS study, do not typically include category information.
+We limit our analysis to traditional WS and WG forms (along with variants in these classes) because short forms, like the one used in the British English TEDS study, do not typically include category information. We also exclude longitudinal administrations.
 
 <!-- The sample sizes included in this analysis are given in Table \@ref(tab:catsyn-sample-sizes). -->
 
@@ -69,7 +69,7 @@ items <- items %>%
 
 ```{r catsyn-vocab_comp_fun}
 get_vocab_data <- function(input_language, input_form) {
-  print(paste(input_language,input_form))
+  print(paste(input_language, input_form))
   
   lang_vocab_items <- items %>%
     filter(language == input_language, form == input_form,
@@ -150,13 +150,27 @@ vocab_comp_data <- vocab_comp_category %>%
 class_data <- vocab_comp_class %>%
   select(-inst_vocab_data) %>%
   unnest()
+```
 
-# save(vocab_data, file = "data/categories-syntactic/_vocab_data.RData")
+```{r catsyn-exclude-longs, eval=FALSE}
+# take earliest administration for any child with multiple administrations
+first_longitudinals <- admins %>%
+  filter(longitudinal) %>%
+  group_by(source_name, original_id) %>%
+  arrange(age) %>%
+  slice(1)
+
+cross_sectionals <- admins %>%
+  filter(!longitudinal | data_id %in% first_longitudinals$data_id)
+
+vocab_comp_data <- vocab_comp_data %>% filter(data_id %in% cross_sectionals$data_id)
+class_data <- class_data %>% filter(data_id %in% cross_sectionals$data_id)
+
 write_feather(vocab_comp_data, "data/categories-syntactic/vocab_comp_data.feather")
 write_feather(class_data, "data/categories-syntactic/class_data.feather")
 ```
 
-```{r catsyn-sample-sizes, results="asis"}
+```{r catsyn-sample-sizes}
 WGs <- c(WGs, "asl_combined")
 forms <- bind_rows(
   as_tibble(WSs) %>% rename(form = value) %>% mutate(form_type = "WSs"),
@@ -221,41 +235,39 @@ As an illustration of this method, Figure \@ref(fig:catsyn-plot-area-demo) shows
 
 ```{r catsyn-resample}
 poly_area <- function(group_data) {
-  model = clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1,
-              data = group_data)
+  model <- tryCatch(
+    clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = group_data),
+    error = function(e) return(NA)
+  )
+  if (is.na(model)) return(NA)
   return((model$solution %*% c(1/4, 1/3, 1/2) - 0.5)[1])
 }
 
-sample_areas <- function(d, nboot = 1000, group) {
+sample_areas <- function(vocab_data, group, nboot = 1000) {
   
   group <- rlang::enquo(group)
   
-  counter <- 1
-  sample_area <- function(d) {
-    d_frame <- d %>%
+  sample_area <- function(i) {
+    print(i)
+    vocab_data %>%
       group_by(language, form, measure) %>%
       sample_frac(replace = TRUE) %>%
       group_by(language, form, measure, !!group) %>%
-      do(area = poly_area(.)) %>%
-      mutate(area = area[1]) %>%
-      rename_(.dots = setNames("area", counter))
-    
-    counter <<- counter + 1 # increment counter outside scope
-    print(counter)
-    return(d_frame)
+      nest() %>%
+      mutate(area = map_dbl(data, poly_area),
+             sample = i) %>%
+      select(-data)
   }
   
-  areas <- replicate(nboot, sample_area(d), simplify = FALSE)
-  
-  Reduce(left_join, areas) %>%
-    gather(sample, area, -language, -form, -measure, -!!group)
+  map_df(1:nboot, sample_area)
 }
 ```
 
 ```{r catsyn-areas_compute, eval=FALSE}
 areas <- sample_areas(vocab_comp_data, group = lexical_category)
-class_areas <- sample_areas(class_data, group = lexical_class)
 write_feather(areas, "data/categories-syntactic/vocab_comp_areas.feather")
+
+class_areas <- sample_areas(class_data, group = lexical_class)
 write_feather(class_areas, "data/categories-syntactic/class_areas.feather")
 ```
 
@@ -266,6 +278,7 @@ class_areas <- read_feather("data/categories-syntactic/class_areas.feather")
 
 ```{r catsyn-area_summary}
 area_summary <- areas %>%
+  filter(!is.na(area)) %>%
   group_by(language, form, measure, lexical_category) %>%
   summarise(mean = mean(area),
             ci_lower = ci_lower(area),
@@ -283,6 +296,7 @@ pred_classes <- items %>%
   unique()
 
 pred_area_summary <- class_areas %>%
+  filter(!is.na(area)) %>%
   filter(lexical_class %in% pred_classes) %>%
   group_by(language, form, measure, lexical_class) %>%
   summarise(mean = mean(area),

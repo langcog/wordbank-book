@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 12 Vocabulary Composition: Semantic Categories | Variability and Consistency in Early Language Learning</title>
   <meta name="description" content="Chapter 12 Vocabulary Composition: Semantic Categories | Variability and Consistency in Early Language Learning" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 12 Vocabulary Composition: Semantic Categories | Variability and Consistency in Early Language Learning" />
   <meta property="og:type" content="book" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="categories-syntactic.html">
-<link rel="next" href="grammar.html">
+<link rel="prev" href="categories-syntactic.html"/>
+<link rel="next" href="grammar.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -39,6 +39,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -345,7 +348,7 @@ Figure 12.5: Relative representation in vocabulary compared to chance for catego
 </div>
 <div id="category-variability" class="section level2">
 <h2><span class="header-section-number">12.3</span> Category variability</h2>
-<p>Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22–26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. Table <a href="categories-semantic.html#tab:catsem-cat-var">12.1</a> gives the coefficient of variation for each category.</p>
+<p>Finally, we quantify the variability across languages for each of these restricted sets of lexical items. For 22–26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item. We do this as follows: we first average the level of production across ages and then across lexical items, we then compute the CV across these averages to obtain a category-level CV. Reported Ns are for the average number of contributing languages. We additionally add a CV estimate words from the Animals category for the sake of comparison. Table <a href="categories-semantic.html#tab:catsem-cat-var">12.1</a> gives the coefficient of variation for each category.</p>
 <p><img src="wordbank-book_files/figure-html/unnamed-chunk-15-1.png" width="\linewidth" style="display: block; margin: auto;" /></p>
 <table>
 <caption>
@@ -445,17 +448,17 @@ Time
 <h3><span class="header-section-number">12.3.1</span> Dimensionality reduction</h3>
 <p>Our next analysis of these data takes an exploratory dimensionality-reduction approach. Rather than examining each semantic category individually, we consider the space defined by variation in semantic preferences by running principal components analysis (PCA) on these data. PCA is a dimensionality reduction technique that projects high-dimensional data (e.g., bias by semantic category for each language) into a set of orthogonal dimensions where lower dimensions capture as much of the variance as possible.</p>
 <p>Standard PCA requires datasets without missing data, so we removed languages with missing categories. This analysis thus includes 23 language/form combinations and 13 categories. (We exclude words from Sounds because of the issue with Russian in this category and other missing data).</p>
-<p>Figure <a href="categories-semantic.html#fig:catsem-pca-autoplot-data">12.6</a> and Figure <a href="categories-semantic.html#fig:catsem-pca-autoplot-loadings">12.7</a> show the data projected into the space of the first two principal components and the loadings of semantic categories on these two components, respectively.</p>
-<div class="figure" style="text-align: center"><span id="fig:catsem-pca-autoplot-data"></span>
-<img src="wordbank-book_files/figure-html/catsem-pca-autoplot-data-1.png" alt="First two principal components for each language." width="\linewidth" />
-<p class="caption">
-Figure 12.6: First two principal components for each language.
-</p>
-</div>
+<p>Figure <a href="categories-semantic.html#fig:catsem-pca-autoplot-loadings">12.6</a> and Figure <a href="categories-semantic.html#fig:catsem-pca-autoplot-data">12.7</a> show the loadings of semantic categories on these two components and the data projected into the space of the first two principal components, respectively.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsem-pca-autoplot-loadings"></span>
 <img src="wordbank-book_files/figure-html/catsem-pca-autoplot-loadings-1.png" alt="Loadings of each semantic category." width="\linewidth" />
 <p class="caption">
-Figure 12.7: Loadings of each semantic category.
+Figure 12.6: Loadings of each semantic category.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:catsem-pca-autoplot-data"></span>
+<img src="wordbank-book_files/figure-html/catsem-pca-autoplot-data-1.png" alt="First two principal components for each language." width="\linewidth" />
+<p class="caption">
+Figure 12.7: First two principal components for each language.
 </p>
 </div>
 <p>Several observations emerge: Mandarin and Cantonese WS data are very far towards the direction of people (indicating that these datasets are unusual in this respect). Second, Kiswahili and Kigiriama are especially far in the direction of Outside and Places To Go words, perhaps consistent with the datasets being collected in rural and semi-rural areas. Many Northern European datasets (as well as Korean) are clustered at the far left, with high scores on Vehicles, Clothing, and Animals. Overall, this analysis reveals some interesting structure, but care should be taken not to over-interpret. In particular, within culture differences (e.g., Mandarin TC vs. Mandarin WS) are as large in size as between-culture differences.</p>
@@ -473,19 +476,19 @@ Figure 12.7: Loadings of each semantic category.
 Figure 12.8: Developmental trajectory of each time word in each language.
 </p>
 </div>
-<p>Figure <a href="categories-semantic.html#fig:catsem-time-words">12.8</a> shows trajectories for these lexical items across languages, sorted by difficulty. Because <em>night</em> is typically signaled by darkness, it is perceptually very concrete and likely easier than other time words. Similarly, <em>now</em> seems relatively more straightforward given that it has a common imperative meaning in sentences like “give me that right now.” In contrast, the latest-acquired is <em>yesterday</em>, which is highly abstract and requires a sort of “mental time travel” in thinking retrospectively beyond the “here and now” <span class="citation">(Busby and Suddendorf <a href="references.html#ref-busby2005">2005</a>)</span>. While <em>tomorrow</em> shares those same features, it does not appear to pose similar challenges for children in these data.</p>
+<p>Figure <a href="categories-semantic.html#fig:catsem-time-words">12.8</a> shows trajectories for these lexical items across languages, sorted by difficulty. Because <em>night</em> is typically signaled by darkness, it is perceptually very concrete and likely easier than other time words. Similarly, <em>now</em> seems relatively more straightforward given that it has a common imperative meaning in sentences like “give me that right now.” In contrast, the latest-acquired is <em>yesterday</em>, which is highly abstract and requires a sort of “mental time travel” in thinking retrospectively beyond the “here and now” <span class="citation">(Busby and Suddendorf <a href="references.html#ref-busby2005">2005</a>)</span>. While <em>tomorrow</em> shares those same features, it appears to be learned earlier than <em>yesterday</em> on average, whether due to frequency or other factors.</p>
 </div>
 <div id="color" class="section level3">
 <h3><span class="header-section-number">12.4.2</span> Color</h3>
 <p>Color word acquisition has been a focus of interest at least since early work by <span class="citation">Carey (<a href="references.html#ref-carey1978">1978</a>)</span>’s influential study of “fast mapping.” Although early work suggested that color words were learned almost simultaneously <span class="citation">(Bartlett <a href="references.html#ref-bartlett1977">1977</a>)</span>, more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space <span class="citation">(Wagner, Dobkins, and Barner <a href="references.html#ref-wagner2013">2013</a>)</span>. Adding to the complexity of this issue are the substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms <span class="citation">(Bornstein <a href="references.html#ref-bornstein1985">1985</a>)</span>.</p>
-<p>There is tremendous cross-linguistic variation in color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively large color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was <em>black</em>, <em>blue</em>, <em>green</em>, <em>red</em>, <em>white</em>, <em>yellow</em>.</p>
+<p>There is tremendous cross-linguistic variation in the overall level of color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively large color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was <em>black</em>, <em>blue</em>, <em>green</em>, <em>red</em>, <em>white</em>, <em>yellow</em>.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsem-color-words"></span>
 <img src="wordbank-book_files/figure-html/catsem-color-words-1.png" alt="Developmental trajectory of each color word in each language." width="\linewidth" />
 <p class="caption">
 Figure 12.9: Developmental trajectory of each color word in each language.
 </p>
 </div>
-<p>In this set of words (Figure <a href="categories-semantic.html#fig:catsem-color-words">12.9</a>), we see that <em>red</em> is typically the first learned, although there is substantial variability in when it is learned. It is followed by <em>yellow</em>, <em>blue</em>, and <em>green</em>, with <em>black</em> and <em>white</em> following behind, consistent with reports by <span class="citation">Wagner, Dobkins, and Barner (<a href="references.html#ref-wagner2013">2013</a>)</span>.</p>
+<p>In contrast to the variability in overall level, the sequence of learning is fairly consistent across languages. In this set of words (Figure <a href="categories-semantic.html#fig:catsem-color-words">12.9</a>), we see that <em>red</em> is typically the first learned, although there is substantial variability in when it is learned. It is followed by <em>yellow</em>, <em>blue</em>, and <em>green</em>, with <em>black</em> and <em>white</em> following behind, consistent with reports by <span class="citation">Wagner, Dobkins, and Barner (<a href="references.html#ref-wagner2013">2013</a>)</span>. (See <span class="citation">Yurovsky et al. (<a href="references.html#ref-yurovsky2015sign">2015</a>)</span> for an account of factors involved in color word learning).</p>
 <div class="figure" style="text-align: center"><span id="fig:catsem-color-langs-words"></span>
 <img src="wordbank-book_files/figure-html/catsem-color-langs-words-1.png" alt="Mean developmental trajectory of color words in each language." width="\linewidth" />
 <p class="caption">
@@ -541,11 +544,13 @@ Finally, we found that acquisition of complex conceptual words reflecting colors
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -591,8 +596,9 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

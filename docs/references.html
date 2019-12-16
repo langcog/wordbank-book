@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>References | Variability and Consistency in Early Language Learning</title>
   <meta name="description" content="References | Variability and Consistency in Early Language Learning" />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
   <meta property="og:title" content="References | Variability and Consistency in Early Language Learning" />
   <meta property="og:type" content="book" />
@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="appendix-aoa.html">
+<link rel="prev" href="appendix-aoa.html"/>
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -39,6 +39,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -588,6 +591,9 @@
 <div id="ref-conwell2007">
 <p>Conwell, Erin, and Katherine Demuth. 2007. “Early Syntactic Productivity: Evidence from Dative Shift.” <em>Cognition</em> 103 (2). Elsevier: 163–79.</p>
 </div>
+<div id="ref-core2013">
+<p>Core, Cynthia, Erika Hoff, Rosario Rumiche, and Melissa Señor. 2013. “Total and conceptual vocabulary in Spanish–English bilinguals from 22 to 30 months: Implications for assessment.” <em>Journal of Speech, Language, and Hearing Research</em> 56: 1637–49. <a href="https://doi.org/10.1044/1092-4388(2013/11-0044)Why">https://doi.org/10.1044/1092-4388(2013/11-0044)Why</a>.</p>
+</div>
 <div id="ref-crain2000">
 <p>Crain, Stephen, and Rosalind Thornton. 2000. <em>Investigations in Universal Grammar: A Guide to Experiments on the Acquisition of Syntax and Semantics</em>. MIT Press.</p>
 </div>
@@ -917,6 +923,9 @@
 </div>
 <div id="ref-iverson2005">
 <p>Iverson, Jana M, and Susan Goldin-Meadow. 2005. “Gesture Paves the Way for Language Development.” <em>Psychological Science</em> 16 (5). SAGE Publications Sage CA: Los Angeles, CA: 367–71.</p>
+</div>
+<div id="ref-jacksonmaldonado2013">
+<p>Jackson-Maldonado, Donna, Virginia A. Marchman, and Lia C. H. Fernald. 2013. “Short-form versions of the Spanish MacArthur–Bates Communicative Development Inventories.” <em>Applied Psycholinguistics</em> 34: 837–68.</p>
 </div>
 <div id="ref-jackson-maldonado1993">
 <p>Jackson-Maldonado, Donna, Donna Thal, Virginia Marchman, Elizabeth Bates, and Vera Gutierrez-Clellen. 1993. “Early Lexical Development in Spanish-Speaking Infants and Toddlers.” <em>Journal of Child Language</em> 20 (3). Cambridge University Press: 523–49.</p>
@@ -1452,6 +1461,9 @@
 <div id="ref-yurovsky2013">
 <p>Yurovsky, Daniel, Linda B Smith, and Chen Yu. 2013. “Statistical Word Learning at Scale: The Baby’s View Is Better.” <em>Developmental Science</em> 16 (6). Wiley Online Library: 959–66.</p>
 </div>
+<div id="ref-yurovsky2015sign">
+<p>Yurovsky, Daniel, Katie Wagner, David Barner, and Michael C Frank. 2015. “Signatures of Domain-General Categorization Mechanisms in Color Word Learning.” In <em>CogSci</em>.</p>
+</div>
 <div id="ref-zajonc1975">
 <p>Zajonc, Robert B, and Gregory B Markus. 1975. “Birth Order and Intellectual Development.” <em>Psychological Review</em> 82 (1). American Psychological Association: 74.</p>
 </div>
@@ -1506,11 +1518,13 @@
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1556,8 +1570,9 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

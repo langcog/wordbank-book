@@ -1,20 +1,25 @@
 ---
 title: "Variability and Consistency in Early Language Learning"
-subtitle: "The Wordbank Project"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
-site: bookdown::bookdown_site
-github-repo: langcog/wordbank-book
-documentclass: book
-bibliography: book.bib
 biblio-style: apalike
+output: pdf_document
+documentclass: book
+github-repo: langcog/wordbank-book
 link-citations: yes
+bibliography: book.bib
+site: bookdown::bookdown_site
+subtitle: The Wordbank Project
 always_allow_html: yes
 ---
 
+\renewcommand{\thefigure}{P.\arabic{figure}}
 
 # Preface {-}
 
-> *This website is the free online version of a book whose current citation is: Frank, M. C., Braginsky, M., Marchman, V. A., and Yurovsky, D. (in prep). Variability and Consistency in Early Language Learning: The Wordbank Project. Cambridge, MA: MIT Press.*
+```{r preface-citation, results='asis'}
+if (opts_knit$get("rmarkdown.pandoc.to") == "html")
+cat("> *This website is the free online version of a book whose current citation is: Frank, M. C., Braginsky, M., Marchman, V. A., and Yurovsky, D. (in prep). Variability and Consistency in Early Language Learning: The Wordbank Project. Cambridge, MA: MIT Press.*")
+```
 
 ## Overview {-}
 
@@ -47,6 +52,15 @@ Chapters \@ref(vocabulary)--\@ref(style) then form the empirical heart of the bo
 ```{r preface-outline, fig.cap="A graphical outline of the book."}
 include_graphics("images/outline-graffle.png")
 ```
+
+<!-- var fig_span = document.getElementById("fig:preface-outline"); -->
+<!-- var fig_img = fig_span.nextElementSibling; -->
+<!-- var fig_p = fig_img.nextElementSibling; -->
+<!-- fig_p.innerHTML = fig_p.innerHTML.replace("Figure 0.", "Figure P."); -->
+
+<!-- var fig_ref = $( "a:contains('0.1')" ); -->
+<!-- console.log(fig_ref.innerHTML); -->
+<!-- fig_ref.innerHTML.replace("0.1", "P.1"); -->
 
 Considering the data in this way leads to a number of obvious data analytic strategies, many of which correspond directly to previous approaches to CDI data. For example, averaging across items leads to *by-child averages*, where each child receives a comprehension or production score. Chapter \@ref(vocabulary) considers this view of the data, examining developmental change and variability in such data. Then in Chapter \@ref(demographics), we report the ways that vocabulary growth varies across gender, birth order, and maternal education (a rough but cross-culturally valid proxy for socioeconomic status). 
 
@@ -84,4 +98,8 @@ Thanks to Danielle Kellier for substantial work importing data and maintaining t
 
 Thanks to NSF Award #1528526, "Wordbank: An Open Repository for Developmental Vocabulary Data" for financial support of the Wordbank project as well as to the Stanford Psychology Department for a small seed funding award that supported the initial development of the site. 
 
-This book benefited from thoughtful comments by Philip Dale and Eve Clark, as well as comments on Chapter \@ref(categories-syntactic) by Dedre Gentner.  
+This book benefited from thoughtful comments by Philip Dale and Eve Clark, as well as comments on Chapter \@ref(categories-syntactic) by Dedre Gentner.
+
+<script>
+document.body.innerHTML = document.body.innerHTML.replace(/0.1/g, "P.1")
+</script>

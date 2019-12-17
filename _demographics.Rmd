@@ -1,0 +1,168 @@
+```{r demo-funs}
+N_MAIN_GROUPS <- 5
+N_AGE_POINTS <- 4
+
+# get means split by demographic features
+get_demo_means <- function(data, demo = ~sex, measure = ~production) {
+  data %>%
+    group_by(language, form, !!demo, age) %>%
+    mutate(measure = !!measure) %>%
+    summarise(median = median(.data$measure / n), 
+              n = n())
+}
+
+# get glmrob models on demographic feature
+get_demo_models <- function(data, demo = ~sex, measure = ~production,
+                            ref_level = "Male") {
+  data %>%
+    mutate(measure = !!measure, 
+           no_measure = n - .data$measure, 
+           demo = !!demo,
+           demo = fct_relevel(demo, ref_level)) %>%
+    unite(langform, language, form, sep = "_") %>%
+    split(.$langform) %>%
+    map(possibly(function(x) {
+      # print(x$langform[1])
+      robustbase::glmrob(cbind(measure, no_measure) ~ age * demo - demo,
+                         family = "binomial",
+                         data = x)
+    }, otherwise = NULL))
+}
+
+# predict from models in the given age range so that you can plot
+get_demo_preds <- function(models, data, demo = ~sex) {
+  
+  demo_name <- rlang::quo_name(demo) # quo
+  data %>%
+    unite(langform, language, form, sep = "_") %>%
+    split(.$langform) %>%
+    map_df(possibly(function(x) {
+      print(x$langform[1])
+      
+      new_data <- list(age = min(x$age):max(x$age),
+                       demo = unique(pull(x, !!demo)), 
+                       langform = x$langform[1]) %>%  
+        cross_df()    
+      
+      new_data$pred <- predict(models[[x$langform[1]]],
+                               newdata = new_data, type = "response")
+      return(new_data)
+    }, otherwise = tibble())) %>%
+    rename(!!demo_name := demo) %>%
+    separate(langform, into = c("language","form"), sep = "_") 
+}
+
+# get the appropriate coefficient from the model and corresponding p value
+get_demo_model_summary <- function(models, level = "Male") {
+  coef_name <- quo(paste0("age:demo", level))
+  
+  models %>%
+    map_df(possibly(function(x) {
+      # print(x$language[1])
+      p <- summary(x)$coefficients[rlang::eval_tidy(coef_name), 'Pr(>|z|)']
+      beta <- summary(x)$coefficients[rlang::eval_tidy(coef_name), 'Estimate']
+      return(data_frame(beta = beta, p = p))
+    }, otherwise = tibble(p = NA, beta = NA))) %>%
+    mutate(langforms = names(models)) %>% # ugly 
+    separate(langforms, into = c("language","form"), sep = "_") %>%
+    select(language, form, beta, p) %>%
+    arrange(beta)
+}
+
+# compute MMAD effect size measure by the demographic and particular levels
+# tricky to filter outliers but important, the current policy is to filter cases 
+# where there are fewer than N_MAIN_GROUPS in each of the two main groups that are being used for MMAD comparison. 
+
+get_mmad_ratio <- function(data, measure = quo(production), demo = quo(sex), 
+                           high_level = "Female", low_level = "Male") {
+  
+  data %>%
+    group_by(language, form, age, !!demo) %>%
+    filter(n() > N_MAIN_GROUPS | !(!!demo %in% c(high_level,low_level))) %>%
+    mutate(measure = !!measure) %>%
+    summarise(median = median(measure),
+              mad = mad(measure),
+              n = n()) %>%
+    group_by(language, form, age) %>%
+    filter(any(!! rlang::get_expr(demo) == high_level), 
+           any(!! rlang::get_expr(demo) == low_level)) %>% # one of each necessary level
+    summarise(mmad = (median[!!(demo) == high_level] - median[!!(demo) == low_level]) / 
+                mean(mad[!!(demo) %in% c(high_level, low_level)]),
+              n = sum(n)) %>%
+    filter(is.finite(mmad))
+}                           
+
+# summarise MMAD across development, again for given demoraphic
+get_mmad_summary <- function(data) {
+  data %>%
+    group_by(language, form) %>%
+    summarise(mmad_mean = weighted.mean(mmad, w = n),
+              n = n()) %>%
+    filter(n > N_AGE_POINTS) %>% # more than four age points - FIXME, arbitrary
+    ungroup %>%
+    mutate(language = fct_reorder(language, mmad_mean)) 
+}
+```
+
+
+```{r demo-analyses, eval=FALSE}
+# this code block does all the analyses above to all the combos of measures, forms, and demographics
+
+# build all the combos to analyze
+analysis_combos <- left_join(
+  tibble(form = c("WG", "WG", "WS"), 
+         measure = c(quo(comprehension), quo(production), quo(production)), 
+         measure_name = c("comprehension","production","production"),
+         index = 1:3), 
+  expand.grid(index = 1:3, 
+              demo = c(quo(sex), quo(birth_order), quo(mom_ed)))) %>%
+  mutate(demo_name = map_chr(demo, rlang::quo_name),
+         reference_level = case_when(demo_name == "sex" ~ "Male", 
+                                     demo_name == "birth_order" ~ "Second",
+                                     demo_name == "mom_ed" ~ "Secondary"),
+         high_level =  case_when(demo_name == "sex" ~ "Female",
+                                 demo_name == "birth_order" ~ "First",
+                                 demo_name == "mom_ed" ~ "College and Above"))
+
+# run all the analyses above on all those combos
+analyses <- analysis_combos %>%
+  split(list(.$form, .$measure_name)) %>%
+  map(function (form_measure_data) {
+    form_measure_data %>%
+      split(.$demo_name) %>%
+      map(possibly(function(demo_data) {
+        
+        demo <- demo_data$demo[1][[1]]
+        measure <- demo_data$measure[1][[1]]
+        
+        form_class <- demo_data$form[1]
+        
+        # deal with form classes to include TC/IC etc.
+        if (form_class == "WS") { 
+          forms <- WSs 
+        } else if (form_class == "WG") { 
+          forms <- WGs
+        }
+        
+        data <- vocab_data %>%
+          filter(!is.na(!!demo), form %in% forms) 
+        
+        results <- list()
+        results$means <- get_demo_means(data, demo = demo, measure = measure)
+        results$models <- get_demo_models(data, demo = demo, measure = measure,
+                                          ref_level = demo_data$reference_level[1])
+        results$preds <- get_demo_preds(results$models, data, demo = demo)
+        results$model_summary <- get_demo_model_summary(results$models, 
+                                                        level = demo_data$high_level[1])
+        results$mmad_ratio <- get_mmad_ratio(data, measure = measure, demo = demo, 
+                                             high_level = demo_data$high_level[1], 
+                                             low_level = demo_data$reference_level[1])
+        results$mmad_summary <- get_mmad_summary(results$mmad_ratio)
+        
+        return(results)
+      }, 
+      otherwise = tibble())) # otherwise for possibly call
+  })
+
+save(file = "data/demographics/demo-analyses.Rds", analyses)
+```

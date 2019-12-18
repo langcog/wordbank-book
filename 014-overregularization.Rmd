@@ -1,0 +1,297 @@
+# Morphological Overgeneralization
+
+## Introduction
+
+## Methods
+
+## Cross-sectional data
+
+```{r overreg-data, eval=FALSE}
+grammar_items <- read_csv("data/overregularization/overreg_item_coding.csv")
+overreg_items <- grammar_items %>%
+  filter(group == "overregularized") %>%
+  select(language, form, item_id, num_item_id, type, definition, lexical_category, stem)
+
+get_overreg_data <- function(lang, lang_items) {
+  print(lang)
+  lang_admins <- admins %>% filter(language == lang, form == "WS")
+  lang_data <- get_instrument_data(language = lang,
+                                   form = "WS",
+                                   items = lang_items$item_id,
+                                   iteminfo = lang_items,
+                                   administrations = lang_admins)
+  
+  lang_data %>%
+    mutate(produces = !is.na(value) & value == "produces") %>%
+    select(language, item_id, type, definition, 
+           data_id, original_id, longitudinal, age, production, produces)
+}
+
+overreg_data <- overreg_items %>%
+  mutate(lang = language) %>%
+  nest(items = -lang) %>%
+  mutate(data = map2(lang, items, get_overreg_data))
+
+overreg_data_items <- overreg_data %>%
+  select(-items) %>%
+  unnest(cols = c(data)) %>%
+  select(-lang) %>%
+  left_join(overreg_items)
+
+feather::write_feather(overreg_data_items, "data/overregularization/overreg_data_items.feather")
+```
+
+```{r overreg-by_kid}
+overreg_data_items <- feather::read_feather("data/overregularization/overreg_data_items.feather")
+
+form_words <- items %>%
+  filter(form == "WS", type == "word") %>%
+  group_by(language) %>%
+  summarise(num_words = n())
+
+overreg_by_kid <- overreg_data_items %>%
+  group_by(language, type, lexical_category,
+           data_id, original_id, longitudinal, age, production) %>%
+  summarise(total = n(), num_true = sum(produces),
+            num_false = total - num_true, prop = num_true / total) %>%
+  ungroup() %>%
+  left_join(form_words) %>%
+  mutate(production_prop = production / num_words,
+         lexical_category = as_factor(lexical_category))
+
+overreg_by_kid_nonzero <- overreg_by_kid %>% filter(prop != 0)
+```
+
+```{r ovreg-fits, dependson="overreg-by_kid"}
+vocab_model <- function(inst_data) {
+  lm(prop ~ I(production_prop ^ 4) + I(production_prop ^ 3) +
+       I(production_prop ^ 2) + production_prop + 0, data = inst_data)
+}
+
+vocab_models <- overreg_by_kid_nonzero %>%
+  group_by(language, lexical_category) %>%
+  nest() %>%
+  mutate(
+    model = map(data, vocab_model),
+    rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
+    rsq_print = glue::glue("r² = {sprintf('%.2f', round(rsq, 2))}")
+    # rsq_print = glue::glue("italic(r)^2 == {sprintf('%.2f', round(rsq, 2))}")
+  )
+
+vocab_step <- 0.01
+vocabs <- tibble(production_prop = seq(0, 1, vocab_step))
+vocab_fits <- vocab_models %>%
+  mutate(fits = map(model, ~broom::augment(., newdata = vocabs))) %>%
+  select(-data, -model) %>%
+  unnest(cols = c(fits))
+
+
+age_model <- function(inst_data) {
+  lm(prop ~ I(age ^ 4) + I(age ^ 3) +
+       I(age ^ 2) + age, data = inst_data)
+}
+
+age_models <- overreg_by_kid_nonzero %>%
+  nest(data = c(-language, -lexical_category)) %>%
+  mutate(
+    model = map(data, age_model),
+    rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
+    rsq_print = glue::glue("r² = {sprintf('%.2f', round(rsq, 2))}")
+    # rsq_print = glue::glue("italic(r)^2 == {sprintf('%.2f', round(rsq, 2))}")
+  )
+ages <- overreg_by_kid_nonzero %>%
+  distinct(language, lexical_category, age) %>%
+  nest(data = age)
+age_fits <- age_models %>%
+  select(-data) %>%
+  left_join(ages) %>%
+  mutate(fits = map2(model, data, ~broom::augment(.x, newdata = .y))) %>%
+  select(-data, -model) %>%
+  unnest(cols = c(fits))
+```
+
+```{r ovreg-fits-vocab, fig.width=8, fig.cap="Each child's proportion of overregularization as a function of their vocabulary size in each language (curves show model fits).", dependson="ovreg-fits"}
+ggplot(overreg_by_kid_nonzero, aes(x = production_prop, y = prop)) +
+  facet_grid(lexical_category ~ language, labeller = label_caps) +
+  coord_fixed() +
+  geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
+  geom_line(aes(y = .fitted), size = 1.2, colour = .pal()(1),
+            data = vocab_fits) +
+  geom_text(aes(label = rsq_print), x = 0.05, y = 0.95, size = 3, hjust = 0,
+            family = .font, #parse = TRUE,
+            data = vocab_models) +
+  scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = "Productive vocabulary size (proportion of items)") +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = glue::glue("Proportion of items overregularized"))
+```
+
+```{r ovreg-fits-age, fig.width=8, fig.cap="Each child's proportion of items overregularized as a function of their age size in each language (curves show model fits).", dependson="ovreg-fits"}
+# age_ranges <- overreg_by_kid_nonzero %>%
+#   group_by(language) %>%
+#   summarise(range = max(age) - min(age))
+ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
+  facet_grid(lexical_category ~ language, labeller = label_caps) + #, scales = "free_x") +
+  coord_fixed(ratio = 21) +
+  geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
+  geom_line(aes(y = .fitted), size = 1.2, colour = .pal()(1),
+            data = age_fits) +
+  geom_text(aes(label = rsq_print), x = 15.1, y = 0.95, size = 3, hjust = 0,
+            family = .font, #parse = TRUE,
+            data = age_models) +
+  scale_x_continuous(limits = c(16, 36),
+                     breaks = seq(16, 36, by = 4),
+                     name = "Age (months)") +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = "Proportion of items overregularized")
+```
+
+```{r overreg-lexcat-comp, fig.width=8, fig.cap="Each child's proportion of verbs overregularized against proportion of nouns overregularized (lines show linear model fits)."}
+overreg_lexcat_comp <- overreg_by_kid %>%
+  select(language, lexical_category, data_id, prop, age) %>%
+  group_by(data_id) %>%
+  # filter(!all(prop == 0)) %>%
+  spread(lexical_category, prop)
+
+lexcat_cors <- overreg_lexcat_comp %>%
+  group_by(language) %>%
+  summarise(rsq = cor(nouns, verbs) ^ 2,
+            rsq_print = sprintf("italic(r)^2 == %.2f", rsq))
+
+ggplot(overreg_lexcat_comp, aes(x = nouns, y = verbs)) +
+  facet_wrap(~language, nrow = 1) + #, scales = "free") +
+  coord_fixed() +
+  geom_jitter(position = position_jitter(width = 0.02, height = 0.02),
+              colour = .grey, size = 0.9) +
+  geom_smooth(method = "lm", se = FALSE, colour = .pal()(1)) +
+  geom_text(aes(label = rsq_print), x = 0.05, y = 0.95, size = 3, hjust = 0,
+            family = .font, parse = TRUE, data = lexcat_cors) +
+  scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = "Proportion of nouns overregularized") +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = "Proportion of verbs\n overregularized")
+```
+
+## Longitudinal data
+
+### English
+
+```{r ovreg-eng-longs}
+overreg_longs <- overreg_by_kid %>%
+  filter(longitudinal) %>%
+  left_join(admins %>% select(data_id)) %>%
+  group_by(language, lexical_category, original_id) %>%
+  mutate(num_admins = n()) %>%
+  filter(num_admins > 1)
+
+# overreg_longs %>%
+#   distinct(language, lexical_category, num_admins) %>%
+#   group_by(language, lexical_category, num_admins) %>%
+#   summarise(n = n())
+
+eng_longs <- overreg_longs %>%
+  ungroup() %>%
+  filter(language == "English (American)") %>%
+  mutate(age = if_else(age %in% c(16, 17), "younger", "older"),
+         age = fct_relevel(age, "younger"))
+
+eng_longs_grouped <- eng_longs %>%
+  select(lexical_category, original_id, age, prop, num = num_true) %>%
+  pivot_wider(names_from = age, values_from = c(num, prop)) %>%
+  count(lexical_category, num_younger, num_older, prop_younger, prop_older) %>%
+  filter(num_younger > 0 | num_older > 0) %>%
+  group_by(lexical_category) %>%
+  mutate(p = n / sum(n)) %>%
+  ungroup() %>%
+  mutate(num_group = paste(lexical_category, num_younger, num_older)) %>%
+  arrange(lexical_category, num_younger, num_older) %>%
+  mutate(num_group = fct_inorder(num_group),
+         decrease = num_older < num_younger)
+
+eng_groups <- eng_longs_grouped %>%
+  group_by(lexical_category) %>%
+  summarise(n = n(), max_p = max(p))
+```
+
+```{r ovreg-eng-longs-hist, fig.cap="For American English data, proportion of children falling into each bin in terms of number of nouns/verbs that they overregularize at 16 months and at 28 months (red bars indicate cases where the number of items is less at 28 months than at 16 months. "}
+x_pos <- -0.02
+y_pos <- 0.37
+ggplot(eng_longs_grouped, aes(x = p, y = num_group)) +
+  facet_wrap(~lexical_category, scales = "free_y", labeller = label_caps) +
+  coord_cartesian(clip = "off") +
+  ggstance::geom_colh(aes(fill = decrease)) +
+  geom_text(aes(x = x_pos, label = num_younger), family = .font, hjust = 1) +
+  geom_text(aes(x = y_pos, label = num_older), family = .font, hjust = 1) +
+  .scale_fill_discrete(guide = FALSE) +
+  labs(x = "Proportion of children", y = "Number of items overregularized") +
+  geom_text(aes(label = "16 mo", y = n + 1, x = x_pos + 0.01), family = .font,
+            fontface = "bold", hjust = 1, data = eng_groups) +
+  geom_text(aes(label = "28 mo", y = n + 1, x = y_pos), family = .font,
+            fontface = "bold", hjust = 1, data = eng_groups) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.border = element_blank(),
+        axis.line.x = element_line())
+```
+
+```{r ovreg-eng-longs-slope}
+eng_longs_age <- eng_longs_grouped %>%
+  ungroup() %>%
+  pivot_longer(c(contains("younger"), contains("older")),
+               names_to = c("var", "age"), names_pattern = "(.*)_(.*)", values_to = "val") %>%
+  pivot_wider(names_from = var, values_from = val) %>%
+  mutate(age = fct_relevel(age, "younger"),
+         n_bin = case_when(n < 10 ~ "1 – 9",
+                           n < 100 ~ "10 – 99",
+                           TRUE ~ "100+"))
+
+pal_1 <- .pal()(2)[1]
+ggplot(eng_longs_age, aes(x = age, y = prop, colour = n_bin)) +
+  facet_wrap(~lexical_category, labeller = label_caps) +
+  geom_line(aes(group = num_group, size = n, alpha = n)) +
+  scale_size(guide = FALSE, range = c(0.2, 3)) +
+  scale_alpha_continuous(guide = FALSE, range = c(0.6, 1)) +
+  scale_x_discrete(name = "Age (months)", breaks = c("younger", "older"),
+                   labels = c(16, 28), expand = c(0.1, 0)) +
+  scale_colour_manual(values = .pal()(12)[3:1], name = "Number of children") +
+  scale_y_continuous(name = "Proportion of items overregularized") +
+  theme(legend.position = "top") +
+  guides(colour = guide_legend(title.position = "top", title.hjust = 0.5))
+```
+
+## Norwegian
+
+```{r overreg-nor-longs}
+nor_longs <- overreg_longs %>%
+  ungroup() %>%
+  filter(language == "Norwegian") %>%
+  group_by(original_id) %>%
+  filter(!all(prop == 0)) %>%
+  group_by(lexical_category, original_id) %>%
+  mutate(num_ages = n_distinct(age))
+
+nor_min <- 11
+nor_dense <- nor_longs %>%
+  filter(num_ages >= nor_min) %>%
+  group_by(original_id) %>%
+  mutate(overall_prop = sum(prop)) %>%
+  ungroup() %>%
+  mutate(original_id = fct_reorder(original_id, overall_prop, .desc = TRUE))
+```
+
+```{r overreg-nor-longs-age, fig.cap=glue::glue("For children in the Norwegian data with at least {nor_min} administrations, the smoothed trajectories of proportion of nouns/verbs that they overregularize as a function of their age."), fig.height=6}
+ggplot(nor_dense, aes(x = age, y = prop, colour = lexical_category)) +
+  facet_wrap(~original_id) +
+  geom_smooth(se = FALSE) +
+  .scale_colour_discrete(name = "") +
+  scale_x_continuous(breaks = seq(min(nor_longs$age), max(nor_longs$age), 4),
+                     name = "Age (months)") +
+  scale_y_continuous(limits = c(0, 0.5), name = "Proportion of items overregularized") +
+  theme(legend.position = "top",
+        strip.text = element_blank())
+```

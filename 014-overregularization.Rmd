@@ -38,11 +38,11 @@ overreg_data_items <- overreg_data %>%
   select(-lang) %>%
   left_join(overreg_items)
 
-feather::write_feather(overreg_data_items, "data/overregularization/overreg_data_items.feather")
+feather::write_feather(overreg_data_items, "data/overregularization/_overreg_data_items.feather")
 ```
 
-```{r overreg-by_kid}
-overreg_data_items <- feather::read_feather("data/overregularization/overreg_data_items.feather")
+```{r overreg-by_kid, eval=FALSE}
+overreg_data_items <- feather::read_feather("data/overregularization/_overreg_data_items.feather")
 
 form_words <- items %>%
   filter(form == "WS", type == "word") %>%
@@ -59,10 +59,13 @@ overreg_by_kid <- overreg_data_items %>%
   mutate(production_prop = production / num_words,
          lexical_category = as_factor(lexical_category))
 
-overreg_by_kid_nonzero <- overreg_by_kid %>% filter(prop != 0)
+feather::write_feather(overreg_by_kid, "data/overregularization/overreg_by_kid.feather")
 ```
 
 ```{r ovreg-fits, dependson="overreg-by_kid"}
+overreg_by_kid <- feather::read_feather("data/overregularization/overreg_by_kid.feather")
+overreg_by_kid_nonzero <- overreg_by_kid %>% filter(prop != 0)
+
 vocab_model <- function(inst_data) {
   lm(prop ~ I(production_prop ^ 4) + I(production_prop ^ 3) +
        I(production_prop ^ 2) + production_prop + 0, data = inst_data)

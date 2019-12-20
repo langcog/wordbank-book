@@ -481,6 +481,15 @@ item_fits <- item_models %>%
   select(-data, -age_vocab_model) %>%
   unnest()
 
+write_feather(item_fits, "data/grammar/_item_fits.feather")
+
+demo_items <- c("kitty go away / kitty went away", "you fix it / can you fix it")
+demo_fits <- item_fits %>%
+  filter(definition %in% demo_items) %>%
+  mutate(age_extremes = case_when(age == max(age) ~ "oldest",
+                                  age == min(age) ~ "youngest"))
+write_feather(demo_fits, "data/grammar/demo_fits.feather")
+
 item_effects <- item_models %>%
   # gather(model_predictors, model, age_model, vocab_model, age_vocab_model) %>%
   gather(model_predictors, model, age_vocab_model) %>%
@@ -490,7 +499,6 @@ item_effects <- item_models %>%
   select(-data, -model) %>%
   unnest()
 
-write_feather(item_fits, "data/grammar/item_fits.feather")
 write_feather(item_effects, "data/grammar/item_effects.feather")
 
 # model_comp <- item_effects %>%
@@ -547,14 +555,9 @@ We then a fit logistic regression separately for every item, predicting whether 
 Figure \@ref(fig:gram-item-effects-plot) shows for each item, the coefficients of vocabulary size, age, and their interaction. In general, age effects are smallest for Word Form items, larger for Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions.
 
 ```{r gram-item-effects-demo, fig.cap="Model fits for two example items."}
-item_fits <- read_feather("data/grammar/item_fits.feather")
+demo_fits <- read_feather("data/grammar/demo_fits.feather")
 
-demo_items <- c("kitty go away / kitty went away", "you fix it / can you fix it")
-item_fits %>%
-  filter(definition %in% demo_items) %>%
-  mutate(age_extremes = case_when(age == max(age) ~ "oldest",
-                                  age == min(age) ~ "youngest")) %>%
-ggplot(aes(x = production_prop, y = .fitted, colour = factor(age))) +
+ggplot(demo_fits, aes(x = production_prop, y = .fitted, colour = factor(age))) +
   facet_wrap(~definition) +
   coord_equal() +
   geom_line() +

@@ -278,9 +278,18 @@ nor_longs <- overreg_longs %>%
   group_by(lexical_category, original_id) %>%
   mutate(num_ages = n_distinct(age))
 
-nor_min <- 11
+nor_ns <- nor_longs %>%
+  ungroup() %>%
+  distinct(lexical_category, original_id, num_ages) %>%
+  count(lexical_category, num_ages) %>%
+  group_by(lexical_category) %>%
+  arrange(lexical_category, desc(num_ages)) %>%
+  mutate(p = n / sum(n),
+         cum_p = cumsum(p))
+
+dense_min <- 12
 nor_dense <- nor_longs %>%
-  filter(num_ages >= nor_min) %>%
+  filter(num_ages >= dense_min) %>%
   group_by(original_id) %>%
   mutate(overall_prop = sum(prop)) %>%
   ungroup() %>%
@@ -289,7 +298,7 @@ nor_dense <- nor_longs %>%
 
 ```{r overreg-nor-longs-age, fig.cap=glue::glue("For children in the Norwegian data with at least {nor_min} administrations, the smoothed trajectories of proportion of nouns/verbs that they overregularize as a function of their age."), fig.height=6}
 ggplot(nor_dense, aes(x = age, y = prop, colour = lexical_category)) +
-  facet_wrap(~original_id) +
+  facet_wrap(~original_id, ncol = 5) +
   geom_smooth(se = FALSE) +
   .scale_colour_discrete(name = "") +
   scale_x_continuous(breaks = seq(min(nor_longs$age), max(nor_longs$age), 4),
@@ -298,3 +307,215 @@ ggplot(nor_dense, aes(x = age, y = prop, colour = lexical_category)) +
   theme(legend.position = "top",
         strip.text = element_blank())
 ```
+
+```{r nor_models, eval=FALSE}
+model_min <- 3
+nor_models <- nor_longs %>%
+  filter(num_ages >= model_min) %>%
+  select(original_id, data_id, lexical_category, age, num_true, num_false, prop, total) %>%
+  nest(data = c(-lexical_category, -original_id)) %>%
+  mutate(
+    null = map(data, function(df) {
+      glm(prop ~ 1, weights = total, family = "binomial", data = df)
+    }),
+    linear = map(data, function(df) {
+      glm(prop ~ age, weights = total, family = "binomial", data = df)
+    }),
+    quadratic = map(data, function(df) {
+      glm(prop ~ age + I(age^2), weights = total, family = "binomial", data = df)
+    })
+  )
+
+nor_models <- nor_models %>%
+  ungroup() %>%
+  select(-data) %>%
+  gather(model_type, model, -original_id, -lexical_category)
+
+nor_aic <- nor_models %>%
+  mutate(aic = map_dbl(model, AIC)) %>%
+  select(-model) %>%
+  filter(model_type != "null")
+
+nor_rsq <- nor_models %>%
+  mutate(loglik = map_dbl(model, logLik),
+         n = map_dbl(model, ~length(.$fitted.values))) %>%
+  select(-model) %>%
+  spread(model_type, loglik) %>%
+  gather(model_type, loglik, linear, quadratic) %>%
+  rename(loglik_null = null) %>%
+  mutate(rsq = 1 - (loglik / loglik_null)) %>%
+  select(-loglik_null, -loglik) 
+
+nor_model_comp <- left_join(nor_aic, nor_rsq) %>%
+  pivot_wider(names_from = model_type, values_from = c(aic, n, rsq)) %>%
+  mutate(winner = if_else(aic_quadratic < aic_linear, "quadratic", "linear")) %>%
+  pivot_longer(cols = c(contains("linear"), contains("quadratic")),
+               names_to = c("measure", "model_type"), names_sep = "_",
+               values_to = "value") %>%
+  pivot_wider(names_from = measure, values_from = value)
+  # pivot_wider(names_from = model_type, values_from = value)
+feather::write_feather(nor_model_comp, "data/overregularization/nor_model_comp.feather")
+
+nor_coefs <- nor_models %>%
+  ungroup() %>%
+  filter(model_type != "null") %>%
+  mutate(coefs = map(model, broom::tidy)) %>%
+  select(-model) %>%
+  unnest(cols = coefs) #%>%
+  # filter(term != "(Intercept)")
+feather::write_feather(nor_coefs, "data/overregularization/nor_coefs.feather")
+
+ages <- tibble(age = min(nor_longs$age):max(nor_longs$age))
+nor_fits <- nor_models %>%
+  ungroup() %>%
+  filter(model_type != "null")  %>%
+  mutate(fits = map(model, function(m){
+    ages %>% mutate(.fitted = predict(m, newdata = ages, type = "response"))
+  }))
+
+nor_fit_vals <- nor_fits %>%
+  select(-model) %>%
+  unnest(cols = fits)
+
+best_fits <- nor_rsq %>% group_by(lexical_category, model_type) %>% top_n(10)
+nor_fit_vals %>%
+  inner_join(best_fits) %>%
+  filter(lexical_category == "verbs", model_type == "linear") %>%
+  ggplot(aes(x = age, y = .fitted)) +
+  # facet_grid(model_type ~ lexical_category) +
+  facet_wrap(~original_id, ncol = 5) +
+  geom_line(aes(colour = model_type)) +
+  geom_point(aes(y = prop), data = nor_longs %>% inner_join(best_fits) %>%
+               filter(lexical_category == "verbs", model_type == "linear")) +
+  .scale_colour_discrete()
+
+nor_fit_vals %>%
+  inner_join(best_fits) %>%
+  filter(lexical_category == "verbs", model_type == "quadratic") %>%
+  ggplot(aes(x = age, y = .fitted)) +
+  # facet_grid(model_type ~ lexical_category) +
+  facet_wrap(~original_id, ncol = 5) +
+  geom_line(aes(colour = model_type)) +
+  geom_point(aes(y = prop), data = nor_longs %>% inner_join(best_fits) %>%
+               filter(lexical_category == "verbs", model_type == "quadratic")) +
+  .scale_colour_discrete()
+
+nor_coefs_plot <- nor_coefs %>%
+  left_join(nor_model_comp) %>%
+  filter(winner == "quadratic", model_type == "quadratic",
+         rsq > 0.25) %>% #, n > 4) %>%
+  select(original_id, lexical_category, n, term, estimate) %>%
+  mutate(term = term %>% fct_recode("age2" = "I(age^2)",
+                                    "intercept" = "(Intercept)")) %>%
+  spread(term, estimate)
+
+lexcat_colours <- set_names(.pal()(2), unique(nor_coefs_plot$lexical_category))
+lexcat_coefs_plot <- function(lexcat) {
+  plt <- ggplot(nor_coefs_plot %>% filter(lexical_category == lexcat),
+                aes(x = age, y = age2)) +
+    geom_hline(yintercept = 0, linetype = .refline, colour = .grey) +
+    geom_vline(xintercept = 0, linetype = .refline, colour = .grey) +
+    geom_point(aes(size = n), alpha = 0.6, colour = "slategrey") +
+    scale_size(guide = FALSE) +
+    labs(x = "Age coefficient (log odds ratio)",
+         y = "Age² coefficient (log odds ratio)")
+    # theme(legend.position = "top")
+  ggExtra::ggMarginal(plt, type = "density", colour = lexcat_colours[lexcat])
+}
+
+cowplot::plot_grid(lexcat_coefs_plot("nouns"), lexcat_coefs_plot("verbs"),
+                   labels = c("Nouns", "Verbs"))
+
+coef_extremes <- nor_coefs_plot %>%
+  filter(n > 10) %>%
+  select(original_id, lexical_category, age2) %>%
+  # gather(term, estimate, -original_id, -lexical_category, -n) %>%
+  # filter(term == "age2") %>%
+  group_by(lexical_category) %>%
+  top_n(-10)
+
+nor_fit_vals %>%
+  filter(model_type == "quadratic", lexical_category == "verbs") %>%
+  inner_join(coef_extremes) %>%
+  ggplot(aes(x = age, y = .fitted)) +
+  # facet_grid(model_type ~ lexical_category) +
+  facet_wrap(~original_id, ncol = 5) +
+  geom_line(aes(colour = lexical_category)) +
+  # geom_point(aes(y = prop), data = nor_longs %>% inner_join(coef_extremes)) +
+  .scale_colour_discrete()
+
+nor_fit_vals %>%
+  filter(model_type == "quadratic") %>%
+  inner_join(nor_dense) %>%
+  ggplot(aes(x = age, y = .fitted)) +
+  # facet_grid(model_type ~ lexical_category) +
+  facet_wrap(~original_id, ncol = 5) +
+  geom_line(aes(colour = lexical_category)) +
+  # geom_point(aes(y = prop), data = nor_longs %>% inner_join(coef_extremes)) +
+  .scale_colour_discrete()
+
+```
+
+```{nor-model-comp}
+nor_model_comp <- feather::read_feather("data/overregularization/nor_model_comp.feather")
+
+nor_aic_plot <- nor_model_comp %>%
+  filter(measure == "aic") %>%
+  spread(model_type, value) %>%
+  mutate(winner = if_else(quadratic < linear, "quadratic", "linear"))
+
+nor_rsq_plot <- nor_model_comp %>%
+  filter(measure == "pseudo_rsq", model_type == "quadratic")
+```
+
+```{r nor-aic-plot}
+ggplot(nor_aic_plot, aes(x = linear, y = quadratic, colour = winner)) +
+  facet_wrap(~lexical_category, labeller = label_caps) +
+  coord_fixed() +
+  geom_abline(linetype = .refline, colour = .grey) +
+  geom_point(size = 0.9, alpha = 0.9) +
+  .scale_colour_discrete() +
+  labs(x = "AIC of linear model", y = "AIC of quadratic model",
+       colour = "Best fitting model") +
+  guides(colour = guide_legend(title.position = "top", title.hjust = 0.5)) +
+  theme(legend.position = "top", legend.key.size = unit(0.1, "line"))
+```
+
+```{r nor-rsq-plot}
+ggplot(nor_rsq_plot, aes(x = value)) +
+  facet_wrap(~lexical_category, labeller = label_caps) +
+  geom_histogram() +
+  labs(x = "Pseudo-r² of quadratic model", y = "Number of children")
+```
+
+```{r nor-coefs}
+min_rsq <- 0.1
+coef_cutoff <- 0.75
+
+nor_estimates <- nor_coefs %>%
+  inner_join(nor_rsq %>% filter(value > min_rsq)) %>%
+  group_by(lexical_category, model_type, term) %>%
+  filter(estimate > mean(estimate) - sd(estimate) * coef_cutoff,
+         estimate < mean(estimate) + sd(estimate) * coef_cutoff) %>%
+  ungroup() %>%
+  mutate(term = term %>% fct_recode("age²" = "I(age^2)")) %>%
+  filter(model_type == "quadratic")
+
+term_colours <- set_names(.pal()(2), unique(nor_estimates$term))
+term_plot <- function(trm) {
+  ggplot(nor_estimates %>% filter(term == trm), aes(x = estimate, fill = term)) +
+    facet_wrap(~lexical_category, scales = "free", labeller = label_caps) +
+    geom_density(fill = term_colours[trm]) +
+    geom_vline(xintercept = 0, colour = .grey, linetype = .refline) +
+    labs(x = glue::glue("{trm} coefficient estimate (log odds ratio of overregularizing)"),
+         y = "") +
+    theme(plot.margin = margin(b = 6))
+}
+
+cowplot::plot_grid(term_plot("age"), term_plot("age²"), ncol = 1)
+```
+
+```{r nor-fits}
+
+```
+

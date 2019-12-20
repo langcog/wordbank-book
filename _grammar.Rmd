@@ -128,6 +128,10 @@ write_feather(grammar_summary, "data/grammar/grammar_summary.feather")
 <!-- **************************** SEM MODELS ******************************** -->
 
 ```{r gram-long-data-dallas}
+library(lavaan) # only works if explicitly library loaded
+
+grammar_summary <- read_feather("data/grammar/grammar_summary.feather")
+
 longitudinal_admins <- admins %>% 
   mutate(langform = paste(language, form, sep = .inst_sep)) %>%
   group_by(langform, original_id) %>% 
@@ -162,47 +166,6 @@ include_dallas <- dallas %>%
   pull(original_id)
   
 dallas_wide <- filter(dallas, original_id %in% include_dallas) %>%
-  gather(variable, value, production, complexity) %>%
-  unite(vtime, variable, time_point) %>%
-  spread(vtime, value) 
-```
-
-
-```{r grammar-long-data-dallas}
-norway <- admins %>%
-  filter(original_id %in% longitudinal_admins$original_id, 
-         language %in% "Norwegian",
-         form == "WS") %>%
-  group_by(original_id, language, source_name) %>%
-  mutate(n_admins = n()) %>%
-  filter(n_admins > 1) %>%
-  left_join(select(grammar_summary, data_id, coded_type, prop) %>%
-              filter(coded_type == "complexity") %>%
-              rename(complexity = prop) %>%
-              select(-coded_type)) %>%
-  mutate(time_point = case_when(age < 18 ~ "t1",
-                                age < 20 ~ "t2",
-                                age < 22 ~ "t3",
-                                age < 24 ~ "t4",
-                                age < 26 ~ "t5",
-                                age < 28 ~ "t6",
-                                age < 30 ~ "t7",
-                                age < 32 ~ "t8",
-                                age < 34 ~ "t9",
-                                age < 37 ~ "t10"), # very few 36mos
-         production = production / 731) %>%
-  ungroup() %>%
-  select(original_id, time_point, production, complexity) 
-
-include <- norway %>%
-  group_by(original_id) %>%
-  summarise(n = n(), 
-            n_unique = length(unique(time_point))) %>%
-  ungroup() %>%
-  filter(n == n_unique & n > 1) %>%
-  pull(original_id)
-  
-norway_wide <- filter(norway, original_id %in% include) %>%
   gather(variable, value, production, complexity) %>%
   unite(vtime, variable, time_point) %>%
   spread(vtime, value) 
@@ -252,16 +215,58 @@ p1 ~~ c1 #p1 and q1 covariance
 p2 ~~ c2 #p2 and q2 covariance
 p3 ~~ c3 #p2 and q2 covariance'
 
-clpm_fit_dallas <- lavaan::lavaan(clpm_dallas, data = dallas_wide,
-                        missing = 'ML', #for the missing data!
-                        int.ov.free = F,
-                        int.lv.free = F,
-                        auto.fix.first = F,
-                        auto.fix.single = F,
-                        auto.cov.lv.x = F,
-                        auto.cov.y = F,
-                        auto.var = F)
+clpm_fit_dallas <- lavaan(clpm_dallas, data = dallas_wide,
+                          missing = 'ML', #for the missing data!
+                          int.ov.free = F,
+                          int.lv.free = F,
+                          auto.fix.first = F,
+                          auto.fix.single = F,
+                          auto.cov.lv.x = F,
+                          auto.cov.y = F,
+                          auto.var = F)
 # lavaan::summary(clpm_fit_dallas)
+```
+
+
+```{r grammar-long-data-dallas}
+norway <- admins %>%
+  filter(original_id %in% longitudinal_admins$original_id, 
+         language %in% "Norwegian",
+         form == "WS") %>%
+  group_by(original_id, language, source_name) %>%
+  mutate(n_admins = n()) %>%
+  filter(n_admins > 1) %>%
+  left_join(select(grammar_summary, data_id, coded_type, prop) %>%
+              filter(coded_type == "complexity") %>%
+              rename(complexity = prop) %>%
+              select(-coded_type)) %>%
+  mutate(time_point = case_when(age < 18 ~ "t1",
+                                age < 20 ~ "t2",
+                                age < 22 ~ "t3",
+                                age < 24 ~ "t4",
+                                age < 26 ~ "t5",
+                                age < 28 ~ "t6",
+                                age < 30 ~ "t7",
+                                age < 32 ~ "t8",
+                                age < 34 ~ "t9",
+                                age < 37 ~ "t10"), # very few 36mos
+         production = production / 731) %>%
+  filter(!is.na(time_point)) %>%
+  ungroup() %>%
+  select(original_id, time_point, production, complexity) 
+
+include <- norway %>%
+  group_by(original_id) %>%
+  summarise(n = n(), 
+            n_unique = length(unique(time_point))) %>%
+  ungroup() %>%
+  filter(n == n_unique, n > 1) %>%
+  pull(original_id)
+  
+norway_wide <- filter(norway, original_id %in% include) %>%
+  gather(variable, value, production, complexity) %>%
+  unite(vtime, variable, time_point) %>%
+  spread(vtime, value) 
 ```
 
 
@@ -370,16 +375,22 @@ p7 ~~ c7
 p8 ~~ c8
 p9 ~~ c9
 p10 ~~ c10'
+```
 
-clpm_fit_norway <- lavaan::lavaan(clpm_norway, data = norway_wide,
-                        missing = 'ML', #for the missing data!
-                        int.ov.free = F,
-                        int.lv.free = F,
-                        auto.fix.first = F,
-                        auto.fix.single = F,
-                        auto.cov.lv.x = F,
-                        auto.cov.y = F,
-                        auto.var = F)
+```{r}
+clpm_fit_norway <- lavaan(clpm_norway, data = norway_wide,
+                                  # estimator = "MLR",
+                                  missing = 'fiml', #for the missing data!
+                                  # optim.method = "BFGS", #nlminb doesn't converge
+                                  int.ov.free = F,
+                                  int.lv.free = F,
+                                  auto.fix.first = F,
+                                  auto.fix.single = F,
+                                  auto.cov.lv.x = F,
+                                  auto.cov.y = F,
+                                  auto.var = F, 
+                                  verbose = TRUE, 
+                          optim.force.converged = TRUE)
 #lavaan::summary(clpm_fit_norway)
 ```
 

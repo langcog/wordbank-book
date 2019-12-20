@@ -612,7 +612,7 @@ In our next set of analyses, we take advantage of the presence of longitudinal d
 
 Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences [@rogosa1980], it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual -- as is clearly the case for language-related measures -- these models are misspecified, since they assume that the *only* source of consistency between individuals is temporal autocorrelation [@hamaker2015]. To address this issue, @hamaker2015 propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure \@ref(fig:grammar-ri-clpm)). This is the approach used by @brinchmann2018, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below. 
 
-```{r grammar-ri-clpm, out.height="60%", fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", fig.height=5}
+```{r grammar-ri-clpm, out.height="60%", fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", fig.height=3}
 include_graphics("images/ri-clpm.png")
 ```
 
@@ -653,22 +653,22 @@ Using these two datasets, we fit RI-CLPM models.^[We gratefully acknowledge code
 
 Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant ($\beta_{p1-c2} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue,2)`$, $\beta_{p2-c3} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue,2)`$). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).
 
-```{r grammar-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. P variables indicate production, while C variables indicate grammatical complexity.", fig.height=4}
+```{r grammar-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts.", fig.height=4}
 dallas_plot <- semPlot::semPlotModel(clpm_fit_dallas)
 semPlot::semPaths(dallas_plot, what="est",
                   intercepts = FALSE,
                   structural = FALSE, 
-                  layout = matrix(data = c(1, 4, 2, 4, 3, 4, 
-                                           1, 0, 2, 0, 3, 0,
-                                           2, 5, 2, -1,
-                                           1, 3, 2, 3, 3, 3, 
-                                           1, 1, 2, 1, 3, 1), 
+                  layout = matrix(data = c(1, 0, 2, 0, 3, 0, 
+                                           1, 4, 2, 4, 3, 4,
+                                           2, -1, 2, 5,
+                                           1, 1, 2, 1, 3, 1, 
+                                           1, 3, 2, 3, 3, 3), 
                                   byrow=TRUE, ncol = 2),
                   edge.label.cex = 1)
 
 ```
 
-Figure \@ref(fig:grammar-norway-plot) shows the analogous fitted model for the Norwegian data. Coefficient estimates from vocabulary to grammar are large and significant for all but the first pair of time-points; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table \@ref(tab:grammar-norway-clpm-tab). 
+Figure \@ref(fig:grammar-norway-plot) shows the analogous fitted model for the Norwegian data.^[Because of the high degree of missingness in this dataset, fititng these models was difficult and so we interpret standard errors with some caution.] Coefficient estimates from vocabulary to grammar are large; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table \@ref(tab:grammar-norway-clpm-tab). 
 
 ```{r grammar-norway-plot, fig.cap="RI-CLPM model fit to Norwegian data. Plotting conventions are as above.", fig.height=5}
 norway_plot <- semPlot::semPlotModel(clpm_fit_norway)
@@ -692,6 +692,8 @@ semPlot::semPaths(norway_plot, what="est",
 filter(lavaan::parameterEstimates(clpm_fit_norway), 
        str_detect(label, "beta") | str_detect(label, "gamma")) %>% 
   select(lhs, rhs, est, se, pvalue) %>%
+  mutate(pvalue = sprintf("%.3f",pvalue), 
+         pvalue = ifelse(pvalue == "0.000", "< 0.001", pvalue)) %>%
   kable(escape = FALSE, digits = 3,
         format.args = list(big.mark = ","),
         caption = "Coefficient estimates for cross-lag parameters in the Norwegian regression model.",

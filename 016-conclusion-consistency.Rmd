@@ -129,5 +129,5 @@ Fifth, generalizations about vocabulary composition span the range from extremel
 
 ## Conclusions
 
-
+This analysis attempted to provide a single metric for the cross-linguistic consistency of the phenomena discussed in the remainder of the book. While developing a scale-free unit for this analysis is a challenge, we still see a number of robust generalizations emerge. We make use of these generalizations in the next chapter, which discusses broad conclusions from the study of language development at scale. 
 

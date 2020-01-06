@@ -8,12 +8,12 @@ While the strong representational claims in these theories may be too extreme by
 
 These early correlational findings could simply reflect a common cause: Children who use gestures might also be better at learning words. More recent studies have demonstrated more specific links between early gesture use and later lexical and syntactic development, however [e.g., @rowe2009]. For example, the particular lexical items that enter a child’s vocabulary are more likely to be names for those objects that are earlier labeled using gestures [@iverson2005]. Moreover, early gesture vocabulary is specifically linked to later word vocabulary, whereas early gesture plus word combinations are linked specifically to children's later word combination skills [@rowe2009]. Taken together, the pattern of predictive correlations suggests that children's early gestures provide an important social, communicative, and linguistic foundation for later language development.
 
-Early gestures serve many different functions. Children typically first begin to use "deictic gestures," for example, giving, pointing, and showing [e.g., @volterra1985].  Such deictic gestures are clear precursors to important linguistic and communicative functions, including establishing reference and promoting shared attention [@carpenter1998].  However, these deictic gestures do not necessarily have symbolic content *per se* [i.e., they do not stand for objects in the world, @bates1980]. And early on, pointing gestures generally may serve an imperative function, e.g., to request something from an adult, whereas, later, pointing is more likely to direct a caregiver's attention to another object or person [@bates1975; @masur1990; @vygotsky1980]. 
+Early gestures serve many different functions. Children typically first begin to use "deictic gestures," for example, giving, pointing, and showing [e.g., @volterra1985].  Such deictic gestures are clear precursors to important linguistic and communicative functions, including establishing reference and promoting shared attention [@carpenter1998].  However, these deictic gestures do not necessarily have symbolic content *per se* [i.e., they do not stand for objects in the world, @bates1980]. Early on, pointing gestures may serve a general imperative function, i.e. to request something from an adult. In contrast, later pointing is more likely to be referential, directing a caregiver's attention to another object or person [@bates1975; @masur1990; @vygotsky1980]. 
 
 Children also use gestures as part of social activities, for example, waving "bye bye" or signaling "all done."  At first, social gestures might occur simply as imitations, but then later, children are able to produce these social gestures spontaneously in appropriate communicative contexts. Children's social gestures also can reflect their ability to engage in activities during pretend play, e.g., talking on a pretend phone or pretending to stir a soup. 
 <!-- Thus, social gestures can show children's ability to tune into contextual cues, mentally reconstruct activities, and engage in sequences of events.  -->
 
-Finally, older children's gestures also take on a "true" symbolic meaning, as a child might use a conventional gesture to recognize or classify objects as an instance of a category (e.g., pretend to drink from a cup or sniff a flower).  Some theorists have hypothesized that children's ability to use gestures in this symbolic way may reflect a common underlying "vocabulary" in both the verbal and gestural domain [e.g., @acredolo1985; @bates1980].  
+Finally, older children's gestures also take on a "true" symbolic meaning, as a child might use a conventional gesture to recognize or classify objects as an instance of a category (e.g., pretend to drink from a cup or sniff a flower).  Some theorists have hypothesized that children's ability to use gestures in this symbolic way may reflect a common underlying "vocabulary" in both the verbal and gestural domain [e.g., @acredolo1985; @bates1980]. These gestures may thus have a similar relationship to language as children's pretend play [@bergen2002; @smith2011].
 
 This chapter contains analysis of the "early gesture" items from the CDI. Our goals here are to examine (1) the robustness of the measurement properties of these non-verbal parent-report measures, (2) the degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo, and (3) the relationships between gestural development and linguistic development. 
 
@@ -71,11 +71,13 @@ unilemmas <- read_csv("data/gesture/first_gestures.csv")
 
 ## Measurement properties of CDI gestures
 
+Following our work in Chapter \@ref(psychometrics), we begin by analyzing the degree of signal in the gesture items. The available dataset is unfortunately significantly smaller--a number of users of the CDI forms did not measure or did not provide gesture. Consequently, we focus first on the American English Words & Gestures form and use face validity as our primary criterion rather than a more advanced metric.
+
 ### Measuring the development of gesture
 
-Unlike the word items on the CDI , which typically ask parents to make a binary decision about whether a word is in their child's vocabulary (although comprehension and production are separate decisions), the First Gestures on CDI forms ask parents to make a 3-way decision, determining if their child produces a given gesture "often", "sometimes", or "not yet." We begin by asking whether parents' responses are sensitive to this distinction, as the choice of whether to treat all three levels as meaningful impacts downstream analytic decisions. We perform this sensitivity analysis on the American English CDI as it is the inventory for which we have the best a priori intuitions.
+Unlike the word items on the CDI, which typically ask parents to make a binary decision about whether a word is in their child's vocabulary (although comprehension and production are separate decisions), the First Gestures on CDI forms ask parents to make a 3-way decision, determining if their child produces a given gesture "often", "sometimes", or "not yet." We begin by asking whether parents' responses are sensitive to this distinction, as the choice of whether to treat all three levels as meaningful impacts downstream analytic decisions. We perform this sensitivity analysis on the American English CDI as it is the inventory for which we have the best a priori intuitions.
 
-Figure \@ref(fig:gesture-first-gesture-figure) shows the proportion of American English learning children who give each of these responses. If each of the three responses is meaningfully different, the developmental trajectory of each should be distinct and predictable. The proportion of children whose parents indicate that they do "not yet" produce each gesture declines predictably over development. However, the other two responses -- "sometimes" and "often" -- do not appear to have reliably different trajectories. Perhaps they are used differently by different parents or in different samples. 
+Figure \@ref(fig:gesture-first-gesture-figure) shows the proportion of American English learning children who give each of these responses. If each of the three responses is meaningfully different, the developmental trajectory of each should be distinct and predictable. The proportion of children whose parents indicate that they do "not yet" produce each gesture declines predictably over development. However, the other two responses --"sometimes" and "often"--do not appear to have reliably different trajectories. Perhaps they are used differently by different parents or in different samples. 
 
 ```{r gesture-first_gestures}
 first_gestures <- gesture_data %>%
@@ -230,7 +232,7 @@ eng_gesture_aoas %>%
 
 ### Consistency of the first gestures
 
-While the First Gestures are not universally learned before the other gestures measured, they are among the earliest learned. Because of the particular theoretical importance of these early communicative gestures (i.e. deictics like pointing and showing, showing routines like _pick me up_), we analyze the cross-linguistic consistency of these at the item level.
+While the First Gestures are not universally learned before the other gestures measured, they are among the earliest learned. Because of the particular theoretical importance of these early communicative gestures (e.g. deictics like pointing and showing, routines like _pick me up_), we analyze the cross-linguistic consistency of these at the item level.
 
 ```{r gesture-crossling-first}
 first_gestures_crossling <- gesture_data %>% 
@@ -326,9 +328,9 @@ kable(intercor_data, digits = 3, col.names = c("Language", "Mean", "SD"),
 
 A critical theoretical question in early communicative development concerns the relationship between language and gesture. As alluded to above, a number of early influential theories [e.g., @piaget1962; @werner1963] held that gesture and language should be intimately related because of their reliance on a shared system of symbolic reasoning. To the extent that they are underpinned by the same system, words and gestures should have related developmental trajectories--children who gesture early should also speak early and vice versa [@bates1991]. Following in the footsteps of @fenson2007, we ask this question at larger scale, and cross-linguistically. To assess this relationship, we will look at the correlations between children's gestural and linguistic vocabularies. 
 
-To first provide a baseline, however, we compute the correlation between children's language and gesture development and their age. As Table \@ref(tab:gesture-age-cor) below shows, gesture shows as much or more development than comprehension and production over the ages measured by the CDI Words & Gestures forms, and the variability in the correlation with age in all three measures hangs together within-language: Languages where there is more developmental change in linguistic development also tend to have more gestural development. 
+To first provide a baseline, however, we compute the correlation between children's language and gesture development and their age. As Figure \@ref(fig:gesture-age-cor) below shows, gesture shows as much or more development than comprehension and production over the ages measured by the CDI Words & Gestures forms, and the variability in the correlation with age in all three measures hangs together within-language: Languages where there is more developmental change in linguistic development also tend to have more gestural development. 
 
-```{r gesture-age-cor}
+```{r gesture-age-cor-fig}
 age_cors <- binary_data %>%
   group_by(language, age, comprehension, production, data_id) %>%
   summarise(gesture = mean(value, na.rm =T)) %>%
@@ -339,17 +341,22 @@ age_cors <- binary_data %>%
   as_data_frame() %>%
   gather(id, cor) %>%
   separate(id, into = c("language", "measure"), "_") %>%
-  spread(measure, cor) %>%
-  select(language, gesture, comprehension, production)
+  select(language, measure, cor) %>%
+  mutate(measure = factor(measure, 
+                          levels = c("gesture", "comprehension", "production")))
 
-kable(age_cors, digits=3, caption = "Correlation with age for each subscale in each language.",
-      col.names = c("Language", "Gesture", "Comprehension", "Production"))
+ggplot(age_cors, aes(x = language, y = cor, color = measure)) + 
+  geom_point() + 
+  coord_flip() + 
+  .scale_color_discrete() + 
+  labs(x = "", y = "", title = "Correlation with age for each language subscale ",
+       color = "subscale") +
+  theme(legend.position = "bottom", legend.title = element_blank())
 ``` 
 
 
 ```{r gesture-growths, eval = F, include = F}
 #The Figure below shows the proportion of gesture items produced by children in each of these 3 languages across development. 
-
 binary_data %>%
   group_by(language, age, data_id) %>%
   summarise(prop = mean(value, na.rm = T)) %>%
@@ -361,7 +368,9 @@ binary_data %>%
   theme(legend.position = "none")
 ```
 
-However, as we noted in Chapter \@ref(psychometrics), comprehension and production do not proceed in lock-step and comprehension generally outpaces production. This is, in part, because production requires additional control over the developing motor systems necessary for speech. To the extent that gesture and language are related by their shared reliance on symbolic understanding, their correlation should be highest when only this shared system is tapped. In this case, we should predict that gesture production and language comprehension are more tightly correlated than gesture production and language production. In contrast, if the correlation is due primarily to a shared desire to communicate and engage socially with caregivers, we should predict a stronger correlation between gesture production and language production. Across these `r nrow(intercor_data)` language, children's production of gestures is consistently more highly correlated with their comprehension (Table \@ref(tab:gesture-gest-lang)).
+But what is the relationship between language and gesture? As both children's lingusitic and gestural vocabularies increase over development, we should expect to see a positive correlation between language and gesture regardless of any interesting assocations between them. One way of getting leverage on their relationship is to exploit the difference between comprehension and production. As we noted in Chapter \@ref(psychometrics), comprehension and production do not proceed in lock-step and comprehension generally outpaces production. This is, in part, because production requires additional control over the developing motor systems necessary for speech. But it may also be driven by individual differences in children's personalities or communicative goals: Some children may want to talk more than others (see Chapter \@ref(style)).
+
+To the extent that gesture and language are related by their shared reliance on symbolic understanding, their correlation should be highest when only this shared system is tapped. In this case, we should predict that gesture *production* and language *comprehension* are more tightly correlated than gesture *production* and language *production*. In contrast, if the correlation is due primarily to a shared desire to communicate and engage socially with caregivers, we should predict a stronger correlation between gesture *production* and language *production*. Across these `r nrow(intercor_data)` languages, children's production of gestures is consistently more highly correlated with their comprehension of language than their production of language (Table \@ref(tab:gesture-gest-lang)). This analysis provides at least some initial evidence for the role of symbolic understanding in driving the correlation between language and gesture. 
 
 ```{r gesture-gest-lang}
 gest_lang_data <- binary_data %>%
@@ -374,219 +383,76 @@ gest_lang_data <- binary_data %>%
   as_data_frame() %>%
   gather(id, cor) %>%
   separate(id, into = c("language", "measure"), "_") %>%
-  spread(measure, cor) 
+  spread(measure, cor)
 
 kable(gest_lang_data, digits = 3, caption = "Correlation with gesture subscale for each vocabulary subscale in each language.",
       col.names = c("Language", "Comprehension", "Production"))
 ```
 
-```{r gesture-correlation_over_age, eval = F, include = F}
-age_cor_data <- binary_data %>%
-  filter(age >= 8) %>%
-  group_by(language, age, comprehension, production, data_id) %>%
-  summarise(gesture = mean(value, na.rm = T)) %>%
-  group_by(language, age) %>%
-  mutate_at(c("comprehension", "production", "gesture"), scale) %>%
-  group_by(language, age) %>%
-  gather(measure, value, comprehension, production) 
+```{r gesture-gest-lang-categories}
+early_gestures_type <- binary_data %>%
+  left_join(unilemmas) %>%
+  filter(type == "gestures_first") %>%
+  mutate(type = if_else(Unilemma %in% c("point", "give", "show"), 
+                        "deictic", "other"))
 
-age_cor_data %>%
-  group_by(age, measure, language) %>%
-  summarise(correlation = cor(value, gesture, use = "pairwise.complete")) %>%
-  ggplot(aes(x = age, y = correlation, color = measure, fill = measure, 
-             label = measure)) +
-  geom_smooth(se = T) + 
-  geom_jitter(alpha = .5, size = .5) + 
-  directlabels::geom_dl(method = list(directlabels::dl.trans(x=x +.2),
-                                      "last.qp", cex=1)) +
-  theme(legend.position = "none") + 
-  scale_x_continuous(limits = c(6, 30))
-# age_cor_model <- lmerTest::lmer(gesture ~ value * measure  * age + 
-#                         (measure|language), data = age_cor_data)
-# 
-# broom::tidy(age_cor_model, "fixed") %>%
-#   kable()
+other_types <- early_gestures_type %>% 
+  filter(type == "other") %>%
+  ungroup() %>%
+  distinct(Unilemma) %>%
+  filter(!is.na(Unilemma),
+         !Unilemma %in% c("smack lips", "finger turn", "hot", "come here")) %>%
+  pull()
+
+
+other_type_combs <- combn(other_types, 3, simplify = F)
+```  
+
+As a second test of this hypothesized relationship, we consider explicitly the deictic gestures, which are most closely associated directly with communicative goals rather than symbolic content: pointing, showing, and giving [@bates1991]. Because all of these gestures are produced by children relatively early, and thus contain less signal for older children, we compare these to the remaining Early Gestures that appear in at least 6 languages: `r paste(other_types, collapse = ", ")`. We excluded "smack lips" because of it's lack of change over development (see above). We then apply the same analytic method as above--computing the correlation between children's gestureal and language development--seperately for these deictic and non-deictic early gestures. Because there are many more non-deictics, we take all `r length(other_type_combs)` possible combinations of 3 of these gestures at a time. Figure \@ref(fig:gesture-early-type-cors-fig) shows these correlations. As before, correlations between gesture and comprehension are higher than gesture and production, but in all cases language is more correlation with the children's non-deictic gestural development rather than their deictic gestural development. This provides a second piece of evidence that the relationship between linguistic and gestural develompent is driven more strongly by reliance on a shared symbolic format rather than reliance on individual children's motoric develompent or desire to communicate.
+
+```{r gesture-early-type-cors-fig}
+gest_lang_cor_table <- function(gests) {
+  early_gestures_type %>%
+    filter(Unilemma %in% gests) %>%
+    group_by(language, comprehension, production, data_id) %>%
+    summarise(gesture = mean(value, na.rm = T)) %>%
+    ungroup() %>%
+    gather(measure, value, comprehension, production) %>%
+    split(paste0(.$language,  "_", .$measure)) %>%
+    map(~ cor(.x$gesture, .x$value, use = "pairwise.complete")) %>%
+    as_data_frame() %>%
+    gather(id, cor) %>%
+    separate(id, into = c("language", "measure"), "_") 
+}
+
+deictic_gest_lang_data <- gest_lang_cor_table(c("point", "give", "show")) %>%
+  mutate(type = "deictic")
+
+other_gest_lang_data <- map(other_type_combs, gest_lang_cor_table) %>%
+  bind_rows(.id = "comb") %>%
+  group_by(language, measure) %>%
+  summarise(cor = mean(cor)) %>%
+  mutate(type = "other")
+
+type_gest_lang_data <- bind_rows(deictic_gest_lang_data, other_gest_lang_data) 
+
+ggplot(type_gest_lang_data, aes(x = language, y = cor, color = type)) + 
+  facet_wrap(~ measure) +
+  geom_point() + 
+  labs(x = "", y = "correlation between gesture and language",
+       color = "gesture type") +
+  theme(legend.position = "bottom")+
+  .scale_colour_discrete() + 
+  coord_flip()
 ```
 
 ## Conclusions
 
-Gestures appear early in young children's communicative repertoires, with an understanding of the deictic purpose of pointing being found as early as 12-months of age [@liszkowski2007]. The frequency of gesture in children's input - as well as the precociousness of their own productions - are also reliably correlated with their linguistic development [@rowe2009;@brooks2008]. In this Chapter, we extended the analyses developed in @fenson2007 to look at these relationships cross-linguistically using large-scale CDI data.
+Gestures appear early in young children's communicative repertoires, with an understanding of the deictic purpose of pointing being found as early as 12-months of age [@liszkowski2007]. The frequency of gesture in children's input - as well as the precociousness of their own productions - are also reliably correlated with their linguistic development [@rowe2009; @brooks2008]. In this Chapter, we extended the analyses developed in @fenson2007 to look at these relationships cross-linguistically using large-scale CDI data.
 
 In the first parts of the chapter, we evaluated the measurement properties of the gesture items, as well as the coherence of the groupings of items on the CDI forms. Our analyses confirm that parents are likely able to report reliably on their children's gesture development. We also found a high degree of consistency in development of different gestures within child--children who learn some gestures early are also likely to learn other gestures early, and a high-degree of cross-linguistic consistency in the age of acquisition of different gestures.
 
-Finally, we examine the relationship between gesture and language directly. We found that individual differences in gesture development were highly correlated with language development, and that gesture was more related to comprehension than production. We take these results to mean that precociousness in the gestural domain may be related to children's developing understanding of symbolic communication systems, rather than a strong desire to communicate with their caregivers. 
-<!--
-## Gesture and demographic variables
-
-Type and sex. Small female advantage overall, but big interaction in gestures_parent
-```{r gesture-sex_type_plot}
-sex_type_kid_data <- binary_data %>%
-  filter(!is.na(sex), !is.na(value)) %>%
-  group_by(language, age, sex, type, data_id) %>%
-  summarise(gesture = mean(value, na.rm = T)) 
-
-sex_type_data <- sex_type_kid_data %>%
-  summarise(gesture = mean(gesture, na.rm = T),
-            n = n()) %>%
-  mutate(se = sqrt((gesture * (1-gesture))/n))
-
-ggplot(sex_type_data, aes(x = age, y = gesture, color = sex, label = sex)) + 
-  facet_grid(language ~ type) +
-  geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
-  geom_smooth(se = F) +
-  directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
-  .scale_colour_discrete() +
-  theme(legend.position = "none")
-```
-
-
-```{r gesture-sex_type_model}
-sex_type_model_data <- binary_data %>%
-  mutate(type = factor(type,
-                       levels = c("gestures_first", "gestures_games", 
-                                  "gestures_objects", "gestures_parent",
-                                  "gestures_adult"))) %>%
-  group_by(language, age, sex, data_id, type) %>%
-  summarise(gesture = mean(value, na.rm = T))
-
-sex_type_model <- sex_type_model_data %>%
-  lme4::lmer(gesture ~ age * sex * type + (1 | data_id) +
-                (1 | language), data = .)
-
-broom::tidy(sex_type_model, "fixed") %>%
-  kable(digits = 3)
-```
-
-Type and ses. Very small low-ses advantage?
-
-```{r gesture-ses_type_plot}
-ses_type_kid_data <- binary_data %>%
-  filter(!is.na(mom_ed), !is.na(value)) %>%
-  mutate(ses = if_else(mom_ed %in% c("College", "Some Graduate",
-                                     "Graduate"), "high", "low")) %>%
-  group_by(language, age, ses, type, data_id) %>%
-  summarise(gesture = mean(value, na.rm = T)) 
-
-ses_type_data <- ses_type_kid_data %>%
-  summarise(gesture = mean(gesture, na.rm = T),
-            n = n()) %>%
-  mutate(se = sqrt((gesture * (1-gesture))/n))
-
-ggplot(ses_type_data, aes(x = age, y = gesture, color = ses, label = ses)) + 
-  facet_grid(language ~ type) +
-  geom_pointrange(aes(ymax = gesture + se, ymin = gesture - se), size = .25) + 
-  geom_smooth(se = F) +
-  directlabels::geom_dl(method = list("smart.grid", cex=1)) + 
-  .scale_colour_discrete() +
-  theme(legend.position = "none")
-```
-
-
-```{r gesture-ses_type_model}
-ses_type_kid_model <- ses_type_kid_data %>%
-  lme4::lmer(gesture ~ age * type + ses * type + 
-         age * ses + (1 | data_id) +
-                (1 | language), data = .)
-
-broom::tidy(ses_type_kid_model, "fixed") %>%
-  kable(digits = 3)
-```
-
-```{r gesture-gesture_word_type_cor_plot, include = F, eval = F}
-reorder_factors_with_clusters <- function(m) {
- 
-   m_wide <- m %>%
-    spread(item2, correlation) %>%
-    select(-1) %>%
-    as.matrix() 
-  
-  item1_order <- hclust(dist(m_wide))$order
-  item2_order <- hclust(dist(t(m_wide)))$order
-  
-  df_reordered <- m %>%
-    mutate(item1 = fct_relevel(item1, levels(m$item1)[item1_order]),
-           item2 = fct_relevel(item2, levels(m$item2)[item2_order]))
-
-  df_reordered
-}
-
-
-word_type_data <- gesture_data %>%
-  filter(type == "word", !category %in% 
-           c("other", "connecting_words", "helping_verbs")) %>%
-  group_by(type, language, age, category, data_id) %>%
-  summarise(produces = mean(value == "produces", na.rm = T), 
-            comprehends = mean(value %in% c("produces", "comprehends"),
-                               na.rm = T)) %>%
-  gather(measure, value, comprehends, produces)
-
-gesture_type_data <- binary_data %>%
-  group_by(language, age, type, data_id) %>%
-  summarise(value = mean(value)) %>%
-  rename(category = type) %>%
-  mutate(measure = "gestures", type = "gesture")
-
-
-type_cor_data <- bind_rows(word_type_data, gesture_type_data)
-
-comp_cor_bylang<- type_cor_data %>%
-  filter(measure != "produces") %>%
-  split(.$language) %>%
-  map(~ widyr::pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
-  bind_rows(.id = "language") %>%
-  filter(item1 %in% binary_data$type & !item2 %in% binary_data$type) %>%
-  filter(!item2 %in% c("connecting_words", "helping_verbs", "other"))
-
-
-comp_cor_bylang %>%
-  group_by(item1, item2) %>%
-  summarise(correlation = mean(correlation, na.rm = T)) %>%
-  ungroup() %>%
-  mutate_at(c("item1", "item2"), as.factor) %>%
-  reorder_factors_with_clusters %>%
-  bind_rows(.id = "language") %>%
-  ggplot(aes(x = item1, y = item2)) + 
-  geom_tile(aes(fill = correlation)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
-
-
-
-prod_cor_bylang <- type_cor_data %>%
-  filter(measure != "comprehends") %>%
-  split(.$language) %>%
-  map(~ widyr::pairwise_cor(.x, category, data_id, value, use = "pairwise.complete")) %>%
-  bind_rows(.id = "language") %>%
-  filter(item1 %in% binary_data$type & !item2 %in% binary_data$type) %>%
-  filter(!item2 %in% c("connecting_words", "helping_verbs", "other"))
-
-
-prod_cor_bylang %>%
-  group_by(item1, item2) %>%
-  summarise(correlation = mean(correlation, na.rm = T)) %>%
-  ungroup() %>%
-  mutate_at(c("item1", "item2"), as.factor) %>%
-  reorder_factors_with_clusters %>%
-  bind_rows(.id = "language") %>%
-  ggplot(aes(x = item1, y = item2)) + 
-  geom_tile(aes(fill = correlation)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0))
-```
-
-```{r gesture-gesture_word_cor_model, include = F, eval = F}
-gesture_word_cord_model_data <- comp_cor_bylang %>%
-  mutate(measure = "comprehends") %>%
-  bind_rows(mutate(prod_cor_bylang, measure = "produces")) %>%
-  mutate(item1 = factor(item1, levels = c("gestures_first", "gestures_games", "gestures_objects", "gestures_parent", "gestures_adult")))
-
-gesture_word_cord_model <- lme4::lmer(correlation ~ item1 * item2 * measure + (1|language),
-                                data = gesture_word_cord_model_data)
-
-broom::tidy(gesture_word_cord_model, "fixed") %>%
-  arrange(desc(abs(statistic))) %>%
-  kable(digits = 3)
-```
--->
-
+Finally, we examine the relationship between gesture and language directly. We found that individual differences in gesture development were highly correlated with language development, and that gesture was more related to comprehension than production. Further, development of deictic gestures is less predictive of language development than development of  non-deictic gestures. We take these results to mean that precociousness in the gestural domain may be related to children's developing understanding of symbolic communication systems, rather than shared motoric development or a strong desire to communicate with their caregivers. 
 
 ```{r gesture-cvs}
 cvs <- gest_lang_data %>%

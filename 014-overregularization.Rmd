@@ -1,10 +1,9 @@
 # Morphological Overgeneralization {#overregularization}
 
-## Introduction
+Although Chapter \@ref(grammar) examined broad patterns of morphological development (along with grammatical development), we did not conduct any specific analyses of morphological development. In this brief chapter, we rectify that omission by examining patterns of generalization and overgeneralization. We focus on this phenomenon because morphological generalization has been an influential case study for language learning -- and mental representation more broadly [@rumelhart1996;@pinker1990]. We begin by describing cross-sectional patterns of overgeneralization across languages and then turn to characterizing longitudinal change in overgeneralization in English and Norwegian. 
 
-## Methods
+## Introduction and methods
 
-## Cross-sectional data
 
 ```{r overreg-data, eval=FALSE}
 grammar_items <- read_csv("data/overregularization/overreg_item_coding.csv")
@@ -113,23 +112,34 @@ age_fits <- age_models %>%
   unnest(cols = c(fits))
 ```
 
-```{r ovreg-fits-vocab, fig.width=8, fig.cap="Each child's proportion of overregularization as a function of their vocabulary size in each language (curves show model fits).", dependson="ovreg-fits"}
-ggplot(overreg_by_kid_nonzero, aes(x = production_prop, y = prop)) +
-  facet_grid(lexical_category ~ language, labeller = label_caps) +
-  coord_fixed() +
-  geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
-  geom_line(aes(y = .fitted), size = 1.2, colour = .pal()(1),
-            data = vocab_fits) +
-  geom_text(aes(label = rsq_print), x = 0.05, y = 0.95, size = 3, hjust = 0,
-            family = .font, #parse = TRUE,
-            data = vocab_models) +
-  scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
-                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
-                     name = "Productive vocabulary size (proportion of items)") +
-  scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
-                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
-                     name = glue::glue("Proportion of items overregularized"))
+Why morphological generalization, from an acquisition perspective (e.g., some languages have a lot more morphology than English - and even some have more morpho than grammar) 
+
+Also theory (e.g., rules/connections) - morpho has become a case study for mental representation more broadly. But it's an open question whether this is right - morphology could be "special" (cf. some of the recent songbird stuff)
+
+Turning to data. Descriptive studies of overregularization in child language - marcus, marchman
+
+More recent work?
+
+Our approach here depends on the fact that the original developers of the CDI were interested in this debate and included overregularizations as options in the morphological sections of the form. For example, an item like *foot* includes *foots* and *feet* as possible options to be checked. To take advantage of this, we coded overgeneralizations on each of the `r length(unique(overreg_by_kid$language))` WS-type forms for which we had access to data from these items (two from English dialects). We then used this coding to count the total proportion overregularizations by child, both overall and within noun and verb categories. We show analyses of these overregularizations for cross-sectional and longitudinal data below. 
+
+## Cross-sectional data
+
+
+```{r ovreg-table}
+overreg_by_kid %>%
+  group_by(language, lexical_category) %>%
+  summarise(mean = mean(prop),
+            n = n()) %>%
+  spread(lexical_category, mean) %>%
+  rename(Language = language, 
+         `Prop. noun overreg.` = nouns, 
+         `Prop. verb overreg.` = verbs, 
+         N = n) %>%
+  kable(digits = 2,
+        caption = "Proportion of noun and verb overregularization across languages.")
 ```
+
+We begin by describing overregularization within the cross-sectional data. The proportion of overregularizations reported is not high overall. Slovak shows the highest rate, and it is still barely above 10% of total reports for these items. Thus, over-regularization is rare in a cross-sectional sample. Figure \@ref(fig:ovreg-fits-age) shows each child's proportion of overregularized items plotted by age. The major generalization from these data is that curves tend to be surprisingly flat -- there are not large, consistent developmental increases for any language. The inset $r^2$ for each panel in this graph show the variance explained by quadratic models of overregularization by age, quantitatively confirming the visual impression of limited developmental change.  
 
 ```{r ovreg-fits-age, fig.width=8, fig.cap="Each child's proportion of items overregularized as a function of their age size in each language (curves show model fits).", dependson="ovreg-fits"}
 # age_ranges <- overreg_by_kid_nonzero %>%
@@ -151,6 +161,27 @@ ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
                      breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
                      name = "Proportion of items overregularized")
 ```
+
+```{r ovreg-fits-vocab, fig.width=8, fig.cap="Each child's proportion of overregularization as a function of their vocabulary size in each language (curves show model fits).", dependson="ovreg-fits"}
+ggplot(overreg_by_kid_nonzero, aes(x = production_prop, y = prop)) +
+  facet_grid(lexical_category ~ language, labeller = label_caps) +
+  coord_fixed() +
+  geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
+  geom_line(aes(y = .fitted), size = 1.2, colour = .pal()(1),
+            data = vocab_fits) +
+  geom_text(aes(label = rsq_print), x = 0.05, y = 0.95, size = 3, hjust = 0,
+            family = .font, #parse = TRUE,
+            data = vocab_models) +
+  scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = "Productive vocabulary size (proportion of items)") +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
+                     breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
+                     name = glue::glue("Proportion of items overregularized"))
+```
+
+Interestingly, the same finding holds true for vocabulary. Overregularization does not appear to be tightly predicted by overall vocabulary size. Figure \@ref(fig:ovreg-fits-vocab) shows findings from this analysis. While some slopes might be slightly higher (especially for verbs), overall the total developmental change predicted by vocabulary size seems limited. What predicts reports of overregularization then? 
+
 
 ```{r overreg-lexcat-comp, fig.width=8, fig.cap="Each child's proportion of verbs overregularized against proportion of nouns overregularized (lines show linear model fits)."}
 overreg_lexcat_comp <- overreg_by_kid %>%
@@ -180,9 +211,13 @@ ggplot(overreg_lexcat_comp, aes(x = nouns, y = verbs)) +
                      name = "Proportion of verbs\n overregularized")
 ```
 
+One positive finding from our exploration is shown in Figure \@ref(fig:overreg-lexcat-comp). The majority of children do not overregularize, but those who do are doing so across nouns and verbs quite consistently, across all of the languages in our sample. $r^2$ values for the relationship between noun and verb over-regularizations range from `r round(min(lexcat_cors$rsq),2)` -- `r round(max(lexcat_cors$rsq),2)`, considerably higher than the relationships documented above. Thus, at a minimum we see within-individual stability in this measure. But we do not yet have a good way of predicting when particular children will show non-zero overregularization.
+
 ## Longitudinal data
 
-### English
+As in other chapters, we make use of the longitudinal data from the English (American) and Norwegian datasets. These data allow us to examine changes in generalization across individuals. Since data are sparser in the English data than the Norwegian, we pursue slightly different approaches to understanding these data. 
+
+For the English data, our analysis examines developmental changes within children. Figure \@ref(fig:ovreg-eng-longs) shows developmental change for children with pairs of observations. 
 
 ```{r ovreg-eng-longs}
 overreg_longs <- overreg_by_kid %>%
@@ -267,7 +302,7 @@ ggplot(eng_longs_age, aes(x = age, y = prop, colour = n_bin)) +
   guides(colour = guide_legend(title.position = "top", title.hjust = 0.5))
 ```
 
-## Norwegian
+Because longitudinal data are so much more plentiful in the Norwegian dataset, we are able to map proportions within individual children. Figure \@ref(overreg-nor-longs-age) shows smoothed curves for those children with at least XYZ administrations. As in the cross-sectional data, we see noun and verb over-regularization traveling together developmentally. Further, we see that the moment that over-regularization is reported seems to vary substantially by child. Some children are continuing to increase their overregularization throughout the sampling period, while others go through a discrete phase (at least for the high-frequency items shown on the form) and then return to zero by the end of the sampling period at age 3. Others barely over-regularize in this period. Thus, at a minimum we can conclude there is truly substantial individual variation in overregularization. 
 
 ```{r overreg-nor-longs}
 nor_longs <- overreg_longs %>%
@@ -287,7 +322,7 @@ nor_ns <- nor_longs %>%
   mutate(p = n / sum(n),
          cum_p = cumsum(p))
 
-dense_min <- 12
+dense_min <- 10
 nor_dense <- nor_longs %>%
   filter(num_ages >= dense_min) %>%
   group_by(original_id) %>%
@@ -296,7 +331,7 @@ nor_dense <- nor_longs %>%
   mutate(original_id = fct_reorder(original_id, overall_prop, .desc = TRUE))
 ```
 
-```{r overreg-nor-longs-age, fig.cap=glue::glue("For children in the Norwegian data with at least {nor_min} administrations, the smoothed trajectories of proportion of nouns/verbs that they overregularize as a function of their age."), fig.height=6}
+```{r overreg-nor-longs-age, fig.cap=glue::glue("For children in the Norwegian data with at least {dense_min} administrations, the smoothed trajectories of proportion of nouns/verbs that they overregularize as a function of their age."), fig.height=6}
 ggplot(nor_dense, aes(x = age, y = prop, colour = lexical_category)) +
   facet_wrap(~original_id, ncol = 5) +
   geom_smooth(se = FALSE) +
@@ -456,7 +491,7 @@ nor_fit_vals %>%
 
 ```
 
-```{nor-model-comp}
+```{r nor-model-comp, eval=FALSE}
 nor_model_comp <- feather::read_feather("data/overregularization/nor_model_comp.feather")
 
 nor_aic_plot <- nor_model_comp %>%
@@ -468,7 +503,7 @@ nor_rsq_plot <- nor_model_comp %>%
   filter(measure == "pseudo_rsq", model_type == "quadratic")
 ```
 
-```{r nor-aic-plot}
+```{r nor-aic-plot, eval=FALSE}
 ggplot(nor_aic_plot, aes(x = linear, y = quadratic, colour = winner)) +
   facet_wrap(~lexical_category, labeller = label_caps) +
   coord_fixed() +
@@ -481,14 +516,14 @@ ggplot(nor_aic_plot, aes(x = linear, y = quadratic, colour = winner)) +
   theme(legend.position = "top", legend.key.size = unit(0.1, "line"))
 ```
 
-```{r nor-rsq-plot}
+```{r nor-rsq-plot, eval=FALSE}
 ggplot(nor_rsq_plot, aes(x = value)) +
   facet_wrap(~lexical_category, labeller = label_caps) +
   geom_histogram() +
   labs(x = "Pseudo-r² of quadratic model", y = "Number of children")
 ```
 
-```{r nor-coefs}
+```{r nor-coefs, eval=FALSE}
 min_rsq <- 0.1
 coef_cutoff <- 0.75
 
@@ -515,7 +550,10 @@ term_plot <- function(trm) {
 cowplot::plot_grid(term_plot("age"), term_plot("age²"), ncol = 1)
 ```
 
-```{r nor-fits}
+## Conclusions
 
-```
+This brief chapter examined overregularization data from the morphology items of the Words and Sentences form. The primary takehome from our analyses is that there is tremendous heterogeneity in these data -- many children are never reported to overgeneralize within the age range of the sample. Others do, however. This behavior is not well-predicted by age or vocabulary, however, making it somewhat mysterious what the drivers of over-regularization behavior are. 
 
+One possibility that bears discussion is whether parents are less keen observers of morphological generalization than they are of vocabulary growth more broadly. It is possible that the lack of systematicity we observed is due to inconsistency in which parents report overgeneralization -- perhaps only some parents are sensitized to the somewhat meta-linguistic observation that their child is using a frequent ending incorrectly (e.g., *foots*). This kind of bias would be consistent with the noun-verb overregularization correlation we observed -- only systematic validation outside of the CDI would truly dispell this worry. 
+
+On the other hand, the kind of variability we observed is not unlike the variability observed in naturalistic studies of overgeneralization [e.g., @marcus1990]. Thus, at a minimum, our work here suggests caution in the received narrative of morphological generalization as just another stage in the predictable progression of language learning. Unlike, say, word combination (cf. Chapter \@ref(grammar)), we do not see as clear a developmental march towards this more elusive behavior. 

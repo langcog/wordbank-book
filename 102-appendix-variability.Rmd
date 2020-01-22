@@ -1,8 +1,7 @@
 # Measures of Variability {#appendix-variability}
 
-In Chapter \@ref(vocabulary), we make use of non-parametric measures of variability, especially MADM (mean absolute deviation from the median) rather than the more standard coefficient of variation. In this brief Appendix, we show that these are very similar in the limit with a large amount of data, although they can produce quite different answers for individual data points, especially those that are at the floor or ceiling of the particular form. 
+In Chapter \@ref(vocabulary), we make use of non-parametric measures of variability, especially MADM (mean absolute deviation from the median) rather than the more standard coefficient of variation (CV). In this brief Appendix, we show that these measures are very highly correlated in the limit. We note however that the two measures (CV and MADM) produce quite different answers for individual data points, especially those that are at the floor or ceiling of a particular form. 
 
-Figure \@ref(fig:appvar-ratios-cv) shows coefficient of variation (CV) vs. MADM, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is 1, despite some considerable variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it goes dramatically higher for some individual datasets. We speculate that this is due to floor/ceiling effects and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme fluctuations than CV.
 
 ```{r appvar-vocab_data}
 num_words <- items %>%
@@ -27,7 +26,12 @@ ratios <- vocab_data %>%
             cv = cv(production), 
             d = d(production), 
             N = n())
+
+madm_cv <- cor.test(ratios$madm, ratios$cv)
 ```
+
+Figure \@ref(fig:appvar-ratios-cv) shows CV and MADM plotted together, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is strong ($r = `r round(madm_cv$estimate,2)`$) and its slope is close to 1, despite some variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it is dramatically higher for some individual datasets. We speculate that this relationship is due to floor/ceiling effects and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme fluctuations than CV.
+
 
 ```{r appvar-ratios-cv, fig.cap="Coefficient of variation and MADM, with each point showing a particular combination of language, form, and age and the line indicating a linear model fit."}
 ggplot(ratios, aes(x = madm, y = cv)) + 
@@ -53,5 +57,5 @@ ggplot(ratios, aes(x = mmad, y = d)) +
 ```
 
  
-Our second analysis, shown in Figure \@ref(fig:appvar-ratios-cv), is identical except that it plots Cohen's $d$ by MMAD. Each of these is the reciprocal of the related measure plotted above. (For example, $d = \frac{\mu}{\sigma}$ whereas $CV = \frac{\sigma}{\mu}$). Thus, the same relation holds.
+Our second analysis, shown in Figure \@ref(fig:appvar-ratios-d), is identical except that it plots Cohen's $d$ by MMAD. Each of these is the reciprocal of the related measure plotted above. (For example, $d = \frac{\mu}{\sigma}$ whereas $CV = \frac{\sigma}{\mu}$). Thus, the same relation holds.
 

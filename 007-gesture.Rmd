@@ -1,5 +1,9 @@
 # Gesture and Communication {#gesture}
 
+In addition to containing early words, CDI forms designed for infants (the "Words and Gestures" family) also contain a set of items designed to probe early gestural communication. This chapter explores these items. Our goals are to examine (1) the robustness of the measurement properties of these non-verbal parent-report measures, (2) the degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo, and (3) the relationships between gestural development and linguistic development. 
+
+# Introduction 
+
 Children's most recognizable early linguistic accomplishments are surely their first words -- a topic we turn to in the Chapter \@ref(items-consistency). However, even before infants approach this important milestone, they are already communicating through another modality: gesture. For example, a child who extends their hands and opens and closes their fist likely wants something to be given to them. A child who points to a bird up in a tree likely wants to get their caregiver's attention so that they can share in the delight together. Children's early vocalizations are also sometimes accompanied by gestures, for example, a child might raise both of their hands in the air and say "up!" The social and communicative routines that these gestures enable may themselves form part of the supportive context in which early language learning happens [@bruner1985]. In sum, gestures are an important aspect of children's early communicative development.
 
 Early gestures have long been thought to have a common mental status with later-developing linguistic accomplishments because both may reflect the child's understanding of symbols, i.e., that a name or gesture can "stand in" for a thing in the world. The classic theories of @piaget1962 and @werner1963 proposed that all symbols have their origins in actions carried out on objects, and moreover, such symbols can be manifested in either the vocal or the gestural domain. These proposals suggest a common underlying mental function that is critical to the development of all symbolic skills, both language and in certain types of gestures. 
@@ -15,7 +19,7 @@ Children also use gestures as part of social activities, for example, waving "by
 
 Finally, older children's gestures also take on a "true" symbolic meaning, as a child might use a conventional gesture to recognize or classify objects as an instance of a category (e.g., pretend to drink from a cup or sniff a flower).  Some theorists have hypothesized that children's ability to use gestures in this symbolic way may reflect a common underlying "vocabulary" in both the verbal and gestural domain [e.g., @acredolo1985; @bates1980]. These gestures may thus have a similar relationship to language as children's pretend play [@bergen2002; @smith2011].
 
-This chapter contains analysis of the "early gesture" items from the CDI. Our goals here are to examine (1) the robustness of the measurement properties of these non-verbal parent-report measures, (2) the degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo, and (3) the relationships between gestural development and linguistic development. 
+In sum, both early deictic gestures and later symbolic gestures have played an important role in shaping theories of communication and language learning. Thus, their cross-linguistic variability and their relationship to other aspects of language learning are important topics for investigation.
 
 ```{r gesture-digits}
 options(scipen=1, digits=2)
@@ -71,7 +75,7 @@ unilemmas <- read_csv("data/gesture/first_gestures.csv")
 
 ## Measurement properties of CDI gestures
 
-Following our work in Chapter \@ref(psychometrics), we begin by analyzing the degree of signal in the gesture items. The available dataset is unfortunately significantly smaller -- a number of users of the CDI forms did not measure (or at least did not provide us with data) on gesture items. Consequently, we focus first on the American English Words & Gestures form and use face validity as our primary criterion rather than a more advanced metric.
+Following our work in Chapter \@ref(psychometrics), we begin by analyzing the degree of measurement signal in the gesture items. The available dataset is unfortunately significantly smaller than is available for vocabulary items -- a number of users of the CDI forms did not measure (or at least did not provide us with data) on gesture items. Consequently, we focus first on the American English Words & Gestures form and use face validity as our primary criterion rather than a more sophisticated metric.
 
 ### Measuring the development of gesture
 

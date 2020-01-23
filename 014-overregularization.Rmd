@@ -287,7 +287,7 @@ nor_ns <- nor_longs %>%
   mutate(p = n / sum(n),
          cum_p = cumsum(p))
 
-dense_min <- 12
+dense_min <- 11
 nor_dense <- nor_longs %>%
   filter(num_ages >= dense_min) %>%
   group_by(original_id) %>%
@@ -377,28 +377,28 @@ nor_fit_vals <- nor_fits %>%
   select(-model) %>%
   unnest(cols = fits)
 
-best_fits <- nor_rsq %>% group_by(lexical_category, model_type) %>% top_n(10)
-nor_fit_vals %>%
-  inner_join(best_fits) %>%
-  filter(lexical_category == "verbs", model_type == "linear") %>%
-  ggplot(aes(x = age, y = .fitted)) +
-  # facet_grid(model_type ~ lexical_category) +
-  facet_wrap(~original_id, ncol = 5) +
-  geom_line(aes(colour = model_type)) +
-  geom_point(aes(y = prop), data = nor_longs %>% inner_join(best_fits) %>%
-               filter(lexical_category == "verbs", model_type == "linear")) +
-  .scale_colour_discrete()
+# best_fits <- nor_rsq %>% group_by(lexical_category, model_type) %>% top_n(10)
+# nor_fit_vals %>%
+#   inner_join(best_fits) %>%
+#   filter(lexical_category == "verbs", model_type == "linear") %>%
+#   ggplot(aes(x = age, y = .fitted)) +
+#   # facet_grid(model_type ~ lexical_category) +
+#   facet_wrap(~original_id, ncol = 5) +
+#   geom_line(aes(colour = model_type)) +
+#   geom_point(aes(y = prop), data = nor_longs %>% inner_join(best_fits) %>%
+#                filter(lexical_category == "verbs", model_type == "linear")) +
+#   .scale_colour_discrete()
 
-nor_fit_vals %>%
-  inner_join(best_fits) %>%
-  filter(lexical_category == "verbs", model_type == "quadratic") %>%
-  ggplot(aes(x = age, y = .fitted)) +
-  # facet_grid(model_type ~ lexical_category) +
-  facet_wrap(~original_id, ncol = 5) +
-  geom_line(aes(colour = model_type)) +
-  geom_point(aes(y = prop), data = nor_longs %>% inner_join(best_fits) %>%
-               filter(lexical_category == "verbs", model_type == "quadratic")) +
-  .scale_colour_discrete()
+# nor_fit_vals %>%
+#   inner_join(best_fits) %>%
+#   filter(lexical_category == "verbs", model_type == "quadratic") %>%
+#   ggplot(aes(x = age, y = .fitted)) +
+#   # facet_grid(model_type ~ lexical_category) +
+#   facet_wrap(~original_id, ncol = 5) +
+#   geom_line(aes(colour = model_type)) +
+#   geom_point(aes(y = prop), data = nor_longs %>% inner_join(best_fits) %>%
+#                filter(lexical_category == "verbs", model_type == "quadratic")) +
+#   .scale_colour_discrete()
 
 nor_coefs_plot <- nor_coefs %>%
   left_join(nor_model_comp) %>%
@@ -426,34 +426,66 @@ lexcat_coefs_plot <- function(lexcat) {
 cowplot::plot_grid(lexcat_coefs_plot("nouns"), lexcat_coefs_plot("verbs"),
                    labels = c("Nouns", "Verbs"))
 
-coef_extremes <- nor_coefs_plot %>%
-  filter(n > 10) %>%
-  select(original_id, lexical_category, age2) %>%
-  # gather(term, estimate, -original_id, -lexical_category, -n) %>%
-  # filter(term == "age2") %>%
-  group_by(lexical_category) %>%
-  top_n(-10)
+# coef_extremes <- nor_coefs_plot %>%
+#   filter(n > 10) %>%
+#   select(original_id, lexical_category, age2) %>%
+#   # gather(term, estimate, -original_id, -lexical_category, -n) %>%
+#   # filter(term == "age2") %>%
+#   group_by(lexical_category) %>%
+#   top_n(-10)
 
-nor_fit_vals %>%
-  filter(model_type == "quadratic", lexical_category == "verbs") %>%
-  inner_join(coef_extremes) %>%
-  ggplot(aes(x = age, y = .fitted)) +
+# nor_fit_vals %>%
+#   filter(model_type == "quadratic", lexical_category == "verbs") %>%
+#   inner_join(coef_extremes) %>%
+#   ggplot(aes(x = age, y = .fitted)) +
+#   # facet_grid(model_type ~ lexical_category) +
+#   facet_wrap(~original_id, ncol = 5) +
+#   geom_line(aes(colour = lexical_category)) +
+#   # geom_point(aes(y = prop), data = nor_longs %>% inner_join(coef_extremes)) +
+#   .scale_colour_discrete()
+
+nor_fit_demo <- nor_fit_vals %>%
+  # filter(model_type == "quadratic") %>%
+  # nest(data = c(age, .fitted)) %>%
+  left_join(nor_model_comp) %>%
+  filter(rsq > 0.25, n >= 10) %>% #, overall_p > 0.5) %>%
+  group_by(lexical_category, original_id) %>%
+  mutate(overall_p = sum(.fitted)) %>%
+  # ungroup() %>%
+  # # filter(lexical_category == "verbs") %>%
+  # group_by(lexical_category, original_id) %>%
+  filter(max(.fitted) > 0.2) %>%
+  ungroup() %>%
+  # filter(winner == "quadratic") %>%
+  # group_by(lexical_category) %>%
+  # nest(data = c(-original_id, -n)) %>%
+  # filter(n >= 11) %>%
+  # top_n(15, n) %>%
+  # ungroup() %>%
+  # unnest(cols = data) %>%
+  mutate(winning = (winner == model_type) %>% as.character() %>%
+           fct_relevel("TRUE")) %>%
+  # group_by(original_id) %>%
+  # mutate(overall_p = sum(.fitted)) %>%
+  # ungroup() %>%
+  mutate(original_id = fct_reorder(original_id, overall_p, .desc = TRUE)) %>%
+  filter(model_type == "quadratic")
+
+nor_longs_demo <- nor_longs %>%
+  ungroup() %>%
+  inner_join(nor_fit_demo) %>%
+  mutate(original_id = fct_reorder(original_id, overall_p, .desc = TRUE))
+
+ggplot(nor_fit_demo, aes(x = age, y = .fitted)) +
   # facet_grid(model_type ~ lexical_category) +
-  facet_wrap(~original_id, ncol = 5) +
-  geom_line(aes(colour = lexical_category)) +
-  # geom_point(aes(y = prop), data = nor_longs %>% inner_join(coef_extremes)) +
-  .scale_colour_discrete()
-
-nor_fit_vals %>%
-  filter(model_type == "quadratic") %>%
-  inner_join(nor_dense) %>%
-  ggplot(aes(x = age, y = .fitted)) +
-  # facet_grid(model_type ~ lexical_category) +
-  facet_wrap(~original_id, ncol = 5) +
-  geom_line(aes(colour = lexical_category)) +
-  # geom_point(aes(y = prop), data = nor_longs %>% inner_join(coef_extremes)) +
-  .scale_colour_discrete()
-
+  facet_wrap(~original_id, ncol = 6) +
+  geom_line(aes(colour = lexical_category, linetype = winning)) +
+  geom_point(aes(y = prop), data = nor_longs_demo, size = 0.6, colour = "slategrey") +
+  .scale_colour_discrete(name = "") +
+  scale_linetype(guide = FALSE) +
+  labs(x = "Age (months)", y = "Model fit probability of overregularizing") +
+  theme(legend.position = "top",
+        strip.text = element_blank())
 ```
 
 ```{nor-model-comp}

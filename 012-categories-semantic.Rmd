@@ -1,6 +1,6 @@
 # Vocabulary Composition: Semantic Categories {#categories-semantic}
 
-Following the approach in the previous chapter, we next investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," we ask for a range of semantic categories whether early vocabulary development in some languages is for example more "vehicle focused" or "animal focused" than in others? 
+Following the approach in the previous chapter, we next investigate the consistency of semantic content categories across languages. By analogy with the "noun bias," we ask for a range of semantic categories whether early vocabulary development in some languages is biased for or against items from these categories. For example, are some languages more "vehicle biased" or "animal biased" than others? Consistent biases across languages can provide hints regarding attentional or conceptual factors influencing early word learning. We begin by exploring general patterns in semantic category bias and then focus specifically on a few theoretically-interesting conceptual domains, like words for time, color, body parts, and logical operators.
 
 ## Introduction and methods
 

@@ -44,32 +44,29 @@ measure_admins <- admins %>%
   mutate(produces = TRUE, understands = form == "WG") %>%
   select(-form)
 
-sample_sizes <- bind_rows(
+measure_sample_sizes <- bind_rows(
   measure_admins %>% filter(produces) %>% mutate(measure = "produces"),
   measure_admins %>% filter(understands) %>% mutate(measure = "understands")
 )
 
-instrument_info <- sample_sizes %>%
+instrument_info <- measure_sample_sizes %>%
   group_by(language, measure) %>%
   summarise(num_admins = n(),
             min_age = min(age),
             max_age = max(age)) %>%
   mutate(age_range = paste(min_age, max_age, sep = "-")) %>%
   select(-min_age, -max_age) %>%
-  group_by(language, measure) %>%
-  nest_legacy() %>%
-  spread(measure, data) %>%
-  unnest_legacy(.sep = "_")
-  
+  pivot_wider(names_from = measure, values_from = c(num_admins, age_range))
+
 lang_stats <- instrument_info %>%
   left_join(uni_lemma_info) %>%
   left_join(childes_sizes) %>%
-  # mutate(language = str_replace(language, " \\(.*\\)", "")) %>%
-  select(language, ni = num_included, pna = produces_num_admins,
-         par = produces_age_range,
-         una = understands_num_admins, uar = understands_age_range, types, tokens)
+  select(language, ni = num_included, pna = num_admins_produces,
+         par = age_range_produces,
+         una = num_admins_understands, uar = age_range_understands, types, tokens)
 
-kable(lang_stats, escape = FALSE, format.args = list(big.mark = ","),
+kable(lang_stats, format = opts_knit$get("rmarkdown.pandoc.to"),
+      escape = FALSE, format.args = list(big.mark = ","),
       caption = "Statistics for data from Wordbank and CHILDES. N indicates number of children.",
       col.names = c("Language", "CDI items", "N", "Ages", "N", "Ages", "Types",
                     "Tokens")) %>%

@@ -1,6 +1,6 @@
 # Individual Datasets {#appendix-data}
 
-This appendix give the contributors and citations for each of the datasets used in this book.
+This appendix gives the contributors and citations for each of the datasets used in this book.
 
 ```{r appdata-load, cache=FALSE}
 datasets <- jsonlite::fromJSON("misc/datasets.json")

@@ -126,9 +126,11 @@ mean_lexcat_coef <- function(t, lc) {
 
 ```{r aoapred-consistencies}
 plt_coef_summary <- coef_summary %>%
+  ungroup() %>%
   mutate(language = language %>% str_remove(" \\(.*\\)") %>% fct_rev())
 
 plt_baseline_coef_summary <- baseline_coef_summary %>%
+  ungroup() %>%
   mutate(language = language %>% str_remove(" \\(.*\\)") %>% fct_rev())
 
 plt_lexcat_coef_summary <- lexcat_coef_summary %>%
@@ -201,7 +203,7 @@ predictor_cors <- uni_model_data %>%
                     widyr::pairwise_cor(predictor, uni_lemma, value,
                                         upper = TRUE))) %>%
   select(-data) %>%
-  unnest() %>%
+  unnest(cols = c(cors)) %>%
   rename(predictor1 = item1, predictor2 = item2)
 
 mean_predictor_cors <- predictor_cors %>%
@@ -225,7 +227,8 @@ predictor_data <- uni_model_data %>%
   ungroup() %>%
   select(language, !!predictors) %>%
   distinct() %>%
-  nest(-language)
+  nest(data = c(frequency, MLU, final_frequency, solo_frequency, num_phons, 
+    concreteness, valence, arousal, babiness))
 
 predictor_vif <- function(lang_data, predictor) {
   others <- paste(predictors[predictors != predictor], collapse = ' + ')
@@ -242,5 +245,5 @@ vifs <- predictor_data %>%
                          ~predictor_vif(lang_data, .x)))
   })) %>%
   select(-data) %>%
-  unnest()
+  unnest(cols = c(vifs))
 ```

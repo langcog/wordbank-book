@@ -141,18 +141,31 @@ ggplot(cutoffs_prod, aes(x = in_langs, y = cum_prop)) +
 
 ## The first 10 words
 
-Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(tab:items-top10-production) and \@ref(tab:items-top10-comprehension)). Similar words appeared in the top 10 across languages, especially in children's earliest productions. These words consist primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). 
-
 ```{r items-top10-compute}
-top10 <- all_aoas %>%
+top10_long <- all_aoas %>%
   inner_join(filter(lemma_completeness, in_langs >= IN_LANGS)) %>%
   group_by(measure,language) %>%
   arrange(aoa) %>%
-  slice(1:10) %>%
+  slice(1:10)
+
+top10 <- top10_long %>%
   select(-aoa, -num_item_id, -in_langs) %>%
   mutate(order = 1:n()) %>%
-  spread(language, uni_lemma)
+  spread(language, uni_lemma) 
+
+in_langs <- top10_long %>% 
+  group_by(measure, uni_lemma, in_langs) %>% 
+  select(measure, uni_lemma, in_langs) %>%
+  distinct() %>%
+  arrange(measure, desc(in_langs), uni_lemma) 
+
+in_lang_props <- in_langs %>%
+  group_by(measure, in_langs) %>%
+  summarise(n = n()) %>%
+  mutate(prop = n/sum(n))
 ```
+
+Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(tab:items-top10-production) and \@ref(tab:items-top10-comprehension)). Similar words appeared in the top 10 across languages, especially in children's earliest productions. In production, `r in_lang_props %>% filter(measure == "produces", in_langs == 15) %>% pull(n)` of the `r in_lang_props %>% filter(measure == "produces") %>% pull(n) %>% sum()` words appeared in the top ten earliest words of every language (`r in_lang_props %>% filter(measure == "produces", in_langs == 15) %>% pull(prop)`), and all but `r in_lang_props %>% filter(measure == "produces", in_langs < 10) %>% pull(n)` appeared in at least ten languages (`r 1 - in_lang_props %>% filter(measure == "produces", in_langs < 10) %>% pull(prop)`). In comprehension, `r in_lang_props %>% filter(measure == "understands", in_langs == 15) %>% pull(n)` of the `r in_lang_props %>% filter(measure == "understands") %>% pull(n) %>% sum()` words appeared in the top ten earliest words of every language (`r in_lang_props %>% filter(measure == "understands", in_langs == 15) %>% pull(prop)`), and all but `r in_lang_props %>% filter(measure == "understands", in_langs < 10) %>% pull(n)` appeared in at least ten languages (`r 1 - in_lang_props %>% filter(measure == "understands", in_langs < 10) %>% pull(prop)`). These words consist primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). 
 
 ```{r items-top10-production}
 # row_langs <- 5

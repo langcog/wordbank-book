@@ -30,7 +30,7 @@ ratios <- vocab_data %>%
 madm_cv <- cor.test(ratios$madm, ratios$cv)
 ```
 
-Figure \@ref(fig:appvar-ratios-cv) shows CV and MADM plotted together, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is strong ($r = `r round(madm_cv$estimate,2)`$) and its slope is close to 1, despite some variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it is dramatically higher for some individual datasets. We speculate that this relationship is due to floor/ceiling effects and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme fluctuations than CV.
+Figure \@ref(fig:appvar-ratios-cv) shows CV and MADM plotted together, with each point representing a single age group for a particular combination of form and language. The slope of the relationship between the two measures is strong ($r$ = `r roundp(madm_cv$estimate)`) and its slope is close to 1, despite some variation. Overall, it appears that for the majority of the data, CV is slightly lower than MADM, but that it is dramatically higher for some individual datasets. We speculate that this relationship is due to floor/ceiling effects and small sample effects. This analysis suggests that MADM, the non-parametric estimate we use, is less subject to extreme fluctuations than CV.
 
 
 ```{r appvar-ratios-cv, fig.cap="Coefficient of variation and MADM, with each point showing a particular combination of language, form, and age and the line indicating a linear model fit."}

@@ -48,3 +48,12 @@ h1, h2, h3, h4, h5, h6 {
 .font-settings {
   display: none;
 }
+
+#the-first-10-words th {
+  padding: 4px 2px 4px 2px;
+  line-height: 95%;
+}
+#the-first-10-words td {
+  padding: 4px 2px 4px 2px;
+  line-height: 95%;
+}

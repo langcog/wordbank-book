@@ -377,7 +377,7 @@ summarised_vocab_exclusions <- n_long_ws %>%
   summarise(more_than_50 = mean(more_than_50))
 ```
 
-The decision to exclude children with larger vocabularies at their first recorded measurement means that there is likely to be an overrepresentation of children with slower, rather than faster, rates of vocabulary growth. In particular, from the WS data, we exclude a substantial proportion of children even from the youngest groups (e.g., `r 100 * signif(filter(summarised_vocab_exclusions, language == "Norwegian", min_age == 16)$more_than_50, 2)`% of Norwegian 16-month-olds). So as not to bias the analysis further by including a large proportion of older, slower learners, we only include children younger than 21 months in this sample. 
+The decision to exclude children with larger vocabularies at their first recorded measurement means that there is likely to be an overrepresentation of children with slower, rather than faster, rates of vocabulary growth. In particular, from the WS data, we exclude a substantial proportion of children even from the youngest groups (e.g., `r roundp(100 * filter(summarised_vocab_exclusions, language == "Norwegian", min_age == 16)$more_than_50, 0)`% of Norwegian 16-month-olds). So as not to bias the analysis further by including a large proportion of older, slower learners, we only include children younger than 21 months in this sample. 
 
 ```{r style-n-long}
 n_long <- n_long %>%
@@ -413,7 +413,7 @@ filtered_rates <- all_rates %>%
   filter(rate > -10) # filter out large negatives
 ```
 
-We exclude datapoints associated with large decreases in vocabulary (negative rates). Although some small negatives would be expected based on measurement error or forgetting, large negative spikes are rare and likely due to errors in the data (e.g., a partially filled form). We exclude rates of -10 words/month and below (`r signif(mean(all_rates$rate < -10) * 100, 2)`% of data). 
+We exclude datapoints associated with large decreases in vocabulary (negative rates). Although some small negatives would be expected based on measurement error or forgetting, large negative spikes are rare and likely due to errors in the data (e.g., a partially filled form). We exclude rates of --10 words/month and below (`r roundp(mean(all_rates$rate < -10) * 100, 1)`% of data). 
 
 Figure \@ref(fig:style-rateplot) shows children's estimated growth rates in the period leading up to that month (number of words learned since the last longitudinal measurement divided by number of months since that measurement) plotted by total words produced in that month. There is a clear quadratic shape to this pattern, almost certainly caused by ceiling effects for children who are "running out of words" on the form.
 

@@ -89,7 +89,7 @@ demo_data <- uni_prop_data %>%
 word_data <- demo_data %>%
   select(language, uni_lemma, items) %>%
   distinct(language, uni_lemma, .keep_all = TRUE) %>%
-  unnest() %>%
+  unnest(cols = items) %>%
   mutate(x = ifelse(uni_lemma == demo_lemmas[1], 8, 35),
          y = ifelse(uni_lemma == demo_lemmas[1], 1, 0))
 
@@ -178,7 +178,7 @@ Each numeric predictor was centered and scaled so that all predictors would have
 
 **Imputation.** The resulting sets of predictor values for each language had varying numbers of missing values, depending on resource availability (number phonemes 0%, concreteness 0%-1%, arousal and valence 8%-13%, [solo/final] frequency 2%-14%, babiness 10%-33%, MLU-w 2%-53%). We used iterative regression imputation to fill in these missing values (separately within each language) by first replacing missing values with samples drawn randomly with replacement from the observed values, and then iteratively imputing values for a predictor based on a linear regression fitting that predictor from all others.
 
-**Collinearity.** A potential concern for comparing coefficient estimates is predictor collinearity. Fortunately, in every language, the only relatively large correlations are between MLU-w and solo frequency (mean over languages `r mean_pair_cor("MLU", "solo_frequency")`), as expected given the similarity of these factors, along with modest correlations between frequency and concreteness (mean over languages `r mean_pair_cor("concreteness", "frequency")`) and between frequency and number of phonemes (mean over languages `r mean_pair_cor("frequency", "num_phons")`), a reflection of Zipf's Law [@zipf1935]. More importantly, the variance inflation factor for each of the predictors in each language is no greater than `r round(max(vifs$vif), 1)`, indicating that multicollinearity among the predictors is low.
+**Collinearity.** A potential concern for comparing coefficient estimates is predictor collinearity. Fortunately, in every language, the only relatively large correlations are between MLU-w and solo frequency (mean over languages `r mean_pair_cor("MLU", "solo_frequency")`), as expected given the similarity of these factors, along with modest correlations between frequency and concreteness (mean over languages `r mean_pair_cor("concreteness", "frequency")`) and between frequency and number of phonemes (mean over languages `r mean_pair_cor("frequency", "num_phons")`), a reflection of Zipf's Law [@zipf1935]. More importantly, the variance inflation factor for each of the predictors in each language is no greater than `r roundp(max(vifs$vif), 1)`, indicating that multicollinearity among the predictors is low.
 
 
 ### Analysis
@@ -196,7 +196,7 @@ The magnitude of the standardized coefficient on each property gives an estimate
 
 Given the emphasis on frequency effects in the literature \citep{ambridge2015}, one might have expected frequency to dominate, but several other predictors are also quite strong. In addition, some factors previously argued to be important for word learning, namely valence and arousal \citep{moors2013}, appear to have limited relevance when compared to other factors. These results provide a strong argument for our approach of including multiple predictors and languages in our analysis.
 
-```{r aoapred-refcoefs, fig.width=7, fig.height=4.5, fig.cap="Estimates of coefficients in predicting words' developmental trajectories for English comprehension and production data. Error bars indicate 95\\% confidence intervals; filled in points indicate coefficients for which $p$ < 0.05."}
+```{r aoapred-refcoefs, fig.width=7, fig.height=4.5, fig.cap="Estimates of coefficients in predicting words' developmental trajectories for English comprehension and production data. Error bars indicate 95\\% confidence intervals; filled in points indicate coefficients for which _p_ < 0.05."}
 
 ggplot(ref_coefs, aes(x = estimate, y = term)) +
   facet_grid(language + measure ~ effect, scales = "free",
@@ -210,7 +210,7 @@ ggplot(ref_coefs, aes(x = estimate, y = term)) +
   labs(y = "", x = "Coefficient estimate")
 ```
 
-```{r aoapred-langcoefs, fig.width=7, fig.height=4.5, fig.align='center', fig.cap="Estimates of coefficients in predicting words' developmental trajectories for all languages and measures. Each point represents a predictor's coefficient in one language, with the bar showing the mean across languages. Filled in points indicate coefficients for which $p$ < 0.05."}
+```{r aoapred-langcoefs, fig.width=7, fig.height=4.5, fig.align='center', fig.cap="Estimates of coefficients in predicting words' developmental trajectories for all languages and measures. Each point represents a predictor's coefficient in one language, with the bar showing the mean across languages. Filled in points indicate coefficients for which _p_ < 0.05."}
 ggplot(plt_lang_coefs, aes(x = estimate, y = term, colour = term)) +
   facet_grid(measure ~ effect, scales = "free",
              labeller = as_labeller(label_caps)) +
@@ -225,7 +225,7 @@ ggplot(plt_lang_coefs, aes(x = estimate, y = term, colour = term)) +
 
 **Consistency.** Apart from valence and arousal, all other predictors have the same the direction of effect in all or almost all languages and measures (at least `r most_opposite(c("arousal", "valence"))` of the `r num_langs * 2`). Thus, across languages, words are likely to be understood and produced by more children if they are more frequent, shorter, more concrete, more frequently the only word in an utterance, more associated with babies, more frequently the final word in an utterance, and appear in shorter utterances.
 
-Additionally, there is considerable consistency in the magnitudes of predictors across languages. _A priori_, it could have been the case that different languages have wildly different effects of various factors (due to linguistic or cultural differences), but this pattern is not what we observe. Instead, there is more consistency in the correlations between coefficients across languages than would be expected by chance. As shown in Figure\ \@ref(fig:aoapred-consistency), each language's mean pairwise correlation with other languages' coefficients (i.e., the correlation of coefficients for English with coefficients for Russian, for Spanish, and so on) is outside of bootstrapped estimates in a randomized baseline created by shuffling predictor coefficients within language. The pairwise correlations are more consistent for production (mean $\bar{r} =$ `r signif(mean(filter(plt_coef_summary, measure == "produces")$mean_cor), 2)`) than for comprehension (mean $\bar{r} =$ `r signif(mean(filter(plt_coef_summary, measure == "understands")$mean_cor), 2)`), in which French and Russian effects are more idiosyncratic.
+Additionally, there is considerable consistency in the magnitudes of predictors across languages. _A priori_, it could have been the case that different languages have wildly different effects of various factors (due to linguistic or cultural differences), but this pattern is not what we observe. Instead, there is more consistency in the correlations between coefficients across languages than would be expected by chance. As shown in Figure\ \@ref(fig:aoapred-consistency), each language's mean pairwise correlation with other languages' coefficients (i.e., the correlation of coefficients for English with coefficients for Russian, for Spanish, and so on) is outside of bootstrapped estimates in a randomized baseline created by shuffling predictor coefficients within language. The pairwise correlations are more consistent for production (mean _r_ = `r roundp(mean(filter(plt_coef_summary, measure == "produces")$mean_cor))`) than for comprehension (mean _r_ = `r roundp(mean(filter(plt_coef_summary, measure == "understands")$mean_cor))`), in which French and Russian effects are more idiosyncratic.
 
 ```{r aoapred-consistency, fig.width=6, fig.height=3, fig.align='center', fig.cap="Correlations of coefficient estimates between languages. Each point represents the mean of one language's coefficients' correlation with each other language's coefficients, with the vertical line indicating the overall mean across languages. The shaded region and line show a bootstrapped 95\\% confidence interval of a randomized baseline where predictor coefficients are shuffled within language."}
 ggplot(plt_coef_summary, aes(x = mean_cor, y = language)) +
@@ -260,7 +260,7 @@ To examine the substructure of predictor variability, we followed Chapter \@ref(
 coef_clust_segments <- coef_clust %>%
   mutate(segment = map(clust, ~.x %>% ggdendro::segment())) %>%
   select(-data, -clust) %>%
-  unnest()
+  unnest(cols = segment)
 
 typology <- yaml::read_yaml("data/items-prediction/typology.yaml") %>%
   data_frame(label = names(.), family = unlist(.)) %>%
@@ -269,7 +269,7 @@ typology <- yaml::read_yaml("data/items-prediction/typology.yaml") %>%
 coef_clust_labels <- coef_clust %>%
   mutate(segment = map(clust, ~.x %>% ggdendro::label())) %>%
   select(-data, -clust) %>%
-  unnest() %>%
+  unnest(cols = segment) %>%
   mutate(label = label %>% str_remove(" \\(.*\\)")) %>%
   left_join(typology)
 

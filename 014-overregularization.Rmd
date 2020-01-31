@@ -75,8 +75,8 @@ vocab_models <- overreg_by_kid_nonzero %>%
   mutate(
     model = map(data, vocab_model),
     rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
-    rsq_print = glue::glue("r² = {sprintf('%.2f', round(rsq, 2))}")
-    # rsq_print = glue::glue("italic(r)^2 == {sprintf('%.2f', round(rsq, 2))}")
+    rsq_print = glue("r² = {roundp(rsq)}")
+    # rsq_print = glue("italic(r)^2 == {sprintf('%.2f', round(rsq, 2))}")
   )
 
 vocab_step <- 0.01
@@ -97,8 +97,8 @@ age_models <- overreg_by_kid_nonzero %>%
   mutate(
     model = map(data, age_model),
     rsq = map_dbl(model, ~summary(.x)$adj.r.squared),
-    # rsq_print = glue::glue("r² = {sprintf('%.2f', round(rsq, 2))}")
-    rsq_print = glue::glue("italic(r)^2 == {sprintf('%.2f', round(rsq, 2))}")
+    # rsq_print = glue("r² = {sprintf('%.2f', round(rsq, 2))}")
+    rsq_print = glue("r² = {roundp(rsq)}")
   )
 ages <- overreg_by_kid_nonzero %>%
   distinct(language, lexical_category, age) %>%
@@ -151,7 +151,7 @@ ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
   geom_line(aes(y = .fitted), size = 1.2, colour = .pal()(1),
             data = age_fits) +
   geom_text(aes(label = rsq_print), x = 15.1, y = 0.95, size = 3, hjust = 0,
-            family = .font, parse = TRUE,
+            family = .font, #parse = TRUE,
             data = age_models) +
   scale_x_continuous(limits = c(16, 36),
                      breaks = seq(16, 36, by = 4),
@@ -176,7 +176,7 @@ ggplot(overreg_by_kid_nonzero, aes(x = production_prop, y = prop)) +
                      name = "Productive vocabulary size (proportion of items)") +
   scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
                      breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
-                     name = glue::glue("Proportion of items overregularized"))
+                     name = glue("Proportion of items overregularized"))
 ```
 
 Interestingly, the same finding holds true for vocabulary. Overregularization does not appear to be tightly predicted by overall vocabulary size. Figure \@ref(fig:overreg-fits-vocab) shows findings from this analysis. While some slopes might be slightly higher (especially for verbs), overall the total developmental change predicted by vocabulary size seems limited. What predicts reports of overregularization then? 
@@ -192,7 +192,7 @@ overreg_lexcat_comp <- overreg_by_kid %>%
 lexcat_cors <- overreg_lexcat_comp %>%
   group_by(language) %>%
   summarise(rsq = cor(nouns, verbs) ^ 2,
-            rsq_print = sprintf("italic(r)^2 == %.2f", rsq))
+            rsq_print = glue("r² = {roundp(rsq)}"))
 
 ggplot(overreg_lexcat_comp, aes(x = nouns, y = verbs)) +
   facet_wrap(~language, nrow = 1) + #, scales = "free") +
@@ -201,7 +201,7 @@ ggplot(overreg_lexcat_comp, aes(x = nouns, y = verbs)) +
               colour = .grey, size = 0.9) +
   geom_smooth(method = "lm", se = FALSE, colour = .pal()(1)) +
   geom_text(aes(label = rsq_print), x = 0.05, y = 0.95, size = 3, hjust = 0,
-            family = .font, parse = TRUE, data = lexcat_cors) +
+            family = .font, data = lexcat_cors) + #parse = TRUE,
   scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
                      breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
                      name = "Proportion of nouns overregularized") +
@@ -210,7 +210,7 @@ ggplot(overreg_lexcat_comp, aes(x = nouns, y = verbs)) +
                      name = "Proportion of verbs\n overregularized")
 ```
 
-One positive finding from our exploration is shown in Figure \@ref(fig:overreg-lexcat-comp). The majority of children do not overregularize, but those who do are doing so across nouns and verbs quite consistently, across all of the languages in our sample. $r^2$ values for the relationship between noun and verb over-regularizations range from `r round(min(lexcat_cors$rsq),2)` -- `r round(max(lexcat_cors$rsq),2)`, considerably higher than the relationships documented above. Thus, at a minimum we see within-individual stability in this measure. But we do not yet have a good way of predicting when particular children will show non-zero overregularization.
+One positive finding from our exploration is shown in Figure \@ref(fig:overreg-lexcat-comp). The majority of children do not overregularize, but those who do are doing so across nouns and verbs quite consistently, across all of the languages in our sample. *r*² values for the relationship between noun and verb over-regularizations range from `r roundp(min(lexcat_cors$rsq))` to `r roundp(max(lexcat_cors$rsq))`, considerably higher than the relationships documented above. Thus, at a minimum we see within-individual stability in this measure. But we do not yet have a good way of predicting when particular children will show non-zero overregularization.
 
 ## Longitudinal data
 
@@ -296,7 +296,7 @@ ggplot(eng_long_grouped, aes(x = age, y = prop)) +
             x = min(eng_long_grouped$age), y = max(eng_long_grouped$prop),
             data = eng_long_cat_props) +
   .scale_colour_numerous(guide = FALSE) +
-  labs(x = "Age (months)", y = glue::glue("Proportion of items overregularized")) +
+  labs(x = "Age (months)", y = glue("Proportion of items overregularized")) +
   scale_x_continuous(breaks = seq(18, 30, 3)) +
   theme(strip.placement = "outside")
 ```

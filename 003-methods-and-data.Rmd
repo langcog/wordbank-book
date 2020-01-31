@@ -1,8 +1,3 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
 # Methods and Data {#methods-and-data}
 
 Note:
@@ -73,7 +68,7 @@ This section gives a broad overview of the data we have available. Unlike projec
 
 ### Data provenance
 
-As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html). Several of these datasets were transferred second-hand from a pre-existing database [CLEX-CDI; @jorgensen2010], while many of the others were contributed directly via electronic or paper forms. In the case of paper forms, we re-keyed the forms using double-entry methods (either ourselves or via a commercial contractor).^[In a check for errors in the re-keying of one Korean dataset, we found that there were 4 incorrect fields in 10 full records for an error rate of ~`r round(100 * 4/6790, digits = 2)`%.]
+As mentioned above, datasets come from a variety of sources. In all cases, the preferred citation for each dataset and its contributor is given on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors.html). Several of these datasets were transferred second-hand from a pre-existing database [CLEX-CDI; @jorgensen2010], while many of the others were contributed directly via electronic or paper forms. In the case of paper forms, we re-keyed the forms using double-entry methods (either ourselves or via a commercial contractor).^[In a check for errors in the re-keying of one Korean dataset, we found that there were 4 incorrect fields in 10 full records for an error rate of ~`r roundp(100 * 4/6790)`%.]
 
 Each of these datasets is then imported to the database by creating a custom import key that matches individual columns of the dataset to particular database fields (e.g., item types like words or gestures, or standardized demographic fields). These mappings are preserved along with the raw data so that they can be re-checked later.  
 

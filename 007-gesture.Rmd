@@ -2,7 +2,7 @@
 
 In addition to containing early words, CDI forms designed for infants (the "Words and Gestures" family) also contain a set of items designed to probe early gestural communication. This chapter explores these items. Our goals are to examine (1) the robustness of the measurement properties of these non-verbal parent-report measures, (2) the degree of cross-linguistic consistency and variability of reporting milestones like first pointing, as well as social routines like waving hi and playing peekaboo, and (3) the relationships between gestural development and linguistic development. 
 
-# Introduction 
+## Introduction 
 
 Children's most recognizable early linguistic accomplishments are surely their first words -- a topic we turn to in the Chapter \@ref(items-consistency). However, even before infants approach this important milestone, they are already communicating through another modality: gesture. For example, a child who extends their hands and opens and closes their fist likely wants something to be given to them. A child who points to a bird up in a tree likely wants to get their caregiver's attention so that they can share in the delight together. Children's early vocalizations are also sometimes accompanied by gestures, for example, a child might raise both of their hands in the air and say "up!" The social and communicative routines that these gestures enable may themselves form part of the supportive context in which early language learning happens [@bruner1985]. In sum, gestures are an important aspect of children's early communicative development.
 
@@ -21,9 +21,6 @@ Finally, older children's gestures also take on a "true" symbolic meaning, as a 
 
 In sum, both early deictic gestures and later symbolic gestures have played an important role in shaping theories of communication and language learning. Thus, their cross-linguistic variability and their relationship to other aspects of language learning are important topics for investigation.
 
-```{r gesture-digits}
-options(scipen=1, digits=2)
-```
 
 ```{r gesture-load_data, eval = FALSE}
 wgs <- get_instruments() %>%
@@ -261,7 +258,7 @@ kable(mean_crossling_aoas, digits = 2, caption = 'Summary statistics for ages of
       col.names = c("Item", "Mean", "SD", "N"))
 ```
 
-Table \@ref(tab:gesture-crossling-first) and Figure \@ref(fig:gesture-crossling-fig) show both consistency and variability across items. As in the learning of words, the means and variances of these ages of acquisition were correlated [_r_ = `r signif(cor(mean_crossling_aoas$mean, mean_crossling_aoas$sd), digits = 2)`; @mollica2017]. The primary outliers were _request_, which appears to be produced surprisingly late in American English, and _shrug_ which was produced surprisingly late by French-learning infants. In general, however, most of the cross-linguistic differences appear to be consistent across the gestures (i.e. French-learning infants gestures later). It is difficult to tell from this small sample of mostly European languages whether these differences are driven by linguistic factors or rather by properties of our samples or variability in parents' interpretation of the form. Nonetheless, they provide some evidence for consistency in the process of gestural development cross-linguistically. To get additional leverage on this process, we next consider the full set of gestures.
+Table \@ref(tab:gesture-crossling-first) and Figure \@ref(fig:gesture-crossling-fig) show both consistency and variability across items. As in the learning of words, the means and variances of these ages of acquisition were correlated [_r_ = `r roundp(cor(mean_crossling_aoas$mean, mean_crossling_aoas$sd))`; @mollica2017]. The primary outliers were _request_, which appears to be produced surprisingly late in American English, and _shrug_ which was produced surprisingly late by French-learning infants. In general, however, most of the cross-linguistic differences appear to be consistent across the gestures (i.e. French-learning infants gestures later). It is difficult to tell from this small sample of mostly European languages whether these differences are driven by linguistic factors or rather by properties of our samples or variability in parents' interpretation of the form. Nonetheless, they provide some evidence for consistency in the process of gestural development cross-linguistically. To get additional leverage on this process, we next consider the full set of gestures.
 
 ```{r gesture-crossling-fig, fig.width = 8, fig.height = 5, fig.cap='Distribution of ages of acquistion for each First Gestures item for each language.'}
 crossling_aoas %>%
@@ -319,9 +316,9 @@ intercor_data <- kid_type_data %>%
   summarise(mean = mean(correlation), sd = sd(correlation))
 ```
 
-Given both the similarity and the variability in the developmental trajectories of different gestures, as well as the cross-linguistic variability in first gestures, a natural next step is to quantify the relationship of gestures to each-other. We begin by computing the average intercorrelation between each of these gesture categories. In this analysis, we take gesture categories in pairs (e.g., Adult Gestures and First Gestures) and ask how the proportion of items that children know in one predict the proportion of items they know in the other. For American English learning children, the proportion of gestures they know across categories is correlated at _r_ = `r intercor_data %>% filter(language == "English (American)") %>% pull(mean) %>% signif(2)` -- nearly identical to the value of ~.6 reported by @fenson1994. For comparison, the same intercorrelation computed across categories of words (e.g. "animals" and "places") yield `r word_intercor_data %>% filter(measure == "produces") %>% pull(mean) %>% signif(2)` for production and `r word_intercor_data %>% filter(measure == "understands") %>% pull(mean) %>% signif(2)` for comprehension.
+Given both the similarity and the variability in the developmental trajectories of different gestures, as well as the cross-linguistic variability in first gestures, a natural next step is to quantify the relationship of gestures to each-other. We begin by computing the average intercorrelation between each of these gesture categories. In this analysis, we take gesture categories in pairs (e.g., Adult Gestures and First Gestures) and ask how the proportion of items that children know in one predict the proportion of items they know in the other. For American English learning children, the proportion of gestures they know across categories is correlated at _r_ = `r intercor_data %>% filter(language == "English (American)") %>% pull(mean) %>% roundp()` -- nearly identical to the value of ~0.6 reported by @fenson1994. For comparison, the same intercorrelation computed across categories of words (e.g. "animals" and "places") yield `r word_intercor_data %>% filter(measure == "produces") %>% pull(mean) %>% roundp(2)` for production and `r word_intercor_data %>% filter(measure == "understands") %>% pull(mean) %>% roundp()` for comprehension.
 
-This cross-category intercorrelation is quite similar cross-linguistically, ranging from `r signif(min(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == min(mean)) %>% pull(language)` to `r signif(max(intercor_data$mean), digits = 2)` in `r intercor_data %>% filter(mean == max(mean)) %>% pull(language)`. The full set of intercorrelations is shown in Table \@ref(tab:gesture-intercor-table).
+This cross-category intercorrelation is quite similar cross-linguistically, ranging from `r roundp(min(intercor_data$mean))` in `r intercor_data %>% filter(mean == min(mean)) %>% pull(language)` to `r roundp(max(intercor_data$mean))` in `r intercor_data %>% filter(mean == max(mean)) %>% pull(language)`. The full set of intercorrelations is shown in Table \@ref(tab:gesture-intercor-table).
 
 ```{r gesture-intercor-table}
 kable(intercor_data, digits = 3, col.names = c("Language", "Mean", "SD"),
@@ -388,7 +385,7 @@ gest_lang_data <- binary_data %>%
   separate(id, into = c("language", "measure"), "_") %>%
   spread(measure, cor)
 
-kable(gest_lang_data, digits = 3, caption = "Correlation with gesture subscale for each vocabulary subscale in each language.",
+kable(gest_lang_data, digits = 2, caption = "Correlation with gesture subscale for each vocabulary subscale in each language.",
       col.names = c("Language", "Comprehension", "Production"))
 ```
 

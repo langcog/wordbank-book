@@ -1,12 +1,4 @@
-```{r aoapred-setup} 
-# pander::panderOptions("round", 2)
-is_integer <- function(x) all(all.equal(x, as.integer(x)) == TRUE)
-inline_hook <- function(x) {
-  if (!is_integer(x) && is.numeric(x)) x <- sprintf("%.2f", round(x, 2))
-  paste(as.character(x), collapse = ", ")
-}
-knit_hooks$set(inline = inline_hook)
-
+```{r aoapred-setup}
 data_path <- "data/items-prediction"
 data_files <- list.files(data_path, pattern = "*.RData", full.names = TRUE,
                          recursive = TRUE)
@@ -55,20 +47,20 @@ mean_term_measure_coefs <- lang_coefs %>%
             n_neg = sum(estimate < 0)) %>%
   arrange(desc(abs(mean_estimate)))
 
-mean_term_coef <- function(t, r = 2) {
+mean_term_coef <- function(t, d = 2) {
  coef <- mean_term_coefs %>%
     filter(term == t) %>%
     pull(mean_estimate) %>%
-    round(r)
- sprintf("$\\bar{\\beta} =$ %s", coef)
+    roundp(d)
+ glue("$\\beta$ = {coef}")
 }
 
 mean_term_measure_coef <- function(meas, t) {
  coef <- mean_term_measure_coefs %>%
     filter(term == t, measure == meas) %>%
     pull(mean_estimate) %>%
-    round(2)
- sprintf("$\\bar{\\beta} =$ %s", coef)
+    roundp()
+ glue("$\\beta$ = {coef}")
 }
 
 most_opposite <- function(ex_terms) {
@@ -119,8 +111,8 @@ mean_lexcat_coef <- function(t, lc) {
  coef <- mean_lexcat %>%
     filter(term == t, lexical_category == lc) %>%
     pull(mean_estimate) %>%
-    round(2)
- sprintf("$\\bar{\\beta} =$ %s", coef)
+    roundp()
+ glue("$\\beta$ = {coef}")
 }
 ```
 
@@ -151,8 +143,8 @@ lexcat_mean_cor <- function(lc) {
     summarise(mean_cor = mean(mean_cor)) %>%
     filter(lexical_category == lc) %>%
     pull(mean_cor) %>%
-    round(2)
-  sprintf("$\\bar{r} =$ %s", lexcat_cor)
+    roundp()
+  glue("_r_ = {lexcat_cor}")
 }
 ```
 
@@ -215,8 +207,8 @@ mean_pair_cor <- function(p1, p2) {
   pair_cor <- mean_predictor_cors %>%
     filter(predictor1 == p1 & predictor2 == p2) %>%
     pull(mean_cor) %>%
-    round(2)
-  sprintf("$\\bar{r} =$ %s", pair_cor)
+    roundp()
+  glue("_r_ = {pair_cor}")
 }
 ```
 
@@ -232,7 +224,7 @@ predictor_data <- uni_model_data %>%
 
 predictor_vif <- function(lang_data, predictor) {
   others <- paste(predictors[predictors != predictor], collapse = ' + ')
-  predictor_model <- glue::glue("{predictor} ~ {others}") %>%
+  predictor_model <- glue("{predictor} ~ {others}") %>%
     as.formula() %>%
     lm(data = lang_data)
   1 / (1 - summary(predictor_model)$r.squared)

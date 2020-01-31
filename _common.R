@@ -3,6 +3,8 @@ library(langcog)
 library(knitr)
 library(feather)
 library(tidyverse)
+library(glue)
+library(kableExtra)
 
 opts_chunk$set(
   message = FALSE,
@@ -83,8 +85,13 @@ inst_colours["French (Québécois) WS"] <- inst_colours["French (Quebecois) WS"]
 WGs <- c("WG", "IC", "Oxford CDI")
 WSs <- c("WS", "TC")
 
-printp <- function(x, min_val = 0.001) {
-  if (x < min_val) sprintf("< %s", min_val) else sprintf("%.3f", x)
+# round and print trailing zeroes
+roundp <- function(x, digits = 2) {
+  sprintf(glue('%.{digits}f'), round(x, digits)) %>% str_replace("-", "–")
+}
+
+print_pvalue <- function(x, min_val = 0.001) {
+  if (x < min_val) glue("< {min_val}") else glue("= {roundp(x)}")
 }
 
 label_caps <- as_labeller(function(value) {

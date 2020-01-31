@@ -230,7 +230,7 @@ comp_vocab <- ex_fits_vocab %>% filter(.fitted > ex_p * multiplier) %>% filter(v
 comp_age <- ex_fits_age %>% filter(.fitted > ex_p * multiplier) %>% filter(age == min(age))
 ```
 
-This model shows a large effect of vocabulary ($\beta$ = `r round(filter(mod_effects, term == "production_prop")$estimate, 2)`, _t_ = `r round(filter(mod_effects, term == "production_prop")$statistic, 2)`), with a relatively smaller effect of age ($\beta$ = `r round(filter(mod_effects, term == "age")$estimate, 2)`, _t_ = `r round(filter(mod_effects, term == "age")$statistic, 2)`). These effects mean that, for example, a `r ex_age`-month-old learning American English with a vocabulary size of `r ex_vocab` words has a `r sprintf("%.1f%%", ex_p * 100)` chance of combining words. At the same age of `r ex_age` months, a child is more likely to combine by about a factor of `r multiplier` if she has a vocabulary size of `r comp_vocab$vocab` words (at `r sprintf("%.1f%%", comp_age$.fitted * 100)`). Conversely, at the same vocabulary size of `r ex_vocab` words, a child is more likely to combine by about a factor of `r multiplier` if she is `r comp_age$age` months old (at `r sprintf("%.1f%%", comp_vocab$.fitted * 100)`). In addition, there is a substantial negative interaction of vocabulary and age ($\beta$ = `r round(filter(mod_effects, term == "production_prop:age")$estimate, 2)`, _t_ = `r round(filter(mod_effects, term == "production_prop:age")$statistic, 2)`), indicating that older children are more likely to be combining words, even with smaller vocabularies. This result parallels others reported below suggesting that there are age-related components in grammatical performance, at least for production of word combinations, that are unaccounted for by vocabulary alone.
+This model shows a large effect of vocabulary ($\beta$ = `r roundp(filter(mod_effects, term == "production_prop")$estimate)`, _t_ = `r roundp(filter(mod_effects, term == "production_prop")$statistic)`), with a relatively smaller effect of age ($\beta$ = `r roundp(filter(mod_effects, term == "age")$estimate)`, _t_ = `r roundp(filter(mod_effects, term == "age")$statistic)`). These effects mean that, for example, a `r ex_age`-month-old learning American English with a vocabulary size of `r ex_vocab` words has a `r roundp(ex_p * 100, 0)`% chance of combining words. At the same age of `r ex_age` months, a child is more likely to combine by about a factor of `r multiplier` if she has a vocabulary size of `r comp_vocab$vocab` words (at `r roundp(comp_age$.fitted * 100, 0)`%). Conversely, at the same vocabulary size of `r ex_vocab` words, a child is more likely to combine by about a factor of `r multiplier` if she is `r comp_age$age` months old (at `r roundp(comp_vocab$.fitted * 100, 0)`%). In addition, there is a substantial negative interaction of vocabulary and age ($\beta$ = `r roundp(filter(mod_effects, term == "production_prop:age")$estimate)`, _t_ = `r roundp(filter(mod_effects, term == "production_prop:age")$statistic)`), indicating that older children are more likely to be combining words, even with smaller vocabularies. This result parallels others reported below suggesting that there are age-related components in grammatical performance, at least for production of word combinations, that are unaccounted for by vocabulary alone.
 
 <!-- Overall, although there was some cross-linguistic variation -- perhaps due to true variation and perhaps due to idiosyncrasies of individual forms or datasets -- and of course substantial individual variation, word combination emerged around 24 months and 100 words on average.  -->
 
@@ -296,17 +296,17 @@ plot_vocab_type <- function(type) {
                        name = "Productive vocabulary size (proportion of items)") +
     scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
                        breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
-                       name = glue::glue("{type} score (proportion of items)"))
+                       name = glue("{type} score (proportion of items)"))
 }
 ```
 
-We next examine the correlation between the proportion of Word Form items and Complexity items completed and the proportion of vocabulary items completed. First reported by @bates1994, these correlations are extremely robust, and can be observed in all of our datasets. Figure \@ref(fig:gram-grammar-plot-wordform) shows this relation for Word Form items. We fit generalized linear regressions predicting Word Form score or Complexity score as a function of linear, quadratic, cubic, and quartic terms of productive vocabulary size (subtracting the intercept to ensure that the function passed through the origin, because a vocabulary size of 0 necessarily implies scores of 0). The total *r*² for these relationships ranges from `r round(min(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)` to `r round(max(filter(vocab_models, coded_type == "Word Forms")$rsq), 2)`.
+We next examine the correlation between the proportion of Word Form items and Complexity items completed and the proportion of vocabulary items completed. First reported by @bates1994, these correlations are extremely robust, and can be observed in all of our datasets. Figure \@ref(fig:gram-grammar-plot-wordform) shows this relation for Word Form items. We fit generalized linear regressions predicting Word Form score or Complexity score as a function of linear, quadratic, cubic, and quartic terms of productive vocabulary size (subtracting the intercept to ensure that the function passed through the origin, because a vocabulary size of 0 necessarily implies scores of 0). The total *r*² for these relationships ranges from `r roundp(min(filter(vocab_models, coded_type == "Word Forms")$rsq))` to `r roundp(max(filter(vocab_models, coded_type == "Word Forms")$rsq))`.
 
 ```{r gram-grammar-plot-wordform, fig.cap="Each child's Word Forms score as a function of their vocabulary size in each language (curves show model fits).", dependson="gram-grammar-data-plot"}
 plot_vocab_type("Word Forms")
 ```
 
-Complexity items show the same relationship (Figure \@ref(fig:gram-grammar-plot-complexity)), typically with equal or greater strength (depending on data density and number of items). *r*² values vary from `r round(min(filter(vocab_models, coded_type == "Complexity")$rsq), 2)` to `r round(max(filter(vocab_models, coded_type == "Complexity")$rsq), 2)`.  Some ceiling effects are observed.
+Complexity items show the same relationship (Figure \@ref(fig:gram-grammar-plot-complexity)), typically with equal or greater strength (depending on data density and number of items). *r*² values vary from `r roundp(min(filter(vocab_models, coded_type == "Complexity")$rsq))` to `r roundp(max(filter(vocab_models, coded_type == "Complexity")$rsq))`.  Some ceiling effects are observed.
 
 ```{r gram-grammar-plot-complexity, fig.cap="Each child's Complexity score as a function of their vocabulary size in each language (curves show model fits).", fig.height=6, dependson="gram-grammar-data-plot"}
 plot_vocab_type("Complexity")
@@ -394,7 +394,7 @@ grammar_age_plot <- function(type) {
                        name = "Productive vocabulary size (proportion of items)") +
     scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
                        breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
-                       name = glue::glue("{type} score (proportion of items)")) +
+                       name = glue("{type} score (proportion of items)")) +
     .scale_colour_discrete(name = "") +
     theme(legend.position = "top")
 }
@@ -551,7 +551,7 @@ We then a fit logistic regression separately for every item, predicting whether 
 
 Figure \@ref(fig:gram-item-effects-plot) shows for each item, the coefficients of vocabulary size, age, and their interaction. In general, age effects are smallest for Word Form items, larger for Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions.
 
-```{r gram-item-effects-demo, fig.cap="Model fits for two example items."}
+```{r gram-item-effects-demo, fig.height=3, fig.cap="Model fits for two example items."}
 demo_fits <- read_feather("data/grammar/demo_fits.feather")
 
 ggplot(demo_fits, aes(x = production_prop, y = .fitted, colour = factor(age))) +
@@ -609,7 +609,7 @@ In our next set of analyses, we take advantage of the presence of longitudinal d
 
 Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences [@rogosa1980], it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual -- as is clearly the case for language-related measures -- these models are misspecified, since they assume that the *only* source of consistency between individuals is temporal autocorrelation [@hamaker2015]. To address this issue, @hamaker2015 propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure \@ref(fig:grammar-ri-clpm)). This is the approach used by @brinchmann2018, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below. 
 
-```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from Hamaker et al., 2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", out.height="30%"}
+```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from @hamaker2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", out.width="60%"}
 include_graphics("images/ri-clpm.png")
 ```
 
@@ -643,12 +643,13 @@ norway_n <- norway_wide %>%
 
 kable(norway_n,
       caption = "Number of children in the Norwegian longitudinal dataset with each number of observations.",
-      col.names = c("Number of observations", "Number of children")) 
+      col.names = c("Number of observations", "Number of children")) %>%
+  kable_styling(full_width = FALSE)
 ```
 
 Using these two datasets, we fit RI-CLPM models.^[We gratefully acknowledge code from [jflournoy.github.io/2017/10/20/riclpm-lavaan-demo](https://jflournoy.github.io/2017/10/20/riclpm-lavaan-demo).] These models measure the magnitude of the reciprocal relationships between grammar and vocabulary over time. Coefficient weights on the paths between latent grammar and vocabulary are then interpretable as temporal influences. Following the RI-CLPM specification in @hamaker2015, we posited latent variables $\kappa$ and $\omega$ that describe stability in vocabulary and grammar, respectively. 
 
-Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant ($\beta_{p1-c2} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est,2)`$, $p = `r  round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue,2)`$, $\beta_{p2-c3} = `r round(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est,2)`$, $p < .001`$). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).
+Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant ($\beta_{p1-c2}$ = `r roundp(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est)`, _p_ `r print_pvalue(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue)`, $\beta_{p2-c3}$ = `r roundp(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est)`, _p_ `r print_pvalue(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue)`). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).
 
 ```{r grammar-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts.", fig.height=4}
 dallas_plot <- semPlot::semPlotModel(clpm_fit_dallas)
@@ -662,7 +663,6 @@ semPlot::semPaths(dallas_plot, what="est",
                                            1, 3, 2, 3, 3, 3), 
                                   byrow=TRUE, ncol = 2),
                   edge.label.cex = 1)
-
 ```
 
 Figure \@ref(fig:grammar-norway-plot) shows the analogous fitted model for the Norwegian data.^[Because of the high degree of missingness in this dataset, fititng these models was difficult and so we interpret standard errors with some caution.] Coefficient estimates from vocabulary to grammar are large; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table \@ref(tab:grammar-norway-clpm-tab). 
@@ -686,15 +686,19 @@ semPlot::semPaths(norway_plot, what="est",
 ```
 
 ```{r grammar-norway-clpm-tab}
-filter(lavaan::parameterEstimates(clpm_fit_norway), 
-       str_detect(label, "beta") | str_detect(label, "gamma")) %>% 
+params_table <- lavaan::parameterEstimates(clpm_fit_norway) %>%
+  filter(str_detect(label, "beta") | str_detect(label, "gamma")) %>% 
   select(lhs, rhs, est, se, pvalue) %>%
-  mutate(pvalue = sprintf("%.3f",pvalue), 
-         pvalue = ifelse(pvalue == "0.000", "< 0.001", pvalue)) %>%
-  kable(escape = FALSE, digits = 3,
-        format.args = list(big.mark = ","),
-        caption = "Coefficient estimates for cross-lag parameters in the Norwegian regression model.",
-        col.names = c("Predicted", "Predictor","Beta","SE","p")) 
+  mutate(pvalue = if_else(pvalue < 0.001, "< 0.001", roundp(pvalue, 3)),
+         est = roundp(est, 3),
+         se = roundp(se, 3)) %>%
+  rename(Predicted = lhs, Predictor = rhs, β = est, SE = se)
+
+colnames(params_table)[5] <- cell_spec("p", italic = TRUE)
+kable(params_table, escape = FALSE,
+      align = c(rep("l", 2), rep("r", 3)),
+      caption = "Coefficient estimates for cross-lag parameters in the Norwegian regression model." )%>%
+  kable_styling(full_width = FALSE)
 ```
 
 

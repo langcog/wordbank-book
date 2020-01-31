@@ -57,14 +57,14 @@ demo_data_plot <- function(demo, form, measure) {
                        breaks = .ages,
                        name = "Age (months)") +
     scale_y_continuous(breaks = c(0, .5, 1), limits = c(0, 1), 
-                       name = glue::glue("Median {measure}")) +
+                       name = glue("Median {measure}")) +
     theme(legend.position = "top",
           strip.text.x = element_text(size = 7)) + 
     scale_size(guide = FALSE)
 }
 
 demo_data_cap <- function(demo_str, form, measure) {
-  glue::glue("Differences in {form} {measure} scores by {tolower(demo_label(demo_str))}, plotted across age by language.")
+  glue("Differences in {form} {measure} scores by {tolower(demo_label(demo_str))}, plotted across age by language.")
 }
 
 demo_mmad_age_plot <- function(demo, form, measure, advantage) {
@@ -76,14 +76,14 @@ demo_mmad_age_plot <- function(demo, form, measure, advantage) {
     geom_smooth(span = 1, aes(group = 1)) +
     geom_hline(yintercept = 0, lty = .refline, col = .grey) + 
     xlab("Age (months)")  + 
-    ylab(glue::glue("MMAD ({advantage} advantage)")) +
+    ylab(glue("MMAD ({advantage} advantage)")) +
     scale_color_manual(values = inst_colours, name = "") + 
     guides(colour = guide_legend(ncol = 4)) +
     theme(legend.position = "bottom",
           legend.text = element_text(size = 7))
 }
 demo_mmad_age_cap <- function(form, measure, advantage) {
-  glue::glue("MMAD {advantage} advantage for {form} {measure} data in each language across age.")
+  glue("MMAD {advantage} advantage for {form} {measure} data in each language across age.")
 }
 
 demo_mmad_plot <- function(demo, form, measure, advantage) {
@@ -94,12 +94,12 @@ demo_mmad_plot <- function(demo, form, measure, advantage) {
          aes(x = interaction(language, form, sep = .inst_sep), y = mmad_mean)) + 
     geom_point() +
     coord_flip() +
-    ylab(glue::glue("MMAD ({advantage} advantage)")) +
+    ylab(glue("MMAD ({advantage} advantage)")) +
     xlab("") +
     geom_hline(aes(yintercept = 0), lty = .refline, color = .grey)
 }
 demo_mmad_cap <- function(form, measure, advantage) {
-  glue::glue("MMAD {advantage} advantage for {form} {measure} data in each language averaged over age.")
+  glue("MMAD {advantage} advantage for {form} {measure} data in each language averaged over age.")
 }
 ```
 
@@ -112,7 +112,7 @@ demo_int_plot <- function(demo_str, form, measure) {
   ggplot(aes(x = beta, y = language)) +
     geom_point() +
     geom_vline(xintercept = 0, linetype = .refline, colour = .grey) +
-    labs(x = glue::glue("Interaction between age and {tolower(demo_label(demo_str))}"), y = "")
+    labs(x = glue("Interaction between age and {tolower(demo_label(demo_str))}"), y = "")
 }
 ```
 
@@ -124,7 +124,7 @@ Using meta-analytic tools, @hyde1988 found that differences in verbal ability we
 
 Of course, a complication of our analysis is the potential presence of caregiver reporting bias added to any true sex differences. In contrast to these findings suggesting modest and consistent female advantages, there is substantial cross-linguistic variation in gender stereotypes [@nosek2009]. Thus, a second plausible speculation is that, if stereotype-based reporting bias plays a major role in gender effects, the cross-national variance should be high and correlated with gender stereotypes. 
 
-Despite these predictions, it almost goes without saying that any finding from our analyses here is subject to the full range of possible explanations articulated in the literature. These range from caregiver and academic socialization (e.g., self-fulfilling expectations that girls are more verbal) to "self socialization" in which affiliative differences produce differences in behavior, all the way to biological explanations.^[As an illustrative example, some literature has implicated fetal testosterone in sex differences in verbal ability. @lutchmaya2001 used CDI measures and recovered an effect somewhat similar to ours with a small sample (_d_ = .64 at 18 months with _N_ = 87), and _d_ = .60 at 24 months for a subsample). They found some relationship with fetal testosterone across sexes, but it did not hold up within sex (perhaps due to small samples). The mechanism by which testosterone translates into vocabulary growth is unclear however.] While descriptive data of the type cited above (and reported in our analyses below) can be more or less consistent with some of these theories, conclusive evidence will not be forthcoming.
+Despite these predictions, it almost goes without saying that any finding from our analyses here is subject to the full range of possible explanations articulated in the literature. These range from caregiver and academic socialization (e.g., self-fulfilling expectations that girls are more verbal) to "self socialization" in which affiliative differences produce differences in behavior, all the way to biological explanations.^[As an illustrative example, some literature has implicated fetal testosterone in sex differences in verbal ability. @lutchmaya2001 used CDI measures and recovered an effect somewhat similar to ours with a small sample (_d_ = 0.64 at 18 months with _N_ = 87), and _d_ = 0.60 at 24 months for a subsample). They found some relationship with fetal testosterone across sexes, but it did not hold up within sex (perhaps due to small samples). The mechanism by which testosterone translates into vocabulary growth is unclear however.] While descriptive data of the type cited above (and reported in our analyses below) can be more or less consistent with some of these theories, conclusive evidence will not be forthcoming.
 
 Our analyses below replicate and extend the results of @eriksson2012, who used an overlapping sample of CDI data from 12 languages to explore sex effects on vocabulary size.^[An earlier version of this analysis was reported in @frank2016.] 
 
@@ -150,7 +150,7 @@ $$d = \frac{\mu_2 - \mu_1}{\sigma_{pooled}}$$
 
 But, as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components: the difference between medians, divided by the MAD. (We call this the MMAD; Appendix \@ref(appendix-variability) shows that it is comparable to Cohen's $d$ as a measure of effect size). 
 
-Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age (Figure \@ref(fig:demo-mmad-age-plot-sex-wg-comp)). For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability (Figure \@ref(fig:demo-mmad-plot-sex-wg-comp)). The overall median for these `r nrow(analyses$WG.comprehension$sex$mmad_summary)` languages is quite small as well, `r round(median(analyses$WG.comprehension$sex$mmad_summary$mmad_mean),2)`. In summary, there is some evidence for a modest female advantage in comprehension.
+Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age (Figure \@ref(fig:demo-mmad-age-plot-sex-wg-comp)). For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability (Figure \@ref(fig:demo-mmad-plot-sex-wg-comp)). The overall median for these `r nrow(analyses$WG.comprehension$sex$mmad_summary)` languages is quite small as well, `r roundp(median(analyses$WG.comprehension$sex$mmad_summary$mmad_mean))`. In summary, there is some evidence for a modest female advantage in comprehension.
 
 ```{r demo-mmad-age-plot-sex-wg-comp, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'comprehension', 'female'), dependson="demo-plot-funs"}
 demo_mmad_age_plot("sex", "WG", "comprehension", "female")
@@ -172,7 +172,7 @@ demo_data_plot(sex, "WS", "production")
 demo_int_plot("sex", "WS", "production")
 ```
 
-We next turn to the MMAD effect size measure (see Figure \@ref(fig:demo-mmad-age-plot-sex-ws-prod) and Figure \@ref(fig:demo-mmad-plot-sex-ws-prod)). Here we see a relatively consistent difference across ages with perhaps a slight downward trend in effect size with age. This downward trend might be a function of ceiling effects on the form, however, as seen in the model-fit curves above for, e.g., Danish. When variability is limited by the form ceiling, effect size estimates will necessarily be depressed. The median female advantage is `r round(median(analyses$WS.production$sex$mmad_summary$mmad_mean),2)`, substantially larger than that seen in early comprehension.
+We next turn to the MMAD effect size measure (see Figure \@ref(fig:demo-mmad-age-plot-sex-ws-prod) and Figure \@ref(fig:demo-mmad-plot-sex-ws-prod)). Here we see a relatively consistent difference across ages with perhaps a slight downward trend in effect size with age. This downward trend might be a function of ceiling effects on the form, however, as seen in the model-fit curves above for, e.g., Danish. When variability is limited by the form ceiling, effect size estimates will necessarily be depressed. The median female advantage is `r roundp(median(analyses$WS.production$sex$mmad_summary$mmad_mean))`, substantially larger than that seen in early comprehension.
 
 ```{r demo-mmad-age-plot-sex-ws-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WS', 'production', 'female'), dependson="demo-plot-funs"}
 demo_mmad_age_plot("sex", "WS", "production", "female")
@@ -199,7 +199,7 @@ b2012_summary <- b2012 %>%
   do(data.frame(rbind(Hmisc::smean.cl.boot(.$z_20))))
 ```
 
-Second, @bornstein2012 used a particularly powerful study design to examine stability in early language estimates across different measures. They gathered longitudinal data at 20 and 48 months using a wide range of standardized and parent-report measures, and then used structural equation modeling to model shared variance due to parent report as well as to standardized latent language ability at each age. We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered (see Figure \@ref(fig:demo-bornstein-plot)).^[These data are not error-free; we have double-digitized one point.] As these scores are standardized, we can examine the difference in means and recover an estimate of the standardized effect size for gender in the data, which is `r round(-diff(b2012_summary$Mean), 2)` standard deviations. Since this measurement is *greater* than that found using the CDIs (the comparable American English measurement was `r round(filter(analyses$WS.production$sex$mmad_summary, language == "English (American)") %>% pull(mmad_mean), 2)`), this observation gives us resaon to doubt that our observed effect is due solely to reporting bias.
+Second, @bornstein2012 used a particularly powerful study design to examine stability in early language estimates across different measures. They gathered longitudinal data at 20 and 48 months using a wide range of standardized and parent-report measures, and then used structural equation modeling to model shared variance due to parent report as well as to standardized latent language ability at each age. We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered (see Figure \@ref(fig:demo-bornstein-plot)).^[These data are not error-free; we have double-digitized one point.] As these scores are standardized, we can examine the difference in means and recover an estimate of the standardized effect size for gender in the data, which is `r roundp(-diff(b2012_summary$Mean))` standard deviations. Since this measurement is *greater* than that found using the CDIs (the comparable American English measurement was `r roundp(filter(analyses$WS.production$sex$mmad_summary, language == "English (American)") %>% pull(mmad_mean))`), this observation gives us resaon to doubt that our observed effect is due solely to reporting bias.
 
 ```{r demo-bornstein-plot, fig.cap="Latent vocabulary scores from Bornstein and Putnick (2012) by age and sex (crossbars show means and 95 percent confidence intervals)."}
 b2012 %>%

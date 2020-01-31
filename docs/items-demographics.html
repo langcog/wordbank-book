@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 
@@ -407,7 +408,7 @@ Figure 9.7: Top 10 most sex biased words in each language for production data.
 Figure 9.8: Main effect of birth order for each language and measure.
 </p>
 </div>
-<p>Figures <a href="items-demographics.html#fig:itemsdemo-ranef-plot-bo-comp">9.9</a> and <a href="items-demographics.html#fig:itemsdemo-tops-bo-comp">9.10</a> again represent random effects coefficients for particular items in comprehension. In general, there are few surprises here: the words for <em>brother</em> and <em>sister</em> are much more likely for second-born children to understand, and even more likely for later-born children.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> Several languages additionally show a few other words that second-born and later-born children might be more likely to be exposed to via their siblings, such as <em>school</em> in English and Norwegian (<em>skole</em>).</p>
+<p>Figures <a href="items-demographics.html#fig:itemsdemo-ranef-plot-bo-comp">9.9</a> and <a href="items-demographics.html#fig:itemsdemo-tops-bo-comp">9.10</a> again represent random effects coefficients for particular items in comprehension. In general, there are few surprises here: the words for <em>brother</em> and <em>sister</em> are much more likely for second-born children to understand, and even more likely for later-born children.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> Several languages additionally show a few other words that second-born and later-born children might be more likely to be exposed to via their siblings, such as <em>school</em> in English and Norwegian (<em>skole</em>).</p>
 <div class="figure" style="text-align: center"><span id="fig:itemsdemo-ranef-plot-bo-comp"></span>
 <img src="wordbank-book_files/figure-html/itemsdemo-ranef-plot-bo-comp-1.png" alt="Distribution of birth order item random effects for comprehension data in each language." width="50%" />
 <p class="caption">
@@ -499,8 +500,8 @@ Figure 9.19: Top 10 most maternal education biased words in each language for pr
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>Of course, children could be marked as understanding a term like <em>brother</em> even without a true understanding of its relational structure!<a href="items-demographics.html#fnref1" class="footnote-back">↩</a></p></li>
+<ol start="19">
+<li id="fn19"><p>Of course, children could be marked as understanding a term like <em>brother</em> even without a true understanding of its relational structure!<a href="items-demographics.html#fnref19" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -559,6 +560,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

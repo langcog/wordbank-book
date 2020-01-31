@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 
@@ -337,7 +338,7 @@
 Figure 11.1: Figure 1 from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary as number of items. Horizontal lines represent the number of opportunities on the vocabulary checklist for each category.
 </p>
 </div>
-<p><span class="citation">Bates et al. (<a href="references.html#ref-bates1994">1994</a>)</span> characterized these patterns of vocabulary composition in the following way. Figure <a href="categories-syntactic.html#fig:catsyn-bates">11.1</a> (reprinted from that paper) shows average vocabulary composition of nominals, predicates and closed class forms as a function of children’s vocabulary size for English-speaking children from the original CDI WS norming study <span class="citation">(Fenson et al. <a href="references.html#ref-fenson1994">1994</a>)</span>. Note that when children only know a few words (e.g., fewer than 50), nominals comprise the greatest proportion of the words that children are reported to produce, with very few predicates or closed class forms (&lt;10%). As the children learn the next hundred words or so, the proportion of nominals increases even more dramatically with a gradual increase in the proportion of children’s vocabularies that are predicates. Closed class forms remain a much smaller proportion over this period. Yet, after about 300 words, children do not appear to add nouns to their vocabularies at the same pace that they did earlier in development; consequently, the proportion of nominals tends to decrease.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> During this developmental period, the proportion of predicates in the vocabulary tends to increase, followed by growth in the proportion of closed class forms.</p>
+<p><span class="citation">Bates et al. (<a href="references.html#ref-bates1994">1994</a>)</span> characterized these patterns of vocabulary composition in the following way. Figure <a href="categories-syntactic.html#fig:catsyn-bates">11.1</a> (reprinted from that paper) shows average vocabulary composition of nominals, predicates and closed class forms as a function of children’s vocabulary size for English-speaking children from the original CDI WS norming study <span class="citation">(Fenson et al. <a href="references.html#ref-fenson1994">1994</a>)</span>. Note that when children only know a few words (e.g., fewer than 50), nominals comprise the greatest proportion of the words that children are reported to produce, with very few predicates or closed class forms (&lt;10%). As the children learn the next hundred words or so, the proportion of nominals increases even more dramatically with a gradual increase in the proportion of children’s vocabularies that are predicates. Closed class forms remain a much smaller proportion over this period. Yet, after about 300 words, children do not appear to add nouns to their vocabularies at the same pace that they did earlier in development; consequently, the proportion of nominals tends to decrease.<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> During this developmental period, the proportion of predicates in the vocabulary tends to increase, followed by growth in the proportion of closed class forms.</p>
 <p>A different way to capture these same trends is shown in Figure <a href="categories-syntactic.html#fig:catsyn-prop">11.2</a> <span class="citation">(also reprinted from Bates et al. <a href="references.html#ref-bates1994">1994</a>)</span>. Here, each of the categories of words is plotted as a proportion of the opportunities on the checklist, again as a function of total vocabulary size. Shown in this way, the curves reflect when in development children are reported to produce half of the words in each of the categories, as represented by the solid horizontal line. For example, it is easy to see that 50% of the nouns have been checked (on average) when total vocabulary is between 200 to 300 words, whereas, 50% of the predicates are reported (on average) when overall vocabulary size falls between 300 and 450 words. Finally, closed-class opportunities do not reach the 50% mark until total vocabulary falls between 500 and 600 words.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsyn-prop"></span>
 <img src="images/bates1994_2_key.png" alt="Figure 3 adapted from Bates et al. (1994), showing developmental trends in the categorical composition of early vocabulary, using proportions of total opportunities in each category. Horizontal line represents the point at which 50\% of the items are chosen on average for each category." width="80%" />
@@ -377,7 +378,7 @@ Figure 11.3: Schematic of our vocabulary composition analysis.
 Figure 11.4: For American English WS data, proportion of each lexical category produced by each child as a function of the proportion of all vocabulary items produced by that child. Lines show model fits.
 </p>
 </div>
-<p>Figure <a href="categories-syntactic.html#fig:catsyn-plot-area-demo">11.4</a> shows this analysis for the American English WS data. Each point shows an individual child’s vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). The curves show the relationship between a class and the whole vocabulary. We capture the overall trend in this plot by estimating a generalized linear model over the data, predicting category proportion as a function of total production (shown by the thick lines). This model is fit with third-order polynomials (to allow both concave and convex functions, and changes in convexity). We fit these models with the constraint that they must predict the point (<em>x</em> = 1, <em>y</em> = 1), so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p>Figure <a href="categories-syntactic.html#fig:catsyn-plot-area-demo">11.4</a> shows this analysis for the American English WS data. Each point shows an individual child’s vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). The curves show the relationship between a class and the whole vocabulary. We capture the overall trend in this plot by estimating a generalized linear model over the data, predicting category proportion as a function of total production (shown by the thick lines). This model is fit with third-order polynomials (to allow both concave and convex functions, and changes in convexity). We fit these models with the constraint that they must predict the point (<em>x</em> = 1, <em>y</em> = 1), so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked.<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a></p>
 <p>The final step in our method is to capture the overall bias in a particular sample by estimating the difference in area between the curve and the diagonal. If the curve is substantially above the diagonal, this difference will be positive (indicating e.g., a positive noun bias). In contrast, if the curve is below the diagonal, the difference will be negative. To capture uncertainty in this area estimate, we conduct a resampling analysis where we randomly resample each population of children 1000 times with replacement, then recompute the area measurement. Confidence intervals displayed below are based on this resampling procedure.</p>
 <p>Critically, this analysis controls for a number of confounds in previous analyses. First, because our interest is in the shape of the overall curve, under-representation of children in some age-band should add uncertainty but not bias. Of course, if data are too sparse, estimates will be unconstrained (visible in wide confidence intervals), but particulars of age sampling should not bias our estimates. Second, in principle, the analysis should not be biased by the number of items in a particular category, as the analysis is relative to the numerical representation of a particular class on the form. Thus we should be able to compare across forms with larger or smaller numbers of items in particular sections.</p>
 </div>
@@ -512,9 +513,9 @@ Figure 11.16: Relative representation in vocabulary for each lexical category pe
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>This effect may also reflect aspects of CDI form design, e.g. “running out of nouns” to learn: children may increasingly be learning nouns that are not on the forms.<a href="categories-syntactic.html#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>We experimented with a number of model classes and found that these polynomial models seemed flexible enough to provide good fit to a wide variety of patterns of data. Because our concern is not making statistical inferences about the shape of these curves (but rather estimating the area under them) we are not specifically worried about overfitting.<a href="categories-syntactic.html#fnref2" class="footnote-back">↩</a></p></li>
+<ol start="20">
+<li id="fn20"><p>This effect may also reflect aspects of CDI form design, e.g. “running out of nouns” to learn: children may increasingly be learning nouns that are not on the forms.<a href="categories-syntactic.html#fnref20" class="footnote-back">↩</a></p></li>
+<li id="fn21"><p>We experimented with a number of model classes and found that these polynomial models seemed flexible enough to provide good fit to a wide variety of patterns of data. Because our concern is not making statistical inferences about the shape of these curves (but rather estimating the area under them) we are not specifically worried about overfitting.<a href="categories-syntactic.html#fnref21" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -573,6 +574,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

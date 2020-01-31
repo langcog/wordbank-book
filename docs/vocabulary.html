@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 
@@ -360,7 +361,7 @@ Figure 5.4: Median comprehension using Words and Gestures-type forms. Included a
 </p>
 </div>
 <p>We next turn to comprehension medians, shown in Figure <a href="vocabulary.html#fig:vocab-medians-comprehension-wg">5.4</a>. Comprehension is queried only on the Words &amp; Gestures form. Reported comprehension increases much faster than production; so much so that most parents are reporting that their children understand most words on the form by 18 months (Chapter <a href="style.html#style">15</a> discusses differences in the balance between comprehension and production between children). As with the production data, we see substantial differences across languages in reported vocabulary, discussed below (see Chapter <a href="methods-and-data.html#methods-and-data">3</a>, section on difficult data, for more discussion of Taiwanese Mandarin comprehension data).</p>
-<p>One striking aspect of the comprehension data is how early comprehension is reported. For example, from 8 months, we see parents reporting medians of 4.5 (Swedish) and 123.5 (Mandarin (Taiwanese)) words. To many researchers (and some parents) these high numbers feel unlikely. We are largely agnostic on this issue, but the literature does provide some support for early comprehension reports. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available <span class="citation">(e.g., Tincoff and Jusczyk <a href="references.html#ref-tincoff1999">1999</a>, <a href="references.html#ref-tincoff2012">2012</a>; Bergelson and Swingley <a href="references.html#ref-bergelson2012">2012</a>; Bergelson and Aslin <a href="references.html#ref-bergelson2017">2017</a>)</span>. The representations revealed in these tasks are quite weak – often amounting to a 2-5% difference in looking to a target on hearing a word uttered. Despite its weakness, depending on the criterion used by parents, this knowledge may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially supposed.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>One striking aspect of the comprehension data is how early comprehension is reported. For example, from 8 months, we see parents reporting medians of 4.5 (Swedish) and 123.5 (Mandarin (Taiwanese)) words. To many researchers (and some parents) these high numbers feel unlikely. We are largely agnostic on this issue, but the literature does provide some support for early comprehension reports. A spate of recent infancy experiments suggest that in fact, children in the second half of the first year do have some fragmentary representations of many common words available <span class="citation">(e.g., Tincoff and Jusczyk <a href="references.html#ref-tincoff1999">1999</a>, <a href="references.html#ref-tincoff2012">2012</a>; Bergelson and Swingley <a href="references.html#ref-bergelson2012">2012</a>; Bergelson and Aslin <a href="references.html#ref-bergelson2017">2017</a>)</span>. The representations revealed in these tasks are quite weak – often amounting to a 2-5% difference in looking to a target on hearing a word uttered. Despite its weakness, depending on the criterion used by parents, this knowledge may be what is detected in these early reports. Thus, these estimates may not be as far off as we initially supposed.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a></p>
 </div>
 <div id="cross-language-differences" class="section level3">
 <h3><span class="header-section-number">5.1.2</span> Cross-language differences</h3>
@@ -474,58 +475,130 @@ Figure 5.14: Standard deviation of latent ability scores from 4PL IRT models fit
 <p>We have observed a striking consistency in the individual variability of children’s vocabulary during their second year and perhaps beyond. Across languages and forms, it appears to be the norm that toddlers vary.</p>
 <p>What does it mean to have such a high level of variability? For one comparison, we compare age of walking onset (as measured by a Norwegian national survey with parent 47,515 respondents) and age of achieving production and comprehension milestones (also in Norwegian). Walking data are from <span class="citation">Størvold, Aarethun, and Bratberg (<a href="references.html#ref-storvold2013">2013</a>)</span>.</p>
 <table>
-<caption><span id="tab:vocab-walking-comparison-2">Table 5.1: </span>Comparison of language milestones with walking. 25th and 75th give the ages at which that percentile ranking is achieved; ranges give the interval between 25th and 75th percentile in months and as a proportion of total age.</caption>
+<caption>
+<span id="tab:vocab-walking-comparison-2">Table 5.1: </span>Comparison of language milestones with walking. 25th and 75th give the ages at which that percentile ranking is achieved; ranges give the interval between 25th and 75th percentile in months and as a proportion of total age.
+</caption>
 <thead>
-<tr class="header">
-<th align="left">Response</th>
-<th align="right">25th</th>
-<th align="right">75th</th>
-<th align="right">Range (months)</th>
-<th align="right">Range (prop)</th>
+<tr>
+<th style="text-align:left;">
+Response
+</th>
+<th style="text-align:right;">
+25th
+</th>
+<th style="text-align:right;">
+75th
+</th>
+<th style="text-align:right;">
+Range (months)
+</th>
+<th style="text-align:right;">
+Range (prop)
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">walking</td>
-<td align="right">12</td>
-<td align="right">14</td>
-<td align="right">2</td>
-<td align="right">0.15</td>
+<tr>
+<td style="text-align:left;">
+walking
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.15
+</td>
 </tr>
-<tr class="even">
-<td align="left">produces 10 words</td>
-<td align="right">13</td>
-<td align="right">16</td>
-<td align="right">3</td>
-<td align="right">0.21</td>
+<tr>
+<td style="text-align:left;">
+produces 10 words
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.21
+</td>
 </tr>
-<tr class="odd">
-<td align="left">produces 50 words</td>
-<td align="right">17</td>
-<td align="right">20</td>
-<td align="right">3</td>
-<td align="right">0.17</td>
+<tr>
+<td style="text-align:left;">
+produces 50 words
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.17
+</td>
 </tr>
-<tr class="even">
-<td align="left">produces 100 words</td>
-<td align="right">18</td>
-<td align="right">23</td>
-<td align="right">5</td>
-<td align="right">0.25</td>
+<tr>
+<td style="text-align:left;">
+produces 100 words
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.25
+</td>
 </tr>
-<tr class="odd">
-<td align="left">understands 50 words</td>
-<td align="right">10</td>
-<td align="right">15</td>
-<td align="right">5</td>
-<td align="right">0.42</td>
+<tr>
+<td style="text-align:left;">
+understands 50 words
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.42
+</td>
 </tr>
-<tr class="even">
-<td align="left">produces 200 words</td>
-<td align="right">20</td>
-<td align="right">26</td>
-<td align="right">6</td>
-<td align="right">0.26</td>
+<tr>
+<td style="text-align:left;">
+produces 200 words
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.26
+</td>
 </tr>
 </tbody>
 </table>
@@ -538,8 +611,8 @@ Figure 5.14: Standard deviation of latent ability scores from 4PL IRT models fit
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>An alternative possibility is that <em>both</em> accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overestimating their vocabulary based on observed behaviors – in essence, parents could be right, but for the wrong reasons <span class="citation">(Bergelson and Swingley <a href="references.html#ref-bergelson2015">2015</a>)</span>.<a href="vocabulary.html#fnref1" class="footnote-back">↩</a></p></li>
+<ol start="12">
+<li id="fn12"><p>An alternative possibility is that <em>both</em> accounts are true, but unconnected: 8-month-olds could in fact know some common words, but parents could be overestimating their vocabulary based on observed behaviors – in essence, parents could be right, but for the wrong reasons <span class="citation">(Bergelson and Swingley <a href="references.html#ref-bergelson2015">2015</a>)</span>.<a href="vocabulary.html#fnref12" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

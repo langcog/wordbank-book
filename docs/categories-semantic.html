@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 
@@ -373,7 +374,7 @@ Figure 12.5: Relative representation in vocabulary compared to chance for catego
 <div id="dimensionality-reduction" class="section level3">
 <h3><span class="header-section-number">12.2.2</span> Dimensionality reduction</h3>
 <p>Our next analysis takes an exploratory dimensionality-reduction approach. Rather than examining each semantic category individually, we consider the space defined by variation in semantic preferences by running principal components analysis (PCA) on these data. PCA is a dimensionality reduction technique that projects high-dimensional data (e.g., bias by semantic category for each language) into a set of orthogonal dimensions where lower dimensions capture as much of the variance as possible.</p>
-<p>Standard PCA requires datasets without missing data, so we removed languages with missing categories. This analysis thus includes 23 language/form combinations and 13 categories. (We exclude words from Sounds because of the issue with Russian in this category and other missing data). The total variance explained by the first principal component was 44% and by the second was 16%.</p>
+<p>Standard PCA requires datasets without missing data, so we removed languages with missing categories. This analysis thus includes 23 language/form combinations and 13 categories. (We exclude words from Sounds because of the issue with Russian in this category and other missing data). The total variance explained by the first principal component es 44% and by the second es 16%.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsem-pca-autoplot-loadings"></span>
 <img src="wordbank-book_files/figure-html/catsem-pca-autoplot-loadings-1.png" alt="Loadings of each semantic category." width="\linewidth" />
 <p class="caption">
@@ -408,7 +409,7 @@ Figure 12.8: Developmental trajectory of each time word in each language.
 <div id="color" class="section level3">
 <h3><span class="header-section-number">12.3.2</span> Color</h3>
 <p>Color word acquisition has been a focus of interest at least since early work by <span class="citation">Carey (<a href="references.html#ref-carey1978">1978</a>)</span>’s influential study of “fast mapping.” Although early work suggested that color words were learned almost simultaneously <span class="citation">(Bartlett <a href="references.html#ref-bartlett1977">1977</a>)</span>, more recent studies have described a more protracted trajectory of partial knowledge. Many children learn some color words and overextend these to cover the rest of color space <span class="citation">(Wagner, Dobkins, and Barner <a href="references.html#ref-wagner2013">2013</a>)</span>. Adding to the complexity of this issue are the substantial cohort changes in the age at which colors are learned: while school-aged children struggled with their colors 50-100 years ago, more recently children learn colors in the age range spanned by the CDI forms <span class="citation">(Bornstein <a href="references.html#ref-bornstein1985">1985</a>)</span>.</p>
-<p>There is tremendous cross-linguistic variation in the overall level of color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively large color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was <em>black</em>, <em>blue</em>, <em>green</em>, <em>red</em>, <em>white</em>, <em>yellow</em>.</p>
+<p>There is tremendous cross-linguistic variation in the overall level of color vocabulary <span class="citation">(Kay et al. <a href="references.html#ref-kay2009">2009</a>)</span>. We take advantage of the fact that most of the languages in our dataset have relatively large color vocabularies, which we can assume means that individual colors probably have relatively similar extensions.<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> Despite this, most CDI forms do not include all the basic level color words. The set of color words with sufficient translation equivalents for inclusion was <em>black</em>, <em>blue</em>, <em>green</em>, <em>red</em>, <em>white</em>, <em>yellow</em>.</p>
 <div class="figure" style="text-align: center"><span id="fig:catsem-color-words"></span>
 <img src="wordbank-book_files/figure-html/catsem-color-words-1.png" alt="Developmental trajectory of each color word in each language." width="\linewidth" />
 <p class="caption">
@@ -447,7 +448,7 @@ Figure 12.12: Developmental trajectory of each logic word in each language.
 </div>
 <div id="category-variability" class="section level3">
 <h3><span class="header-section-number">12.3.5</span> Category variability</h3>
-<p>To end this section, we quantify the variability across languages for each of these restricted sets of lexical items.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> For 22–26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item (see Chapter <a href="vocabulary.html#vocabulary">5</a> for the details of this analysis). (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. Table <a href="categories-semantic.html#tab:catsem-cat-var">12.1</a> gives the coefficient of variation for each category.</p>
+<p>To end this section, we quantify the variability across languages for each of these restricted sets of lexical items.<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> For 22–26 month-olds (chosen somewhat arbitrarily to be an age range of high coverage across forms that does not encompass too much developmental change), we compute the coefficient of variation for children at each age on each lexical item (see Chapter <a href="vocabulary.html#vocabulary">5</a> for the details of this analysis). (We first average across ages and then across lexical items; reported Ns are for the average number of contributing languages). We additionally add words from the Animals category for the sake of comparison. Table <a href="categories-semantic.html#tab:catsem-cat-var">12.1</a> gives the coefficient of variation for each category.</p>
 <table>
 <caption>
 <span id="tab:catsem-cat-var">Table 12.1: </span>Mean coefficient of variation for each semantic category.
@@ -554,9 +555,9 @@ Finally, we found that acquisition of complex conceptual words reflecting colors
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like <em>red</em> would be much larger than in English.<a href="categories-semantic.html#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>We experimented with applying this approach to the broader set of lexical categories we investigated in the first part of this chapter, but were confounded by a particular property of the coefficient of variation. For those categories with very small mean bias, even if they had small variance, their CV was very high (simply because <span class="math inline">\(CV = \sigma/\mu\)</span> and hence as <span class="math inline">\(\mu\)</span> goes down, CV must go up). For this reason, we choose only categories with some bias. We expand on this limitation to the CV analysis in Chapter <a href="conclusion-consistency.html#conclusion-consistency">16</a>.<a href="categories-semantic.html#fnref2" class="footnote-back">↩</a></p></li>
+<ol start="22">
+<li id="fn22"><p>Such an assumption would not be warranted if we were considering languages with just a handful of color terms, in which the extension of a term like <em>red</em> would be much larger than in English.<a href="categories-semantic.html#fnref22" class="footnote-back">↩</a></p></li>
+<li id="fn23"><p>We experimented with applying this approach to the broader set of lexical categories we investigated in the first part of this chapter, but were confounded by a particular property of the coefficient of variation. For those categories with very small mean bias, even if they had small variance, their CV was very high (simply because <span class="math inline">\(CV = \sigma/\mu\)</span> and hence as <span class="math inline">\(\mu\)</span> goes down, CV must go up). For this reason, we choose only categories with some bias. We expand on this limitation to the CV analysis in Chapter <a href="conclusion-consistency.html#conclusion-consistency">16</a>.<a href="categories-semantic.html#fnref23" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

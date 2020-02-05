@@ -22,6 +22,8 @@ opts_chunk$set(
   out.width = "\\linewidth"
 )
 
+set.seed(42)
+
 .font <- "Source Sans Pro"
 .uni_font <- "Gulim"
 theme_set(theme_mikabr(base_family = .font))

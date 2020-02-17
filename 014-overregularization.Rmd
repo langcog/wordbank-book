@@ -175,21 +175,21 @@ kable(overreg_props, digits = 2, col.names = c("Language", "N", "Nouns", "Verbs"
 ```
 
 ```{r overreg-extreme-items, dependson="overreg-load"}
-# min_items <- by_item_summary %>%
-#   filter(language == "English (American)", direction == "min") %>%
-#   pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")
-# 
-# max_items <- by_item_summary %>%
-#   filter(language == "English (American)", direction == "max") %>%
-#   pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")
-# 
-# max_prop <- by_item_summary %>%
-#   filter(language == "English (American)", direction == "max") %>%
-#   pull(prop) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>%
-#   paste(collapse = " and ")
-min_items <- ""
-max_items <- ""
-max_prop <- ""
+min_items <- by_item_summary %>%
+  filter(language == "English (American)", direction == "min") %>%
+  pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")
+
+max_items <- by_item_summary %>%
+  filter(language == "English (American)", direction == "max") %>%
+  pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")
+
+max_prop <- by_item_summary %>%
+  filter(language == "English (American)", direction == "max") %>%
+  pull(prop) %>% map_dbl(~. * 100) %>% roundp(0) %>% paste0("%") %>%
+  paste(collapse = " and ")
+# min_items <- ""
+# max_items <- ""
+# max_prop <- ""
 ```
 
 Individual items vary in how often they are overregularized (Table \@ref(tab:overreg-item-table)): in English, items range from `r min_items`, which are virtually never overregularized, to `r max_items`, which are overregularized by `r max_prop` of children, respectively.
@@ -224,7 +224,7 @@ ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
                      name = "Proportion of items overregularized")
 ```
 
-Overregularization is more tightly correlated with vocabulary size than with age (Figure \@ref(fig:overreg-fits-vocab)), with _r_^2^ values ranging from `r min(vocab_models$rsq) %>% roundp()` to `r max(vocab_models$rsq) %>% roundp()`. However, the relationship between overregularization and vocabulary tends to be far weaker than the relationship between correct morphological inflection and vocabulary (as described in Chapter \@ref(grammar)), for which _r_^2^ is around 0.9.
+Overregularization is more tightly correlated with vocabulary size than with age (Figure \@ref(fig:overreg-fits-vocab)), with _r_^2^ values ranging from `r roundp(min(vocab_models$rsq))` to `r roundp(max(vocab_models$rsq))`. However, the relationship between overregularization and vocabulary tends to be far weaker than the relationship between correct morphological inflection and vocabulary (as described in Chapter \@ref(grammar)), for which _r_^2^ is around 0.9.
 
 <!-- Interestingly, the same finding holds true for vocabulary. Overregularization does not appear to be tightly predicted by overall vocabulary size. Figure \@ref(fig:overreg-fits-vocab) shows findings from this analysis. While some slopes might be slightly higher (especially for verbs), overall the total developmental change predicted by vocabulary size seems limited. Contrast these relationships to those described in Chapter \@ref(grammar), where the correlations between vocabulary size and correct morphological inflection are quite high. What predicts reports of overregularization then? -->
 
@@ -373,9 +373,19 @@ eng_long_comp <- eng_long_grouped %>%
   mutate(p = n / sum(n))
 
 eng_3 <- filter(eng_ns, num_ages == 3)$n
-message(eng_3)
+# message(eng_3)
 eng_4 <- filter(eng_ns, num_ages == 4)$n
-message(eng_4)
+# message(eng_4)
+
+eng_increase <- eng_long_cat_props %>%
+  filter(trajectory == "/") %>% pull(p) %>%
+  map_dbl(~. * 100) %>% roundp(0) %>%
+  paste0("%") %>% paste(collapse = " and ")
+
+eng_recover <- eng_long_cat_props %>%
+  filter(trajectory == "/\\") %>% pull(p) %>%
+  map_dbl(~. * 100) %>% roundp(0) %>%
+  paste0("%") %>% paste(collapse = " and ")
 ```
 
 In the American English dataset, out of children who overregularize at least one item, there are `r eng_3` with three longitudinal administrations, `r eng_4` with four administrations, and none with more than that. For each child, we compare their three overregularization values -- youngest, middle, and oldest (with the two middle values averages for the four administration children) -- to categorize their overregularization trajectory as:
@@ -385,7 +395,7 @@ In the American English dataset, out of children who overregularize at least one
 - __recovery__ (Λ) if youngest to middle _increases_ and middle to oldest _decreases_
 - __retreat__ (V) if youngest to middle _decreases_ and middle to oldest _increases_
 
-Figure \@ref(fig:overreg-eng-longs-plot) shows the trajectories of each child, grouped by this classification. For both nouns and verbs, the vast majority of children (`r eng_long_cat_props %>% filter(trajectory == "/") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`, respectively) __increase__ in overregularization over this age range, a substantial minority (`r eng_long_cat_props %>% filter(trajectory == "/\\") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`) __recover__ from overregularization, and very few __decrease__ or __retreat__. So we see that by 30 months, most children who have shown any sign of overregularization to date are continuing to overregularize more and more, while some are recovering from an earlier peak rate.
+Figure \@ref(fig:overreg-eng-longs-plot) shows the trajectories of each child, grouped by this classification. For both nouns and verbs, the vast majority of children (`r eng_increase`, respectively) __increase__ in overregularization over this age range, a substantial minority (`r eng_recover`) __recover__ from overregularization, and very few __decrease__ or __retreat__. So we see that by 30 months, most children who have shown any sign of overregularization to date are continuing to overregularize more and more, while some are recovering from an earlier peak rate.
 
 <!-- Additionally, trajectory shape is correlated between nouns and verbs: out of the children who have __increase__ noun trajectories, XX also have __increase__ verb trajectories -->
 
@@ -519,6 +529,16 @@ nor_fit_vals_grouped <- nor_fit_vals %>%
   filter(model_type == winner) %>%
   mutate(id_n = paste(original_id, num_admins)) %>%
   mutate(original_id = fct_reorder(original_id, num_admins))
+
+nor_recover <- nor_group_counts %>%
+  filter(trajectory == "/\\") %>% pull(p) %>%
+  map_dbl(~. * 100) %>% roundp(0) %>%
+  paste0("%") %>% paste(collapse = " and ")
+
+nor_increase <- nor_group_counts %>%
+  filter(trajectory == "/") %>% pull(p) %>%
+  map_dbl(~. * 100) %>% roundp(0) %>%
+  paste0("%") %>% paste(collapse = " and ")
 ```
 
 Because longitudinal data are so much more plentiful in the Norwegian dataset, we can quantify children's trajectories more rigorously. For the `r n_distinct(nor_longs$original_id)` number of children who overregularize at least one item and have at least `r nor_min` administrations, we fit a logistic regression for each child predicting how many items they overregularize from their age. For each child, we select either a model with a linear effect of age or both linear and quadratic effects of age based on which one fits the data better (i.e. has the lower AIC). We then classify each child's trajectory as: 
@@ -528,7 +548,7 @@ Because longitudinal data are so much more plentiful in the Norwegian dataset, w
 - __recovery__ (Λ) if the best fit model is _quadratic_ and the quadratic effect of age is _negative_
 - __retreat__ (V) if the best fit model is _quadratic_ and the quadratic effect of age is _positive_
 
-These classifications are analogous to the three datapoint ones from the English data, but are taking advantage of the higher density in Norwegian to have smoothed trajectories and model-based estimates. Figure \@ref(fig:overreg-nor-groups-plot) shows the grouped trajectories of each child. In this dataset, which extend to 36 months, many more children exhibit recovery trajectories for both nouns and verbs (`r nor_group_counts %>% filter(trajectory == "/\\") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`) and fewer exhibit increase trajectories (`r nor_group_counts %>% filter(trajectory == "/") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`), for an approximately even split between the two types. While the English and Norwegian data may differ in a variety of ways, it's plausible that the difference reflects that many children are recovering from overregularizing between 30 and 36 months (an age range that is not represented in the English dataset).
+These classifications are analogous to the three datapoint ones from the English data, but are taking advantage of the higher density in Norwegian to have smoothed trajectories and model-based estimates. Figure \@ref(fig:overreg-nor-groups-plot) shows the grouped trajectories of each child. In this dataset, which extend to 36 months, many more children exhibit recovery trajectories for both nouns and verbs (`r nor_recover`) and fewer exhibit increase trajectories (`r nor_increase`), for an approximately even split between the two types. While the English and Norwegian data may differ in a variety of ways, it's plausible that the difference reflects that many children are recovering from overregularizing between 30 and 36 months (an age range that is not represented in the English dataset).
 
 <!-- Because longitudinal data are so much more plentiful in the Norwegian dataset, we are able to map proportions within individual children. Figure \@ref(overreg-nor-longs-age) shows smoothed curves for those children with at least 4 administrations. As in the cross-sectional data, we see noun and verb overregularization traveling together developmentally. Further, we see that the moment that over-regularization is reported seems to vary substantially by child. Some children are continuing to increase their overregularization throughout the sampling period, while others go through a discrete phase (at least for the high-frequency items shown on the form) and then return to zero by the end of the sampling period at age 3. Others barely over-regularize in this period. Thus, at a minimum we can conclude there is truly substantial individual variation in overregularization. -->
 
@@ -561,9 +581,17 @@ nor_lexcat_labels <- nor_lexcat_props %>%
   group_by(nouns) %>%
   mutate(sp = cumsum(p) - 0.5 * p) %>%
   filter(nouns == verbs)
+
+nor_verb_recover <- nor_lexcat_labels %>%
+  filter(verbs == "/\\") %>% pull(p) %>%
+  prod(100) %>% roundp(0)
+
+nor_verb_increase <- nor_lexcat_labels %>%
+  filter(verbs == "/") %>% pull(p) %>%
+  prod(100) %>% roundp(0)
 ```
 
-Additionally, we see evidence that trajectory shape is correlated between nouns and verbs: out of the children who have __recovery__ noun trajectories, `r nor_lexcat_labels %>% filter(verbs == "/\\") %>% pull(p) %>% prod(100) %>% roundp(0)`% also have __recovery__ verb trajectories; conversely, out of the children who have __increase__ noun trajectories, `r nor_lexcat_labels %>% filter(verbs == "/") %>% pull(p) %>% prod(100) %>% roundp(0)`% also have __increase__ verb trajectories (see Figure \@ref(fig:overreg-nor-lexcat-plot)). This echoes the observation from the cross-sectional data that while substantial variation between children, there is some degree of consistency within child across lexical categories.
+Additionally, we see evidence that trajectory shape is correlated between nouns and verbs: out of the children who have __recovery__ noun trajectories, `r nor_verb_recover`% also have __recovery__ verb trajectories; conversely, out of the children who have __increase__ noun trajectories, `r nor_verb_increase`% also have __increase__ verb trajectories (see Figure \@ref(fig:overreg-nor-lexcat-plot)). This echoes the observation from the cross-sectional data that while substantial variation between children, there is some degree of consistency within child across lexical categories.
 
 ```{r overreg-nor-lexcat-plot, dependson="overreg-nor-lexcat", out.width="75%", fig.cap="Proportion of children exhbiting each verb overrregularization trajectory type as a function of noun overregularization trajectory type."}
 ggplot(nor_lexcat_props, aes(x = nouns, y = p, fill = fct_rev(verbs))) +
@@ -608,7 +636,7 @@ nor_max_summary <- nor_max_demo %>%
             max_max = max(age))
 ```
 
-Lastly, for a more detailed look at recovery from the overregularization, we examine the trajectories of the `r n_distinct(nor_fit_demo$original_id)` Norwegian children with the most observations (at least `r min_admin_plot`) who have recovery-type trajectories for both nouns and verbs (Figure \@ref(fig:overreg-nor-dense-plot)). We observe that for many of these children, the trajectories for nouns and verbs do not just have the same overall type, but also hang together over the course of development. The median age when these children are most likely to overregularize is `r nor_max_summary %>% filter(lexical_category == "Nouns") %>% pull(median_max)` months for nouns and `r nor_max_summary %>% filter(lexical_category == "Verbs") %>% pull(median_max)` months for verbs, consistent with the speculation above that 30 months marks the beginning of more widespread recovery.
+Lastly, for a more detailed look at recovery from the overregularization, we examine the trajectories of the `r n_distinct(nor_fit_demo$original_id)` Norwegian children with the most observations (at least `r min_admin_plot`) who have recovery-type trajectories for both nouns and verbs (Figure \@ref(fig:overreg-nor-dense-plot)). We observe that for many of these children, the trajectories for nouns and verbs do not just have the same overall type, but also hang together over the course of development. The median age when these children are most likely to overregularize is `r filter(nor_max_summary, lexical_category == "Nouns")$median_max` months for nouns and `r filter(nor_max_summary, lexical_category == "Verbs")$median_max` months for verbs, consistent with the speculation above that 30 months marks the beginning of more widespread recovery.
 
 ```{r overreg-nor-dense-plot, dependson="overreg-nor-dense", fig.width=8, fig.height=7, fig.cap=glue("Model fit overregularization trajectories for Norwegian children with recovery-type trajectories and at least {min_admin_plot} observations. Marks in each line show the inflection point of the recovery.")}
 s <- 0.03

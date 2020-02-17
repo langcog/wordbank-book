@@ -156,7 +156,7 @@ The particular mechanisms underlying this so-called "U-shaped" development (corr
 
 <!-- Also theory (e.g., rules/connections) - morpho has become a case study for mental representation more broadly. But it's an open question whether this is right - morphology could be "special" (cf. some of the recent songbird stuff) -->
 
-Here, we explore the consistency and variability timecourse of children's use of plural and past tense overgeneralizations using CDI data from the English and Norwegian samples.  Our approach here depends on the fact that the original developers of the CDI were interested in this debate and included overregularizations as options in the morphological sections of the form. For example, an item like *foot* includes *foots* and *feet* as possible options to be checked. To take advantage of this, we coded overgeneralizations on each of the `r length(unique(overreg_by_kid$language))` WS-type forms for which we had access to data from these items (two from English dialects). We then used this coding to count the total proportion overregularizations by child, both overall and within noun and verb categories. We first show analyses of these overregularizations for cross-sectional data, and then present more in-depth analyses of longitudinal data in English and Norwegian.
+Here, we explore the consistency and variability timecourse of children's use of plural and past tense overgeneralizations using CDI data from the English and Norwegian samples.  Our approach here depends on the fact that the original developers of the CDI were interested in this debate and included overregularizations as options in the morphological sections of the form. For example, an item like *foot* includes *foots* and *feet* as possible options to be checked. To take advantage of this, we coded overgeneralizations on each of the `r n_distinct(overreg_by_kid$language)` WS-type forms for which we had access to data from these items (two from English dialects). We then used this coding to count the total proportion overregularizations by child, both overall and within noun and verb categories. We first show analyses of these overregularizations for cross-sectional data, and then present more in-depth analyses of longitudinal data in English and Norwegian.
 
 
 ## Cross-sectional data
@@ -164,17 +164,36 @@ Here, we explore the consistency and variability timecourse of children's use of
 We begin by describing overregularization within the cross-sectional data. For any dataset with longitudinal administrations, we we include only the earliest administration for each child. We then compute the proportion of nouns and verbs that each is reported to overregularize. The mean proportion of overregularizations (Table \@ref(tab:overreg-kid-table)) reported is relatively low overall, both for nouns and verbs, ranging from `r roundp(100 * min(by_kid_summary$mean), 0)`% to `r roundp(100 * max(by_kid_summary$mean), 0)`%. For children who overregularize at least one item, the overall overregularization proportion is generally higher, ranging from `r roundp(100 * min(non_zero_summary$mean), 0)`% to `r roundp(100 * max(non_zero_summary$mean), 0)`%.
 
 ```{r overreg-kid-table, dependson="overreg-load"}
-bind_rows(by_kid_summary, non_zero_summary) %>%
+overreg_props <- bind_rows(by_kid_summary, non_zero_summary) %>%
   pivot_wider(names_from = c(group, lexical_category), values_from = c(mean, n)) %>%
   rename(n = n_all_nouns) %>%
   select(-starts_with("n_")) %>%
-  select(language, n, contains("all"), contains("non_zero")) %>%
-  kable(digits = 2, col.names = c("Language", "N", "Nouns", "Verbs", "Nouns", "Verbs"),
-        caption = "Proportion of noun and verb overregularization across languages.") %>%
-  add_header_above(c(" " = 2, "All children" = 2, "Children who overregularize at least one item" = 2))
+  select(language, n, contains("all"), contains("non_zero"))
+
+kable(overreg_props, digits = 2, col.names = c("Language", "N", "Nouns", "Verbs", "Nouns", "Verbs"),
+      caption = "Proportion of noun and verb overregularization across languages.") %>%
+  add_header_above(c(" " = 2, "All children" = 2, "Children who overregularize" = 2))
 ```
 
-Individual items vary in how often they are overregularized (Table \@ref(tab:overreg-item-table)): in English, items range from `r by_item_summary %>% filter(language == "English (American)", direction == "min") %>% pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")`, which are virtually never overregularized, to `r by_item_summary %>% filter(language == "English (American)", direction == "max") %>% pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")`, which are overregularized by `r by_item_summary %>% filter(language == "English (American)", direction == "max") %>% pull(prop) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")` of children, respectively.
+```{r overreg-extreme-items, dependson="overreg-load"}
+# min_items <- by_item_summary %>%
+#   filter(language == "English (American)", direction == "min") %>%
+#   pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")
+# 
+# max_items <- by_item_summary %>%
+#   filter(language == "English (American)", direction == "max") %>%
+#   pull(definition) %>% sprintf(fmt = "_%s_") %>% paste(collapse = " and ")
+# 
+# max_prop <- by_item_summary %>%
+#   filter(language == "English (American)", direction == "max") %>%
+#   pull(prop) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>%
+#   paste(collapse = " and ")
+min_items <- ""
+max_items <- ""
+max_prop <- ""
+```
+
+Individual items vary in how often they are overregularized (Table \@ref(tab:overreg-item-table)): in English, items range from `r min_items`, which are virtually never overregularized, to `r max_items`, which are overregularized by `r max_prop` of children, respectively.
 
 ```{r overreg-item-table, dependson="overreg-load"}
 by_item_summary %>%
@@ -186,7 +205,7 @@ by_item_summary %>%
   add_header_above(c(" " = 1, "Least overregularized" = 4, "Most overregularized" = 4))
 ```
 
-Figure \@ref(fig:overreg-fits-age) shows each child's proportion of overregularized items plotted by age (for children who overregularize at least item overall). The major generalization from these data is that curves tend to be surprisingly flat -- there are not large, consistent developmental increases for any language. The inset _r_^2^ for each panel in this graph show the variance explained by quadratic models of overregularization by age, quantitatively confirming the visual impression of limited developmental change -- the largest of these _r_^2^ values is only `r max(age_models$rsq) %>% roundp()`.
+Figure \@ref(fig:overreg-fits-age) shows each child's proportion of overregularized items plotted by age (for children who overregularize at least item overall). The major generalization from these data is that curves tend to be surprisingly flat -- there are not large, consistent developmental increases for any language. The inset _r_^2^ for each panel in this graph show the variance explained by quadratic models of overregularization by age, quantitatively confirming the visual impression of limited developmental change -- the largest of these _r_^2^ values is only `r roundp(max(age_models$rsq))`.
 
 ```{r overreg-fits-age, fig.width=8, fig.height=3.5, fig.cap="Each child's proportion of items overregularized as a function of their age size in each language (curves show model fits -- overregularization proportion from quadratic and linear terms for age).", dependson="overreg-fits"}
 ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
@@ -353,9 +372,14 @@ eng_long_comp <- eng_long_grouped %>%
   group_by(trajectory_nouns) %>%
   count(trajectory_verbs) %>%
   mutate(p = n / sum(n))
+
+eng_3 <- filter(eng_ns, num_ages == 3)$n
+message(eng_3)
+eng_4 <- filter(eng_ns, num_ages == 4)$n
+message(eng_4)
 ```
 
-In the American English dataset, out of children who overregularize at least one item, there are `r eng_ns %>% filter(num_ages == 3) %>% pull(n)` with three longitudinal administrations, `r eng_ns %>% filter(num_ages == 4) %>% pull(n)`) with four administration, and none with more than that. For each child, we compare their three overregularization values -- youngest, middle, and oldest (with the two middle values averages for the four administration children) -- to categorize their overregularization trajectory as:
+In the American English dataset, out of children who overregularize at least one item, there are `r eng_3` with three longitudinal administrations, `r eng_4`) with four administration, and none with more than that. For each child, we compare their three overregularization values -- youngest, middle, and oldest (with the two middle values averages for the four administration children) -- to categorize their overregularization trajectory as:
 
 - __increase__ (/) if youngest to middle _stays the same_ or _increases_ and middle to oldest _stays the same_ or _increases_
 - __decrease__ (\) if youngest to middle _stays the same_ or _decreases_ and middle to oldest _stays the same_ or _decreases_

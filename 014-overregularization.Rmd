@@ -1,8 +1,8 @@
 # Morphological Overgeneralization {#overregularization}
 
-Although Chapter \@ref(grammar) examined broad patterns of morphosyntactic development in relation to vocabulary size, we did not conduct specific analyses of the development of morphology *per se*. In this brief chapter, we rectify that omission by examining patterns of morphology in two cases, plural noun morphology and past tense verb morphology.  These two morphological systems are well-studied in the literature because plural (e.g., *cats*) and past tense forms (e.g., *walked*) are some of the earliest to be produced by young children [@brown1973].  Moreover, plural and past tense forms are viewed as a window into the mechanisms underlying productive language use because children will sometimes make overgeneralization errors, such as *tooths* or *goed*. The developmental time course of children's overgeneralization errors has been an influential case study for language learning -- and mental representation more broadly [@rumelhart1986;@pinker1988;@pinker1991;@elman1996]. We begin by describing cross-sectional patterns of overgeneralization across languages and then turn to characterizing longitudinal change in overgeneralization in two languages which have different morphological systems, English and Norwegian. 
+Although Chapter \@ref(grammar) examined broad patterns of morphosyntactic development in relation to vocabulary size, we did not conduct specific analyses of the development of morphology *per se*. In this brief chapter, we rectify that omission by examining patterns of morphology in two cases, plural noun morphology and past tense verb morphology. These two morphological systems are well-studied in the literature because plural (e.g., *cats*) and past tense forms (e.g., *walked*) are some of the earliest to be produced by young children [@brown1973]. Moreover, plural and past tense forms are viewed as a window into the mechanisms underlying productive language use because children will sometimes make overgeneralization errors, such as *tooths* or *goed*. The developmental time course of children's overgeneralization errors has been an influential case study for language learning -- and mental representation more broadly [@rumelhart1986;@pinker1988;@pinker1991;@elman1996]. We begin by describing cross-sectional patterns of overgeneralization across languages and then turn to characterizing longitudinal change in overgeneralization in two languages which have different morphological systems, English and Norwegian. 
 
-## Introduction and methods
+## Introduction and Methods
 
 ```{r overreg-data, eval=FALSE}
 grammar_items <- read_csv("data/overregularization/overreg_item_coding.csv")
@@ -148,20 +148,19 @@ age_fits <- age_models %>%
   unnest(cols = c(fits))
 ```
 
-When a child gleefully says *Mommy, I brushed my tooths!*, a proud parent will certainly rejoice in their child's accomplishment. At the same time, they might worry because the child has *overgeneralized* the regular plural -s inflection to an irregular form.  Overgeneralization errors are not uncommon in child speech, although like all aspects of early language development, there is considerable variation across children in how many errors children make [@marcus1992;@maratsos1993]. Importantly, overgeneralization errors have been viewed as a positive sign that the child has abstracted the regularities of their language (e.g., add -s to indicate there is more than one thing) and applied that regularity in a productive way (i.e., the child has not likely heard the adult use that form).  One classic study in child language [@berko1958] explored children's ability to be productive with plural and past tense forms in an elicitation task using novel forms (e.g., *Here is a wug! Now there are two of them - there are two wugs!*).  Other classic studies using naturalistic designs [@cazden1968;@brown1973] noted that correct irregular forms often appear early in development, along side correctly inflected forms.  Only later in development are overgeneralizations produced, *after* children have been successful in producing the correct irregular form, apparently unlearning what they already knew.  With development, overgeneralizations are less likely to occur -- although they are still more difficult for children with language disorders [@marchman1999] and sometimes produced by adults [especially under stressed conditions; @mcdonald2010].  In general, however, most children ultimately master the balance between the regular and irregular patterns that characterize the morphological systems of their language.
+When a child gleefully says *Mommy, I brushed my tooths!*, a proud parent might rejoice in their child's accomplishment. At the same time, they might worry because the child has *overgeneralized* the regular plural -s inflection to an irregular form (*teeth*). Overgeneralization errors are not uncommon in child speech, although like all aspects of early language development, there is considerable variation across children in how many errors children make [@marcus1992;@maratsos1993]. Importantly, overgeneralization errors have been viewed as a positive sign that the child has abstracted the regularities of their language (e.g., add -s to indicate there is more than one thing) and applied that regularity in a productive way (i.e., the child has not likely heard the adult use that form).
 
-The particular mechanisms underlying this so-called "U-shaped" development (correct irregular - overgeneralization - correct irregular) have been subject to considerable debate in the literature [@marcus1992;@elman1996].  In one view, the onset of overgeneralizations after correct productions may signify a grammatical rule coming "online," after a period in which correctly inflected forms were learned by rote [@pinker1998]. Alternatively, the onset of overgeneralization errors may be the consequence of an accumulation of lexical exemplars from which children extract the general patterns [@marchman1994;@plunkett1989]. Each of these views, as well as those in between, make different predictions about the universal nature of the U-shaped pattern, both across children and across individual noun or verb forms, as well as the sources of variability that might influence the developmental time course of this pattern. While this debate has become a case study for understanding the representational formats which form the foundation for human learning and generalization, few studies have had the opportunity to explore patterns of the onset of overgeneralization errors in large datasets like those available in Wordbank. Moreover, it is critical to begin to evaluate patterns of overgeneralization errors crosslinguistically, given that morphological systems vary widely across languages [@marcus1995;@clahsen1992]. 
+The developmental timeline of generalization has been investigated extensively for the English plural and past tense. One classic study in child language [@berko1958] explored children's ability to be productive with plural and past tense forms in an elicitation task using novel forms (e.g., *Here is a wug! Now there are two of them -- there are two wugs!*). Other classic studies using naturalistic designs [@cazden1968;@brown1973] noted that correct irregular forms often appear early in development, alongside correctly inflected forms. Only later in development are overgeneralizations produced, *after* children have been successful in producing the correct irregular form, apparently unlearning what they already knew. With further development, overgeneralizations are less likely to occur -- although they are still more difficult for children with language disorders [@marchman1999] and sometimes produced by adults [especially under stressed conditions; @mcdonald2010]. 
 
-<!-- Why morphological generalization, from an acquisition perspective (e.g., some languages have a lot more morphology than English - and even some have more morpho than grammar) -->
+The particular mechanisms underlying this developmental timeline have been subject to considerable debate in the literature [@marcus1992;@elman1996]. A particular focus of interest has been the so-called "U-shaped" developmental pattern (correct irregular -- overgeneralization -- correct irregular) . On one view, the onset of overgeneralizations after correct productions may signify a grammatical rule coming "online," after a period in which correctly inflected forms were learned by rote [@pinker1998]. Alternatively, the onset of overgeneralization errors may be the consequence of an accumulation of lexical exemplars from which children extract the general patterns [@marchman1994;@plunkett1989]. Each of these views, as well as those in between, make different predictions about the universal nature of the U-shaped pattern, both across children and across individual noun or verb forms, as well as the sources of variability that might influence the developmental time course of this pattern. 
 
-<!-- Also theory (e.g., rules/connections) - morpho has become a case study for mental representation more broadly. But it's an open question whether this is right - morphology could be "special" (cf. some of the recent songbird stuff) -->
+This debate has become a case study for understanding the representational formats which form the foundation for human learning and generalization [@pinker1998]. Yet few studies have had the opportunity to explore patterns of the onset of overgeneralization errors in large datasets like those available in Wordbank. Moreover, most of the publishe work in this debate came from English. For a broader view, it is critical to begin to evaluate patterns of overgeneralization errors crosslinguistically, given that morphological systems vary widely across languages [@marcus1995;@clahsen1992]. 
 
-Here, we explore the consistency and variability timecourse of children's use of plural and past tense overgeneralizations using CDI data from the English and Norwegian samples.  Our approach here depends on the fact that the original developers of the CDI were interested in this debate and included overregularizations as options in the morphological sections of the form. For example, an item like *foot* includes *foots* and *feet* as possible options to be checked. To take advantage of this, we coded overgeneralizations on each of the `r n_distinct(overreg_by_kid$language)` WS-type forms for which we had access to data from these items (two from English dialects). We then used this coding to count the total proportion overregularizations by child, both overall and within noun and verb categories. We first show analyses of these overregularizations for cross-sectional data, and then present more in-depth analyses of longitudinal data in English and Norwegian.
+Here we explore the consistency and variability timecourse of children's use of plural and past tense overgeneralizations using CDI data from the English and Norwegian samples. Our approach here depends on the fact that the original developers of the CDI were interested in this debate and included overregularizations as options in the morphological sections of the form. For example, an item like *foot* includes *foots* and *feet* as possible options to be checked. To take advantage of this, we coded overgeneralizations on each of the `r n_distinct(overreg_by_kid$language)` WS-type forms for which we had access to data from these items (two from English dialects). We then used this coding to count the total proportion overregularizations by child, both overall and within noun and verb categories. We first show analyses of these overregularizations for cross-sectional data, and then present more in-depth analyses of longitudinal data in English and Norwegian.
 
+## Cross-Sectional Data
 
-## Cross-sectional data
-
-We begin by describing overregularization within the cross-sectional data. For any dataset with longitudinal administrations, we we include only the earliest administration for each child. We then compute the proportion of nouns and verbs that each is reported to overregularize. The mean proportion of overregularizations (Table \@ref(tab:overreg-kid-table)) reported is relatively low overall, both for nouns and verbs, ranging from `r roundp(100 * min(by_kid_summary$mean), 0)`% to `r roundp(100 * max(by_kid_summary$mean), 0)`%. For children who overregularize at least one item, the overall overregularization proportion is generally higher, ranging from `r roundp(100 * min(non_zero_summary$mean), 0)`% to `r roundp(100 * max(non_zero_summary$mean), 0)`%.
+We begin by describing overregularization within the cross-sectional data. For any dataset with longitudinal administrations, we we include only the earliest administration for each child. We then compute the proportion of nouns and verbs that each child is reported to overregularize. The mean proportion of overregularizations (Table \@ref(tab:overreg-kid-table)) reported is relatively low overall, both for nouns and verbs, ranging from `r roundp(100 * min(by_kid_summary$mean), 0)`% to `r roundp(100 * max(by_kid_summary$mean), 0)`%. For children who overregularize at least one item, the overall overregularization proportion is of course higher, ranging from `r roundp(100 * min(non_zero_summary$mean), 0)`% to `r roundp(100 * max(non_zero_summary$mean), 0)`%, but even these rates are low -- suggesting that those children who overregularize are not overregularizing all or even most forms at the same time. 
 
 ```{r overreg-kid-table, dependson="overreg-load"}
 overreg_props <- bind_rows(by_kid_summary, non_zero_summary) %>%
@@ -205,7 +204,7 @@ by_item_summary %>%
   add_header_above(c(" " = 1, "Least overregularized" = 4, "Most overregularized" = 4))
 ```
 
-Figure \@ref(fig:overreg-fits-age) shows each child's proportion of overregularized items plotted by age (for children who overregularize at least item overall). The major generalization from these data is that curves tend to be surprisingly flat -- there are not large, consistent developmental increases for any language. The inset _r_^2^ for each panel in this graph show the variance explained by quadratic models of overregularization by age, quantitatively confirming the visual impression of limited developmental change -- the largest of these _r_^2^ values is only `r roundp(max(age_models$rsq))`.
+Figure \@ref(fig:overreg-fits-age) shows each child's proportion of overregularized items plotted by age (for children who overregularize at least one item overall). The major generalization from these data is that curves tend to be surprisingly flat -- there are not large, consistent developmental increases for any language. The inset _r_^2^ for each panel in this graph show the variance explained by quadratic models of overregularization by age, quantitatively confirming the visual impression of limited developmental change -- the largest of these _r_^2^ values is only `r roundp(max(age_models$rsq))`.
 
 ```{r overreg-fits-age, fig.width=8, fig.height=3.5, fig.cap="Each child's proportion of items overregularized as a function of their age size in each language (curves show model fits -- overregularization proportion from quadratic and linear terms for age).", dependson="overreg-fits"}
 ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
@@ -225,9 +224,9 @@ ggplot(overreg_by_kid_nonzero, aes(x = age, y = prop)) +
                      name = "Proportion of items overregularized")
 ```
 
-Overregularization is more tightly correlated with vocabulary size than with age (Figure \@ref(fig:overreg-fits-vocab)), with _r_^2^ values ranging from `r min(vocab_models$rsq) %>% roundp()` to `r max(vocab_models$rsq) %>% roundp()`. However, the relationships between overregularization and vocabulary is much weaker than the relationships between correct inflection and vocabulary (as described in Chapter \@ref(grammar)), for which _r_^2^ is around 0.9.
+Overregularization is more tightly correlated with vocabulary size than with age (Figure \@ref(fig:overreg-fits-vocab)), with _r_^2^ values ranging from `r min(vocab_models$rsq) %>% roundp()` to `r max(vocab_models$rsq) %>% roundp()`. However, the relationship between overregularization and vocabulary tends to be far weaker than the relationship between correct morphological inflection and vocabulary (as described in Chapter \@ref(grammar)), for which _r_^2^ is around 0.9.
 
-<!-- Interestingly, the same finding holds true for vocabulary. Overregularization does not appear to be tightly predicted by overall vocabulary size. Figure \@ref(fig:overreg-fits-vocab) shows findings from this analysis. While some slopes might be slightly higher (especially for verbs), overall the total developmental change predicted by vocabulary size seems limited. Contrast these relationships to those described in Chapter \@ref(grammar), where the correlations between vocabulary size and correct morphological inflection are quite high. What predicts reports of overregularization then?  -->
+<!-- Interestingly, the same finding holds true for vocabulary. Overregularization does not appear to be tightly predicted by overall vocabulary size. Figure \@ref(fig:overreg-fits-vocab) shows findings from this analysis. While some slopes might be slightly higher (especially for verbs), overall the total developmental change predicted by vocabulary size seems limited. Contrast these relationships to those described in Chapter \@ref(grammar), where the correlations between vocabulary size and correct morphological inflection are quite high. What predicts reports of overregularization then? -->
 
 ```{r overreg-fits-vocab, fig.width=8, fig.height=3.5, fig.cap="Each child's proportion of overregularization as a function of their vocabulary size in each language (curves show model fits -- overregularization proportion from quadratic and linear terms for vocabulary size).", dependson="overreg-fits"}
 ggplot(overreg_by_kid_nonzero, aes(x = production_prop, y = prop)) +
@@ -267,7 +266,7 @@ lexcat_cors <- overreg_lexcat_comp %>%
             rsq_print = glue("r² = {roundp(rsq)}"))
 ```
 
-Another perspective on the structure of these data comes from comparing overregularization across lexical categories, as shown in Figure \@ref(fig:overreg-lexcat-plot). While a substantial proportion of children (`r roundp(min(lexcat_neither$p))`--`r roundp(max(lexcat_neither$p))`) do not overregularize any items, those who do are doing do across nouns and verbs quite consistently, for all of the languages in our sample. *r*^2^ values for the relationship between noun and verb overregularizations range from `r roundp(min(lexcat_cors$rsq))` to `r roundp(max(lexcat_cors$rsq))`.
+Another perspective on the structure of these data comes from comparing overregularization across lexical categories, as shown in Figure \@ref(fig:overreg-lexcat-plot). While a substantial proportion of children (`r roundp(min(lexcat_neither$p))`--`r roundp(max(lexcat_neither$p))`) do not overregularize any items, those who do are doing so across nouns and verbs quite consistently, for all of the languages in our sample. *r*^2^ values for the relationship between noun and verb overregularizations range from `r roundp(min(lexcat_cors$rsq))` to `r roundp(max(lexcat_cors$rsq))`.
 <!-- One positive finding from our exploration is shown in Figure \@ref(fig:overreg-lexcat-comp). The majority of children do not overregularize, but those who do are doing so across nouns and verbs quite consistently, across all of the languages in our sample. *r*² values for the relationship between noun and verb overregularizations range from `r roundp(min(lexcat_cors$rsq))` to `r roundp(max(lexcat_cors$rsq))`, considerably higher than the relationships documented above. Thus, at a minimum we see within-individual stability in this measure. But we do not yet have a good way of predicting when particular children will show non-zero overregularization. -->
 
 ```{r overreg-lexcat-plot, dependson="overreg-lexcat-comp", fig.width=8, fig.height=2.25, fig.cap="Each child's proportion of verbs overregularized against proportion of nouns overregularized (lines show linear model fits -- verb proportion from noun proportion)."}
@@ -287,12 +286,12 @@ ggplot(overreg_lexcat_comp, aes(x = nouns, y = verbs)) +
                      name = "Proportion of verbs\n overregularized")
 ```
 
-In summary, our data suggests that when aggregated across children, overregularization does not appear to have a set relationship with age, and does relate to vocabulary size, though not as strongly as does correct morphology. Additionally, overregularization is highly variable across children, but relatively stable within children across nouns and verbs.
+In summary, our data suggests that when aggregated across children, overregularization does not appear to have a set relationship with age, and does relate to vocabulary size, though not nearly as strongly as does correct morphological inflection. Additionally, overregularization is highly variable across children, but relatively stable within children but across lexical categories.
 
 
-## Longitudinal data
+## Longitudinal Data
 
-Next, we ask how individual children's overregularization trajectories can paint a clearer picture of the overall developmental time course of overregularization.  As in other chapters, we make use of the longitudinal data from the American English and Norwegian datasets. These data allow us to examine changes in generalization across individuals. Since data are sparser in the English data than the Norwegian, we pursue slightly different approaches to understanding these data.
+Next, we ask whether individual children's overregularization trajectories can paint a clearer picture of the overall developmental time course of overregularization. As in other chapters, we make use of the longitudinal data from the American English and Norwegian datasets. These data allow us to examine changes in generalization across individuals. Since data are sparser in the English data than the Norwegian, we pursue slightly different approaches in our analysis.
 
 ### English
 
@@ -313,13 +312,13 @@ eng_longs <- overreg_longs %>%
   mutate(num_ages = n_distinct(age))
 
 # eng_ns <- eng_longs %>%
-#   ungroup() %>%
-#   distinct(lexical_category, original_id, num_ages) %>%
-#   count(lexical_category, num_ages) %>%
-#   group_by(lexical_category) %>%
-#   arrange(lexical_category, desc(num_ages)) %>%
-#   mutate(p = n / sum(n),
-#          cum_p = cumsum(p))
+#  ungroup() %>%
+#  distinct(lexical_category, original_id, num_ages) %>%
+#  count(lexical_category, num_ages) %>%
+#  group_by(lexical_category) %>%
+#  arrange(lexical_category, desc(num_ages)) %>%
+#  mutate(p = n / sum(n),
+#     cum_p = cumsum(p))
 eng_ns <- eng_longs %>%
   ungroup() %>%
   distinct(original_id, num_ages) %>%
@@ -339,17 +338,17 @@ eng_long_cats <- eng_longs %>%
   select(-age, -n) %>%
   spread(age_code, prop) %>%
   mutate(step_1 = case_when(middle > youngest ~ "increases",
-                                     middle == youngest ~ "stays",
-                                     TRUE ~ "decreases"),
+                            middle == youngest ~ "stays",
+                            TRUE ~ "decreases"),
          step_2 = case_when(oldest > middle ~ "increases",
-                                   oldest == middle ~ "stays",
-                                   TRUE ~ "decreases"),
+                            oldest == middle ~ "stays",
+                            TRUE ~ "decreases"),
          trajectory = case_when(
            step_1 == "stays" & step_2 == "stays" ~ "–",
            step_1 %in% c("stays", "increases") & step_2 %in% c("stays", "increases") ~ "/",
            step_1 %in% c("stays", "decreases") & step_2 %in% c("stays", "decreases") ~ "\\",
-           step_1 == "increases" & step_2 == "decreases" ~ "Λ",
-           step_1 == "decreases" & step_2 == "increases" ~ "V",
+           step_1 == "increases" & step_2 == "decreases" ~ "/\\",
+           step_1 == "decreases" & step_2 == "increases" ~ "\\/",
            TRUE ~ "other"
          )) %>%
   ungroup() %>%
@@ -379,21 +378,21 @@ eng_4 <- filter(eng_ns, num_ages == 4)$n
 message(eng_4)
 ```
 
-In the American English dataset, out of children who overregularize at least one item, there are `r eng_3` with three longitudinal administrations, `r eng_4`) with four administration, and none with more than that. For each child, we compare their three overregularization values -- youngest, middle, and oldest (with the two middle values averages for the four administration children) -- to categorize their overregularization trajectory as:
+In the American English dataset, out of children who overregularize at least one item, there are `r eng_3` with three longitudinal administrations, `r eng_4` with four administrations, and none with more than that. For each child, we compare their three overregularization values -- youngest, middle, and oldest (with the two middle values averages for the four administration children) -- to categorize their overregularization trajectory as:
 
 - __increase__ (/) if youngest to middle _stays the same_ or _increases_ and middle to oldest _stays the same_ or _increases_
-- __decrease__ (\) if youngest to middle _stays the same_ or _decreases_ and middle to oldest _stays the same_ or _decreases_
+- __decrease__ (\\\) if youngest to middle _stays the same_ or _decreases_ and middle to oldest _stays the same_ or _decreases_
 - __recovery__ (Λ) if youngest to middle _increases_ and middle to oldest _decreases_
 - __retreat__ (V) if youngest to middle _decreases_ and middle to oldest _increases_
 
-Figure \@ref(fig:overreg-eng-longs-plot) shows the trajectories of each child, grouped by this classification. For both nouns and verbs, the vast majority of children (`r eng_long_cat_props %>% filter(trajectory == "/") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`, respectively) __increase__ in overregularization over this age range, a substantial minority (`r eng_long_cat_props %>% filter(trajectory == "Λ") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`) __recover__ from overregularization, and very few __decrease__ or __retreat__. So we see that by 30 months, most children who have shown any sign of overregularization to date are continuing to overregularize more and more, while some are recovering from an earlier peak rate.
+Figure \@ref(fig:overreg-eng-longs-plot) shows the trajectories of each child, grouped by this classification. For both nouns and verbs, the vast majority of children (`r eng_long_cat_props %>% filter(trajectory == "/") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`, respectively) __increase__ in overregularization over this age range, a substantial minority (`r eng_long_cat_props %>% filter(trajectory == "/\\") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`) __recover__ from overregularization, and very few __decrease__ or __retreat__. So we see that by 30 months, most children who have shown any sign of overregularization to date are continuing to overregularize more and more, while some are recovering from an earlier peak rate.
 
 <!-- Additionally, trajectory shape is correlated between nouns and verbs: out of the children who have __increase__ noun trajectories, XX also have __increase__ verb trajectories -->
 
 ```{r overreg-eng-longs-plot, fig.width=8, fig.height=4.25, fig.cap="Empirical overregularization trajectories for American English children with at least three observations, categorized by overall shape."}
 ggplot(eng_long_grouped, aes(x = age, y = prop)) +
   facet_grid(lexical_category ~ trajectory, labeller = label_caps, switch = "y") +
-  geom_line(aes(colour = original_id), alpha = .3) +
+  geom_line(aes(colour = original_id), alpha = .30) +
   geom_text(aes(label = label), family = .font, hjust = 0, vjust = 1, size = 3,
             x = min(eng_long_grouped$age), y = max(eng_long_grouped$prop),
             data = eng_long_cat_props) +
@@ -476,7 +475,7 @@ feather::write_feather(nor_coefs, "data/overregularization/nor_coefs.feather")
 ages <- tibble(age = min(nor_longs$age):max(nor_longs$age))
 nor_fits <- nor_models %>%
   ungroup() %>%
-  filter(model_type != "null")  %>%
+  filter(model_type != "null") %>%
   mutate(fits = map(model, function(m){
     ages %>% mutate(.fitted = predict(m, newdata = ages, type = "response"))
   }))
@@ -503,8 +502,8 @@ nor_groups <- nor_coefs %>%
   mutate(trajectory = case_when(
     winner == "linear" & direction_age == "positive" ~ "/",
     winner == "linear" & direction_age == "negative" ~ "\\",
-    winner == "quadratic" & direction_age2 == "positive" ~ "V",
-    winner == "quadratic" & direction_age2 == "negative" ~ "Λ",
+    winner == "quadratic" & direction_age2 == "positive" ~ "\\/",
+    winner == "quadratic" & direction_age2 == "negative" ~ "/\\",
     TRUE ~ "ALERT"
   )) %>%
   mutate(trajectory = fct_infreq(trajectory))
@@ -529,9 +528,9 @@ Because longitudinal data are so much more plentiful in the Norwegian dataset, w
 - __recovery__ (Λ) if the best fit model is _quadratic_ and the quadratic effect of age is _negative_
 - __retreat__ (V) if the best fit model is _quadratic_ and the quadratic effect of age is _positive_
 
-These classifications are analogous to the three datapoint ones from the English data, but are taking advantage of the higher density in Norwegian to have smoothed trajectories and model-based estimates. Figure \@ref(fig:overreg-nor-groups-plot) shows the grouped trajectories of each child. In this dataset, which extend to 36 months, many more children exhibit recovery trajectories for both nouns and verbs (`r nor_group_counts %>% filter(trajectory == "Λ") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`) and fewer exhibit increase trajectories (`r nor_group_counts %>% filter(trajectory == "/") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`), for an approximately even split between the two types. While the English and Norwegian data may differ in a variety of ways, it's plausible that the difference reflects that many children are recovering from overregularizing between 30 and 36 months.
+These classifications are analogous to the three datapoint ones from the English data, but are taking advantage of the higher density in Norwegian to have smoothed trajectories and model-based estimates. Figure \@ref(fig:overreg-nor-groups-plot) shows the grouped trajectories of each child. In this dataset, which extend to 36 months, many more children exhibit recovery trajectories for both nouns and verbs (`r nor_group_counts %>% filter(trajectory == "/\\") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`) and fewer exhibit increase trajectories (`r nor_group_counts %>% filter(trajectory == "/") %>% pull(p) %>% map_dbl(partial(prod, 100)) %>% roundp(0) %>% paste0("%") %>% paste(collapse = " and ")`), for an approximately even split between the two types. While the English and Norwegian data may differ in a variety of ways, it's plausible that the difference reflects that many children are recovering from overregularizing between 30 and 36 months (an age range that is not represented in the English dataset).
 
-<!-- Because longitudinal data are so much more plentiful in the Norwegian dataset, we are able to map proportions within individual children. Figure \@ref(overreg-nor-longs-age) shows smoothed curves for those children with at least 4 administrations. As in the cross-sectional data, we see noun and verb overregularization traveling together developmentally. Further, we see that the moment that over-regularization is reported seems to vary substantially by child. Some children are continuing to increase their overregularization throughout the sampling period, while others go through a discrete phase (at least for the high-frequency items shown on the form) and then return to zero by the end of the sampling period at age 3. Others barely over-regularize in this period. Thus, at a minimum we can conclude there is truly substantial individual variation in overregularization.  -->
+<!-- Because longitudinal data are so much more plentiful in the Norwegian dataset, we are able to map proportions within individual children. Figure \@ref(overreg-nor-longs-age) shows smoothed curves for those children with at least 4 administrations. As in the cross-sectional data, we see noun and verb overregularization traveling together developmentally. Further, we see that the moment that over-regularization is reported seems to vary substantially by child. Some children are continuing to increase their overregularization throughout the sampling period, while others go through a discrete phase (at least for the high-frequency items shown on the form) and then return to zero by the end of the sampling period at age 3. Others barely over-regularize in this period. Thus, at a minimum we can conclude there is truly substantial individual variation in overregularization. -->
 
 ```{r overreg-nor-groups-plot, dependson="overreg-nor-traj", fig.width=8, fig.height=4.25, fig.cap=glue("Model fit overregularization trajectories for Norweigian children with at least {nor_min} observations, categorized by overall shape.")}
 ggplot(nor_fit_vals_grouped, aes(x = age, y = .fitted)) +
@@ -564,7 +563,7 @@ nor_lexcat_labels <- nor_lexcat_props %>%
   filter(nouns == verbs)
 ```
 
-Additionally, we see evidence that trajectory shape is correlated between nouns and verbs: out of the children who have __recovery__ noun trajectories, `r nor_lexcat_labels %>% filter(verbs == "Λ") %>% pull(p) %>% prod(100) %>% roundp(0)`% also have __recovery__ verb trajectories; conversely, out of the children who have __increase__ noun trajectories, `r nor_lexcat_labels %>% filter(verbs == "/") %>% pull(p) %>% prod(100) %>% roundp(0)`% also have __increase__ verb trajectories (see Figure \@ref(fig:overreg-nor-lexcat-plot)). This echoes the observation from the cross-sectional data that while substantial variation between children, there is some degree of consistency within child across lexical categories.
+Additionally, we see evidence that trajectory shape is correlated between nouns and verbs: out of the children who have __recovery__ noun trajectories, `r nor_lexcat_labels %>% filter(verbs == "/\\") %>% pull(p) %>% prod(100) %>% roundp(0)`% also have __recovery__ verb trajectories; conversely, out of the children who have __increase__ noun trajectories, `r nor_lexcat_labels %>% filter(verbs == "/") %>% pull(p) %>% prod(100) %>% roundp(0)`% also have __increase__ verb trajectories (see Figure \@ref(fig:overreg-nor-lexcat-plot)). This echoes the observation from the cross-sectional data that while substantial variation between children, there is some degree of consistency within child across lexical categories.
 
 ```{r overreg-nor-lexcat-plot, dependson="overreg-nor-lexcat", out.width="75%", fig.cap="Proportion of children exhbiting each verb overrregularization trajectory type as a function of noun overregularization trajectory type."}
 ggplot(nor_lexcat_props, aes(x = nouns, y = p, fill = fct_rev(verbs))) +
@@ -579,7 +578,7 @@ ggplot(nor_lexcat_props, aes(x = nouns, y = p, fill = fct_rev(verbs))) +
 ```{r overreg-nor-dense, dependson="overreg-nor-traj"}
 min_admin_plot <- 9
 nor_fit_demo <- nor_fit_vals_grouped %>%
-  filter(trajectory == "Λ", num_admins >= min_admin_plot) %>%
+  filter(trajectory == "/\\", num_admins >= min_admin_plot) %>%
   group_by(original_id) %>%
   filter(all(c("nouns", "verbs") %in% lexical_category)) %>%
   mutate(sum_fitted = sum(.fitted)) %>%
@@ -592,15 +591,15 @@ nor_max_demo <- nor_fit_demo %>%
   filter(.fitted == max(.fitted))
 
 # nor_longs_demo <- nor_longs %>%
-#   ungroup() %>%
-#   inner_join(nor_fit_demo) %>%
-#   mutate(original_id = fct_reorder(original_id, sum_fitted, .desc = TRUE))
-#          # lexical_category = as.character(label_caps(lexical_category)))
+#  ungroup() %>%
+#  inner_join(nor_fit_demo) %>%
+#  mutate(original_id = fct_reorder(original_id, sum_fitted, .desc = TRUE))
+#     # lexical_category = as.character(label_caps(lexical_category)))
 # 
 # nor_fit_vals_grouped %>%
-#   filter(trajectory == "Λ") %>%
-#   group_by(original_id, lexical_category) %>%
-#   filter(.fitted == max(.fitted)) %>%
+#  filter(trajectory == "Λ") %>%
+#  group_by(original_id, lexical_category) %>%
+#  filter(.fitted == max(.fitted)) %>%
 nor_max_summary <- nor_max_demo %>%
   group_by(lexical_category) %>%
   summarise(mean_max = mean(age),
@@ -611,7 +610,7 @@ nor_max_summary <- nor_max_demo %>%
 
 Lastly, for a more detailed look at recovery from the overregularization, we examine the trajectories of the `r n_distinct(nor_fit_demo$original_id)` Norwegian children with the most observations (at least `r min_admin_plot`) who have recovery-type trajectories for both nouns and verbs (Figure \@ref(fig:overreg-nor-dense-plot)). We observe that for many of these children, the trajectories for nouns and verbs do not just have the same overall type, but also hang together over the course of development. The median age when these children are most likely to overregularize is `r nor_max_summary %>% filter(lexical_category == "Nouns") %>% pull(median_max)` months for nouns and `r nor_max_summary %>% filter(lexical_category == "Verbs") %>% pull(median_max)` months for verbs, consistent with the speculation above that 30 months marks the beginning of more widespread recovery.
 
-```{r overreg-nor-dense-plot, dependson="overreg-nor-dense", fig.width=8, fig.height=7, fig.cap=glue("Model fit overregularization trajectories for Norwegian children with recovery-type trajectories and at least {min_admin_plot} observations.")}
+```{r overreg-nor-dense-plot, dependson="overreg-nor-dense", fig.width=8, fig.height=7, fig.cap=glue("Model fit overregularization trajectories for Norwegian children with recovery-type trajectories and at least {min_admin_plot} observations. Marks in each line show the inflection point of the recovery.")}
 s <- 0.03
 ggplot(nor_fit_demo, aes(x = age, y = .fitted, colour = lexical_category)) +
   facet_wrap(~original_id, ncol = 6) +
@@ -629,8 +628,8 @@ ggplot(nor_fit_demo, aes(x = age, y = .fitted, colour = lexical_category)) +
 
 ## Conclusions
 
-This chapter examined overregularization data from the noun and verb morphology items of the Words and Sentences form in English and Norwegian. A central takeaway from our analyses is that there is tremendous heterogeneity in these data -- some children are never reported to overgeneralize within the age range of the sample, while others do substantially more, without a set developmental time course across children. We got a handle on this variability by observing that children with larger vocabularies tend to overregularize more and that children who overregularize more nouns tend to overregularize more verbs. Furthermore, individual children's trajectories can be fruitfully categorized by overall shape, leading to the observation that for children who overregularize, approximately half begin recovery towards correct inflection at around 30 months and half continue to overregularize more and more through 36 months; and that overregularization tend to proceed in tandem for nouns and verbs.
+This chapter examined overregularization data from the noun and verb morphology items of the Words and Sentences form in English and Norwegian. A central takeaway from our analyses is that there is tremendous heterogeneity in these data -- some children are never reported to overgeneralize within the age range of the sample, while others do substantially more, without a set developmental timecourse across children. Children with larger vocabularies tend to overregularize more. Overregularization also tends to proceed in tandem for nouns and verbs, in both cross-sectional and longitudinal data. Furthermore, individual children's trajectories can be fruitfully categorized by overall shape, leading to the observation that for children who overregularize, approximately half begin recovery towards correct inflection at around 30 months and half continue to overregularize more and more through 36 months. 
 
 One important caveat to these findings is the possibility that parents are less keen observers of morphological generalization than they are of vocabulary growth more broadly. It is possible that the lack of systematicity we observed is due to inconsistency in which parents report overgeneralization -- perhaps only some parents are sensitized to the somewhat meta-linguistic observation that their child is using a frequent ending incorrectly (e.g., *foots*). This kind of bias would be consistent with the noun-verb overregularization correlation we observed -- only systematic validation outside of the CDI would truly dispel this worry. 
 
-On the other hand, the kind of variability we observed is not unlike the variability observed in naturalistic studies of overgeneralization [e.g., @marcus1992]. Thus our work here suggests caution in the received narrative of morphological generalization as just another stage in the predictable progression of language learning. Unlike, say, word combination (cf. Chapter \@ref(grammar)), we do not see as clear a developmental march towards this more elusive behavior.
+On the other hand, the kind of variability we observed is not unlike the variability observed in naturalistic studies of overgeneralization [e.g., @marcus1992]. Thus our work here suggests caution in the received narrative of morphological generalization as just another stage in the predictable progression of language learning. Unlike, say, word combination (cf. Chapter \@ref(grammar)), we do not see as clear and consistent developmental progression in this more elusive behavior.

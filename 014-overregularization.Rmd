@@ -171,7 +171,8 @@ overreg_props <- bind_rows(by_kid_summary, non_zero_summary) %>%
 
 kable(overreg_props, digits = 2, col.names = c("Language", "N", "Nouns", "Verbs", "Nouns", "Verbs"),
       caption = "Proportion of noun and verb overregularization across languages.") %>%
-  add_header_above(c(" " = 2, "All children" = 2, "Children who overregularize" = 2))
+  add_header_above(c(" " = 2, "All children" = 2, "Children who overregularize" = 2)) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ```{r overreg-extreme-items, dependson="overreg-load"}
@@ -187,21 +188,32 @@ max_prop <- by_item_summary %>%
   filter(language == "English (American)", direction == "max") %>%
   pull(prop) %>% map_dbl(~. * 100) %>% roundp(0) %>% paste0("%") %>%
   paste(collapse = " and ")
-# min_items <- ""
-# max_items <- ""
-# max_prop <- ""
 ```
 
-Individual items vary in how often they are overregularized (Table \@ref(tab:overreg-item-table)): in English, items range from `r min_items`, which are virtually never overregularized, to `r max_items`, which are overregularized by `r max_prop` of children, respectively.
+Individual items vary in how often they are overregularized (Tables \@ref(tab:overreg-item-table-min) and \@ref(tab:overreg-item-table-max)): in English, items range from `r min_items`, which are virtually never overregularized, to `r max_items`, which are overregularized by `r max_prop` of children, respectively.
 
-```{r overreg-item-table, dependson="overreg-load"}
+```{r overreg-item-table-min, dependson="overreg-load"}
 by_item_summary %>%
-  pivot_wider(names_from = c(direction, lexical_category), values_from = c(definition, prop)) %>%
-  select(language, contains("min_nouns"), contains("min_verbs"), contains("max_nouns"), contains("max_verbs")) %>%
-  kable(digits = 2, col.names = c("Language", "Item", "Proportion", "Item", "Proportion", "Item", "Proportion", "Item", "Proportion"),
-        caption = "Most and least overregularized items in each language.") %>%
-  add_header_above(c(" " = 1, "Nouns" = 2, "Verbs" = 2, "Nouns" = 2, "Verbs" = 2)) %>%
-  add_header_above(c(" " = 1, "Least overregularized" = 4, "Most overregularized" = 4))
+  ungroup() %>%
+  filter(direction == "min") %>%
+  select(-direction) %>%
+  pivot_wider(names_from = lexical_category, values_from = c(definition, prop)) %>%
+  select(language, contains("nouns"), contains("verbs")) %>%
+  kable(digits = 2, col.names = c("Language", "Item", "Proportion", "Item", "Proportion"),
+        caption = "Least overregularized items in each language.") %>%
+  add_header_above(c(" " = 1, "Nouns" = 2, "Verbs" = 2))
+```
+
+```{r overreg-item-table-max, dependson="overreg-load"}
+by_item_summary %>%
+  ungroup() %>%
+  filter(direction == "max") %>%
+  select(-direction) %>%
+  pivot_wider(names_from = lexical_category, values_from = c(definition, prop)) %>%
+  select(language, contains("nouns"), contains("verbs")) %>%
+  kable(digits = 2, col.names = c("Language", "Item", "Proportion", "Item", "Proportion"),
+        caption = "Most overregularized items in each language.") %>%
+  add_header_above(c(" " = 1, "Nouns" = 2, "Verbs" = 2))
 ```
 
 Figure \@ref(fig:overreg-fits-age) shows each child's proportion of overregularized items plotted by age (for children who overregularize at least one item overall). The major generalization from these data is that curves tend to be surprisingly flat -- there are not large, consistent developmental increases for any language. The inset _r_^2^ for each panel in this graph show the variance explained by quadratic models of overregularization by age, quantitatively confirming the visual impression of limited developmental change -- the largest of these _r_^2^ values is only `r roundp(max(age_models$rsq))`.

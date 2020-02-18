@@ -297,8 +297,9 @@ ggplot(eng_prod_data,
                      limits = c(16, 30),
                      name = "Age (months)") +
   ylab("Production (number of words)") +
-  ylim(c(0, 680)) + 
-  theme(legend.position = "bottom")
+  ylim(c(0, 680)) +
+  guides(colour = guide_legend(reverse = TRUE))
+  # theme(legend.position = "bottom")
 ```
 
 As an example, we zoom in on the English (American) production data from the Words & Sentences form. The canonical view of these data is given in Figure \@ref(fig:vocab-eng-prod). It is very clear that variability is the norm! There are children clsose to the floor and ceiling of the instrument at almost all age groups. 
@@ -338,13 +339,14 @@ madm_data <- vocab_data %>%
 ggplot(filter(madm_data, language == "English (American)"), 
        aes(x = age, y = madm_p)) + 
   geom_point(aes(col = form)) + 
-  geom_smooth(aes(group = 1)) + 
+  geom_smooth(aes(group = 1), colour = .pal()(1)) + 
   ylim(0,2) +
   xlim(8,30) + 
   ylab("MADM (MAD / median)") + 
   xlab("Age (months)") + 
-  .scale_colour_discrete(name = "Form") +
-  theme(legend.position = "bottom")
+  # .scale_colour_discrete(name = "Form") +
+  scale_colour_manual(values = .pal()(3)[2:3], name = "Form") +
+  theme(legend.position = "top")
 ```
 
 Figure \@ref(fig:vocab-madm1) shows the MADM value for American English production data, plotted by age. In these data, the MADM is actually close to 1 from age one until almost age two, suggesting that the standard *difference* from the median is actually as big as the median itself! 
@@ -355,7 +357,7 @@ To get a sense of this variability, it can help to have a smaller dataset to con
 
 ggplot(madm_data, aes(x = age, y = madm_p)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 
-  geom_smooth(aes(group = 1)) + 
+  geom_smooth(aes(group = 1), colour = .pal()(1)) + 
   ylim(0,2) + 
   ylab("MADM (production)") + 
   xlab("Age (months)") + 
@@ -388,7 +390,8 @@ ggplot(madm_summary_prod, aes(y = language, x = madm_mean, col = form)) +
   # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") + 
   # geom_hline(aes(yintercept = 1), lty = 2, color = "gray") + 
   .scale_colour_discrete(name = "Form") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top",
+        panel.grid.major.y = .coef_line)
 ```
 
 We summarize the MADM in the second year of life by taking its mean across that age range. This summary is shown in Figure \@ref(fig:vocab-madm-summary). The MADM mean is close to 1 for almost every language and form for which we have data. In sum, confirming the analysis above, we see strong cross-linguistic consistency in the variability of children.
@@ -399,7 +402,7 @@ One question that could be raised regarding the analysis above is the extent to 
 ggplot(filter(madm_data, form %in% WGs), 
        aes(x = age, y = madm_c)) + 
   geom_jitter(aes(size = n, col = language), alpha = .5) + 
-  geom_smooth(aes(group  = 1)) + 
+  geom_smooth(aes(group  = 1), colour = .pal()(1)) + 
   ylim(0,2) + 
   ylab("MADM (comprehension)") + 
   xlab("Age (months)") + 
@@ -425,7 +428,8 @@ ggplot(madm_summary_comp, aes(x = language, y = madm_mean)) +
   ylim(0,1.5) + 
   coord_flip() + 
   xlab("") + 
-  ylab("MADM (comprehension)") 
+  ylab("MADM (comprehension)") +
+  theme(panel.grid.major.y = .coef_line)
 # geom_hline(aes(yintercept = 0), lty = 2, color = "gray") 
 # geom_hline(aes(yintercept = 1), lty = 2, color = "gray")
 ```

@@ -61,6 +61,8 @@ instrument_info <- measure_sample_sizes %>%
 lang_stats <- instrument_info %>%
   left_join(uni_lemma_info) %>%
   left_join(childes_sizes) %>%
+  ungroup() %>%
+  mutate(language = str_remove(language, " \\(.*\\)$")) %>%
   select(language, ni = num_included, pna = num_admins_produces,
          par = age_range_produces,
          una = num_admins_understands, uar = age_range_understands, types, tokens)
@@ -68,10 +70,9 @@ lang_stats <- instrument_info %>%
 kable(lang_stats, format = opts_knit$get("rmarkdown.pandoc.to"),
       escape = FALSE, format.args = list(big.mark = ","),
       caption = "Statistics for data from Wordbank and CHILDES. N indicates number of children.",
-      col.names = c("Language", "CDI items", "N", "Ages", "N", "Ages", "Types",
-                    "Tokens")) %>%
-  kableExtra::add_header_above(c("", "", "Production" = 2, "Comprehension" = 2,
-                     "CHILDES" = 2))
+      col.names = c("Language", "Items", "N", "Ages", "N", "Ages", "Types", "Tokens")) %>%
+  add_header_above(c("", "", "Production" = 2, "Comprehension" = 2, "CHILDES" = 2)) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 See Figure \@ref(fig:aoapred-demotraj) for example smoothed empirical item curves of the type being predicted in our subsequent analyses. 
@@ -147,13 +148,13 @@ extremes <- uni_model_data %>%
 extremes_display <- extremes %>%
   filter(language == "English (American)") %>%
   select(-language) %>%
-  rename(Lowest = lowest, Highest = highest) %>%
+  arrange(Predictor) %>%
   mutate(Predictor = display_predictors(Predictor)) %>%
-  arrange(Predictor)
+  select(Predictor, Lowest = lowest, Highest = highest)
 
-kable(extremes_display, escape = FALSE,
-      caption = "Items with the highest and lowest values for each predictor in English."
-)
+kable(extremes_display, align = "llr",
+      caption = "Items with the highest and lowest values for each predictor in English.") %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 Previous studies have shown robust consistency in the types of words that children learn very early [@tardif2008]. These words seem to describe concepts that are important or exciting in the lives of infants in a way that standard psycholinguistic features like concreteness do not. Capturing this intuition quantitatively is difficult, but @perry2015 provides a proxy measure as a first step. This measure is simply the degree to which a particular word was "associated with babies." Intuitively, we expect this measure to capture the degree to which words like _ball_ or _bottle_ feature heavily in the environment (and presumably, mental life) of many babies.

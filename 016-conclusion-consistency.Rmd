@@ -80,8 +80,7 @@ ggplot(cv_sim, aes(x = m, y = cv, col = sd, group = sd)) +
   geom_line() + 
   viridis::scale_color_viridis(guide = FALSE) + 
   xlab("Mean") + 
-  ylab("CV") 
-
+  ylab("CV")
 ```
 
 One key interpretive caution comes from the nature of the CV measure, however. The goal of the CV measure is to provide a unit-less way to compare variability across many measures. But because it is a ratio, when $\mu$ is small, CVs can be arbitrarily large. Figure \@ref(fig:cons-sim-plot) shows this relation. Concretely, this property will cause difficulties for us when we have phenomena within a particular grouping that have both small means and small standard deviations relative to other phenomena. For example, in Chapter \@ref(categories-semantic), the bias for household words is negligible -- as is the variation across languages. But, because the mean bias is very close to zero, the coefficient of variation appears gigantic. To assist interpretability, we have simply omitted negligable effects like this from the analysis below, recognizing that this move limits the generality of the approach.  
@@ -99,10 +98,11 @@ ggplot(cvs_plot, aes(y = signature, x = cv, col = measure)) +
   geom_vline(xintercept = 0, lty = .refline, colour = .grey) + 
   xlab("Coefficient of variation across languages") + 
   ylab("") + 
-  theme(legend.position = "bottom",
+  theme(legend.position = "top",
         legend.box = "vertical") + 
   .scale_colour_discrete(name = "Measure") + 
-  scale_size_continuous(name = "N languages")  
+  scale_size_continuous(name = "N languages") +
+  theme(panel.grid.major.y = .coef_line)
   # xlim(0, 2)
 ```
 

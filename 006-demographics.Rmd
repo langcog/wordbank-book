@@ -73,7 +73,7 @@ demo_mmad_age_plot <- function(demo, form, measure, advantage) {
   demo_data <- analyses[[paste(form, measure, sep = ".")]][[demo_str]]
   ggplot(ungroup(demo_data$mmad_ratio), aes(x = age, y = mmad)) +
     geom_jitter(aes(col = interaction(language, form, sep = .inst_sep))) +
-    geom_smooth(span = 1, aes(group = 1)) +
+    geom_smooth(span = 1, aes(group = 1), colour = .pal()(1)) +
     geom_hline(yintercept = 0, lty = .refline, col = .grey) + 
     xlab("Age (months)")  + 
     ylab(glue("MMAD ({advantage} advantage)")) +
@@ -96,7 +96,8 @@ demo_mmad_plot <- function(demo, form, measure, advantage) {
     coord_flip() +
     ylab(glue("MMAD ({advantage} advantage)")) +
     xlab("") +
-    geom_hline(aes(yintercept = 0), lty = .refline, color = .grey)
+    geom_hline(aes(yintercept = 0), lty = .refline, color = .grey) +
+    theme(panel.grid.major.y = .coef_line)
 }
 demo_mmad_cap <- function(form, measure, advantage) {
   glue("MMAD {advantage} advantage for {form} {measure} data in each language averaged over age.")
@@ -112,7 +113,8 @@ demo_int_plot <- function(demo_str, form, measure) {
   ggplot(aes(x = beta, y = language)) +
     geom_point() +
     geom_vline(xintercept = 0, linetype = .refline, colour = .grey) +
-    labs(x = glue("Interaction between age and {tolower(demo_label(demo_str))}"), y = "")
+    labs(x = glue("Interaction between age and {tolower(demo_label(demo_str))}"), y = "") +
+    theme(panel.grid.major.y = .coef_line)
 }
 ```
 
@@ -134,7 +136,7 @@ We begin by examining data from WG-type forms using comprehension measures. Figu
 
 Visual inspection of the data suggest limited sex differences, but a female advantage is present in some languages (most pronounced in Korean, Latvian, and Hebrew). Note that many authors do not find gender differences in early comprehension. For example, using an overlapping 12 language dataset, @eriksson2012 concluded that there were no major comprehension differences. And in an earlier study, @feldman2000 also did not find gender differences in comprehension using a large, relatively representative American dataset, though this study included data only from younger children (10--13 months).
 
-```{r demo-data-plot-sex-wg-comp, fig.height=7, fig.cap=demo_data_cap('sex', 'WG', 'comprehension'), dependson="demo-plot-funs"}
+```{r demo-data-plot-sex-wg-comp, fig.height=8, fig.cap=demo_data_cap('sex', 'WG', 'comprehension'), dependson="demo-plot-funs"}
 demo_data_plot(sex, "WG", "comprehension")
 ```
 
@@ -168,7 +170,7 @@ We next turn to production data on the Words & Sentences instrument. Figure \@re
 demo_data_plot(sex, "WS", "production")
 ```
 
-```{r demo-int-sex-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and sex for WS production data in each language."}
+```{r demo-int-sex-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and sex for WS production data in each language.", fig.height=5}
 demo_int_plot("sex", "WS", "production")
 ```
 
@@ -235,7 +237,7 @@ We perform the same set of analyses as for sex, shown in Figure \@ref(fig:demo-d
 demo_data_plot(birth_order, "WG", "comprehension")
 ```
 
-```{r demo-int-birth-order-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WG production data in each language."}
+```{r demo-int-birth-order-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WG production data in each language.", fig.height=2}
 demo_int_plot("birth_order", "WG", "comprehension")
 ```
 
@@ -243,7 +245,7 @@ demo_int_plot("birth_order", "WG", "comprehension")
 demo_mmad_age_plot("birth_order", "WG", "comprehension", "first-born")
 ```
 
-```{r demo-mmad-plot-birth-order-wg-comp, fig.cap=demo_mmad_cap('WG', 'comprehension', 'first-born'), dependson="demo-plot-funs"}
+```{r demo-mmad-plot-birth-order-wg-comp, fig.cap=demo_mmad_cap('WG', 'comprehension', 'first-born'), dependson="demo-plot-funs", fig.height=2}
 demo_mmad_plot("birth_order", "WG", "comprehension", "first-born")
 ```
 
@@ -251,11 +253,11 @@ demo_mmad_plot("birth_order", "WG", "comprehension", "first-born")
 
 The parallel set of analyses for WS Production data are shown in Figure \@ref(fig:demo-data-plot-birth-order-ws-prod), Figure \@ref(fig:demo-int-birth-order-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-birth-order-ws-prod), and Figure \@ref(fig:demo-mmad-plot-birth-order-ws-prod).
 
-```{r demo-data-plot-birth-order-ws-prod, fig.height=7, fig.cap=demo_data_cap('birth_order', 'WS', 'production'), dependson="demo-plot-funs"}
+```{r demo-data-plot-birth-order-ws-prod, fig.height=6, fig.cap=demo_data_cap('birth_order', 'WS', 'production'), dependson="demo-plot-funs"}
 demo_data_plot(birth_order, "WS", "production")
 ```
 
-```{r demo-int-birth-order-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WS production data in each language."}
+```{r demo-int-birth-order-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and birth order for WS production data in each language.", fig.height=3}
 demo_int_plot("birth_order", "WS", "production")
 ```
 
@@ -263,7 +265,7 @@ demo_int_plot("birth_order", "WS", "production")
 demo_mmad_age_plot("birth_order", "WS", "production", "first-born")
 ```
 
-```{r demo-mmad-plot-birth-order-ws-prod, fig.cap=demo_mmad_cap('WS', 'production', 'first-born'), dependson="demo-plot-funs"}
+```{r demo-mmad-plot-birth-order-ws-prod, fig.cap=demo_mmad_cap('WS', 'production', 'first-born'), dependson="demo-plot-funs", fig.height=3}
 demo_mmad_plot("birth_order", "WS", "production", "first-born")
 ```
 
@@ -285,11 +287,11 @@ In the current dataset, we use maternal education as a proxy for SES, following 
 
 We again perform the same set of analyses, shown in Figure \@ref(fig:demo-data-plot-mom-ed-wg-comp), Figure \@ref(fig:demo-int-mom-ed-wg-comp), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-wg-comp), and Figure \@ref(fig:demo-mmad-plot-mom-ed-wg-comp).
 
-```{r demo-data-plot-mom-ed-wg-comp, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WG', 'comprehension'), dependson="demo-plot-funs"}
+```{r demo-data-plot-mom-ed-wg-comp, fig.height=6, fig.cap=demo_data_cap('mom_ed', 'WG', 'comprehension'), dependson="demo-plot-funs"}
 demo_data_plot(mom_ed, "WG", "comprehension")
 ```
 
-```{r demo-int-mom-ed-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WG comprehension data in each language."}
+```{r demo-int-mom-ed-wg-comp, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WG comprehension data in each language.", fig.height=3}
 demo_int_plot("mom_ed", "WG", "comprehension")
 ```
 
@@ -297,7 +299,7 @@ demo_int_plot("mom_ed", "WG", "comprehension")
 demo_mmad_age_plot("mom_ed", "WG", "comprehension", "college-educated")
 ```
 
-```{r demo-mmad-plot-mom-ed-wg-comp, fig.cap=demo_mmad_cap('WG', 'comprehension', 'college-educated'), dependson="demo-plot-funs"}
+```{r demo-mmad-plot-mom-ed-wg-comp, fig.cap=demo_mmad_cap('WG', 'comprehension', 'college-educated'), dependson="demo-plot-funs", fig.height=2.5}
 demo_mmad_plot("mom_ed", "WG", "comprehension", "college-educated")
 ```
 
@@ -307,11 +309,11 @@ These results suggest a small -- and perhaps negative -- relationship between ma
 
 The next analyses are shown in Figure \@ref(fig:demo-data-plot-mom-ed-ws-prod), Figure \@ref(fig:demo-int-mom-ed-ws-prod), Figure \@ref(fig:demo-mmad-age-plot-mom-ed-ws-prod), and Figure \@ref(fig:demo-mmad-plot-mom-ed-ws-prod).
 
-```{r demo-data-plot-mom-ed-ws-prod, fig.height=7, fig.cap=demo_data_cap('mom_ed', 'WS', 'production'), dependson="demo-plot-funs"}
+```{r demo-data-plot-mom-ed-ws-prod, fig.height=6, fig.cap=demo_data_cap('mom_ed', 'WS', 'production'), dependson="demo-plot-funs"}
 demo_data_plot(mom_ed, "WS", "production")
 ```
 
-```{r demo-int-mom-ed-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WS production data in each language."}
+```{r demo-int-mom-ed-ws-prod, dependson="demo-int-plot", fig.cap="Interaction term between age and maternal education for WS production data in each language.", fig.height=3}
 demo_int_plot("mom_ed", "WS", "production")
 ```
 
@@ -319,7 +321,7 @@ demo_int_plot("mom_ed", "WS", "production")
 demo_mmad_age_plot("mom_ed", "WS", "production", "college-educated")
 ```
 
-```{r demo-mmad-plot-mom-ed-ws-prod, fig.cap=demo_mmad_cap('WS', 'production', 'college-educated'), dependson="demo-plot-funs"}
+```{r demo-mmad-plot-mom-ed-ws-prod, fig.cap=demo_mmad_cap('WS', 'production', 'college-educated'), dependson="demo-plot-funs", fig.height=3}
 demo_mmad_plot("mom_ed", "WS", "production", "college-educated")
 ```
 
@@ -369,7 +371,7 @@ write_feather(cvs, "data/cvs/demographic_cvs.feather")
 
 <!-- After we get the data finalized, we can see if there is evidence for reporting bias in these data.
 
-```{r demo-early_comp}
+```{r demo-early_comp, eval=FALSE}
 early_comprehension <- vocab_data %>%
   filter(form == "WG", age < 13, !is.na(mom_ed)) %>%
   group_by(language, mom_ed, age) %>%

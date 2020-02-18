@@ -144,7 +144,8 @@ ggplot(predictions, aes(x = vocab, y = prop)) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.5),
                      name = "Vocabulary size") +
   .scale_colour_numerous(guide = FALSE) +
-  .scale_fill_numerous(guide = FALSE) 
+  .scale_fill_numerous(guide = FALSE) +
+  theme(strip.text = element_text(size = rel(0.7)))
 ```
 
 Many of the results of this analysis for English are expected. Sounds items (onomatopoeia) are heavily over-represented, as are Body Parts, Games & Routines, and to a slightly lesser extent, Toys, Animals, and Vehicles. These particular biases are likely related to particular parenting practices, cultural emphases (for example, on animal names), and young children's' idiosyncratic interests [@deloache2007]. 
@@ -175,7 +176,8 @@ ggplot(plot_data, aes(x = vocab, y = prop, colour = langform)) +
   geom_line(stat = "smooth", method = "clm",
             formula = y ~ I(x ^ 3) + I(x ^ 2) + x - 1, 
             size = 1, se = FALSE, alpha = .2) + 
-  geom_abline(linetype = .refline, colour = .grey)
+  geom_abline(linetype = .refline, colour = .grey) +
+  theme(strip.text = element_text(size = rel(0.7)))
 ```
 
 Because there are so many different languages represented in this analysis, the simplest analysis examines the spread of languages across categories (Figure \@ref(fig:catsem-plot-points-ws)). Somewhat surprisingly, the ordering of categories looks quite similar to what was observed in English. Sounds, Games & Routines, and Body parts are all over-represented. Vehicles, Food & Drink, Animals, and Clothing all are more  variable across cultures, as is People. Small Household Items, Outside Things, and Furniture & Rooms show variability but overall less bias. Finally, Places and Time Words are both under-represented systematically across all languages. 
@@ -199,7 +201,8 @@ ggplot(aes(x = langform, y = mean, colour = langform)) +
   geom_hline(yintercept = 0, linetype = .refline, colour = .grey) + 
   scale_colour_manual(values = inst_colours, guide = FALSE) +
   ylab("Relative representation in early vocabulary") + 
-  xlab("")
+  xlab("") +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 We next zoom in on the most highly over-represented categories (Figure \@ref(fig:catsem-plot-areas)). The highest mean comes from Body Parts, which are over-represented in just about every language [@andersen1978]. Interestingly, the three datasets with the lowest proportion of Body Parts are the two Mandarin datasets (WS and TC) and the Cantonese WS data. Games & Routines are generally over-represented but somewhat more variable, with Kiswahili, Kigiriama, and Mandarin TC data lowest. Sounds are quite highly variable but almost all positive, with Russian being the outlier. Inspection of these items shows *negative* developmental trajectories for a number of words in the Sounds category. We believe these data are likely an artifact of parents feeling that they should "trade off" with noun labels in the Animals category, and hence that items in the Sounds category are "baby words" and should be discounted. Finally, words in the Vehicles category appear more variable but have positive bias across most language families.
@@ -216,7 +219,8 @@ ggplot(filter(area_summary,
   geom_hline(yintercept = 0, linetype = .refline, colour = .grey) + 
   scale_colour_manual(values = inst_colours, guide = FALSE) +
   ylab("Relative representation in early vocabulary") + 
-  xlab("")
+  xlab("") +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 We next consider People, Places, and Time Words (Figure \@ref(fig:catsem-people-places-time)). People has highly variable bias, with some languages under-representing and others over-representing. @tardif2008 speculated that names for people were a substantial part of children's earliest words, but that may reflect that study's use of Mandarin and Cantonese data where people terms are very over-represented due to cultural emphasis on family connections. Surprisingly, despite the relatively multi-generational and family-centric nature of children's experience in Kenya [@alcock2013], people words were relatively under-represented in Kiswahili and Kigiriama. 

@@ -811,7 +811,7 @@ In sum, across languages, a given word has lower odds of being understood by a f
 
 A specific claim has been made in the literature regarding effects of birth order on language development -- @oshima-takane1996 reported that second-born children learn second-person personal pronouns (e.g., *you*) earlier, likely due to the disambiguating effect of having siblings addressed using such pronouns in overheard speech. We examined this pattern in our own American English data in Figure \@ref(fig:itemsdemo-props-plot-pronouns), but did not find global support for it. The major trend that emerged was a smaller first-born advantage for *me* and *mine* than average (and smaller than for *my*, *you*, and *your*). *Prima facie*, this finding is less consistent with a global increase in second-person disambiguation -- which would have predicted a reversal of the global pattern for these terms -- than with later-born children needing to assert "mine" to declare ownership. 
 
-```{r itemsdemo-props-plot-pronouns, dependson="itemsdemo-plot_props", fig.height=5, fig.cap="Developmental trajectories for personal pronouns in American English words by birth order. Note that lines are overplotted, especially in the case of _mine_."}
+```{r itemsdemo-props-plot-pronouns, dependson="itemsdemo-plot_props", fig.height=5, fig.cap="(ref:plot-pronouns-cap)"}
 pronouns <- c("me", "my", "mine", "you","your", "yours")
 
 plot_demo_props[["birth_order"]] %>%
@@ -828,6 +828,7 @@ plot_demo_props[["birth_order"]] %>%
   lims(y = c(0, 1)) +
   theme(legend.position = "top")
 ```
+(ref:plot-pronouns-cap) Developmental trajectories for personal pronouns in American English words by birth order. Note that lines are overplotted, especially in the case of _mine_.
 
 Examining the data across languages in Figure \@ref(fig:itemsdemo-plot-pronouns), we see a similar pattern. *Me*, *my*, and *mine* are all learned earlier for second-born children than first-born. In contrast, *you* and *your*, while numerically positive, have confidence intervals that overlap with zero. These data thus support the hypothesis that first-person possessives are learned slightly earlier for later-born children (perhaps related to property conflicts, e.g. "that's mine!").
 

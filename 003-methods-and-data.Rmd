@@ -76,10 +76,11 @@ Each of these datasets is then imported to the database by creating a custom imp
 
 Wordbank currently contains data from `r length(unique(items$language))` language communities. Many of these are from instruments similar to the original Words & Gestures (WG, "infant") / Words & Sentences (WS, "toddler") format, with around 400 items in WG and 700 in the WS. Typically, WG forms are intended for children from 8--18 months and WS forms are intended for children 16--30 months, but these ranges are flexible. Some WS forms are used up to `r max(filter(instruments, form == "WS")$age_max)` months or extended as low as `r min(filter(instruments, form == "WS")$age_min)` months (in cases where a single form is considered desirable by the researchers constructing the adaptation). 
 
-Wordbank also includes some other forms that do not fit into this schema. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age range. We group this form with WG forms because it measures comprehension. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these checklist forms in analyses where WS and WG data are included, grouping them by their target age range. 
+Wordbank also includes some other forms that do not fit into this schema. Some of these are "short forms" with no internal category structure and fewer items overall, and these are excluded from many item and category analyses. But others have many structural features of WS and WG forms. For example, the Oxford CDI is a WG-style form with comprehension as well as production estimates, but applied to a larger age range. We group this form with WG forms because it measures comprehension. The Mandarin Infant Checklist (IC) and Toddler Checklist (TC) are checklist forms without grammatical and gesture items but with structured sets of vocabulary items. We include these checklist forms in analyses where WS and WG data are included, grouping them by their target age range.
 
-Table \@ref(tab:methods-overview) shows an overview of the instruments in Wordbank.
+Table \@ref(tab:methods-overview) shows an overview of the instruments in Wordbank. The number of administrations available is highly variable across instruments and languages. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages. We have fewer WG administrations than WS forms for essentially all languages/dialects. These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-/un-represented. Figure \@ref(fig:methods-map) indicates which countries have their population represented in the dataset.
 
+\afterpage{
 ```{r methods-overview, results="asis"}
 items %>%
   group_by(language, form) %>%
@@ -87,14 +88,16 @@ items %>%
             words = sum(type == "word"),
             categories = n_distinct(category)) %>%
   left_join(instruments) %>%
-  select(language, form, categories, items, words, age_min, age_max) %>%
+  mutate(age_range = glue("{age_min}–{age_max}")) %>%
+  select(language, form, categories, items, words, age_range) %>%
   kable(caption = "Overview of the available instruments in the Wordbank dataset.",
-        col.names = label_caps(colnames(.)))
+        col.names = label_caps(colnames(.)), align = c(rep("l", 2), rep("r", 4)),
+        longtable = TRUE) %>%
+  kable_styling(font_size = 8, latex_options = "repeat_header")
 ```
+\vspace{4em}
 
-The number of administrations available is highly variable across instruments and languages, however. Figure \@ref(fig:methods-admins) shows the distribution of administrations across forms and languages. We have fewer WG administrations than WS forms for essentially all languages/dialects. 
-
-```{r methods-admins, fig.cap="Log-scaled number of administrations for each instrument."}
+```{r methods-admins, fig.cap="Log-scaled number of administrations for each instrument.", fig.pos="bh"}
 admins_grouped <- admins %>%
     mutate(form = ifelse(form %in% c("WS","WG"), form, "Other") %>%
              fct_relevel("WG", "WS", "Other"))
@@ -114,12 +117,11 @@ ggplot(admin_summary, aes(x = language, y = n, col = form)) +
   ylab("Number of administrations") + 
   xlab("") +
   scale_y_log10() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top",
+        panel.grid.major.y = .coef_line)
 ```
 
-These instruments have global reach, although the maximal number cover North America and Western Europe. African, South American, and South/South-East Asian languages are notably under-/un-represented. Figure \@ref(fig:methods-map) indicates which countries have their population represented in the dataset.
-
-```{r methods-map, fig.cap="World map shaded for those countries whose population is represented in the dataset.", fig.height=3.6}
+```{r methods-map, fig.cap="World map shaded for those countries whose population is represented in the dataset.", fig.height=3.2}
 # write_csv(data.frame(unique(instruments$language)), "data/methods/languages_countries.csv")
 
 languages_countries <- read_csv("data/methods/languages_countries.csv")
@@ -147,6 +149,7 @@ ggplot() +
   scale_x_continuous(labels = NULL) + 
   scale_y_continuous(labels = NULL, lim = c(-55,90)) 
 ```
+}
 
 ### Administration details
 
@@ -192,7 +195,8 @@ ggplot(filter(gender_counts, sex == "Female"),
   xlab("") + 
   # ylim(.2, .8) + 
   theme(axis.text.x = element_text(angle = 90, vjust = .5, hjust = 1), 
-        legend.position = "bottom")
+        legend.position = "top",
+        panel.grid.major.y = .coef_line)
 ```
 
 Sex proportions tend to be quite close to .5, with a few exceptions for small datasets. Several WG datasets (e.g., British Sign Language, Russian, Italian, Quebec French) have more males than might be expected by chance. This pattern is important because (as we will investigate in Chapter \@ref(demographics)), there are systematic differences in vocabulary size between boys and girls, and so sample differences in gender will lead to absolute differences in mean vocabulary size. 
@@ -214,6 +218,7 @@ ggplot(momed_counts,
   facet_grid(~form) + 
   ylab("Maternal education proportions") + 
   xlab("") +
+  scale_y_continuous(labels = paste) +
   .scale_fill_discrete(name = "Maternal education") 
 ```
 
@@ -236,6 +241,7 @@ ggplot(ord_counts,
   facet_grid(~form) + 
   ylab("Birth order proportions") + 
   xlab("") +
+  scale_y_continuous(labels = paste) +
   .scale_fill_discrete(name = "Birth order") 
 ```
 
@@ -247,7 +253,7 @@ In summary, our samples differ substantially in their demographic makeup. Presum
 
 The strongest developmental inferences can be made by the examination of longitudinal data, in which children's individual development is measured multiple times using the same instrument. Unfortunately, relatively little of our CDI data comes from this type of repeated administration. Figure \@ref(fig:methods-longitudinal) shows the number of administrations for particular languages that come from longitudinal datasets with a particular depth. There is a substantial amount of two-administration longitudinal data for several languages, but only a few have more than two observations for individual children.
 
-```{r methods-longitudinal, fig.cap="Number of children for whom there are multiple administrations for each instrument, split into bins."}
+```{r methods-longitudinal, fig.cap="Number of children for whom there are multiple administrations per instrument, split into bins."}
 longitudinal <- admins %>%
   filter(form %in% c(WSs,WGs), 
          !is.na(original_id)) %>%
@@ -281,7 +287,7 @@ One feature of dealing with data from such disparate sources can't be glossed ov
 
 In general, our approach with respect to these data is to embrace the messiness of the data we have. While it is very tempting to remove specific datasets from consideration when they deviate from our expectations, this practice creates a strong circularity in all of our inferences: they will be estimates of variability or consistency stemming from cases where we ourselves have imposed certain consistency standards on our data. While there are some cases where we have a relatively likely explanation close to hand for the pattern we observe in the data, unless we can confirm this pattern externally, we have chosen not to exclude these data. 
 
-```{r methods-russian-animals, fig.cap="Mean proportion children reported to produce each item in the Animal Sounds category for Russian Words and Sentences."}
+```{r methods-russian-animals, fig.cap="Proportion of children reported to produce each item in the Sounds category in Russian WS."}
 
 russian_animals <- get_instrument_data(language = "Russian", form = "WS", 
                                items = filter(items, 
@@ -299,14 +305,14 @@ ggplot(russian_animal_means,
        aes(x = age, y = mean, group = uni_lemma)) + 
   geom_line(alpha = .3) + 
   xlab("Age (months)") + 
-  ylab("Median production")
+  ylab("Proportion producing")
 ```
 
 One example of this kind of situation comes from the Russian dataset. Although -- as we will explore in depth -- nearly every individual item in every dataset shows a positive developmental slope (indicating learning over time), Russian animal sounds are a distinctive exception, as shown in Figure \@ref(fig:methods-russian-animals). Every item in this category *decreases* developmentally in a very consistent and reliable way. What happened? One possibility is that this set of items was reverse coded (and so it should be asymptoting at three years). Another possibility is that Russian parents treat these as "baby words" that a three-year-old would not or should not produce (e.g., rather than saying *oink* they should say *pig*.) We can speculate but we will likely never know. 
 
-Extending more broadly (and presaging the discussion in Chapter \@ref(vocabulary)), our analyses have revealed two datasets that show large disparities not just in a single category but in the pattern of overall vocabulary sizes: Mandarin (Beijing) Words & Sentences production and Mandarin (Taiwain) Words & Sentences comprehension. 
+Extending more broadly (and presaging the discussion in Chapter \@ref(vocabulary)), our analyses have revealed two datasets that show large disparities not just in a single category but in the pattern of overall vocabulary sizes: Mandarin (Beijing) Words & Sentences production and Mandarin (Taiwain) Words & Sentences comprehension.
 
-```{r vocab-ords-mandarin, fig.cap="Median production vocabulary for 24-month-olds, with total item scores shown in the left panel and proportions on the right. Scores are sorted by total item score. To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months."}
+```{r methods-ords-mandarin, fig.cap="Median production vocabulary for 24-month-olds, with total item scores shown in the left panel and proportions on the right. Scores are sorted by total item score. To increase stability, the plotted value is the intercept of a linear model predicting vocabulary as a function of centered age between 18 and 30 months."}
 num_words <- items %>%
   filter(type == "word") %>%
   group_by(language, form) %>%
@@ -363,16 +369,11 @@ ggplot(ords, aes(y = language, x = estimate, col = form)) +
   xlab("Median 24-month vocabulary estimate") + 
   ylab("") +
   .scale_colour_discrete(name = "Form") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top") +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
-In our first example, Mandarin Words & Sentences, these data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there show a pronounced Mandarin advantage. As it turns out, this advantage is almost unprecedented relative to other languages. We plot the median production for 24-month olds in Figure \@ref(fig:vocab-ords-mandarin). This figure reveals both how large the Mandarin advantage and the high level of vocabulary reported for Hebrew speakers as well (this difference is less striking in raw scores because of the relatively smaller number of items on the Hebrew form). 
-
-To investigate the Mandarin disparities further, @tardif2009 discussed a number of possible explanations, given that the administration and sampling procedures were similar in Mandarin and Cantonese. The children in the Mandarin sample are nearly all monolingual, only (first born) children; but these factors did not account for variation between samples. @tardif2009 therefore, speculate that structural factors regarding Mandarin (e.g., phonological structure relative to Cantonese) might be accounting for the Mandarin advantage.
-
-These speculations seem unlikely in light of the data presented here. First, and perhaps most importantly, the same magnitude response is not shown in the data from the analogous WS Checklist questionnaire of @hao2008 (blue points). Second, this unusual trajectory is not apparent in the production data from the Mandarin Beijing WG form. Finally, given the surprising difference between Mandarin and all other languages in the sample, pure phonological factors seem unlikely to account fully for the differences. These differences thus remain somewhat mysterious; perhaps some quirk of administration instructions led to relative over-reporting, or perhaps the populations being sampled truly were different. Alongside the Hebrew data, these data serve as an important caution against simple cross-linguistic comparison in raw scores or even percentiles. 
-
-```{r vocab-taiwan-comprehension, fig.cap="Comprehension data from Taiwanese Mandarin."}
+```{r methods-taiwan-comprehension, fig.cap="Comprehension data from Taiwanese Mandarin.", out.width="70%"}
 taiwan_comp_data <- vocab_data %>%
   filter(form == "WG", language == "Mandarin (Taiwanese)") %>%
   mutate(mean = comprehension)
@@ -380,15 +381,21 @@ taiwan_comp_data <- vocab_data %>%
 ggplot(taiwan_comp_data,
        aes(x = age, y = mean)) +
   geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_smooth() + #aes(col = interaction(language, form, sep = .inst_sep)))+
+  geom_smooth(colour = .pal()(1)) + #aes(col = interaction(language, form, sep = .inst_sep)))+
   scale_x_continuous(breaks = seq(8, 16, 2),
                      limits = c(8, 16),
                      name = "Age (months)") +
   # scale_colour_manual(values = inst_colours, name = "") +
   ylab("Comprehension (number of words)") +
-  ylim(c(0, 380)) + 
-  theme(legend.position = "bottom")
+  ylim(c(0, 380))
+  # theme(legend.position = "bottom")
 ```
+
+In our first example, Mandarin Words & Sentences, these data are reported by @tardif2009 in a study of both Mandarin- and Cantonese-learning children. The data reported there show a pronounced Mandarin advantage. As it turns out, this advantage is almost unprecedented relative to other languages. We plot the median production for 24-month olds in Figure \@ref(fig:vocab-ords-mandarin). This figure reveals both how large the Mandarin advantage and the high level of vocabulary reported for Hebrew speakers as well (this difference is less striking in raw scores because of the relatively smaller number of items on the Hebrew form). 
+
+To investigate the Mandarin disparities further, @tardif2009 discussed a number of possible explanations, given that the administration and sampling procedures were similar in Mandarin and Cantonese. The children in the Mandarin sample are nearly all monolingual, only children; but these factors did not account for variation between samples. @tardif2009 therefore, speculate that structural factors regarding Mandarin (e.g., phonological structure relative to Cantonese) might be accounting for the Mandarin advantage.
+
+These speculations seem unlikely in light of the data presented here. First, and perhaps most importantly, the same magnitude response is not shown in the data from the analogous WS Checklist questionnaire of @hao2008 (blue points). Second, this unusual trajectory is not apparent in the production data from the Mandarin Beijing WG form. Finally, given the surprising difference between Mandarin and all other languages in the sample, pure phonological factors seem unlikely to account fully for the differences. These differences thus remain somewhat mysterious; perhaps some quirk of administration instructions led to relative over-reporting, or perhaps the populations being sampled truly were different. Alongside the Hebrew data, these data serve as an important caution against simple cross-linguistic comparison in raw scores or even percentiles.
 
 Turning to Mandarin (Taiwanese) comprehension scores, we see that they are relatively flat and show very high medians very early in development. Deeper inspection of the full distributional pattern (Figure \@ref(fig:vocab-taiwan-comprehension)) suggests that there is relatively little developmental change in comprehension scores on this dataset. In contrast, production appears to follow a more typical pattern. In our experience, this pattern results from parents who do not understand what is being asked on the comprehension section of a form; sometimes they report whether they think a child has heard a particular word, or whether they respond to language in more general ways. We have observed a population of "over-responders" of this sort in a number of self-report contexts -- often they are parents of very young children who appear loathe to return a form having checked essentially no items at all. But such an explanation is only speculation.
 

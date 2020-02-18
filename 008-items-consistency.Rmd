@@ -172,14 +172,14 @@ in_lang_props <- in_langs %>%
 Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(tab:items-top10-production) and \@ref(tab:items-top10-comprehension)). Similar words appeared in the top 10 across languages, especially in children's earliest productions. In production, `r in_lang_props %>% filter(measure == "produces", in_langs == 15) %>% pull(n)` of the `r in_lang_props %>% filter(measure == "produces") %>% pull(n) %>% sum()` words appeared in the top ten earliest words of every language (`r in_lang_props %>% filter(measure == "produces", in_langs == 15) %>% pull(prop) %>% roundp()`), and all but `r in_lang_props %>% filter(measure == "produces", in_langs < 10) %>% pull(n)` appeared in at least ten languages (`r (1 - in_lang_props %>% filter(measure == "produces", in_langs < 10) %>% pull(prop)) %>% roundp()`). In comprehension, `r in_lang_props %>% filter(measure == "understands", in_langs == 15) %>% pull(n)` of the `r in_lang_props %>% filter(measure == "understands") %>% pull(n) %>% sum()` words appeared in the top ten earliest words of every language (`r in_lang_props %>% filter(measure == "understands", in_langs == 15) %>% pull(prop) %>% roundp()`), and all but `r in_lang_props %>% filter(measure == "understands", in_langs < 10) %>% pull(n)` appeared in at least ten languages (`r (1 - in_lang_props %>% filter(measure == "understands", in_langs < 10) %>% pull(prop)) %>% roundp()`). These words consist primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). 
 
 ```{r items-top10-production}
-MIN_HIGHLIGHT <- 6
+MIN_HIGHLIGHT_PRODUCTION <- 6
 
 highlight_produces <- top10 %>%
   filter(measure == "produces") %>%
   pivot_longer(cols = Croatian:Turkish, names_to = "language", values_to = "word") %>%
   group_by(word) %>%
   summarise(n = n()) %>%
-  filter(n >= 6) %>%
+  filter(n >= MIN_HIGHLIGHT_PRODUCTION) %>%
   mutate(bold_word = paste0("**",word,"**"))
 
 top10 %>%
@@ -192,17 +192,19 @@ top10 %>%
   select(-bold_word) %>%
   pivot_wider(names_from = "language", values_from = "word") %>%
   select(-measure, -order) %>%
-  kable(caption = "The 10 earliest words that children produce in each language.") %>%
+  kable(caption = paste0("The 10 earliest words that children produce in each language. Bolded words appear in at least ", MIN_HIGHLIGHT_PRODUCTION, " languages.")) %>%
   kableExtra::kable_styling(font_size = 10.5)
 ```
 
 ```{r items-top10-comprehension}
+MIN_HIGHLIGHT_COMPREHENSION <- 6
+
 highlight_understands<- top10 %>%
   filter(measure == "understands") %>%
   pivot_longer(cols = Croatian:Turkish, names_to = "language", values_to = "word") %>%
   group_by(word) %>%
   summarise(n = n()) %>%
-  filter(n >= 6) %>%
+  filter(n >= MIN_HIGHLIGHT_COMPREHENSION) %>%
   mutate(bold_word = paste0("**",word,"**"))
 
 top10 %>%
@@ -215,7 +217,7 @@ top10 %>%
   select(-bold_word) %>%
   pivot_wider(names_from = "language", values_from = "word") %>%
   select(-measure, -order) %>%
-  kable(caption = "The 10 earliest words that children comprehend in each language.") %>%
+   kable(caption = paste0("The 10 earliest words that children understand in each language. Bolded words appear in at least ", MIN_HIGHLIGHT_COMPREHENSION, " languages.")) %>%
   kableExtra::kable_styling(font_size = 10.5)
 ```
 

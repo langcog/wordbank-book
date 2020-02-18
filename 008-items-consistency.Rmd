@@ -172,21 +172,49 @@ in_lang_props <- in_langs %>%
 Following @tardif2008, we begin by examining the first 10 words acquired by children across the `r n_distinct(all_aoas$language)` languages we measured (Tables \@ref(tab:items-top10-production) and \@ref(tab:items-top10-comprehension)). Similar words appeared in the top 10 across languages, especially in children's earliest productions. In production, `r in_lang_props %>% filter(measure == "produces", in_langs == 15) %>% pull(n)` of the `r in_lang_props %>% filter(measure == "produces") %>% pull(n) %>% sum()` words appeared in the top ten earliest words of every language (`r in_lang_props %>% filter(measure == "produces", in_langs == 15) %>% pull(prop) %>% roundp()`), and all but `r in_lang_props %>% filter(measure == "produces", in_langs < 10) %>% pull(n)` appeared in at least ten languages (`r (1 - in_lang_props %>% filter(measure == "produces", in_langs < 10) %>% pull(prop)) %>% roundp()`). In comprehension, `r in_lang_props %>% filter(measure == "understands", in_langs == 15) %>% pull(n)` of the `r in_lang_props %>% filter(measure == "understands") %>% pull(n) %>% sum()` words appeared in the top ten earliest words of every language (`r in_lang_props %>% filter(measure == "understands", in_langs == 15) %>% pull(prop) %>% roundp()`), and all but `r in_lang_props %>% filter(measure == "understands", in_langs < 10) %>% pull(n)` appeared in at least ten languages (`r (1 - in_lang_props %>% filter(measure == "understands", in_langs < 10) %>% pull(prop)) %>% roundp()`). These words consist primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). 
 
 ```{r items-top10-production}
+MIN_HIGHLIGHT <- 6
+
+highlight_produces <- top10 %>%
+  filter(measure == "produces") %>%
+  pivot_longer(cols = Croatian:Turkish, names_to = "language", values_to = "word") %>%
+  group_by(word) %>%
+  summarise(n = n()) %>%
+  filter(n >= 6) %>%
+  mutate(bold_word = paste0("**",word,"**"))
+
 top10 %>%
   ungroup() %>%
   filter(measure == "produces") %>%
-  select(-measure, -order) %>%
   mutate_all(function(col) str_remove(col, " \\(.*\\)")) %>%
+  pivot_longer(cols = c(-measure, -order), names_to = "language", values_to = "word") %>%
+  left_join(select(highlight_produces, -n), by = "word") %>%
+  mutate(word = if_else(is.na(bold_word), word, bold_word)) %>%
+  select(-bold_word) %>%
+  pivot_wider(names_from = "language", values_from = "word") %>%
+  select(-measure, -order) %>%
   kable(caption = "The 10 earliest words that children produce in each language.") %>%
   kableExtra::kable_styling(font_size = 10.5)
 ```
 
 ```{r items-top10-comprehension}
+highlight_understands<- top10 %>%
+  filter(measure == "understands") %>%
+  pivot_longer(cols = Croatian:Turkish, names_to = "language", values_to = "word") %>%
+  group_by(word) %>%
+  summarise(n = n()) %>%
+  filter(n >= 6) %>%
+  mutate(bold_word = paste0("**",word,"**"))
+
 top10 %>%
   ungroup() %>%
   filter(measure == "understands") %>%
-  select(-measure, -order) %>%
   mutate_all(function(col) str_remove(col, " \\(.*\\)")) %>%
+  pivot_longer(cols = c(-measure, -order), names_to = "language", values_to = "word") %>%
+  left_join(select(highlight_understands, -n), by = "word") %>%
+  mutate(word = if_else(is.na(bold_word), word, bold_word)) %>%
+  select(-bold_word) %>%
+  pivot_wider(names_from = "language", values_from = "word") %>%
+  select(-measure, -order) %>%
   kable(caption = "The 10 earliest words that children comprehend in each language.") %>%
   kableExtra::kable_styling(font_size = 10.5)
 ```
@@ -313,7 +341,7 @@ pairwise_cor_test <- cor.test(wide_method_cor$produces, wide_method_cor$understa
 
 Unfortunately, the `r n_distinct(all_aoas$language)` languages in our analyses are both a small and non-representative sample of the world's languages, and thus do not have sufficient power to detect typological features of language that might be responsible for differences in the similarity of acquisition across languages [@piantadosi2014]. Nonetheless, the languages do come from different languages families, and do vary in their phylogenetic distance. We leverage this variability to ask whether the similarity between two languages is related to similarity in how quickly words for the same concepts are learned in those two languages.
 
-Instead of correlating the average similarity of age of acquisition across all languages, we consider the pairwise similarities in the age of acquisition of each of the `r cutoff_n` words in each language. Figure \@ref(fig:items-consistency-heatmap) shows these pairwise correlations for  production as a matrix in which each cell shows a single pairwise correlation. This correlation matrix appears to contain a significant amount of structure, with languages that are from the same language family (e.g. Norwegian and Danish) showing higher correlations in their ages of acquisition for the same concepts. Perhaps unsurprisingly from the high average correlation between production and comprehension, pairwise correlations were nearly identical for production and comprehension (_r_ = `r roundp(pairwise_cor_test$estimate)`, _p_ `r print_pvalue(pairwise_cor_test$p.value)`); we omit the comprehension matrices for length. Figure \@ref(fig:items-production-dendro) shows a dendrogram produced by hierarchically clustering these pairwise correlations. 
+Instead of correlating the average similarity of age of acquisition across all languages, we consider the pairwise similarities in the age of acquisition of each of the `r cutoff_n` words in each language. Figure \@ref(fig:items-consistency-heatmap) shows these pairwise correlations for  production as a matrix in which each cell shows a single pairwise correlation. This correlation matrix appears to contain a significant amount of structure, with languages that are from the same language family (e.g. Norwegian and Danish) showing higher correlations in their ages of acquisition for the same concepts. Perhaps unsurprisingly from the high average correlation between production and comprehension, pairwise correlations were nearly identical for production and comprehension (_r_ = `r roundp(pairwise_cor_test$estimate)`, _p_ `r print_pvalue(pairwise_cor_test$p.value)`); we omit the comprehension matrices for length. Figure \@ref(fig:items-consistency-dendro) shows a dendrogram produced by hierarchically clustering these pairwise correlations. 
 
 ```{r items-consistency-heatmap, fig.height=7.5, out.width="80%", fig.cap = "Correlation matrix showing pairwise correlations in words' age of acquisition. Languages that are more similar have more similar acquisition orders."}
 ggplot(filter(cors, measure == "produces"),
@@ -330,6 +358,10 @@ ggplot(filter(cors, measure == "produces"),
 ```
 
 ```{r items-dendro-setup}
+typology <- yaml::read_yaml("data/items-consistency/typology.yaml") %>%
+  tibble(label = names(.), family = unlist(.)) %>%
+  select(label, family)
+
 make_hc <- function(df) {
    mat <- df %>%
     spread(language2, correlation) %>%
@@ -337,26 +369,69 @@ make_hc <- function(df) {
     column_to_rownames("language1") %>%
     data.matrix()
    
-   hclust(dist(mat))
+   hclust(dist(mat)) %>% 
+     ggdendro::dendro_data(., type = "triangle")
 }
+```
 
+
+
+```{r items-consistency-dendro, fig.cap = "Dendrograms of the similarity in the ages of words' first production cross-linguistically."}
 dendros <- cors %>%
   group_by(measure) %>%
   nest() %>%
   mutate(hc = map(data, make_hc)) %>%
   select(-data) 
-```
 
-```{r items-production-dendro, fig.cap = "A hierarchical clustering of the similarity in the ages of words' first production cross-linguistically."}
-ggdendro::ggdendrogram(dendros %>% filter(measure == "produces")
-                       %>% pull(hc) %>% .[[1]]) +
-  theme(axis.text.y = element_blank())
-```
+dendro_segments <- dendros %>%
+  mutate(segment = map(hc, ~.x %>% ggdendro::segment())) %>%
+  select(-hc) %>%
+  unnest(cols = segment)
 
-```{r items-comprehension-dendro, eval = F, fig.cap = "A hierarchical clustering of the similarity in the ages of words' first comprehension cross-linguistically."}
-ggdendro::ggdendrogram(dendros %>% filter(measure == "understands")
-                       %>% pull(hc) %>% .[[1]]) +
-  theme(axis.text.y = element_blank())
+dendro_labels <- dendros %>%
+  mutate(segment = map(hc, ~.x %>% ggdendro::label())) %>%
+  select(-hc) %>%
+  unnest(cols = segment) %>%
+  mutate(label = label %>% str_remove(" \\(.*\\)")) %>%
+  left_join(typology, by = "label")
+
+plt <- ggplot(dendro_segments) +
+  facet_grid(. ~ measure, scales = "free",
+             labeller = as_labeller(label_caps)) +
+  geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_text(aes(x = x, y = y - 0.02, label = label, colour = family),
+            data = dendro_labels, hjust = 0, family = .font) +
+  coord_flip() +
+  scale_x_reverse() +
+  scale_y_reverse() +
+  # scale_colour_manual(values = lang_colours_aoa, guide = FALSE) +
+  .scale_color_discrete(name = "Language family",
+                        guide = guide_legend(title.position = "top",
+                                             title.hjust = 0.5,
+                                             override.aes = list(size = 0),
+                                             keyheight = unit(0, "lines"))) +
+  expand_limits(y = -1) +
+  theme_get() +
+  theme(axis.line = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        legend.position = "bottom",
+        legend.text = element_blank(),
+        legend.title = element_text(size = rel(0.8), margin = margin(b = -8)),
+        legend.margin = margin(t = 0),
+        panel.border = element_blank())
+
+lgnd <- typology %>% 
+  distinct(family) %>% 
+  mutate(x = scale(1:n())) %>%
+  ggplot(aes(x = x, y = 0)) +
+    geom_text(aes(label = family, colour = family), family = .font, size = 3) +
+    .scale_colour_discrete(guide = FALSE) +
+    lims(x = c(-2, 2)) +
+    theme_void()
+
+cowplot::plot_grid(plt, lgnd, ncol = 1, rel_heights = c(20, 1))
 ```
 
 ```{r items-asjp-distance}

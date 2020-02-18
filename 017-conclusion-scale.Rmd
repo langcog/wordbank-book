@@ -49,7 +49,7 @@ Research on international adoption provides additional support for this unitary 
 In sum, the language system is much more tightly woven than casual observation might lead an observer to expect. Although our data provided multiple opportunities for aspects of language development (communication, vocabulary, morphology, grammar) to dissociate into modular subsystems across individuals, measures of ability instead hung together very tightly. Further, the strength of these connections varied little across the languages we examined. 
 
 
-### Young children's similar interests drive their communication
+### Children's similar interests drive their communication
 
 A second broad generalization from our work here is the content similarities in children's early communication -- both vocabulary and gesture -- across languages. Put simply, regardless of the language they are learning, children in the early stages of language learning appear to talk about similar things, especially people, social routines, small objects, and body parts. This work builds on analyses by @tardif2008, who compared the distribution of children's first ten words across three languages, Mandarin, Cantonese and English. Many of the content generalizations that held for those three languages in fact hold here as well in a much more broad array of languages. Further, children's early gestures are also strikingly similar across languages, communicating showing, giving, and the desire to be picked up before their first birthday with high consistency across languages. 
 

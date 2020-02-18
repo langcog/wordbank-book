@@ -1,27 +1,28 @@
 ---
 title: "Variability and Consistency in Early Language Learning"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
-biblio-style: apalike
-output: pdf_document
+subtitle: The Wordbank Project
 documentclass: book
-github-repo: langcog/wordbank-book
-link-citations: yes
+biblio-style: apalike
 bibliography: book.bib
 site: bookdown::bookdown_site
-subtitle: The Wordbank Project
+github-repo: langcog/wordbank-book
+link-citations: yes
 always_allow_html: yes
+ISBN: ?????
+copyright_year: 2020
 ---
 
 \renewcommand{\thefigure}{P.\arabic{figure}}
 
-# Preface {.unlisted .unnumbered}
+# __Preface__ {.unlisted .unnumbered}
 
 ```{r preface-citation, results='asis'}
 if (opts_knit$get("rmarkdown.pandoc.to") == "html")
 cat("> *This website is the free online version of a book whose current citation is: Frank, M. C., Braginsky, M., Marchman, V. A., and Yurovsky, D. (in prep). Variability and Consistency in Early Language Learning: The Wordbank Project. Cambridge, MA: MIT Press.*")
 ```
 
-## Overview {.unlisted .unnumbered}
+### Overview {.unnumbered}
 
 The emergence of children's early language is one of the most miraculous parts of human development. The ability to communicate using language arrives with incredible rapidity -- most parents judge that their child is producing words with the intent to communicate before his or her first birthday [@schneider2015] and the onset of comprehension is even earlier [e.g., @bergelson2012;@tincoff1999]. 
 
@@ -43,7 +44,7 @@ The third contribution of this work is to develop theory treating the question o
 
 This set of contributions reflects an important guiding principle of our work here. Studies which at first glance seem like "mere replication" -- in which a particular analysis is replicated on a larger dataset -- are in fact important opportunities for theoretical development. Replicating with a larger dataset typically leads to a more precise estimate of the phenomenon of interest, which can be used for confirmation, but also for quantitative comparisons and computational modeling. But this increased precision then allows for the examination of variability and consistency across meaningful units like children, words, instruments, or languages. Such estimates in turn are -- as we argue throughout -- relevant to foundational theoretical questions. Thus, there is never "mere" replication. More precise measurements sit hand and hand with better theory [@greenwald2012]. 
 
-## Outline {.unlisted .unnumbered}
+### Outline {.unnumbered}
 
 The first chapters of this book provide an overview of the practical and theoretical issues that we cover. Chapter \@ref(intro-theory) gives a broad theoretical overview of our claims and sets up some of the empirical themes that we return to throughout, especially the notion of using the consistency and variability of phenomena to make generalizations about the process of acquisition. Chapter \@ref(intro-practical) then discusses the practicalities of the CDI and the Wordbank project. Chapter \@ref(methods-and-data) gives a methodological and descriptive overview of the dataset we analyze throughout. And Chapter \@ref(psychometrics) discusses the psychometric properties of parent report data, addressing questions about the strengths and limitations of this method. 
 
@@ -66,7 +67,7 @@ The book ends with three synthetic chapters. Chapter \@ref(conclusion-consistenc
 
 Finally, the appendices describe and cite the individual datasets reported in Wordbank and provide supplemental analyses validating particular analytic practices that we adopt. 
 
-## How to read this book {.unlisted .unnumbered}
+### How to read this book {.unnumbered}
 
 You can read this book as a narrative monograph. If you intend to do so, we recommend you read Chapters \@ref(intro-theory), \@ref(intro-practical), \@ref(methods-and-data), and \@ref(psychometrics) before moving on to substantive chapters of interest. 
 
@@ -79,7 +80,7 @@ The dataset in Wordbank is constantly growing and changing as we add new feature
 For this reason, we work using snapshots of the underlying database. Every so often, we will return to the manuscript and recompile the online edition, then check references to the data that might have changed. The current build of the book is from `r lubridate::now()`.
 <!-- , based on data cached on `r format(file.mtime("data/_common"), "%a %b %d %H:%M:%S %Y")`. -->
 
-## Acknowledgements {.unlisted .unnumbered}
+### Acknowledgements {.unnumbered}
 
 Our sincere thanks go to all of the generous researchers -- too many to name here, but listed on the [Wordbank contributors page](http://wordbank.stanford.edu/contributors) and in Appendix \@ref(appendix-data) -- who contributed their data to the database. Even during our time working on this project, norms of data sharing have shifted; some substantial portion of this shift is due to the generosity of those researchers who shared their data early on in the process. Thanks especially to Rune Nørdgard Jørgensen for sharing the full CLEX-CDI dataset [@jorgensen2010] and for his kind assistance in the transition from the CLEX-CDI website to the Wordbank website. 
 
@@ -94,3 +95,5 @@ This book benefited from thoughtful comments by Philip Dale and Eve Clark, as we
 <script>
 document.body.innerHTML = document.body.innerHTML.replace(/0.1/g, "P.1")
 </script>
+
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}

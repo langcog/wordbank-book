@@ -9,7 +9,7 @@
     ]
   },
   "Bioconductor": {
-    "Version": "3.10"
+    "Version": null
   },
   "Packages": {
     "BDgraph": {

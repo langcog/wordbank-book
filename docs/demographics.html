@@ -72,9 +72,9 @@
 </li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<li><a href="index.html#preface"><strong>Preface</strong></a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview"><i class="fa fa-check"></i>Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#outline"><i class="fa fa-check"></i>Outline</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i>How to read this book</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
@@ -319,7 +319,7 @@
 <li class="chapter" data-level="17.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#generalizations"><i class="fa fa-check"></i><b>17.2</b> Generalizations</a>
 <ul>
 <li class="chapter" data-level="17.2.1" data-path="conclusion-scale.html"><a href="conclusion-scale.html#the-language-system-is-tightly-woven"><i class="fa fa-check"></i><b>17.2.1</b> The language system is tightly woven</a></li>
-<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#young-childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Young children’s similar interests drive their communication</a></li>
+<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Children’s similar interests drive their communication</a></li>
 <li class="chapter" data-level="17.2.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#children-take-different-routes-into-language"><i class="fa fa-check"></i><b>17.2.3</b> Children take different routes into language</a></li>
 </ul></li>
 <li class="chapter" data-level="17.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#learning-processes"><i class="fa fa-check"></i><b>17.3</b> Learning processes</a>
@@ -381,14 +381,14 @@
 <h3><span class="header-section-number">6.1.1</span> Comprehension (WG)</h3>
 <p>We begin by examining data from WG-type forms using comprehension measures. Figure <a href="demographics.html#fig:demo-data-plot-sex-wg-comp">6.1</a> shows our approach. Each subplot shows median reported comprehension for each age and sex group. Smoothing lines show the predictions of a robust generalized linear model (we selected a robust GLM to avoid some pathological effects from outliers in a small subset of situations).</p>
 <p>Visual inspection of the data suggest limited sex differences, but a female advantage is present in some languages (most pronounced in Korean, Latvian, and Hebrew). Note that many authors do not find gender differences in early comprehension. For example, using an overlapping 12 language dataset, <span class="citation">Eriksson et al. (<a href="references.html#ref-eriksson2012" role="doc-biblioref">2012</a>)</span> concluded that there were no major comprehension differences. And in an earlier study, <span class="citation">Feldman et al. (<a href="references.html#ref-feldman2000" role="doc-biblioref">2000</a>)</span> also did not find gender differences in comprehension using a large, relatively representative American dataset, though this study included data only from younger children (10–13 months).</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-data-plot-sex-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-data-plot-sex-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-data-plot-sex-wg-comp-1.png" alt="Differences in WG comprehension scores by sex, plotted across age by language." width="\linewidth" />
 <p class="caption">
 Figure 6.1: Differences in WG comprehension scores by sex, plotted across age by language.
 </p>
 </div>
 <p>We can examine statistical models to get a clearer picture. For each language, we fit a robust generalized linear model predicting vocabulary size (number of words understood out of the total) based on age and the interaction of age and sex. We specified this simple model so that the coefficient estimate for the age by sex interaction (as shown in Figure <a href="demographics.html#fig:demo-int-sex-wg-comp">6.2</a>) provides a convenient summary of the difference in vocabulary growth across groups. Despite the small magnitudes of the coefficients, 16 of 22 languages had a female advantage. In contrast, only 2 showed a male advantage and the remainder did not show a significant sex by age interaction.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-int-sex-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-int-sex-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-int-sex-wg-comp-1.png" alt="Interaction term between age and sex for WG comprehension data in each language." width="\linewidth" />
 <p class="caption">
 Figure 6.2: Interaction term between age and sex for WG comprehension data in each language.
@@ -398,13 +398,13 @@ Figure 6.2: Interaction term between age and sex for WG comprehension data in ea
 <p><span class="math display">\[d = \frac{\mu_2 - \mu_1}{\sigma_{pooled}}\]</span></p>
 <p>But, as in the previous chapter, we have the problem of non-normal distributions. To circumvent this issue, we use a non-parametric measure derived from the same components: the difference between medians, divided by the MAD. (We call this the MMAD; Appendix <a href="appendix-variability.html#appendix-variability">B</a> shows that it is comparable to Cohen’s <span class="math inline">\(d\)</span> as a measure of effect size).</p>
 <p>Applying this measure to the data on comprehension, we see a quite small average female advantage that appears relatively constant across age (Figure <a href="demographics.html#fig:demo-mmad-age-plot-sex-wg-comp">6.3</a>). For those languages with dense enough data, we can take a weighted average of this pattern across ages, which reveals substantial variability (Figure <a href="demographics.html#fig:demo-mmad-plot-sex-wg-comp">6.4</a>). The overall median for these 18 languages is quite small as well, 0.08. In summary, there is some evidence for a modest female advantage in comprehension.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-age-plot-sex-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-age-plot-sex-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-age-plot-sex-wg-comp-1.png" alt="MMAD female advantage for WG comprehension data in each language across age." width="\linewidth" />
 <p class="caption">
 Figure 6.3: MMAD female advantage for WG comprehension data in each language across age.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-plot-sex-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-plot-sex-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-plot-sex-wg-comp-1.png" alt="MMAD female advantage for WG comprehension data in each language averaged over age." width="\linewidth" />
 <p class="caption">
 Figure 6.4: MMAD female advantage for WG comprehension data in each language averaged over age.
@@ -414,26 +414,26 @@ Figure 6.4: MMAD female advantage for WG comprehension data in each language ave
 <div id="production-ws" class="section level3" number="6.1.2">
 <h3><span class="header-section-number">6.1.2</span> Production (WS)</h3>
 <p>We next turn to production data on the Words &amp; Sentences instrument. Figure <a href="demographics.html#fig:demo-data-plot-sex-ws-prod">6.5</a> shows curves for each individual language. Visual inspection confirms a female advantage in almost every case, and an analysis of the fitted models (see Figure <a href="demographics.html#fig:demo-int-sex-ws-prod">6.6</a>) shows that 25 of 26 languages show a statistically significant female advantage!</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-data-plot-sex-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-data-plot-sex-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-data-plot-sex-ws-prod-1.png" alt="Differences in WS production scores by sex, plotted across age by language." width="\linewidth" />
 <p class="caption">
 Figure 6.5: Differences in WS production scores by sex, plotted across age by language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-int-sex-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-int-sex-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-int-sex-ws-prod-1.png" alt="Interaction term between age and sex for WS production data in each language." width="\linewidth" />
 <p class="caption">
 Figure 6.6: Interaction term between age and sex for WS production data in each language.
 </p>
 </div>
 <p>We next turn to the MMAD effect size measure (see Figure <a href="demographics.html#fig:demo-mmad-age-plot-sex-ws-prod">6.7</a> and Figure <a href="demographics.html#fig:demo-mmad-plot-sex-ws-prod">6.8</a>). Here we see a relatively consistent difference across ages with perhaps a slight downward trend in effect size with age. This downward trend might be a function of ceiling effects on the form, however, as seen in the model-fit curves above for, e.g., Danish. When variability is limited by the form ceiling, effect size estimates will necessarily be depressed. The median female advantage is 0.40, substantially larger than that seen in early comprehension.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-age-plot-sex-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-age-plot-sex-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-age-plot-sex-ws-prod-1.png" alt="MMAD female advantage for WS production data in each language across age." width="\linewidth" />
 <p class="caption">
 Figure 6.7: MMAD female advantage for WS production data in each language across age.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-plot-sex-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-plot-sex-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-plot-sex-ws-prod-1.png" alt="MMAD female advantage for WS production data in each language averaged over age." width="\linewidth" />
 <p class="caption">
 Figure 6.8: MMAD female advantage for WS production data in each language averaged over age.
@@ -445,7 +445,7 @@ Figure 6.8: MMAD female advantage for WS production data in each language averag
 <p>Do these differences reflect differences in measurement that are unique to the CDI? One way of addressing this question is to examine other studies of gender differences. Unfortunately, many of the studies reporting differences themselves rely on the CDI or similar measures, likely for the reasons reviewed in Chapter <a href="intro-practical.html#intro-practical">2</a>, <span class="citation">(e.g. Bauer, Goldfield, and Reznick <a href="references.html#ref-bauer2002" role="doc-biblioref">2002</a>; Fenson et al. <a href="references.html#ref-fenson1994" role="doc-biblioref">1994</a>; Feldman et al. <a href="references.html#ref-feldman2000" role="doc-biblioref">2000</a>)</span>. For example, <span class="citation">Feldman et al. (<a href="references.html#ref-feldman2000" role="doc-biblioref">2000</a>)</span> collected CDIs with a large dataset of low-income American English speakers at 12 and 24 months. In those data, early comprehension showed no significant gender differences, but production at 24 months showed a difference comparable to what we observed here (<em>N</em> = 2156, <em>d</em> = .35, as recomputed from provided summary statistics). These data, while providing a replication in an independent dataset, do not speak to whether reporting biases contributed to or created the observed sex effects.</p>
 <p>For external validation, we turn to two other studies that provide more objective (non parent-report) measurements of early language. First, a seminal study by <span class="citation">Huttenlocher et al. (<a href="references.html#ref-huttenlocher1991" role="doc-biblioref">1991</a>)</span> measured gender effects in vocabulary production as estimated from a naturalistic language sample, finding substantial differences in vocabulary growth favoring girls. Although the measures from this study are not comparable totthose used in the current analysis, the effects were quite large (and were relatively unaffected by controlling for maternal language exposure).</p>
 <p>Second, <span class="citation">Bornstein and Putnick (<a href="references.html#ref-bornstein2012" role="doc-biblioref">2012</a>)</span> used a particularly powerful study design to examine stability in early language estimates across different measures. They gathered longitudinal data at 20 and 48 months using a wide range of standardized and parent-report measures, and then used structural equation modeling to model shared variance due to parent report as well as to standardized latent language ability at each age. We digitized data from their Figure 2 to examine the size of the gender differences in the latent vocabulary construct that they recovered (see Figure <a href="demographics.html#fig:demo-bornstein-plot">6.9</a>).<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> As these scores are standardized, we can examine the difference in means and recover an estimate of the standardized effect size for gender in the data, which is 0.62 standard deviations. Since this measurement is <em>greater</em> than that found using the CDIs (the comparable American English measurement was 0.35), this observation gives us resaon to doubt that our observed effect is due solely to reporting bias.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-bornstein-plot"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-bornstein-plot"></span>
 <img src="wordbank-book_files/figure-html/demo-bornstein-plot-1.png" alt="Latent vocabulary scores from Bornstein and Putnick (2012) by age and sex (crossbars show means and 95 percent confidence intervals)." width="\linewidth" />
 <p class="caption">
 Figure 6.9: Latent vocabulary scores from Bornstein and Putnick (2012) by age and sex (crossbars show means and 95 percent confidence intervals).
@@ -465,25 +465,25 @@ Figure 6.9: Latent vocabulary scores from Bornstein and Putnick (2012) by age an
 <div id="comprehension-wg-1" class="section level3" number="6.2.1">
 <h3><span class="header-section-number">6.2.1</span> Comprehension (WG)</h3>
 <p>We perform the same set of analyses as for sex, shown in Figure <a href="demographics.html#fig:demo-data-plot-birth-order-wg-comp">6.10</a>, Figure <a href="demographics.html#fig:demo-int-birth-order-wg-comp">6.11</a>, Figure <a href="demographics.html#fig:demo-mmad-age-plot-birth-order-wg-comp">6.12</a>, and Figure <a href="demographics.html#fig:demo-mmad-plot-birth-order-wg-comp">6.13</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-data-plot-birth-order-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-data-plot-birth-order-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-data-plot-birth-order-wg-comp-1.png" alt="Differences in WG comprehension scores by birth order, plotted across age by language." width="\linewidth" />
 <p class="caption">
 Figure 6.10: Differences in WG comprehension scores by birth order, plotted across age by language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-int-birth-order-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-int-birth-order-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-int-birth-order-wg-comp-1.png" alt="Interaction term between age and birth order for WG production data in each language." width="\linewidth" />
 <p class="caption">
 Figure 6.11: Interaction term between age and birth order for WG production data in each language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-age-plot-birth-order-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-age-plot-birth-order-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-age-plot-birth-order-wg-comp-1.png" alt="MMAD first-born advantage for WG comprehension data in each language across age." width="\linewidth" />
 <p class="caption">
 Figure 6.12: MMAD first-born advantage for WG comprehension data in each language across age.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-plot-birth-order-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-plot-birth-order-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-plot-birth-order-wg-comp-1.png" alt="MMAD first-born advantage for WG comprehension data in each language averaged over age." width="\linewidth" />
 <p class="caption">
 Figure 6.13: MMAD first-born advantage for WG comprehension data in each language averaged over age.
@@ -493,25 +493,25 @@ Figure 6.13: MMAD first-born advantage for WG comprehension data in each languag
 <div id="production-ws-1" class="section level3" number="6.2.2">
 <h3><span class="header-section-number">6.2.2</span> Production (WS)</h3>
 <p>The parallel set of analyses for WS Production data are shown in Figure <a href="demographics.html#fig:demo-data-plot-birth-order-ws-prod">6.14</a>, Figure <a href="demographics.html#fig:demo-int-birth-order-ws-prod">6.15</a>, Figure <a href="demographics.html#fig:demo-mmad-age-plot-birth-order-ws-prod">6.16</a>, and Figure <a href="demographics.html#fig:demo-mmad-plot-birth-order-ws-prod">6.17</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-data-plot-birth-order-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-data-plot-birth-order-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-data-plot-birth-order-ws-prod-1.png" alt="Differences in WS production scores by birth order, plotted across age by language." width="\linewidth" />
 <p class="caption">
 Figure 6.14: Differences in WS production scores by birth order, plotted across age by language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-int-birth-order-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-int-birth-order-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-int-birth-order-ws-prod-1.png" alt="Interaction term between age and birth order for WS production data in each language." width="\linewidth" />
 <p class="caption">
 Figure 6.15: Interaction term between age and birth order for WS production data in each language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-age-plot-birth-order-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-age-plot-birth-order-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-age-plot-birth-order-ws-prod-1.png" alt="MMAD first-born advantage for WS production data in each language across age." width="\linewidth" />
 <p class="caption">
 Figure 6.16: MMAD first-born advantage for WS production data in each language across age.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-plot-birth-order-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-plot-birth-order-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-plot-birth-order-ws-prod-1.png" alt="MMAD first-born advantage for WS production data in each language averaged over age." width="\linewidth" />
 <p class="caption">
 Figure 6.17: MMAD first-born advantage for WS production data in each language averaged over age.
@@ -532,25 +532,25 @@ Figure 6.17: MMAD first-born advantage for WS production data in each language a
 <div id="comprehension-wg-2" class="section level3" number="6.3.1">
 <h3><span class="header-section-number">6.3.1</span> Comprehension (WG)</h3>
 <p>We again perform the same set of analyses, shown in Figure <a href="demographics.html#fig:demo-data-plot-mom-ed-wg-comp">6.18</a>, Figure <a href="demographics.html#fig:demo-int-mom-ed-wg-comp">6.19</a>, Figure <a href="demographics.html#fig:demo-mmad-age-plot-mom-ed-wg-comp">6.20</a>, and Figure <a href="demographics.html#fig:demo-mmad-plot-mom-ed-wg-comp">6.21</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-data-plot-mom-ed-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-data-plot-mom-ed-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-data-plot-mom-ed-wg-comp-1.png" alt="Differences in WG comprehension scores by maternal education, plotted across age by language." width="\linewidth" />
 <p class="caption">
 Figure 6.18: Differences in WG comprehension scores by maternal education, plotted across age by language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-int-mom-ed-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-int-mom-ed-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-int-mom-ed-wg-comp-1.png" alt="Interaction term between age and maternal education for WG comprehension data in each language." width="\linewidth" />
 <p class="caption">
 Figure 6.19: Interaction term between age and maternal education for WG comprehension data in each language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-age-plot-mom-ed-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-age-plot-mom-ed-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-age-plot-mom-ed-wg-comp-1.png" alt="MMAD college-educated advantage for WG comprehension data in each language across age." width="\linewidth" />
 <p class="caption">
 Figure 6.20: MMAD college-educated advantage for WG comprehension data in each language across age.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-plot-mom-ed-wg-comp"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-plot-mom-ed-wg-comp"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-plot-mom-ed-wg-comp-1.png" alt="MMAD college-educated advantage for WG comprehension data in each language averaged over age." width="\linewidth" />
 <p class="caption">
 Figure 6.21: MMAD college-educated advantage for WG comprehension data in each language averaged over age.
@@ -561,25 +561,25 @@ Figure 6.21: MMAD college-educated advantage for WG comprehension data in each l
 <div id="production-ws-2" class="section level3" number="6.3.2">
 <h3><span class="header-section-number">6.3.2</span> Production (WS)</h3>
 <p>The next analyses are shown in Figure <a href="demographics.html#fig:demo-data-plot-mom-ed-ws-prod">6.22</a>, Figure <a href="demographics.html#fig:demo-int-mom-ed-ws-prod">6.23</a>, Figure <a href="demographics.html#fig:demo-mmad-age-plot-mom-ed-ws-prod">6.24</a>, and Figure <a href="demographics.html#fig:demo-mmad-plot-mom-ed-ws-prod">6.25</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:demo-data-plot-mom-ed-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-data-plot-mom-ed-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-data-plot-mom-ed-ws-prod-1.png" alt="Differences in WS production scores by maternal education, plotted across age by language." width="\linewidth" />
 <p class="caption">
 Figure 6.22: Differences in WS production scores by maternal education, plotted across age by language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-int-mom-ed-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-int-mom-ed-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-int-mom-ed-ws-prod-1.png" alt="Interaction term between age and maternal education for WS production data in each language." width="\linewidth" />
 <p class="caption">
 Figure 6.23: Interaction term between age and maternal education for WS production data in each language.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-age-plot-mom-ed-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-age-plot-mom-ed-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-age-plot-mom-ed-ws-prod-1.png" alt="MMAD college-educated advantage for WS production data in each language across age." width="\linewidth" />
 <p class="caption">
 Figure 6.24: MMAD college-educated advantage for WS production data in each language across age.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:demo-mmad-plot-mom-ed-ws-prod"></span>
+<div class="figure" style="text-align: left"><span id="fig:demo-mmad-plot-mom-ed-ws-prod"></span>
 <img src="wordbank-book_files/figure-html/demo-mmad-plot-mom-ed-ws-prod-1.png" alt="MMAD college-educated advantage for WS production data in each language averaged over age." width="\linewidth" />
 <p class="caption">
 Figure 6.25: MMAD college-educated advantage for WS production data in each language averaged over age.
@@ -602,7 +602,7 @@ Figure 6.25: MMAD college-educated advantage for WS production data in each lang
 <p>We could only speculate about the origins of the relations we found, but the directionality of these relations was similar across languages and they showed reasonable consistency across the full language sample (especially for sex differences). For sex differences, this consistency leads us to speculate about the cognitive origins of verbal ability differences, which are found quite consistently outside of the CDI as well <span class="citation">(e.g., Maccoby and Jacklin <a href="references.html#ref-maccoby1974" role="doc-biblioref">1974</a>)</span>. In contrast, birth order and maternal education-related differences were slightly more variable than sex differences and have been argued in previous work to relate to children’s input. We return to the interpretation of demographic differences in vocabulary in Chapter <a href="conclusion-scale.html#conclusion-scale">17</a>.</p>
 <!-- After we get the data finalized, we can see if there is evidence for reporting bias in these data.
 
-<img src="wordbank-book_files/figure-html/demo-early_comp-1.png" width="\linewidth" style="display: block; margin: auto;" />
+
 
 --->
 

@@ -72,9 +72,9 @@
 </li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<li><a href="index.html#preface"><strong>Preface</strong></a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview"><i class="fa fa-check"></i>Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#outline"><i class="fa fa-check"></i>Outline</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i>How to read this book</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
@@ -319,7 +319,7 @@
 <li class="chapter" data-level="17.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#generalizations"><i class="fa fa-check"></i><b>17.2</b> Generalizations</a>
 <ul>
 <li class="chapter" data-level="17.2.1" data-path="conclusion-scale.html"><a href="conclusion-scale.html#the-language-system-is-tightly-woven"><i class="fa fa-check"></i><b>17.2.1</b> The language system is tightly woven</a></li>
-<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#young-childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Young children’s similar interests drive their communication</a></li>
+<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Children’s similar interests drive their communication</a></li>
 <li class="chapter" data-level="17.2.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#children-take-different-routes-into-language"><i class="fa fa-check"></i><b>17.2.3</b> Children take different routes into language</a></li>
 </ul></li>
 <li class="chapter" data-level="17.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#learning-processes"><i class="fa fa-check"></i><b>17.3</b> Learning processes</a>
@@ -377,16 +377,16 @@
 </ol>
 <p>For the Bayesian GLM, we took an ad-hoc approach, experimenting substantially with prior setting in order to incorporate information about the slopes and intercepts we expected for words. We adopted default, long-tailed (Cauchy) priors over coefficients. We then used the empirical distribution of GLM slopes to set a strict prior over the age slopes we expected (guided in part by our investigations in Chapter <a href="psychometrics.html#psychometrics">4</a>, which indicated that most items should show positive developmental change). We then set a much weaker prior over intercepts. While these choices are somewhat arbitrary, in practice, in larger datasets only the most extreme words (e.g. <em>mommy</em>, for which there is a ceiling effect for nearly every age) were affected by this choice.</p>
 <p>In addition to these models, we investigated a hierarchical Bayesian model with shared distributional components across words. This model obviated the ad-hoc prior determination that we performed for the individual Bayesian GLMs, but it appeared to perform very similarly (at least in the presence of sufficient data) and was quite expensive to fit in terms of computation, so we do not discuss it here.</p>
-<p>Figure <a href="appendix-aoa.html#fig:appaoa-compare-dist">D.1</a> shows a comparison of these methods, in the form of histograms of recovered 50% values for American English AoA data. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (<em>N</em> = 5846). In contrast, all three models smooth the AoA distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently.</p>
+<p>Figure <a href="appendix-aoa.html#fig:appaoa-compare-dist">D.1</a> shows a comparison of these methods, in the form of histograms of recovered 50% values for American English AoA data. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (<em>N</em> = 5520). In contrast, all three models smooth the AoA distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently.</p>
 <p>Both the GLM and robust GLM recover two AoAs that are below zero, which is logically impossible (<em>mommy</em> and <em>daddy</em> are both presumed learned before birth). In contrast, the priors of the Bayesian GLM regularize these AoAs to be 8 and 9 months respectively. Further, the Bayesian GLM estimates 10% of AoAs above 30 months (the max value in the data), while the other two methods estimate slightly fewer: 8% and 7% respectively. These Bayesian GLM results strike us as more reasonable than those returned by the other methods (although they only affect a small minority of words).</p>
-<div class="figure" style="text-align: center"><span id="fig:appaoa-compare-dist"></span>
+<div class="figure" style="text-align: left"><span id="fig:appaoa-compare-dist"></span>
 <img src="wordbank-book_files/figure-html/appaoa-compare-dist-1.png" alt="Histogram of English (American) age of acquisition values as estimated via a variety of statistical methods (panels)." width="\linewidth" />
 <p class="caption">
 Figure D.1: Histogram of English (American) age of acquisition values as estimated via a variety of statistical methods (panels).
 </p>
 </div>
 <p>To further validate the Bayesian GLM approach, we tested the accuracy of the method in recovering AoAs for much smaller datasets. We did this by taking a subsample of only 100 children from the full English (American) WS dataset. We then fit standard and Bayesian GLMs to this sparse subsample. The resulting AoA estimates are plotted in Figure <a href="appendix-aoa.html#fig:appaoa-sparsity">D.2</a>. The Bayesian GLM shows the same minor bias to lower AoAs for hard words that the regular GLM does (a slightly below-diagonal slope), but the GLM shows noisier estimates for the earliest and (especially) the latest-learned words, suggesting that the regularization from the prior values in the Bayesian model is allowing it to deal with sparse data more effectively.</p>
-<div class="figure" style="text-align: center"><span id="fig:appaoa-sparsity"></span>
+<div class="figure" style="text-align: left"><span id="fig:appaoa-sparsity"></span>
 <img src="wordbank-book_files/figure-html/appaoa-sparsity-1.png" alt="Recovered AoAs from a sparse subsample (100 children), plotted by the Bayesian GLM AoAs from the full dataset. Left panel shows standard GLM, right panel shows Bayesian GLM. Differences of AoA &gt; 4 months between methods are labeled." width="\linewidth" />
 <p class="caption">
 Figure D.2: Recovered AoAs from a sparse subsample (100 children), plotted by the Bayesian GLM AoAs from the full dataset. Left panel shows standard GLM, right panel shows Bayesian GLM. Differences of AoA &gt; 4 months between methods are labeled.

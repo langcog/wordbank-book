@@ -72,9 +72,9 @@
 </li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<li><a href="index.html#preface"><strong>Preface</strong></a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview"><i class="fa fa-check"></i>Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#outline"><i class="fa fa-check"></i>Outline</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i>How to read this book</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
@@ -319,7 +319,7 @@
 <li class="chapter" data-level="17.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#generalizations"><i class="fa fa-check"></i><b>17.2</b> Generalizations</a>
 <ul>
 <li class="chapter" data-level="17.2.1" data-path="conclusion-scale.html"><a href="conclusion-scale.html#the-language-system-is-tightly-woven"><i class="fa fa-check"></i><b>17.2.1</b> The language system is tightly woven</a></li>
-<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#young-childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Young children’s similar interests drive their communication</a></li>
+<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Children’s similar interests drive their communication</a></li>
 <li class="chapter" data-level="17.2.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#children-take-different-routes-into-language"><i class="fa fa-check"></i><b>17.2.3</b> Children take different routes into language</a></li>
 </ul></li>
 <li class="chapter" data-level="17.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#learning-processes"><i class="fa fa-check"></i><b>17.3</b> Learning processes</a>
@@ -412,7 +412,7 @@
 <div id="combines" class="section level3" number="13.3.1">
 <h3><span class="header-section-number">13.3.1</span> Combines</h3>
 <p>Figure <a href="grammar.html#fig:gram-combine-plot">13.1</a> shows the probability of a parent checking that their child combines words, plotted by the child’s chronological age (left) and raw productive vocabulary size (right). As can be seen, across 8 languages, there is some consistency in the chronological trajectories for this item. By 24 months, around 75% of children are reported to be combining words, though this estimate is substantially earlier in Québécois French. One possibility is that the phrasing of the “combines” item contributes to this difference, in that some forms (including Québécois French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-combine-plot"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-combine-plot"></span>
 <img src="wordbank-book_files/figure-html/gram-combine-plot-1.png" alt="Trajectory of the Combines item in each language across age (left) and vocabulary size (right)." width="\linewidth" />
 <p class="caption">
 Figure 13.1: Trajectory of the Combines item in each language across age (left) and vocabulary size (right).
@@ -420,7 +420,7 @@ Figure 13.1: Trajectory of the Combines item in each language across age (left) 
 </div>
 <p>Vocabulary-related trajectories are more variable, however. In general, children who were marked as combining had vocabularies larger than around 100 words. There are several notable exceptions, however. As noted in Chapter <a href="vocabulary.html#vocabulary">5</a>, raw Beijing Mandarin vocabulary in the WS form is unusually high, but the “combines” item does not appear to be comparably accelerated. Thus, Beijing Mandarin-learning children appear to be combining words only after producing substantially more words than children learning other languages. On the opposite side, children learning Québécois French and Korean were reported to be combining with quite small vocabularies.<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a></p>
 <p>To investigate the quantitative relationship between word combination (as measured with this item), age, and vocabulary, we fit a logistic mixed effects model predicting whether a child combines as a function of their vocabulary (as proportion of items), age, and interaction between vocabulary and age. We also included a random effect of language, with a random intercept and random slopes for vocabulary and for age. Coefficient estimates from this model are shown in Figure <a href="grammar.html#fig:gram-combines-coefs">13.2</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-combines-coefs"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-combines-coefs"></span>
 <img src="wordbank-book_files/figure-html/gram-combines-coefs-1.png" alt="Coeffient estimates from Combines model, with fixed effects in the top row and random effects in the bottom row." width="\linewidth" />
 <p class="caption">
 Figure 13.2: Coeffient estimates from Combines model, with fixed effects in the top row and random effects in the bottom row.
@@ -432,14 +432,14 @@ Figure 13.2: Coeffient estimates from Combines model, with fixed effects in the 
 <div id="grammar-and-lexicon-relationship" class="section level3" number="13.3.2">
 <h3><span class="header-section-number">13.3.2</span> Grammar and Lexicon Relationship</h3>
 <p>We next examine the correlation between the proportion of Word Form items and Complexity items completed and the proportion of vocabulary items completed. First reported by <span class="citation">Bates et al. (<a href="references.html#ref-bates1994" role="doc-biblioref">1994</a>)</span>, these correlations are extremely robust, and can be observed in all of our datasets. Figure <a href="grammar.html#fig:gram-grammar-plot-wordform">13.3</a> shows this relation for Word Form items. We fit generalized linear regressions predicting Word Form score or Complexity score as a function of linear, quadratic, cubic, and quartic terms of productive vocabulary size (subtracting the intercept to ensure that the function passed through the origin, because a vocabulary size of 0 necessarily implies scores of 0). The total <em>r</em>² for these relationships ranges from 0.82 to 0.93.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-grammar-plot-wordform"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-grammar-plot-wordform"></span>
 <img src="wordbank-book_files/figure-html/gram-grammar-plot-wordform-1.png" alt="Each child's Word Forms score as a function of their vocabulary size in each language (curves show model fits)." width="\linewidth" />
 <p class="caption">
 Figure 13.3: Each child’s Word Forms score as a function of their vocabulary size in each language (curves show model fits).
 </p>
 </div>
 <p>Complexity items show the same relationship (Figure <a href="grammar.html#fig:gram-grammar-plot-complexity">13.4</a>), typically with equal or greater strength (depending on data density and number of items). <em>r</em>² values vary from 0.75 to 0.94. Some ceiling effects are observed.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-grammar-plot-complexity"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-grammar-plot-complexity"></span>
 <img src="wordbank-book_files/figure-html/gram-grammar-plot-complexity-1.png" alt="Each child's Complexity score as a function of their vocabulary size in each language (curves show model fits)." width="\linewidth" />
 <p class="caption">
 Figure 13.4: Each child’s Complexity score as a function of their vocabulary size in each language (curves show model fits).
@@ -451,20 +451,20 @@ Figure 13.4: Each child’s Complexity score as a function of their vocabulary s
 <h3><span class="header-section-number">13.3.3</span> Age effects</h3>
 <p>In our next analysis, we follow up on the relationship between age and grammatical ability found in the “combines” analysis above. In that analysis, we noted that less vocabulary was needed for older children to be marked as combining words, suggesting that other abilities can contribute or supplement vocabulary in achieving this milestone. We investigate this pattern in the full Word Form and Complexity item set by splitting data from each language by age. We plot the same curves as above, but separately for children older and younger than the median age (within each dataset).</p>
 <p>In essentially every language, for both Word Form (Figure <a href="grammar.html#fig:gram-age-plot-wordforms">13.5</a>) and Complexity items (Figure <a href="grammar.html#fig:gram-age-plot-complexity">13.6</a>), we see a higher curve for older children than younger children. This finding is consistent with the idea that grammatical development is faster per unit lexicon for older children (mirroring the negative interaction shown for the “combines” item). That is, an older child with comparable vocabulary to a younger one will likely be better at combining words.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-age-plot-wordforms"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-age-plot-wordforms"></span>
 <img src="wordbank-book_files/figure-html/gram-age-plot-wordforms-1.png" alt="Each child's Word Forms score as a function of their vocabulary size in each language for children younger and older than the median (curves show model fits)." width="\linewidth" />
 <p class="caption">
 Figure 13.5: Each child’s Word Forms score as a function of their vocabulary size in each language for children younger and older than the median (curves show model fits).
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:gram-age-plot-complexity"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-age-plot-complexity"></span>
 <img src="wordbank-book_files/figure-html/gram-age-plot-complexity-1.png" alt="Each child's Complexity score as a function of their vocabulary size in each language for children younger and older than the median (curves show model fits)." width="\linewidth" />
 <p class="caption">
 Figure 13.6: Each child’s Complexity score as a function of their vocabulary size in each language for children younger and older than the median (curves show model fits).
 </p>
 </div>
 <p>This pattern is further summarized in Figure <a href="grammar.html#fig:gram-grammar-diffs">13.7</a>, where we show the area under the grammar/lexicon curve for younger and older children. The upward slope from younger to older of nearly every line demonstrates the consistency of the age effect, which we discuss further below. In addition, there is a trend for age effects to be larger in Complexity items compared to Word Forms, suggesting that factors beyond vocabulary size have a larger effect on syntax than on morphology.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-grammar-diffs"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-grammar-diffs"></span>
 <img src="wordbank-book_files/figure-html/gram-grammar-diffs-1.png" alt="Area under model fit curve for Word Forms score and Complexity score as a function of vocabulary size in each language for younger and older children." width="\linewidth" />
 <p class="caption">
 Figure 13.7: Area under model fit curve for Word Forms score and Complexity score as a function of vocabulary size in each language for younger and older children.
@@ -476,13 +476,13 @@ Figure 13.7: Area under model fit curve for Word Forms score and Complexity scor
 <p>In our next analysis, we examine the individual items on the Word Form and Complexity sections. Given the heterogeneous nature of the CDI instruments, particularly in the Complexity sections, we attempted a more fine-grained item-analysis by classifying items as capturing either more morphological or more syntactic phenomena. Items for which the difference between the simple and complex sentences is in the inflection of a noun or verb (such as <em>kitty go away</em> / <em>kitty went away</em>) were coded as Morphological. Items were coded as Syntactic if they involved the use of some sentence-level syntactic construction (such as <em>you fix it</em> / <em>can you fix it</em>). Some languages’ items involved a mix of the two or otherwise didn’t fit into this dichotomy, in which case they were coded as Other.</p>
 <p>We then a fit logistic regression separately for every item, predicting whether children produced the item from vocabulary size and age. Figure <a href="grammar.html#fig:gram-item-effects-demo">13.8</a> shows the resulting model fits for two example items. For both items, children with larger vocabulary sizes are more likely to produce it than children with smaller vocabulary sizes (the curves have positive slopes), and older children are more to produce it than younger children (the older curves are higher than the younger curves). For the item on the left, the interaction between vocabulary size and age is very small (all the curves have roughly the same slope), while for the item on the right this interaction is large (the older curve is much steeper than the younger curve, indicating that at larger vocabulary sizes the advantage for older children is larger).</p>
 <p>Figure <a href="grammar.html#fig:gram-item-effects-plot">13.9</a> shows for each item, the coefficients of vocabulary size, age, and their interaction. In general, age effects are smallest for Word Form items, larger for Morphological Complexity items, and largest for Syntactic Complexity items, suggesting that more syntactic phenomena likely have greater age contributions.</p>
-<div class="figure" style="text-align: center"><span id="fig:gram-item-effects-demo"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-item-effects-demo"></span>
 <img src="wordbank-book_files/figure-html/gram-item-effects-demo-1.png" alt="Model fits for two example items." width="\linewidth" />
 <p class="caption">
 Figure 13.8: Model fits for two example items.
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:gram-item-effects-plot"></span>
+<div class="figure" style="text-align: left"><span id="fig:gram-item-effects-plot"></span>
 <img src="wordbank-book_files/figure-html/gram-item-effects-plot-1.png" alt="Coefficient estimates (as log odds ratio) for each grammar item in each language. Line segments indicate means effect for category." width="\linewidth" />
 <p class="caption">
 Figure 13.9: Coefficient estimates (as log odds ratio) for each grammar item in each language. Line segments indicate means effect for category.
@@ -494,18 +494,18 @@ Figure 13.9: Coefficient estimates (as log odds ratio) for each grammar item in 
 <div id="longitudinal-relationships" class="section level2" number="13.4">
 <h2><span class="header-section-number">13.4</span> Longitudinal relationships</h2>
 <p>In our next set of analyses, we take advantage of the presence of longitudinal data in two languages (Norwegian and American English) to investigate the relationship between vocabulary size and grammatical ability, as operationalized by average Complexity score. As mentioned above, this relationship has been the subject of a variety of previous investigations using longitudinal data <span class="citation">(Dionne et al. <a href="references.html#ref-dionne2003" role="doc-biblioref">2003</a>; Moyle et al. <a href="references.html#ref-moyle2007" role="doc-biblioref">2007</a>; Pérez-Leroux, Castilla-Earls, and Brunner <a href="references.html#ref-perez-leroux2012" role="doc-biblioref">2012</a>; Hoff, Quinn, and Giguere <a href="references.html#ref-hoff2017" role="doc-biblioref">2017</a>; Brinchmann, Braeken, and Lyster <a href="references.html#ref-brinchmann2018" role="doc-biblioref">2018</a>)</span>, but outcomes have been contradictory. Given the heterogeneity of these studies, results could differ for a variety of reasons, including the language background of the participants, the target age range of the study (which ranged from 2–6 years old), and the nature of the specific models being fit to the data.</p>
-<p>Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences <span class="citation">(Rogosa <a href="references.html#ref-rogosa1980" role="doc-biblioref">1980</a>)</span>, it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual – as is clearly the case for language-related measures – these models are misspecified, since they assume that the <em>only</em> source of consistency between individuals is temporal autocorrelation <span class="citation">(Hamaker, Kuiper, and Grasman <a href="references.html#ref-hamaker2015" role="doc-biblioref">2015</a>)</span>. To address this issue, <span class="citation">Hamaker, Kuiper, and Grasman (<a href="references.html#ref-hamaker2015" role="doc-biblioref">2015</a>)</span> propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure <a href="grammar.html#fig:grammar-ri-clpm">13.10</a>). This is the approach used by <span class="citation">Brinchmann, Braeken, and Lyster (<a href="references.html#ref-brinchmann2018" role="doc-biblioref">2018</a>)</span>, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below.</p>
-<div class="figure" style="text-align: center"><span id="fig:grammar-ri-clpm"></span>
+<p>Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences <span class="citation">(Rogosa <a href="references.html#ref-rogosa1980" role="doc-biblioref">1980</a>)</span>, it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual – as is clearly the case for language-related measures – these models are misspecified, since they assume that the <em>only</em> source of consistency between individuals is temporal autocorrelation <span class="citation">(Hamaker, Kuiper, and Grasman <a href="references.html#ref-hamaker2015" role="doc-biblioref">2015</a>)</span>. To address this issue, <span class="citation">Hamaker, Kuiper, and Grasman (<a href="references.html#ref-hamaker2015" role="doc-biblioref">2015</a>)</span> propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure <a href="#fig:grammar-ri-clpm"><strong>??</strong></a>). This is the approach used by <span class="citation">Brinchmann, Braeken, and Lyster (<a href="references.html#ref-brinchmann2018" role="doc-biblioref">2018</a>)</span>, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below.</p>
+<div class="figure" style="text-align: left"><span id="fig:gram-ri-clpm"></span>
 <img src="images/ri-clpm.png" alt="The random intercept cross-lagged panel model. Figure reproduced from @hamaker2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects." width="60%" />
 <p class="caption">
 Figure 13.10: The random intercept cross-lagged panel model. Figure reproduced from <span class="citation">Hamaker, Kuiper, and Grasman (<a href="references.html#ref-hamaker2015" role="doc-biblioref">2015</a>)</span>. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.
 </p>
 </div>
 <p>We include data from two different longitudinal datasets. The first is a group of children from a study conducted by Virginia Marchman with English-speaking children in Dallas, TX (N = 247). This dataset includes children with three waves of data collection centered around 18, 24, and 30 months; we included children if they contributed to two waves (N = 160) or all three waves (N = 83), for a total of 243 children. The offsets between waves varied somewhat in these data, but for simplicity, we split all administrations into three time points: 18–21 months, 22–25 months, and 26–30 months.</p>
-<p>The second dataset is a large group of longitudinal administrations in the Norwegian normative data, including a total of 1,565 children. These children’s parents were invited to complete multiple CDIs online every month or few months, with many parents completing two and a small number completing 10 or more. For purposes of discrete analysis, we binned these continuous data into two-month waves from 18–35 months (the small number of 36-month-olds were included in the oldest wave). We then included children with two or more administrations, each falling in a different wave (N = 1141). Table <a href="grammar.html#tab:grammar-norway-table">13.1</a> shows the distribution of how many observations are available for children across different waves.</p>
+<p>The second dataset is a large group of longitudinal administrations in the Norwegian normative data, including a total of 1,565 children. These children’s parents were invited to complete multiple CDIs online every month or few months, with many parents completing two and a small number completing 10 or more. For purposes of discrete analysis, we binned these continuous data into two-month waves from 18–35 months (the small number of 36-month-olds were included in the oldest wave). We then included children with two or more administrations, each falling in a different wave (N = 1141). Table <a href="#tab:grammar-norway-table"><strong>??</strong></a> shows the distribution of how many observations are available for children across different waves.</p>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:grammar-norway-table">Table 13.1: </span>Number of children in the Norwegian longitudinal dataset with each number of observations.
+<span id="tab:gram-norway-table">Table 13.1: </span>Number of children in the Norwegian longitudinal dataset with each number of observations.
 </caption>
 <thead>
 <tr>
@@ -585,23 +585,23 @@ Number of children
 </tbody>
 </table>
 <p>Using these two datasets, we fit RI-CLPM models.<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a> These models measure the magnitude of the reciprocal relationships between grammar and vocabulary over time. Coefficient weights on the paths between latent grammar and vocabulary are then interpretable as temporal influences. Following the RI-CLPM specification in <span class="citation">Hamaker, Kuiper, and Grasman (<a href="references.html#ref-hamaker2015" role="doc-biblioref">2015</a>)</span>, we posited latent variables <span class="math inline">\(\kappa\)</span> and <span class="math inline">\(\omega\)</span> that describe stability in vocabulary and grammar, respectively.</p>
-<p>Figure <a href="grammar.html#fig:grammar-dallas-plot">13.11</a> shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant (<span class="math inline">\(\beta_{p1-c2}\)</span> = 0.95, <em>p</em> &lt; 0.001, <span class="math inline">\(\beta_{p2-c3}\)</span> = 0.77, <em>p</em> &lt; 0.001). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).</p>
-<div class="figure" style="text-align: center"><span id="fig:grammar-dallas-plot"></span>
-<img src="wordbank-book_files/figure-html/grammar-dallas-plot-1.png" alt="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts." width="\linewidth" />
+<p>Figure <a href="#fig:grammar-dallas-plot"><strong>??</strong></a> shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant (<span class="math inline">\(\beta_{p1-c2}\)</span> = 0.95, <em>p</em> &lt; 0.001, <span class="math inline">\(\beta_{p2-c3}\)</span> = 0.77, <em>p</em> &lt; 0.001). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).</p>
+<div class="figure" style="text-align: left"><span id="fig:gram-dallas-plot"></span>
+<img src="wordbank-book_files/figure-html/gram-dallas-plot-1.png" alt="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts." width="\linewidth" />
 <p class="caption">
 Figure 13.11: RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts.
 </p>
 </div>
-<p>Figure <a href="grammar.html#fig:grammar-norway-plot">13.12</a> shows the analogous fitted model for the Norwegian data.<a href="#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a> Coefficient estimates from vocabulary to grammar are large; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table <a href="grammar.html#tab:grammar-norway-clpm-tab">13.2</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:grammar-norway-plot"></span>
-<img src="wordbank-book_files/figure-html/grammar-norway-plot-1.png" alt="RI-CLPM model fit to Norwegian data. Plotting conventions are as above; P indicates production, while C indicates complexity." width="\linewidth" />
+<p>Figure <a href="#fig:grammar-norway-plot"><strong>??</strong></a> shows the analogous fitted model for the Norwegian data.<a href="#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a> Coefficient estimates from vocabulary to grammar are large; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table <a href="#tab:grammar-norway-clpm-tab"><strong>??</strong></a>.</p>
+<div class="figure" style="text-align: left"><span id="fig:gram-norway-plot"></span>
+<img src="wordbank-book_files/figure-html/gram-norway-plot-1.png" alt="RI-CLPM model fit to Norwegian data. Plotting conventions are as above; P indicates production, while C indicates complexity." width="\linewidth" />
 <p class="caption">
 Figure 13.12: RI-CLPM model fit to Norwegian data. Plotting conventions are as above; P indicates production, while C indicates complexity.
 </p>
 </div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:grammar-norway-clpm-tab">Table 13.2: </span>Coefficient estimates for cross-lag parameters in the Norwegian regression model.
+<span id="tab:gram-norway-clpm-tab">Table 13.2: </span>Coefficient estimates for cross-lag parameters in the Norwegian regression model.
 </caption>
 <thead>
 <tr>
@@ -612,7 +612,7 @@ Predicted
 Predictor
 </th>
 <th style="text-align:right;">
-β
+<span class="math inline">\(\beta\)</span>
 </th>
 <th style="text-align:right;">
 SE

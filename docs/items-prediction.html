@@ -72,9 +72,9 @@
 </li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<li><a href="index.html#preface"><strong>Preface</strong></a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview"><i class="fa fa-check"></i>Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#outline"><i class="fa fa-check"></i>Outline</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i>How to read this book</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
@@ -319,7 +319,7 @@
 <li class="chapter" data-level="17.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#generalizations"><i class="fa fa-check"></i><b>17.2</b> Generalizations</a>
 <ul>
 <li class="chapter" data-level="17.2.1" data-path="conclusion-scale.html"><a href="conclusion-scale.html#the-language-system-is-tightly-woven"><i class="fa fa-check"></i><b>17.2.1</b> The language system is tightly woven</a></li>
-<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#young-childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Young children’s similar interests drive their communication</a></li>
+<li class="chapter" data-level="17.2.2" data-path="conclusion-scale.html"><a href="conclusion-scale.html#childrens-similar-interests-drive-their-communication"><i class="fa fa-check"></i><b>17.2.2</b> Children’s similar interests drive their communication</a></li>
 <li class="chapter" data-level="17.2.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#children-take-different-routes-into-language"><i class="fa fa-check"></i><b>17.2.3</b> Children take different routes into language</a></li>
 </ul></li>
 <li class="chapter" data-level="17.3" data-path="conclusion-scale.html"><a href="conclusion-scale.html#learning-processes"><i class="fa fa-check"></i><b>17.3</b> Learning processes</a>
@@ -375,7 +375,7 @@
 <p>In this chapter, we take up the challenge posed in Chapter <a href="items-consistency.html#items-consistency">8</a>, that is, to explain consistency and variability in the acquisition of individual words. Our approach is to define regression models that attempt to predict which words are learned earlier or later on the basis of a range of features drawn from different data sources. We fit these models to data across different languages and then interpret the resulting coefficients to draw conclusions about the potential contribution of different factors to children’s learning.</p>
 <div id="introduction-1" class="section level2" number="10.1">
 <h2><span class="header-section-number">10.1</span> Introduction</h2>
-<p>As discussed in Chapter <a href="intro-theory.html#intro-theory">1</a>, one classic approach to word learning focuses on the specific mechanisms that children bring to bear on the learning problem. For example, across many laboratory experiments, a variety of mechanisms have been identified as plausible drivers of early word learning, including co-occurrence based and cross-situational word learning <span class="citation">(Schwartz and Terrell <a href="references.html#ref-schwartz1983" role="doc-biblioref">1983</a>; Yu and Ballard <a href="references.html#ref-yu2007" role="doc-biblioref">2007</a>)</span>; social cue use <span class="citation">(Baldwin <a href="references.html#ref-baldwin1993" role="doc-biblioref">1993</a>)</span>; and syntactic bootstrapping <span class="citation">(Gleitman <a href="references.html#ref-gleitman1990" role="doc-biblioref">1990</a>; Mintz <a href="references.html#ref-mintz2003" role="doc-biblioref">2003</a>)</span>. The individual contribution of each of these mechanisms has been difficult to assess, however.</p>
+<p>As discussed in Chapter <a href="intro-theory.html#intro-theory">1</a>, one classic approach to word learning focuses on the specific mechanisms that children bring to bear on the learning problem. For example, across many laboratory experiments, a variety of mechanisms have been identified as plausible drivers of early word learning, including co-occurrence based and cross-situational word learning <span class="citation">(Schwartz and Terrell <a href="references.html#ref-schwartz1983" role="doc-biblioref">1983</a>; C. Yu and Ballard <a href="references.html#ref-yu2007" role="doc-biblioref">2007</a>)</span>; social cue use <span class="citation">(Baldwin <a href="references.html#ref-baldwin1993" role="doc-biblioref">1993</a>)</span>; and syntactic bootstrapping <span class="citation">(Gleitman <a href="references.html#ref-gleitman1990" role="doc-biblioref">1990</a>; Mintz <a href="references.html#ref-mintz2003" role="doc-biblioref">2003</a>)</span>. The individual contribution of each of these mechanisms has been difficult to assess, however.</p>
 <p>Indeed, many theories of early word learning take multiplicity of cue types and mechanisms as a central feature <span class="citation">(e.g., Hollich et al. <a href="references.html#ref-hollich2000" role="doc-biblioref">2000</a>; Bloom <a href="references.html#ref-bloom2000" role="doc-biblioref">2000</a>)</span>. As important as this work is, though, these studies are typically aimed at understanding how a small handful of words are learned in the laboratory under precisely-defined learning conditions. They do not directly address questions regarding the developmental composition and ordering of growth in the lexicon across many different children in their natural environments, nor whether these patterns are consistent across different languages.</p>
 <p>An alternate approach to word learning – one that we have been following throughout this book – asks why some words are learned so early and some much later. This question about the order of the acquisition of first words can provide a different window into the nature of children’s language learning. In Chapter <a href="items-consistency.html#items-consistency">8</a>, we began approaching this question by examining the consistency of acquisition order for children’s earliest words. In the current chapter, we advance this goal using quantitative models to understand acquisition ordering.</p>
 <p>Posed as a statistical problem, the challenge is to find what set of variables best predicts the age at which different words are acquired. This approach was pioneered by <span class="citation">Huttenlocher et al. (<a href="references.html#ref-huttenlocher1991" role="doc-biblioref">1991</a>)</span> and developed further by <span class="citation">Goodman, Dale, and Li (<a href="references.html#ref-goodman2008" role="doc-biblioref">2008</a>)</span>; it is now firmly established as an important method for understanding vocabulary learning at scale. This previous work has revealed that, in English, within a lexical category (e.g., nouns, verbs), words that are more frequent in speech to children are likely to be learned earlier <span class="citation">(Goodman, Dale, and Li <a href="references.html#ref-goodman2008" role="doc-biblioref">2008</a>)</span>. Further studies (also in English) have found evidence that age of acquisition is likely to be earlier for words that have more phonological neighbors <span class="citation">(e.g., Storkel <a href="references.html#ref-storkel2004" role="doc-biblioref">2004</a>; Stokes <a href="references.html#ref-stokes2010" role="doc-biblioref">2010</a>; Jones and Brandt <a href="references.html#ref-jones2019" role="doc-biblioref">2019</a>; but see Swingley and Aslin <a href="references.html#ref-swingley2007" role="doc-biblioref">2007</a>; Stager and Werker <a href="references.html#ref-stager1997" role="doc-biblioref">1997</a>)</span>; words that share more associations with other words in the learning environment <span class="citation">(Hills et al. <a href="references.html#ref-hills2009" role="doc-biblioref">2009</a>)</span>; words that occur more often in isolation <span class="citation">(Brent and Siskind <a href="references.html#ref-brent2001" role="doc-biblioref">2001</a>; Swingley and Humphrey <a href="references.html#ref-swingley2018" role="doc-biblioref">2018</a>)</span>; words whose meanings are more concrete <span class="citation">(Swingley and Humphrey <a href="references.html#ref-swingley2018" role="doc-biblioref">2018</a>)</span>; words that are rated more iconic and/or more associated with babies <span class="citation">(such as “choo-choo” or “doggy”, Perry, Perlman, and Lupyan <a href="references.html#ref-perry2015" role="doc-biblioref">2015</a>)</span>; and words that occur in more distinctive spacial, temporal, and linguistic contexts <span class="citation">(Roy et al. <a href="references.html#ref-roy2015" role="doc-biblioref">2015</a>)</span>.</p>
@@ -390,7 +390,7 @@
 <div id="acquisition-trajectories" class="section level3" number="10.2.1">
 <h3><span class="header-section-number">10.2.1</span> Acquisition trajectories</h3>
 <p>Since analyses in this chapter rely on unilemma mappings (see Section <a href="methods-and-data.html#unilemmas">3.1.5</a>), the set of languages represented is smaller than in other chapters. We use data from the items on WG forms for our comprehension measure, and data from the items in common between WG and WS forms for our production measure. Placeholder items, such as “child’s own name,” are excluded, as are longitudinal administrations. Table <a href="items-prediction.html#tab:aoapred-lang-stats-table">10.1</a> gives an overview of our acquisition data.</p>
-<table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:aoapred-lang-stats-table">Table 10.1: </span>Statistics for data from Wordbank and CHILDES. N indicates number of children.
 </caption>
@@ -421,7 +421,7 @@ CHILDES
 Language
 </th>
 <th style="text-align:right;">
-CDI items
+Items
 </th>
 <th style="text-align:right;">
 N
@@ -498,7 +498,7 @@ Danish
 </tr>
 <tr>
 <td style="text-align:left;">
-English (American)
+English
 </td>
 <td style="text-align:right;">
 393
@@ -524,7 +524,7 @@ English (American)
 </tr>
 <tr>
 <td style="text-align:left;">
-French (Quebec)
+French
 </td>
 <td style="text-align:right;">
 396
@@ -628,7 +628,7 @@ Russian
 </tr>
 <tr>
 <td style="text-align:left;">
-Spanish (Mexican)
+Spanish
 </td>
 <td style="text-align:right;">
 399
@@ -718,7 +718,7 @@ Figure 10.1: Example production trajectories for the words “dog” and “jump
 <h3><span class="header-section-number">10.2.2</span> Word properties</h3>
 <p>For each word that appears on the forms in each of our 10 languages, we used corpora of child-directed speech in that language from CHILDES to obtain an estimate of its frequency, the mean length of utterances in which it appears, its frequency as the sole constituent of utterance, and its frequency in utterance final position (with frequency residualized out of solo and final frequencies). Additionally, we computed each word’s length in phonemes.</p>
 <p>To capture meaning-based factors in acquisition, we included ratings of each word’s concreteness, valence, arousal, and relatedness to babies. All of these ratings were compiled based on previous studies using adult raters. In addition, since existing datasets for all of these ratings are primarily available for English, we used the unilemma mappings (see Section <a href="methods-and-data.html#unilemmas">3.1.5</a>) to use the ratings for English words across languages. Example words for these predictors in English are shown in Table <a href="items-prediction.html#tab:aoapred-extremes-table">10.2</a>.</p>
-<table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:aoapred-extremes-table">Table 10.2: </span>Items with the highest and lowest values for each predictor in English.
 </caption>
@@ -728,10 +728,10 @@ Figure 10.1: Example production trajectories for the words “dog” and “jump
 Predictor
 </th>
 <th style="text-align:left;">
-Highest
-</th>
-<th style="text-align:left;">
 Lowest
+</th>
+<th style="text-align:right;">
+Highest
 </th>
 </tr>
 </thead>
@@ -741,10 +741,10 @@ Lowest
 Arousal
 </td>
 <td style="text-align:left;">
-naughty, money, scared
-</td>
-<td style="text-align:left;">
 today, asleep, shh
+</td>
+<td style="text-align:right;">
+naughty, money, scared
 </td>
 </tr>
 <tr>
@@ -752,10 +752,10 @@ today, asleep, shh
 Babiness
 </td>
 <td style="text-align:left;">
-baby, bib, bottle
-</td>
-<td style="text-align:left;">
 jeans, penny, donkey
+</td>
+<td style="text-align:right;">
+baby, bib, bottle
 </td>
 </tr>
 <tr>
@@ -763,10 +763,10 @@ jeans, penny, donkey
 Concreteness
 </td>
 <td style="text-align:left;">
-apple, baby, ball
-</td>
-<td style="text-align:left;">
 that, now, how
+</td>
+<td style="text-align:right;">
+apple, baby, ball
 </td>
 </tr>
 <tr>
@@ -774,10 +774,10 @@ that, now, how
 Final frequency
 </td>
 <td style="text-align:left;">
-book, it, there
-</td>
-<td style="text-align:left;">
 put, when, give
+</td>
+<td style="text-align:right;">
+book, it, there
 </td>
 </tr>
 <tr>
@@ -785,10 +785,10 @@ put, when, give
 Frequency
 </td>
 <td style="text-align:left;">
-you, it, that
-</td>
-<td style="text-align:left;">
 babysitter, rocking chair, grrr
+</td>
+<td style="text-align:right;">
+you, it, that
 </td>
 </tr>
 <tr>
@@ -796,10 +796,10 @@ babysitter, rocking chair, grrr
 MLU
 </td>
 <td style="text-align:left;">
-daddy, when, day
-</td>
-<td style="text-align:left;">
 ouch, thank you, peekaboo
+</td>
+<td style="text-align:right;">
+daddy, when, day
 </td>
 </tr>
 <tr>
@@ -807,10 +807,10 @@ ouch, thank you, peekaboo
 Number phonemes
 </td>
 <td style="text-align:left;">
-refrigerator, cockadoodledoo, babysitter
-</td>
-<td style="text-align:left;">
 i, eye, ear
+</td>
+<td style="text-align:right;">
+refrigerator, cockadoodledoo, babysitter
 </td>
 </tr>
 <tr>
@@ -818,10 +818,10 @@ i, eye, ear
 Solo frequency
 </td>
 <td style="text-align:left;">
-no, yes, thank you
-</td>
-<td style="text-align:left;">
 feed, bathroom, tooth
+</td>
+<td style="text-align:right;">
+no, yes, thank you
 </td>
 </tr>
 <tr>
@@ -829,10 +829,10 @@ feed, bathroom, tooth
 Valence
 </td>
 <td style="text-align:left;">
-happy, hug, love
-</td>
-<td style="text-align:left;">
 ouch, hurt, sick
+</td>
+<td style="text-align:right;">
+happy, hug, love
 </td>
 </tr>
 </tbody>
@@ -860,7 +860,7 @@ ouch, hurt, sick
 <h2><span class="header-section-number">10.3</span> Results</h2>
 <p><strong>English predictor effects.</strong> To illustrate the structure of our analysis, we first describe the results for English data, shown in Figure <a href="items-prediction.html#fig:aoapred-refcoefs">10.2</a> as the main effect and age interaction coefficient estimates and 95% confidence intervals, for comprehension and production. For main effects, words are more likely to be known by more children if they are higher in frequency or concreteness, as well as in babiness for comprehension and in sentence-final frequency or sole-constituent frequency for production. In contrast, words that appear in shorter sentences (MLU-w) are more likely to be reported as understood or produced. For age interactions, while most predictors have consistent effects over age, words that are higher in frequency or concreteness are more likely to be known more by older children, while words that are higher in valence have a greater effect on acquisition in younger children, with an additional negative interaction with babiness in comprehension and positive interaction with MLU-w in production.</p>
 <p><strong>Cross-linguistic predictor effects.</strong> Figure <a href="items-prediction.html#fig:aoapred-langcoefs">10.3</a> shows the coefficient estimate for each predictor in each language and measure. We find that frequency is the strongest predictor of acquisition (mean across languages and measures <span class="math inline">\(\beta\)</span> = 0.23). Other relatively strong overall predictors include concreteness (<span class="math inline">\(\beta\)</span> = 0.18), solo frequency (<span class="math inline">\(\beta\)</span> = 0.17), MLU-w (<span class="math inline">\(\beta\)</span> = –0.14), and final frequency (<span class="math inline">\(\beta\)</span> = 0.13). Number of phonemes is comparatively large for production (<span class="math inline">\(\beta\)</span> = –0.31) but not comprehension (<span class="math inline">\(\beta\)</span> = –0.07); conversely, babiness is comparatively large for comprehension (<span class="math inline">\(\beta\)</span> = 0.19) but not production (<span class="math inline">\(\beta\)</span> = 0.08). Finally, valence (<span class="math inline">\(\beta\)</span> = 0.06) and arousal (<span class="math inline">\(\beta\)</span> = 0.003) have much smaller effects.</p>
-<p>Given the emphasis on frequency effects in the literature , one might have expected frequency to dominate, but several other predictors are also quite strong. In addition, some factors previously argued to be important for word learning, namely valence and arousal , appear to have limited relevance when compared to other factors. These results provide a strong argument for our approach of including multiple predictors and languages in our analysis.</p>
+<p>Given the emphasis on frequency effects in the literature <span class="citation">(Ambridge et al. <a href="references.html#ref-ambridge2015" role="doc-biblioref">2015</a>)</span>, one might have expected frequency to dominate, but several other predictors are also quite strong. In addition, some factors previously argued to be important for word learning, namely valence and arousal <span class="citation">(Moors et al. <a href="references.html#ref-moors2013" role="doc-biblioref">2013</a>)</span>, appear to have limited relevance when compared to other factors. These results provide a strong argument for our approach of including multiple predictors and languages in our analysis.</p>
 <div class="figure" style="text-align: left"><span id="fig:aoapred-refcoefs"></span>
 <img src="wordbank-book_files/figure-html/aoapred-refcoefs-1.png" alt="Estimates of coefficients in predicting words’ developmental trajectories for English comprehension and production data. Error bars indicate 95% confidence intervals; filled in points indicate coefficients for which p &lt; 0.05." width="\linewidth" />
 <p class="caption">

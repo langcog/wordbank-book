@@ -2,20 +2,24 @@
 title: "Variability and Consistency in Early Language Learning"
 author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
 subtitle: The Wordbank Project
+
 documentclass: book
+class_options: 7x9
+ISBN: ?????
+copyright_year: 2020
+
 biblio-style: apalike
 bibliography: book.bib
+
 site: bookdown::bookdown_site
 github-repo: langcog/wordbank-book
 link-citations: yes
 always_allow_html: yes
-ISBN: ?????
-copyright_year: 2020
 ---
 
 \renewcommand{\thefigure}{P.\arabic{figure}}
 
-# __Preface__ {.unlisted .unnumbered}
+# Preface {.unnumbered .unlisted}
 
 ```{r preface-citation, results='asis'}
 if (opts_knit$get("rmarkdown.pandoc.to") == "html")

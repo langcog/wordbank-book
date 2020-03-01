@@ -1,7 +1,40 @@
-\usepackage{booktabs}
+% \usepackage{booktabs}
 \usepackage[russian, english]{babel}
 \usepackage{longtable}
 \usepackage{afterpage}
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% \def\timesroman{SourceSerifPro-Regular}
+% \def\timesbold{SourceSerifPro-Bold}
+% \def\timesitalic{SourceSerifPro-It}
+% \def\timesbolditalic{SourceSerifPro-BoldIt}
+%
+% \xdef\timesroman{\timesroman\space}
+% \xdef\timesbold{\timesbold\space}
+% \xdef\timesitalic{\timesitalic\space}
+% \xdef\timesbolditalic{\timesbolditalic\space}
+
+\usepackage{fontspec}
+
+\setmainfont[
+  UprightFont=SourceSerifPro-Regular,
+  BoldFont=SourceSerifPro-Bold,
+  ItalicFont=SourceSerifPro-It,
+  BoldItalicFont=SourceSerifPro-BoldIt
+]{SourceSerifPro}
+
+% \setsansfont[
+%   UprightFont=SourceSansPro-Regular,
+%   BoldFont=SourceSansPro-Bold,
+%   ItalicFont=SourceSansPro-Italic,
+%   BoldItalicFont=SourceSansPro-BoldItalic
+% ]{SourceSansPro}
+%
+% \setmonofont[
+%   UprightFont=SourceCodePro-Regular,
+%   BoldFont=SourceCodePro-Bold,
+%   ItalicFont=SourceCodePro-Italic,
+%   BoldItalicFont=SourceCodePro-BoldItalic
+% ]{SourceCodePro}

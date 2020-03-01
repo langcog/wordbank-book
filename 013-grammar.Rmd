@@ -130,12 +130,41 @@ combine_compare <- grammar_combine %>%
   mutate(predictor = factor(
     predictor, levels = c("age", "production_prop"),
     labels = c("Age (months)", "Productive vocabulary (proportion of items)"))) %>%
-  filter(language != "Slovak")
+  filter(language != "Slovak", language != "French (Québécois)")
 
 # slovak combine item is "your child uses 'fancy words' like bubble blower, brush and comb' - so I am excluding it. -MCF
+# french (quebec) combines item switches schemes halfway though, excluding it -MB
+
+combines_models <- combine_compare %>%
+  group_by(language, form, predictor) %>%
+  nest() %>%
+  mutate(model = map(data, function(lang_data) {
+    glm(positive ~ value, family = "binomial", weights = num_items, data = lang_data)
+  }))
+
+combines_fits <- combines_models %>%
+  mutate(values = if_else(str_detect(predictor, "Age"),
+                          map(data, ~seq(min(.$value), max(.$value), 1)),
+                          map(data, ~seq(min(.$value), max(.$value), 0.01))),
+         fits = map2(model, values,
+                     ~broom::augment(.x, newdata = tibble(value = .y),
+                                     type.predict = "response"))) %>%
+  select(-data, -model, -values) %>%
+  unnest(fits)
+
+combines_age_means <- combines_fits %>%
+  filter(str_detect(predictor, "Age")) %>%
+  group_by(value) %>%
+  summarise(mean_fitted = mean(.fitted))
+age_percent <- function(age) {
+  combines_age_means %>% filter(value == age) %>% pull(mean_fitted) %>% round(1)
+}
+age_1 <- 19
+age_2 <- 25
 ```
 
-Figure \@ref(fig:gram-combine-plot) shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))` languages, there is some consistency in the chronological trajectories for this item. By 24 months, around 75% of children are reported to be combining words, though this estimate is substantially earlier in Québécois French. One possibility is that the phrasing of the "combines" item contributes to this difference, in that some forms (including Québécois French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting.
+Figure \@ref(fig:gram-combine-plot) shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))` languages, there is some consistency in the developmental trajectories for this item. By `r age_1` months, around `r 100 * age_percent(age_1)`% of children are reported to be combining words; by `r age_2` months, around `r 100 * age_percent(age_2)`% are combining.
+<!-- though this estimate is substantially earlier in Québécois French. One possibility is that the phrasing of the "combines" item contributes to this difference, in that some forms (including Québécois French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting. -->
 
 ```{r gram-combine-plot, fig.cap="Trajectory of the Combines item in each language across age (left) and vocabulary size (right).", dependson="gram-combine-compare"}
 ggplot(combine_compare, aes(x = value, y = positive, colour = language)) +

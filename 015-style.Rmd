@@ -311,7 +311,7 @@ To summarize, we were interested in this subsection in whether we found cross-li
 
 Taken together, these data provide some cross-linguistic support for the idea that children show variability beyond differences in rate of vocabulary acquisition. One dimension of variability is that, for a particular level of vocabulary size, there appear to be children who are younger, know more nouns, and combine words less (perhaps the "referential" children referred to in previous literature); other children will be older, have a more diverse vocabulary (including more predicates), and will tend to use more complex word combinations. 
 
-## "Spurts" in vocabulary
+## Spurts in vocabulary
 
 Perhaps the most obvious aspect of early vocabulary is that it picks up speed in growth over the second year after birth. First words are hard-won, but soon children's vocabulary acquisition appears to "explode." This acceleration is easily visible in Figure \@ref(fig:style-median-production), which shows the median productive vocabulary from 8--18 months (for American English Words & Gestures data). (We could measure the rate of learning by taking the derivative of this curve; but this rate calculation is slightly misleading for cross-sectional data and so we postpone this analysis until below). This increase in the rate of vocabulary learning has been much remarked on in the literature, as discussed above.
 

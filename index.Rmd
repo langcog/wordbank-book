@@ -1,6 +1,6 @@
 ---
 title: "Variability and Consistency in Early Language Learning"
-author: "Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
+author: "Michael C. Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky"
 biblio-style: apalike
 output: pdf_document
 documentclass: book

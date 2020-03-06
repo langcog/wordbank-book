@@ -254,8 +254,10 @@ mean_crossling_aoas <- crossling_aoas %>%
   summarise(mean = mean(aoa, na.rm = T), sd = sd(aoa, na.rm = T), n = n()) %>%
   arrange(mean)
 
-kable(mean_crossling_aoas, digits = 2, caption = 'Summary statistics for ages of acquistion for each First Gestures item across languages.',
-      col.names = c("Item", "Mean", "SD", "N"))
+kable(mean_crossling_aoas, digits = 2,
+      caption = 'Summary statistics for ages of acquistion for each First Gestures item across languages.',
+      col.names = c("Item", "Mean", "SD", "N")) %>%
+  kableExtra::kable_styling(full_width = FALSE)
 ```
 
 Table \@ref(tab:gesture-crossling-first) and Figure \@ref(fig:gesture-crossling-fig) show both consistency and variability across items. As in the learning of words, the means and variances of these ages of acquisition were correlated [_r_ = `r roundp(cor(mean_crossling_aoas$mean, mean_crossling_aoas$sd))`; @mollica2017]. The primary outliers were _request_, which appears to be produced surprisingly late in American English, and _shrug_ which was produced surprisingly late by French-learning infants. In general, however, most of the cross-linguistic differences appear to be consistent across the gestures (i.e. French-learning infants gestures later). It is difficult to tell from this small sample of mostly European languages whether these differences are driven by linguistic factors or rather by properties of our samples or variability in parents' interpretation of the form. Nonetheless, they provide some evidence for consistency in the process of gestural development cross-linguistically. To get additional leverage on this process, we next consider the full set of gestures.
@@ -322,7 +324,8 @@ This cross-category intercorrelation is quite similar cross-linguistically, rang
 
 ```{r gesture-intercor-table}
 kable(intercor_data, digits = 3, col.names = c("Language", "Mean", "SD"),
-      caption = "Summary statistics for intercorrelations between gesture categories for each language.")
+      caption = "Summary statistics for intercorrelations between gesture categories for each language.") %>%
+  kableExtra::kable_styling(full_width = FALSE)
 ```
 
 ## The relationship between language and gesture
@@ -331,7 +334,7 @@ A critical theoretical question in early communicative development concerns the 
 
 To first provide a baseline, however, we compute the correlation between children's language and gesture development and their age. As Figure \@ref(fig:gesture-age-cor-fig) below shows, gesture shows as much or more developmental change than comprehension and production -- at least over the age range measured by the CDI Words & Gestures forms. The variability in the correlation with age in all three measures hangs together within languages: Languages where there is more developmental change in linguistic development also tend to have more gestural development. Production typically shows the lowest correlation, presumably because many childre are still at floor on this measure for most of the age range being measured. 
 
-```{r gesture-age-cor-fig, fig.cap='Correlations between subscales -- gesture, comprehension, and production -- and age, across languages.'}
+```{r gesture-age-cor-fig, fig.cap='Correlations between age and subscales (gesture, comprehension, production) across languages.', fig.height=3}
 age_cors <- binary_data %>%
   group_by(language, age, comprehension, production, data_id) %>%
   summarise(gesture = mean(value, na.rm = TRUE)) %>%
@@ -351,7 +354,8 @@ ggplot(age_cors, aes(x = language, y = cor, color = measure)) +
   coord_flip() + 
   .scale_color_discrete(name = "Measure") + 
   labs(x = "", y = "", color = "subscale") +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "top", legend.title = element_blank(),
+        panel.grid.major.y = .coef_line)
 ``` 
 
 
@@ -385,8 +389,10 @@ gest_lang_data <- binary_data %>%
   separate(id, into = c("language", "measure"), "_") %>%
   spread(measure, cor)
 
-kable(gest_lang_data, digits = 2, caption = "Correlation with gesture subscale for each vocabulary subscale in each language.",
-      col.names = c("Language", "Comprehension", "Production"))
+kable(gest_lang_data, digits = 2,
+      caption = "Correlation with gesture subscale for each vocabulary subscale in each language.",
+      col.names = c("Language", "Comprehension", "Production")) %>%
+  kableExtra::kable_styling(full_width = FALSE)
 ```
 
 ```{r gesture-gest-lang-categories}
@@ -412,7 +418,7 @@ As a second, more specific test of this hypothesized relationship, we consider e
 
 Figure \@ref(fig:gesture-early-type-cors-fig) shows deictic gesture-vocabulary correlations. As before, correlations between gesture and comprehension are higher than gesture and production, but in all cases language is more correlated with the children's non-deictic gestural development rather than their deictic gestural development. This finding provides a second piece of evidence that the relationship between linguistic and gestural develompent is driven more strongly by reliance on a shared symbolic format rather than reliance on individual children's motoric develompent or desire to communicate. Although this finding adds additional specificity to our analysis, we still mark this conclusion as tentative due to possible confounding with measurement issues. 
 
-```{r gesture-early-type-cors-fig, fig.cap='Correlations between gesture and vocabulary size, for both deictic and non-deictic gestures, split by production and comprehension vocabulary.'}
+```{r gesture-early-type-cors-fig, fig.cap='Correlations between gesture and vocabulary size, for both deictic and non-deictic gestures, split by production and comprehension vocabulary.', fig.height=3}
 gest_lang_cor_table <- function(gests) {
   early_gestures_type %>%
     filter(Unilemma %in% gests) %>%
@@ -439,13 +445,14 @@ other_gest_lang_data <- map(other_type_combs, gest_lang_cor_table) %>%
 type_gest_lang_data <- bind_rows(deictic_gest_lang_data, other_gest_lang_data) 
 
 ggplot(type_gest_lang_data, aes(x = language, y = cor, color = type)) + 
-  facet_wrap(~ measure) +
+  facet_wrap(~ measure, labeller = label_caps) +
   geom_point() + 
   labs(x = "", y = "Correlation between gesture and vocabulary size",
        color = "Gesture Type") +
-  theme(legend.position = "bottom")+
+  theme(legend.position = "top")+
   .scale_colour_discrete() + 
-  coord_flip()
+  coord_flip() +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 ## Conclusions

@@ -1,8 +1,3 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
 # Individual Variation in Vocabulary {#style}
 
 > Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development. If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994, p. 86]
@@ -106,7 +101,8 @@ ggplot(coefs, aes(y = langform, x = estimate,  col = term)) +
   geom_vline(xintercept = 0, lty = .refline, colour = .grey) + 
   ylab("") +
   xlab("Coefficient estimate") +
-  .scale_colour_discrete(guide = FALSE)
+  .scale_colour_discrete(guide = FALSE) +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 The trouble is that these variables -- age, noun bias, and total vocabulary size -- have a complex relationship to one another. For a young child, having a bigger noun bias is correlated with having a bigger vocabulary (because they are on the early part of the "noun over-representation" curve shown in Chapter \@ref(categories-syntactic)). In contrast, for an older child, having a bigger noun bias is correlated with having a smaller vocabulary because they are on the later part of the curve. Thus, the directionality of the relationship that you discover is largely determined by what part of your sample is densest. 
@@ -119,7 +115,7 @@ One way to circumvent this critique statistically is to measure whether a partic
 
 Figure \@ref(fig:style-vc-eng) shows both the English noun-proportion data (plotted now by vocabulary size) and the residuals of that distribution when fit via a cubic model. The next question we can ask is how this "residualized style" relates to other variables like age, grammatical ability, and (in longitudinal data) further vocabulary growth. Note that we cannot directly compare this variable to other aspects of concurrent vocabulary size because features like, for example, number of closed class items in the vocabulary are non-independent (since the more nouns you have, by definition the fewer closed class items). 
 
-```{r style-vc-eng, fig.cap="For American English data, proportion of nouns produced by each child as a function of their vocabulary size (top) and the residual proportion of nouns regressing out vocabulary size (bottom).", fig.width=4.5, fig.height=6}
+```{r style-vc-eng, fig.cap="For American English data, proportion of nouns produced by each child as a function of their vocabulary size (top) and the residual proportion of nouns regressing out vocabulary size (bottom).", fig.width=4.5, fig.height=6, out.width="70%"}
 eng_ex <- filter(vc_pred, language == "English (American)") %>%
   filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
   mutate(resid_noun_prop = resid(lm(noun_prop ~ prop + I(prop^2) + I(prop^3)))) %>%
@@ -147,7 +143,7 @@ ggplot(eng_ex, aes(x = age, y = value)) +
 
 Our first analysis looks at the correlation between vocabulary-residualized noun bias and age. Figure \@ref(fig:style-vc-resids) shows coefficient estimates on this analysis. Now, most age coefficients are reliably negative, suggesting that a greater residual noun bias is associated with being *younger*. Two of the main outliers here are from Mandarin, which, as discussed in Chapter \@ref(categories-syntactic), has the smallest noun bias of any of the languages in our dataset.
 
-```{r style-vc-resids, fig.cap="Effect of age on vocabulary-residualized noun bias in each language.", fig.width=6}
+```{r style-vc-resids, fig.cap="Effect of age on vocabulary-residualized noun bias in each language.", fig.width=7}
 resid_vc_pred <- vc_pred %>%
   filter(is.finite(noun_prop), is.finite(prop), is.finite(age)) %>%
   split(.$language) %>%
@@ -173,7 +169,8 @@ ggplot(resid_coefs, aes(x = langform, y = estimate)) +
   geom_hline(yintercept = 0, lty = .refline, colour = .grey) + 
   coord_flip() +
   xlab("") +
-  ylab("Coefficient estimate")
+  ylab("Coefficient estimate") +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 ### Vocabulary composition and grammatical ability
@@ -189,7 +186,7 @@ grammar_summary <- read_feather("data/grammar/grammar_summary.feather") %>%
 
 For grammatical complexity scores (Figure \@ref(fig:style-grammar-correlations-complexity)), we see that vocabulary-residualized noun bias is reliably related to grammatical complexity, as indicated by estimates that are to the left of the vertical dashed line. (Again, Mandarin is an exception). Because of the residualization procedure, this relation reflects effects that are over and above the correlations between grammar and lexicon (as reported in Chapter \@ref(grammar)). Thus, those children with more nouns than expected for their vocabulary size produce *less* complex language. As seen above, they are also *younger* than expected. 
 
-```{r style-grammar-correlations-complexity, fig.cap="Effect of vocabulary-residualized noun bias on complexity score in each language.", fig.width=5.5, fig.height=3.5}
+```{r style-grammar-correlations-complexity, fig.cap="Effect of vocabulary-residualized noun bias on complexity score in each language.", fig.width=5.5, fig.height=2.5}
 grammar_coefs <- grammar_summary %>%
   group_by(language, form) %>%
   nest() %>%
@@ -210,7 +207,8 @@ ggplot(grammar_coefs, aes(x = langform, y = estimate)) +
   coord_flip() +
   xlab("") +
   ylab("Coefficient estimate") + 
-  .scale_colour_discrete(guide = FALSE)
+  .scale_colour_discrete(guide = FALSE) +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 We next repeat the analysis of complexity while controlling for age and total vocabulary size. The coefficients are shown in Figure \@ref(fig:style-grammar-correlations-complexity-age). Vocabulary size, of course, has a positive relation to grammatical complexity, as does age (see Chapter \@ref(grammar)). Even controlling for these two factors, however, we still observe a consistent negative relation between residual noun bias and complexity. 
@@ -245,14 +243,15 @@ ggplot(grammar_age_coefs,
   facet_wrap(~term, scales = "free_x") + 
   xlab("") +
   ylab("Coefficient estimate") + 
-  .scale_colour_discrete(guide = FALSE) 
+  .scale_colour_discrete(guide = FALSE)  +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 ### Vocabulary composition differences across siblings
 
 @nelson1973 noted that later-born children had larger expressive vocabularies than first-born children. This observation is consistent with the confounding of vocabulary size and composition, since later-born children tend to have smaller vocabularies (see Chapter \@ref(demographics)). But, there are other reasons to suspect that vocabulary composition could differ for children who are first vs. later born. @tomasello1985 observe that older siblings tend to be more directive with their younger siblings. Since more directive speech has been argued to lead to an "expressive" style, perhaps later-born children have a different vocabulary composition due to the input they receive [@tomasello1983].^[Technically, the observation that directive speech leads to expressive style could also be due to confounding of amount of speech; more directive parents also tend to be those who talk to children less [e.g., @hart1995].] 
 
-```{r style-sibs-vocab-comp, fig.cap="Proportion nouns in vocabulary by age, with color showing birth order."}
+```{r style-sibs-vocab-comp, fig.cap="Proportion nouns in vocabulary by age, with color showing birth order.", fig.height=6}
 has_birth_order <- vc_pred %>%
   filter(form %in% WSs) %>%
   group_by(language) %>%
@@ -274,12 +273,12 @@ filter(vc_pred, form %in% WSs,
   xlab("Age (months)") + 
   ylab("Proportion nouns") + 
   .scale_colour_discrete(name = "Birth Order") + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "top")
 ```
 
 We first examined uncorrected vocabulary composition by birth order. Figure \@ref(fig:style-sibs-vocab-comp) shows this analysis. There is a trend for young children (15--20 months) to show slightly "nounier" vocabularies -- consistent with @nelson1973's observation -- but this trend is very small and not observed in all languages. 
 
-```{r style-sibs-vocab-comp-resid, fig.cap="Vocabulary-residualized noun proportion by age, with color showing birth order."}
+```{r style-sibs-vocab-comp-resid, fig.cap="Vocabulary-residualized noun proportion by age, with color showing birth order.", fig.height=6}
 has_birth_order <- resid_vc_pred %>%
   filter(form %in% WSs) %>%
   group_by(language) %>%
@@ -301,9 +300,8 @@ filter(resid_vc_pred, form %in% WSs,
   xlab("Age (months)") + 
   ylab("Residualized noun proportion") + 
   .scale_colour_discrete(name = "Birth Order") + 
-  theme(legend.position = "bottom") + 
+  theme(legend.position = "top") + 
   ylim(c(-.5, .5))
-
 ```
 Further, when we examine the trend in the residualized noun proportion, it appears even weaker and is observed in even fewer languages. This pattern is shown in Figure \@ref(fig:style-sibs-vocab-comp-resid). Thus, we conclude that differences in vocabulary composition across birth order are likely to be small and may be, at least in part, due to faster learning by earlier-born siblings. 
 
@@ -313,11 +311,11 @@ To summarize, we were interested in this subsection in whether we found cross-li
 
 Taken together, these data provide some cross-linguistic support for the idea that children show variability beyond differences in rate of vocabulary acquisition. One dimension of variability is that, for a particular level of vocabulary size, there appear to be children who are younger, know more nouns, and combine words less (perhaps the "referential" children referred to in previous literature); other children will be older, have a more diverse vocabulary (including more predicates), and will tend to use more complex word combinations. 
 
-## "Spurts" in vocabulary
+## Spurts in vocabulary
 
 Perhaps the most obvious aspect of early vocabulary is that it picks up speed in growth over the second year after birth. First words are hard-won, but soon children's vocabulary acquisition appears to "explode." This acceleration is easily visible in Figure \@ref(fig:style-median-production), which shows the median productive vocabulary from 8--18 months (for American English Words & Gestures data). (We could measure the rate of learning by taking the derivative of this curve; but this rate calculation is slightly misleading for cross-sectional data and so we postpone this analysis until below). This increase in the rate of vocabulary learning has been much remarked on in the literature, as discussed above.
 
-```{r style-median-production, fig.cap="For American English data, median productive vocabulary as a function of age (curve shows smoothed fit).", fig.width=5, fig.height=4}
+```{r style-median-production, fig.cap="For American English data, median productive vocabulary as a function of age (curve shows smoothed fit).", fig.width=5, fig.height=4, out.width="70%"}
 admins %>%
   filter(language == "English (American)", form == "WG") %>%
   group_by(age) %>%
@@ -386,7 +384,7 @@ n_long <- n_long %>%
 
 We now have a population of children for whom we can evaluate the rate of vocabulary growth and how it varies as a function of age. This winnowing leaves us with data from `r n_distinct(n_long$original_id)` children, whose growth curves are shown in Figure \@ref(fig:style-spaghetti).
 
-```{r style-spaghetti, fig.height=4, fig.width=8, fig.cap="Vocabulary size as a function of age for included longitudinal administrations."}
+```{r style-spaghetti, fig.height=3.7, fig.width=8, fig.cap="Vocabulary size as a function of age for included longitudinal administrations."}
 ggplot(n_long, aes(x = age, y = production)) +
   facet_wrap(~langform, scales = "free_x") + 
   geom_line(aes(col = original_id), alpha = .1) +
@@ -568,7 +566,8 @@ best_model_counts <- best_model %>%
   
 best_model_counts %>%
   kable(digits = 2, col.names = label_caps(names(best_model_counts)),
-        caption = "Number of children for whom the best fitting model falls into each model type.")
+        caption = "Number of children for whom the best fitting model falls into each model type.") %>%
+  kable_styling(latex_options = "scale_down")
 
 rates_quadratic <- rates %>%
   left_join(best_model) %>%
@@ -630,7 +629,7 @@ preds <- data_frame(
 
 To further examine this issue in a denser dataset, we used data from @roy2015's in-depth study of a single child. This is an ultra-dense dataset with millions of words of transcribed speech and hand-checked age-of-acquisition data for over 600 words up to the child's second birthday. The comparable curves for this dataset are shown above. Using the same AIC method, the quadratic model fits best, but the linear model is clearly close as well. 
 
-```{r style-roy-ploy, fig.cap="Vocabulary growth rate as a function of vocabulary size for the @roy2015 data.", fig.width=5, fig.height=5}
+```{r style-roy-ploy, fig.cap="Vocabulary growth rate as a function of vocabulary size for the @roy2015 data.", fig.width=5, fig.height=5, out.width="70%"}
 ggplot(roy_rate, aes(x = production, y = rate)) + 
   geom_line(aes(colour = model), size = 1, data = preds) +
   geom_point() +
@@ -664,7 +663,7 @@ Of course, this type of analysis can only be conducted on WG-type forms which in
 
 Figure \@ref(fig:style-eng-wg) shows individual children's comprehension and production plotted against one another. The diagonal indicates a child who comprehends and produces exactly the same number of words. In practice, this measure is always below the diagonal because, by the design of the form, a child cannot "say but not understand" a particular word; they can only "understand" or "understand and say."
 
-```{r style-eng-wg, fig.cap="For American English data, each child's productive vs. receptive vocabulary size."}
+```{r style-eng-wg, fig.cap="For American English data, each child's productive vs. receptive vocabulary size.", out.width="70%"}
 eng_wg <- filter(admins, language == "English (American)", form == "WG")
 
 ggplot(eng_wg, aes(x = comprehension, y = production)) +
@@ -740,7 +739,7 @@ ggplot(filter(wg, !(langform %in% c("British Sign Language WG"))),
         legend.text = element_text(size = 6.5))
 ```
 
-```{r style-productivity-coefs, fig.cap="Effect of age on productivity ratio in each language (ranges indicates 95 percent confidence intervals)."}
+```{r style-productivity-coefs, fig.cap="Effect of age on productivity ratio in each language (ranges indicates 95\\% confidence intervals)."}
 productivity_coefs <- wg %>%
   group_by(language, form) %>%
   do(broom::tidy(lm(productivity ~ age, data = .))) %>%
@@ -754,7 +753,8 @@ ggplot(productivity_coefs, aes(x = langform, y = estimate)) +
   geom_pointrange(aes(ymin = estimate - 1.96 * std.error,
                       ymax = estimate + 1.96 * std.error)) +
   coord_flip() +
-  labs(x = "", y = "Coefficient estimate")
+  labs(x = "", y = "Coefficient estimate") +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 However, in nearly every language, to one degree or another, we see some children with productivity ratios > .95. Figure \@ref(fig:style-wg-props) shows the proportion of children showing more than 95% productivity. A number of samples have substantial proportions of parents reporting comprehension in this way. While it is possible that these numbers represent actual children whose production is synchronized with their comprehension, a more parsimonious explanation is that there are local variations in administration, leading to some fraction of parents who are not completing the form properly. In particular, it does not appear that these "no comprehension without production" children are the tail of a shifted distribution of productivity ratios; instead, they appear to be due to a separate small population. Yet, despite that, they appear to have an outsized effect on our estimates of the development of productivity ratios across languages.
@@ -766,7 +766,9 @@ wg %>%
   ggplot(aes(x = no_comprehension, y = fct_reorder(langform, no_comprehension))) +
     geom_point() +
     scale_x_continuous(labels = function(breaks) paste0(breaks, "%")) +
-    labs(x = "Percentage of administrations with productivity ratio > 95%", y = "")
+    labs(x = "Percentage of administrations with productivity ratio > 95%", y = "") +
+    theme(panel.grid.major.y = .coef_line,
+          axis.text.x = element_text(size = rel(0.8)))
 ```
 
 In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of developing instructions for parents that more effectively convey the concept of what it means for a child to "understand" a word. Outside of these concerns, while there very well may be reliable variation in the comprehension-production ratio across children, we unfortunately do not have access to independent signals that could validate this quantity.

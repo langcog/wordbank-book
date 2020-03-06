@@ -5,9 +5,6 @@ An examination of early language development across languages, using parent repo
 
 Visible at: https://langcog.github.io/wordbank-book/index.html
 
-Still under active development, in early and incomplete draft form. Manuscript due to MIT Press in Summer 2018.
-
-
 ---
 
 ## Building the book

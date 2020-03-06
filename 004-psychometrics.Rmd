@@ -242,12 +242,11 @@ d_ws_summary <- d_ws %>%
 
 ### Measurement properties of individual WS items
 
-
 A first question that we can ask using a fitted IRT model is how well individual items relate to children's overall latent abilities. Practically speaking, in these analyses, we use the `mirt` package [@chalmers2012;@chalmers2016] to estimate the parameters of a four-parameter IRT model. As described above, the two-parameter model includes difficulty and discrimination parameters for each item. The four-parameter model supplements the standard two-parameter model with two parameters corresponding to floor and ceiling performance for a particular item. Items with high rates of guessing or universal acceptance across test takers would tend to have abnormal values on these bounds.
 
 We fit Rasch, two-, three-, and four-parameter models to the English WS data and performed a set of model comparisons. On all metrics -- AIC, BIC, and direct likelihood comparison -- the 2PL model handily outperfomrmed the Rasch model, suggesting that not every item had the same discrimination. Similarly, the 3PL outperformed the 4PL on all metrics, suggesting that adding an upper bound parameter did not increase model fit. On the other hand, the 2PL and 3PL were close in fit, with AIC and log likelihood favoring the 3PL but BIC favoring the 2PL. In the remainder of the analyses below save one, we adopt the 2PL for simplicity. In an exploratory analysis, we examine upper and lower bounds from the 4PL because the estimated upper bounds help us reason about those items that are not yet universally known by the older children in our sample. 
 
-```{r psycho-item-individual-ws, fig.cap="Item characteristic curves for a set of individual items from the English WS sample."}
+```{r psycho-item-individual-ws, fig.cap="Item characteristic curves for a set of individual items from the English WS sample.", fig.height=4.5}
 
 thetas <- seq(-6,6,.1)
 irt4pl <- function(a, d, g, u, theta = seq(-6,6,.1)) {
@@ -396,7 +395,7 @@ gridExtra::grid.arrange(a, b)
 Using 2PL parameter fits, Figure \@ref(fig:psycho-lexcat) shows WS item difficulty and discrimination (as above) and the histogram of discrimination, but broken down by lexical class (color). Many of the easy, non-discriminating items are found in the "other" section. In contrast, the hardest items tend to be function words. These items tend to have similar discrimination on average (`r roundp(class_summary$a1[class_summary$lexical_class == "function_words"], 1)`) compared with nouns (`r roundp(class_summary$a1[class_summary$lexical_class == "nouns"], 1)`), and modestly lower discrimination than adjectives (`r roundp(class_summary$a1[class_summary$lexical_class == "adjectives"], 1)`), and especially verbs (`r roundp(class_summary$a1[class_summary$lexical_class == "verbs"], 1)`). The situation is not dire: all have a discrimination parameter above one. Thus, although function words are not the most discriminative items on the CDI WS, these items still appear to encode valid signal about children's abilities.
 
 
-```{r psycho-lexcat-summary, fig.cap="Mean discrimination values for individual words' in production and comprehension measures from the Words and Gestures form (error bars show SD)."}
+```{r psycho-lexcat-summary, fig.cap="Mean discrimination values for individual words' in production and comprehension measures from the Words and Gestures form (error bars show SD).", fig.height=3.5}
 coefs_2pl_wg <- coefs_2pl_wg %>%
   left_join(items %>% 
                filter(language == "English (American)", 
@@ -438,7 +437,8 @@ ggplot(filter(class_summary, parameter=="Discrimination"),
   geom_vline(xintercept = 0, linetype = .refline, colour = .grey) + 
   # .scale_colour_discrete(guide = FALSE) +
   xlab("Discrimination") +
-  ylab("")
+  ylab("") +
+  theme(panel.grid.major.y = .coef_line)
 ```
 
 In our last analysis, we turn to the WG data. Figure \@ref(fig:psycho-lexcat-summary) shows the mean (error bars show SD) for discrimination parameter values. The only major trend is that there is a moderate level of discrimination for all classes except "other" (which includes items like *mommy* and *daddy* and a variety of animal sounds and social routines). One hypothesis about this finding is that, especially early on, parents are very generous in their interpretation of whether their child understands these specific words. 

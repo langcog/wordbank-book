@@ -34,7 +34,7 @@ ggplot(eng_prod_data,
                      limits = c(8, 30)) +
   scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1),
                      name = "Proportion Production") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top")
 ```
 A second method is to use absolute numbers, rather than relative proportions. This method is shown in Figure \@ref(fig:appstitch-eng-prod-absolute). While this method appears better, a gap is also visible between the smoothed means from the two instruments. Here, the vocabulary estimated from the WS instrument is *larger*, presumably because the form affords more total items for parents to check, even if they are on average more difficult. 
 
@@ -51,7 +51,7 @@ ggplot(eng_prod_data,
                      breaks = seq(8, 30, 4),
                      limits = c(8, 30)) +
   scale_y_continuous(name = "Total Production") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top")
 ```
 
 With these two negative examples in hand, we might be tempted to ask whether differences in the two forms allow data from them to be commensurate at all. For example, a longer form might lead parents to be make different choices (e.g., being more liberal in checking items so as to get through the form faster). To address this issue, we examine data from individual items in  Figure \@ref(fig:appstitch-example), which shows 25 randomly-sampled items from the American English data.

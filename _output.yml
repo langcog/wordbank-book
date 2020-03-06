@@ -25,5 +25,5 @@ bookdown::pdf_book:
     in_header: preamble.tex
   citation_package: natbib
   keep_tex: yes
-  base_format: mitpress::mitpress_linguistics
+  base_format: mitpress::mitpress_newmath
   dev: "png"

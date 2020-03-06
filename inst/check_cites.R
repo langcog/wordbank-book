@@ -1,3 +1,5 @@
+library(tidyverse)
+
 fs <- list.files(pattern = "*.Rmd")
 
 bibs <- read_file("book.bib") %>% str_match_all("@.*\\{(.*),") %>%
@@ -11,3 +13,7 @@ get_cites <- function(f) {
 fs %>% map(~.x %>% get_cites %>% setdiff(bibs)) %>%
   set_names(fs) %>%
   compact()
+
+cites <- fs %>% map(~.x %>% get_cites) %>% unlist()
+setdiff(cites, bibs)
+setdiff(bibs, cites)

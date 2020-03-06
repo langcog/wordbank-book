@@ -58,7 +58,7 @@ While many words on the English-language checklist may easily translate to other
 
 Due to variation in language structure, the interests of the developers of CDI adaptations, and the target age ranges of the forms, the CDI instruments vary in structure across languages. Most adaptations of the WG generally include gestures as well as vocabulary comprehension and production, however, it is not always the case. Further, while adaptations of the WS always include vocabulary production, not all instruments also contain some measures of grammar, for example, early use of closed-class morphology or combinatorial syntax. Cross-linguistic differences also render the structure and format of many parts of the grammar sections to be very different, and hence, not always amenable to comparisons across languages. Finally, a few instruments included in our dataset are pure vocabulary checklists, with no other sections included. 
 
-In sum, CDIs are a useful tool for many languages, but the forms differ substantially between languages. When these differences obviously confound our analysis, we present the relevant control or comparison analyses  (e.g., as in Chapter \@ref(categories-syntax)).
+In sum, CDIs are a useful tool for many languages, but the forms differ substantially between languages. When these differences obviously confound our analysis, we present the relevant control or comparison analyses  (e.g., as in Chapter \@ref(categories-syntactic)).
 
 ### Our approach to comparison
 

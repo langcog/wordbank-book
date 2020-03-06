@@ -15,7 +15,7 @@ opts_chunk$set(
   cache = TRUE,
   echo = FALSE,
   cache.lazy = FALSE,
-  fig.align = "center",
+  fig.align = "left",
   fig.show = "hold",
   dev = "png",
   dpi = 300,

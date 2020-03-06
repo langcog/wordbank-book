@@ -2,6 +2,8 @@
 
 This appendix gives the contributors and citations for each of the datasets used in this book.
 
+\vspace{3em}
+
 ```{r appdata-load, cache=FALSE}
 datasets <- jsonlite::fromJSON("misc/datasets.json")
 
@@ -13,7 +15,8 @@ lang_datasets <- datasets %>%
 
 ```{r appdata-print, cache=FALSE, results="asis"}
 map2(lang_datasets$instrument_language, lang_datasets$data, function(lang, df) {
-  c(glue("\n\n#### [lang] {-}\n\n", .open = "[", .close = "]"),
+  # c(glue("\n\n#### [lang] {-}\n\n", .open = "[", .close = "]"),
+  c(glue("\n\n\n\n\\noindent __[lang]__\n\n", .open = "[", .close = "]"),
     pmap(
       df %>% select(instrument_form, contributor, citation),
       function(instrument_form, contributor, citation) {

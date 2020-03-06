@@ -129,21 +129,51 @@ combine_compare <- grammar_combine %>%
   gather(predictor, value, age, production_prop) %>%
   mutate(predictor = factor(
     predictor, levels = c("age", "production_prop"),
-    labels = c("Age (months)", "Productive vocabulary size (proportion of items)"))) %>%
-  filter(language != "Slovak")
+    labels = c("Age (months)", "Productive vocabulary (proportion of items)"))) %>%
+  filter(language != "Slovak", language != "French (Québécois)")
 
 # slovak combine item is "your child uses 'fancy words' like bubble blower, brush and comb' - so I am excluding it. -MCF
+# french (quebec) combines item switches schemes halfway though, excluding it -MB
+
+combines_models <- combine_compare %>%
+  group_by(language, form, predictor) %>%
+  nest() %>%
+  mutate(model = map(data, function(lang_data) {
+    glm(positive ~ value, family = "binomial", weights = num_items, data = lang_data)
+  }))
+
+combines_fits <- combines_models %>%
+  mutate(values = if_else(str_detect(predictor, "Age"),
+                          map(data, ~seq(min(.$value), max(.$value), 1)),
+                          map(data, ~seq(min(.$value), max(.$value), 0.01))),
+         fits = map2(model, values,
+                     ~broom::augment(.x, newdata = tibble(value = .y),
+                                     type.predict = "response"))) %>%
+  select(-data, -model, -values) %>%
+  unnest(fits)
+
+combines_age_means <- combines_fits %>%
+  filter(str_detect(predictor, "Age")) %>%
+  group_by(value) %>%
+  summarise(mean_fitted = mean(.fitted))
+age_percent <- function(age) {
+  combines_age_means %>% filter(value == age) %>% pull(mean_fitted) %>% round(1)
+}
+age_1 <- 19
+age_2 <- 25
 ```
 
-Figure \@ref(fig:gram-combine-plot) shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))` languages, there is some consistency in the chronological trajectories for this item. By 24 months, around 75% of children are reported to be combining words, though this estimate is substantially earlier in Québécois French. One possibility is that the phrasing of the "combines" item contributes to this difference, in that some forms (including Québécois French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting.
+Figure \@ref(fig:gram-combine-plot) shows the probability of a parent checking that their child combines words, plotted by the child's chronological age (left) and raw productive vocabulary size (right). As can be seen, across `r length(unique(combine_compare$language))` languages, there is some consistency in the developmental trajectories for this item. By `r age_1` months, around `r 100 * age_percent(age_1)`% of children are reported to be combining words; by `r age_2` months, around `r 100 * age_percent(age_2)`% are combining.
+<!-- though this estimate is substantially earlier in Québécois French. One possibility is that the phrasing of the "combines" item contributes to this difference, in that some forms (including Québécois French, but also Norwegian and Danish) give examples of simple combinations, which could encourage earlier reporting. -->
 
-```{r gram-combine-plot, fig.cap="Trajectory of the Combines item in each language across age (left) and vocabulary size (right)."}
+```{r gram-combine-plot, fig.cap="Trajectory of the Combines item in each language across age (left) and vocabulary size (right).", dependson="gram-combine-compare"}
 ggplot(combine_compare, aes(x = value, y = positive, colour = language)) +
   facet_wrap(~predictor, scales = "free_x", strip.position = "bottom") +
   geom_smooth(method = "glm", method.args = list(family = "binomial"),
               se = FALSE) +
   scale_colour_manual(values = lang_colours, name = "") +
   labs(x = "", y = "Combines words (probability)") +
+  guides(colour = guide_legend(ncol = 3)) +
   theme(legend.position = "bottom",
         strip.placement = "outside")
 ```
@@ -293,7 +323,7 @@ plot_vocab_type <- function(type) {
               data = filter(vocab_models, coded_type == type)) +
     scale_x_continuous(limits = c(0, 1), expand = c(0.01, 0),
                        breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
-                       name = "Productive vocabulary size (proportion of items)") +
+                       name = "Productive vocabulary (proportion of items)") +
     scale_y_continuous(limits = c(0, 1), expand = c(0.01, 0),
                        breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1),
                        name = glue("{type} score (proportion of items)"))
@@ -595,9 +625,10 @@ legend <- cowplot::get_legend(term_plots[[1]])
 term_plots <- map(term_plots, ~. + guides(colour = FALSE))
 
 cowplot::plot_grid(
-  cowplot::plot_grid(NULL, legend, nrow = 1),
+  cowplot::plot_grid(NULL, legend, NULL, nrow = 1),
   cowplot::plot_grid(term_plots[[1]], term_plots[[2]], term_plots[[3]], nrow = 1),
-  ncol = 1, rel_heights = c(0.1, 1), align = "hv") %>%
+  ncol = 1, rel_heights = c(0.1, 1), align = "hv"
+) %>%
   cowplot::ggdraw()
 ```
 
@@ -607,21 +638,21 @@ Building on previous analyses that showed a strong relationship between lexical 
 
 In our next set of analyses, we take advantage of the presence of longitudinal data in two languages (Norwegian and American English) to investigate the relationship between vocabulary size and grammatical ability, as operationalized by average Complexity score. As mentioned above, this relationship has been the subject of a variety of previous investigations using longitudinal data [@dionne2003;@moyle2007;@perez-leroux2012;@hoff2017;@brinchmann2018], but outcomes have been contradictory. Given the heterogeneity of these studies, results could differ for a variety of reasons, including the language background of the participants, the target age range of the study (which ranged from 2--6 years old), and the nature of the specific models being fit to the data. 
 
-Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences [@rogosa1980], it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual -- as is clearly the case for language-related measures -- these models are misspecified, since they assume that the *only* source of consistency between individuals is temporal autocorrelation [@hamaker2015]. To address this issue, @hamaker2015 propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure \@ref(fig:grammar-ri-clpm)). This is the approach used by @brinchmann2018, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below. 
+Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences [@rogosa1980], it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual -- as is clearly the case for language-related measures -- these models are misspecified, since they assume that the *only* source of consistency between individuals is temporal autocorrelation [@hamaker2015]. To address this issue, @hamaker2015 propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure \@ref(fig:gram-ri-clpm)). This is the approach used by @brinchmann2018, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below. 
 
-```{r grammar-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from @hamaker2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", out.width="60%"}
+```{r gram-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from @hamaker2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", out.width="60%"}
 include_graphics("images/ri-clpm.png")
 ```
 
-```{r grammar-ri-clpm-data}
+```{r gram-ri-clpm-data}
 load("data/grammar/clpms.Rds")
 ```
 
 We include data from two different longitudinal datasets. The first is a group of children from a study conducted by Virginia Marchman with English-speaking children in Dallas, TX (N = `r length(unique(dallas$original_id))`). This dataset includes children with three waves of data collection centered around 18, 24, and 30 months; we included children if they contributed to two waves (N = `r sum(3-rowSums(is.na(dallas_wide[,2:4])) == 2)`) or all three waves (N = `r sum(3-rowSums(is.na(dallas_wide[,2:4])) == 3)`), for a total of `r nrow(dallas_wide)` children. The offsets between waves varied somewhat in these data, but for simplicity, we split all administrations into three time points: 18--21 months, 22--25 months, and 26--30 months.
 
-The second dataset is a large group of longitudinal administrations in the Norwegian normative data, including a total of `r format(length(unique(norway$original_id)), big.mark = ",")` children. These children's parents were invited to complete multiple CDIs online every month or few months, with many parents completing two and a small number completing 10 or more. For purposes of discrete analysis, we binned these continuous data into two-month waves from 18--35 months (the small number of 36-month-olds were included in the oldest wave). We then included children with two or more administrations, each falling in a different wave (N = `r nrow(norway_wide)`). Table \@ref(tab:grammar-norway-table) shows the distribution of how many observations are available for children across different waves.
+The second dataset is a large group of longitudinal administrations in the Norwegian normative data, including a total of `r format(length(unique(norway$original_id)), big.mark = ",")` children. These children's parents were invited to complete multiple CDIs online every month or few months, with many parents completing two and a small number completing 10 or more. For purposes of discrete analysis, we binned these continuous data into two-month waves from 18--35 months (the small number of 36-month-olds were included in the oldest wave). We then included children with two or more administrations, each falling in a different wave (N = `r nrow(norway_wide)`). Table \@ref(tab:gram-norway-table) shows the distribution of how many observations are available for children across different waves.
 
-```{r grammar-norway-table}
+```{r gram-norway-table}
 norway_n <- norway_wide %>%
   select(original_id, starts_with("production")) %>%
   gather(time, production, starts_with("production")) %>%
@@ -649,9 +680,9 @@ kable(norway_n,
 
 Using these two datasets, we fit RI-CLPM models.^[We gratefully acknowledge code from [jflournoy.github.io/2017/10/20/riclpm-lavaan-demo](https://jflournoy.github.io/2017/10/20/riclpm-lavaan-demo).] These models measure the magnitude of the reciprocal relationships between grammar and vocabulary over time. Coefficient weights on the paths between latent grammar and vocabulary are then interpretable as temporal influences. Following the RI-CLPM specification in @hamaker2015, we posited latent variables $\kappa$ and $\omega$ that describe stability in vocabulary and grammar, respectively. 
 
-Figure \@ref(fig:grammar-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant ($\beta_{p1-c2}$ = `r roundp(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est)`, _p_ `r print_pvalue(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue)`, $\beta_{p2-c3}$ = `r roundp(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est)`, _p_ `r print_pvalue(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue)`). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).
+Figure \@ref(fig:gram-dallas-plot) shows the fitted model for the English data. Coefficient estimates from vocabulary to grammar are large and significant ($\beta_{p1-c2}$ = `r roundp(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$est)`, _p_ `r print_pvalue(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma2")$pvalue)`, $\beta_{p2-c3}$ = `r roundp(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$est)`, _p_ `r print_pvalue(filter(lavaan::parameterEstimates(clpm_fit_dallas), label == "gamma3")$pvalue)`). These are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant).
 
-```{r grammar-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts.", fig.height=4}
+```{r gram-dallas-plot, fig.cap="RI-CLPM model fit to English (American) data. Path diagram for latent (circles) and observed (squares) variables. Edges show estimated regression coefficients, scaled and colored by estimate magnitudes. Uppercase P variables indicate production coefficients, while C variables indicate grammatical complexity coefficients. Lowercase square variables are observed data. kpp and omg denote global intercepts.", fig.height=4}
 dallas_plot <- semPlot::semPlotModel(clpm_fit_dallas)
 semPlot::semPaths(dallas_plot, what="est",
                   intercepts = FALSE,
@@ -665,9 +696,9 @@ semPlot::semPaths(dallas_plot, what="est",
                   edge.label.cex = 1)
 ```
 
-Figure \@ref(fig:grammar-norway-plot) shows the analogous fitted model for the Norwegian data.^[Because of the high degree of missingness in this dataset, fititng these models was difficult and so we interpret standard errors with some caution.] Coefficient estimates from vocabulary to grammar are large; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table \@ref(tab:grammar-norway-clpm-tab). 
+Figure \@ref(fig:gram-norway-plot) shows the analogous fitted model for the Norwegian data.^[Because of the high degree of missingness in this dataset, fititng these models was difficult and so we interpret standard errors with some caution.] Coefficient estimates from vocabulary to grammar are large; as in the English data, these are consistently higher than estimates from grammar to vocabulary (which are both small and non-significant). Coefficient estimates are shown in Table \@ref(tab:gram-norway-clpm-tab). 
 
-```{r grammar-norway-plot, fig.cap="RI-CLPM model fit to Norwegian data. Plotting conventions are as above; P indicates production, while C indicates complexity.", fig.height=5}
+```{r gram-norway-plot, fig.cap="RI-CLPM model fit to Norwegian data. Plotting conventions are as above; P indicates production, while C indicates complexity.", fig.height=5}
 norway_plot <- semPlot::semPlotModel(clpm_fit_norway)
 semPlot::semPaths(norway_plot, what="est", 
                   structural = FALSE, 
@@ -685,19 +716,19 @@ semPlot::semPaths(norway_plot, what="est",
                   edge.label.cex = 1)
 ```
 
-```{r grammar-norway-clpm-tab}
+```{r gram-norway-clpm-tab}
 params_table <- lavaan::parameterEstimates(clpm_fit_norway) %>%
   filter(str_detect(label, "beta") | str_detect(label, "gamma")) %>% 
   select(lhs, rhs, est, se, pvalue) %>%
   mutate(pvalue = if_else(pvalue < 0.001, "< 0.001", roundp(pvalue, 3)),
          est = roundp(est, 3),
          se = roundp(se, 3)) %>%
-  rename(Predicted = lhs, Predictor = rhs, β = est, SE = se)
+  rename(Predicted = lhs, Predictor = rhs, `$\\beta$` = est, SE = se)
 
 colnames(params_table)[5] <- cell_spec("p", italic = TRUE)
-kable(params_table, escape = FALSE,
+kable(params_table, escape = FALSE, #col.names = c("Predicted", "Predictor", "$\beta$", "SE"),
       align = c(rep("l", 2), rep("r", 3)),
-      caption = "Coefficient estimates for cross-lag parameters in the Norwegian regression model." )%>%
+      caption = "Coefficient estimates for cross-lag parameters in the Norwegian regression model." ) %>%
   kable_styling(full_width = FALSE)
 ```
 

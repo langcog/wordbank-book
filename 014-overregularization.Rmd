@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Morphological Overgeneralization {#overregularization}
 
 Although Chapter \@ref(grammar) examined broad patterns of morphosyntactic development in relation to vocabulary size, we did not conduct specific analyses of the development of morphology *per se*. In this brief chapter, we rectify that omission by examining patterns of morphology in two cases, plural noun morphology and past tense verb morphology. These two morphological systems are well-studied in the literature because plural (e.g., *cats*) and past tense forms (e.g., *walked*) are some of the earliest to be produced by young children [@brown1973]. Moreover, plural and past tense forms are viewed as a window into the mechanisms underlying productive language use because children will sometimes make overgeneralization errors, such as *tooths* or *goed*. The developmental time course of children's overgeneralization errors has been an influential case study for language learning -- and mental representation more broadly [@rumelhart1986;@pinker1988;@pinker1991;@elman1996]. We begin by describing cross-sectional patterns of overgeneralization across languages and then turn to characterizing longitudinal change in overgeneralization in two languages which have different morphological systems, English and Norwegian. 

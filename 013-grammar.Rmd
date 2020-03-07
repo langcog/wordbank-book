@@ -597,7 +597,7 @@ ggplot(demo_fits, aes(x = production_prop, y = .fitted, colour = factor(age))) +
        y = "Model fit probability of producing")
 ```
 
-```{r gram-item-effects-plot, fig.cap="Coefficient estimates (as log odds ratio) for each grammar item in each language. Line segments indicate means effect for category.", fig.height=14, fig.width=8}
+```{r gram-item-effects-plot, fig.cap="Coefficient estimates (as log odds ratio) for each grammar item in each language. Line segments indicate means effect for category.", fig.height=14, fig.width=8, out.width="90%"}
 term_plot <- function(term_data) {
   term_name <- unique(term_data$term)
   ggplot(term_data, aes(colour = coded_type)) +
@@ -640,9 +640,11 @@ In our next set of analyses, we take advantage of the presence of longitudinal d
 
 Further, a specific technical concern underlies one potential source of variance. The standard method for examining reciprocal relationships between longitudinally-measured variables is the cross-lagged panel model (CLPM). While this model does not allow for causal inferences [@rogosa1980], it is a convenient way to estimate temporal precedence in the relationships between variables measured over multiple time points; many of the previous studies have used variants of this model. However, in cases where the measured constructs show stability within individual -- as is clearly the case for language-related measures -- these models are misspecified, since they assume that the *only* source of consistency between individuals is temporal autocorrelation [@hamaker2015]. To address this issue, @hamaker2015 propose the random intercepts CLPM (RI-CLPM), which adds a latent intercept that accounts for individual variation across observation timepoints (shown in Figure \@ref(fig:gram-ri-clpm)). This is the approach used by @brinchmann2018, and they find significantly better fits for the RI-CLPM on their vocabulary/grammar data than the standard CLPM. Hence, we use this model in our analyses below. 
 
-```{r gram-ri-clpm, fig.cap="The random intercept cross-lagged panel model. Figure reproduced from @hamaker2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.", out.width="60%"}
+```{r gram-ri-clpm, fig.cap="(ref:gram-ri-clpm-cap)", out.width="60%"}
 include_graphics("images/ri-clpm.png")
 ```
+
+(ref:gram-ri-clpm-cap) The random intercept cross-lagged panel model. Figure reproduced from @hamaker2015. Circles represent observed variables, squares represent latent variables, and directed edges represent regression effects.
 
 ```{r gram-ri-clpm-data}
 load("data/grammar/clpms.Rds")

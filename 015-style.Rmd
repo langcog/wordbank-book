@@ -629,7 +629,7 @@ preds <- data_frame(
 
 To further examine this issue in a denser dataset, we used data from @roy2015's in-depth study of a single child. This is an ultra-dense dataset with millions of words of transcribed speech and hand-checked age-of-acquisition data for over 600 words up to the child's second birthday. The comparable curves for this dataset are shown above. Using the same AIC method, the quadratic model fits best, but the linear model is clearly close as well. 
 
-```{r style-roy-ploy, fig.cap="Vocabulary growth rate as a function of vocabulary size for the @roy2015 data.", fig.width=5, fig.height=5, out.width="70%"}
+```{r style-roy-ploy, fig.cap="(ref:style-roy-ploy-cap)", fig.width=5, fig.height=5, out.width="70%"}
 ggplot(roy_rate, aes(x = production, y = rate)) + 
   geom_line(aes(colour = model), size = 1, data = preds) +
   geom_point() +
@@ -640,6 +640,7 @@ ggplot(roy_rate, aes(x = production, y = rate)) +
         strip.text.x = element_blank(),
         legend.position = "top")
 ```
+(ref:style-roy-ploy-cap) Vocabulary growth rate as a function of vocabulary size for the @roy2015 data.
 
 Stepping back, we examined the growth rate of children's vocabulary. To a first, group-wise approximation, children's vocabulary growth accelerates linearly with vocabulary size during the initial period (up to around 250 words). After this point, we run into substantial measurement issues because the CDI does not contain enough words to be certain of the pattern of growth. Further, when we examined individuals' growth, it also often appeared to be linear or quadratic; only in a minority of individuals was there any evidence for a "spurt" (a discrete change). This conclusion was tempered, however, by the difficulty of drawing conclusions without even denser longitudinal data concerning the very beginnings of language. 
 
@@ -768,7 +769,7 @@ wg %>%
     scale_x_continuous(labels = function(breaks) paste0(breaks, "%")) +
     labs(x = "Percentage of administrations with productivity ratio > 95%", y = "") +
     theme(panel.grid.major.y = .coef_line,
-          axis.text.x = element_text(size = rel(0.8)))
+          axis.title.x = element_text(size = rel(0.9)))
 ```
 
 In sum, although the relationship between production and comprehension is a fascinating locus for individual differences, we may not be able to measure this relationship effectively using cross-linguistic comprehension data. Further, these analyses underscore the importance of developing instructions for parents that more effectively convey the concept of what it means for a child to "understand" a word. Outside of these concerns, while there very well may be reliable variation in the comprehension-production ratio across children, we unfortunately do not have access to independent signals that could validate this quantity.

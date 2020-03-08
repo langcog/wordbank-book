@@ -21,7 +21,7 @@
   
   
 
-<meta name="author" content="Michael Frank, Mika Braginsky, Virginia Marchman, and Daniel Yurovsky" />
+<meta name="author" content="Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia M. Marchman" />
 
 
 
@@ -72,9 +72,9 @@
 </li>
 
 <li class="divider"></li>
-<li><a href="index.html#preface"><strong>Preface</strong></a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview"><i class="fa fa-check"></i>Overview</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#outline"><i class="fa fa-check"></i>Outline</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i>How to read this book</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
@@ -118,7 +118,7 @@
 <li class="chapter" data-level="3.1.2" data-path="methods-and-data.html"><a href="methods-and-data.html#implementation"><i class="fa fa-check"></i><b>3.1.2</b> Implementation</a></li>
 <li class="chapter" data-level="3.1.3" data-path="methods-and-data.html"><a href="methods-and-data.html#the-web-interface"><i class="fa fa-check"></i><b>3.1.3</b> The web interface</a></li>
 <li class="chapter" data-level="3.1.4" data-path="methods-and-data.html"><a href="methods-and-data.html#the-wordbankr-api"><i class="fa fa-check"></i><b>3.1.4</b> The <code>wordbankr</code> API</a></li>
-<li class="chapter" data-level="3.1.5" data-path="methods-and-data.html"><a href="methods-and-data.html#unilemmas"><i class="fa fa-check"></i><b>3.1.5</b> “Unilemmas”: cross-linguistic conceptual mappings</a></li>
+<li class="chapter" data-level="3.1.5" data-path="methods-and-data.html"><a href="methods-and-data.html#unilemmas"><i class="fa fa-check"></i><b>3.1.5</b> Unilemmas: cross-linguistic conceptual mappings</a></li>
 <li class="chapter" data-level="3.1.6" data-path="methods-and-data.html"><a href="methods-and-data.html#a-note-on-age"><i class="fa fa-check"></i><b>3.1.6</b> A note on age</a></li>
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="methods-and-data.html"><a href="methods-and-data.html#datasets"><i class="fa fa-check"></i><b>3.2</b> Datasets</a>
@@ -303,7 +303,7 @@
 <li class="chapter" data-level="15.2.4" data-path="style.html"><a href="style.html#vocabulary-composition-differences-across-siblings"><i class="fa fa-check"></i><b>15.2.4</b> Vocabulary composition differences across siblings</a></li>
 <li class="chapter" data-level="15.2.5" data-path="style.html"><a href="style.html#conclusions-5"><i class="fa fa-check"></i><b>15.2.5</b> Conclusions</a></li>
 </ul></li>
-<li class="chapter" data-level="15.3" data-path="style.html"><a href="style.html#spurts-in-vocabulary"><i class="fa fa-check"></i><b>15.3</b> “Spurts” in vocabulary</a></li>
+<li class="chapter" data-level="15.3" data-path="style.html"><a href="style.html#spurts-in-vocabulary"><i class="fa fa-check"></i><b>15.3</b> Spurts in vocabulary</a></li>
 <li class="chapter" data-level="15.4" data-path="style.html"><a href="style.html#variation-in-comprehension-vs.-production"><i class="fa fa-check"></i><b>15.4</b> Variation in comprehension vs. production</a></li>
 <li class="chapter" data-level="15.5" data-path="style.html"><a href="style.html#discussion-9"><i class="fa fa-check"></i><b>15.5</b> Discussion</a></li>
 </ul></li>
@@ -470,7 +470,7 @@ Figure 15.8: Vocabulary-residualized noun proportion by age, with color showing 
 </div>
 </div>
 <div id="spurts-in-vocabulary" class="section level2" number="15.3">
-<h2><span class="header-section-number">15.3</span> “Spurts” in vocabulary</h2>
+<h2><span class="header-section-number">15.3</span> Spurts in vocabulary</h2>
 <p>Perhaps the most obvious aspect of early vocabulary is that it picks up speed in growth over the second year after birth. First words are hard-won, but soon children’s vocabulary acquisition appears to “explode.” This acceleration is easily visible in Figure <a href="style.html#fig:style-median-production">15.9</a>, which shows the median productive vocabulary from 8–18 months (for American English Words &amp; Gestures data). (We could measure the rate of learning by taking the derivative of this curve; but this rate calculation is slightly misleading for cross-sectional data and so we postpone this analysis until below). This increase in the rate of vocabulary learning has been much remarked on in the literature, as discussed above.</p>
 <div class="figure" style="text-align: left"><span id="fig:style-median-production"></span>
 <img src="wordbank-book_files/figure-html/style-median-production-1.png" alt="For American English data, median productive vocabulary as a function of age (curve shows smoothed fit)." width="70%" />
@@ -602,11 +602,12 @@ Figure 15.14: Vocabulary growth rate as a function of vocabulary size for childr
 </div>
 <p>To further examine this issue in a denser dataset, we used data from <span class="citation">Roy et al. (<a href="references.html#ref-roy2015" role="doc-biblioref">2015</a>)</span>’s in-depth study of a single child. This is an ultra-dense dataset with millions of words of transcribed speech and hand-checked age-of-acquisition data for over 600 words up to the child’s second birthday. The comparable curves for this dataset are shown above. Using the same AIC method, the quadratic model fits best, but the linear model is clearly close as well.</p>
 <div class="figure" style="text-align: left"><span id="fig:style-roy-ploy"></span>
-<img src="wordbank-book_files/figure-html/style-roy-ploy-1.png" alt="Vocabulary growth rate as a function of vocabulary size for the @roy2015 data." width="70%" />
+<img src="wordbank-book_files/figure-html/style-roy-ploy-1.png" alt="Vocabulary growth rate as a function of vocabulary size for the Roy et al. (2015) data." width="70%" />
 <p class="caption">
 Figure 15.15: Vocabulary growth rate as a function of vocabulary size for the <span class="citation">Roy et al. (<a href="references.html#ref-roy2015" role="doc-biblioref">2015</a>)</span> data.
 </p>
 </div>
+
 <p>Stepping back, we examined the growth rate of children’s vocabulary. To a first, group-wise approximation, children’s vocabulary growth accelerates linearly with vocabulary size during the initial period (up to around 250 words). After this point, we run into substantial measurement issues because the CDI does not contain enough words to be certain of the pattern of growth. Further, when we examined individuals’ growth, it also often appeared to be linear or quadratic; only in a minority of individuals was there any evidence for a “spurt” (a discrete change). This conclusion was tempered, however, by the difficulty of drawing conclusions without even denser longitudinal data concerning the very beginnings of language.</p>
 </div>
 <div id="variation-in-comprehension-vs.-production" class="section level2" number="15.4">

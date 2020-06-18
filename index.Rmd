@@ -1,6 +1,6 @@
 ---
 title: "Variability and Consistency in Early Language Learning"
-author: "Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia M. Marchman"
+author: "Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia A. Marchman"
 subtitle: The Wordbank Project
 
 documentclass: book

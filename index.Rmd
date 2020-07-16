@@ -24,7 +24,7 @@ always_allow_html: yes
 
 ```{r preface-citation, results='asis'}
 if (opts_knit$get("rmarkdown.pandoc.to") == "html")
-cat("> *This website is the free online version of a book whose current citation is: Frank, M. C., Braginsky, M., Marchman, V. A., and Yurovsky, D. (in prep). Variability and Consistency in Early Language Learning: The Wordbank Project. Cambridge, MA: MIT Press.*")
+cat("> *This website is the free online version of a book whose current citation is: Frank, M. C., Braginsky, M., Yurovsky, D., and Marchman, V. A. (in press). Variability and Consistency in Early Language Learning: The Wordbank Project. Cambridge, MA: MIT Press.*")
 ```
 
 ### Overview {.unnumbered}

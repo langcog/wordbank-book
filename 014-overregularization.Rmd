@@ -578,7 +578,8 @@ ggplot(nor_fit_vals_grouped, aes(x = age, y = .fitted)) +
   scale_alpha_continuous(guide = FALSE) +
   scale_x_continuous(breaks = seq(16, 36, 4)) +
   labs(x = "Age (months)", y = "Model fit probability of overregularizing") +
-  theme(strip.placement = "outside")
+  theme(strip.placement = "outside",
+        plot.margin = margin(l = 2, r = 2))
 ```
 
 ```{r overreg-nor-lexcat, dependson="overreg-nor-traj"}
@@ -666,7 +667,8 @@ ggplot(nor_fit_demo, aes(x = age, y = .fitted, colour = lexical_category)) +
   scale_x_continuous(breaks = seq(16, 36, 4)) +
   labs(x = "Age (months)", y = "Model fit probability of overregularizing") +
   theme(legend.position = "top",
-        strip.text = element_blank())
+        strip.text = element_blank(),
+        plot.margin = margin(l = 2, r = 2))
 ```
 
 ## Conclusions

@@ -313,7 +313,7 @@ write_feather(cvs, "data/cvs/grammar_lex.feather")
 plot_vocab_type <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
          aes(x = production_prop, y = prop)) +
-    facet_wrap(~language, ncol = 4) +
+    facet_wrap(~language, ncol = 3) +
     coord_fixed() +
     geom_jitter(alpha = 0.2, size = 0.75, shape = 1) +
     geom_line(aes(y = fitted_prop), size = 1.2, colour = .pal()(1),
@@ -412,7 +412,7 @@ age_group_fits <- age_group_models %>%
 grammar_age_plot <- function(type) {
   ggplot(filter(grammar_morphosyntax, coded_type == type),
          aes(x = production_prop, y = prop, colour = age_group)) +
-    facet_wrap(~language, ncol = 4) +
+    facet_wrap(~language, ncol = 3) +
     coord_fixed() +
     geom_jitter(alpha = 0.1, size = 0.70, shape = 1) +
     # geom_line(aes(y = mean_fitted), size = 0.9,

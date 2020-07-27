@@ -21,7 +21,7 @@
   
   
 
-<meta name="author" content="Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia M. Marchman" />
+<meta name="author" content="Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia A. Marchman" />
 
 
 
@@ -50,7 +50,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 
@@ -378,9 +377,9 @@
 <p>The set of signatures we include in this analysis are necessarily a subjectively-determined subset of the possible measures we have examined in the book. And, of course, those in turn are a subset of the measures we could have computed. Wherever possible we have attempted to make reasonable decisions, but some of these are, by necessity, somewhat arbitrary. An example of such a decision comes from the summary of Chapter <a href="vocabulary.html#vocabulary">5</a>. In that chapter we noted that population variability appears quite consistent across languages. We summarized population variability in production via a statistic, MMAD – but what is the appropriate range of ages to include in a single estimate? We also observed that there appears to be a ceiling effect in the later ages. Thus, we decided to include variability in production from 12 – 24 months. But this decision is data-dependent and so, of course, there is a risk of circularity. We point the issue out not to undermine this particular analysis; we believe the ceiling effect is quite clear and other aspects of the age choice do not lead to much change in the CV estimate. Rather, we intend to highlight that the summary we give is not a theory-neutral estimate but rather a “best guess” – an attempt to navigate the myriad choices involved in our analysis in a reasonable way.</p>
 <p>One example of such a choice is that we have made the decision throughout to omit estimates of early production from WG-type forms. Our judgment was motivated by the fact that such estimates are routinely quite noisy and difficult to interpret, likely due to the small size of early productive vocabularies. In chapter after chapter, we found unreliable or uninterpretable results that are plausibly due to data sparsity; thus, we choose to omit these patterns from our broader synthesis effort.</p>
 <div class="figure" style="text-align: left"><span id="fig:cons-sim-plot"></span>
-<img src="wordbank-book_files/figure-html/cons-sim-plot-1.png" alt="A theoretical analysis of the properties of the coefficient of variation (CV) method. CV is plotted by its two components: mean and standard deviation. Mean values are shown on the horizontal axis, with colors indicating different standard deviations." width="\linewidth" />
+<img src="wordbank-book_files/figure-html/cons-sim-plot-1.png" alt="A theoretical analysis of the properties of the coefficient of variation (CV) method. CV is plotted by its two components: mean and standard deviation (sd). Mean values are shown on the horizontal axis, with colors indicating different standard deviations." width="\linewidth" />
 <p class="caption">
-Figure 16.1: A theoretical analysis of the properties of the coefficient of variation (CV) method. CV is plotted by its two components: mean and standard deviation. Mean values are shown on the horizontal axis, with colors indicating different standard deviations.
+Figure 16.1: A theoretical analysis of the properties of the coefficient of variation (CV) method. CV is plotted by its two components: mean and standard deviation (sd). Mean values are shown on the horizontal axis, with colors indicating different standard deviations.
 </p>
 </div>
 <p>One key interpretive caution comes from the nature of the CV measure, however. The goal of the CV measure is to provide a unit-less way to compare variability across many measures. But because it is a ratio, when <span class="math inline">\(\mu\)</span> is small, CVs can be arbitrarily large. Figure <a href="conclusion-consistency.html#fig:cons-sim-plot">16.1</a> shows this relation. Concretely, this property will cause difficulties for us when we have phenomena within a particular grouping that have both small means and small standard deviations relative to other phenomena. For example, in Chapter <a href="categories-semantic.html#categories-semantic">12</a>, the bias for household words is negligible – as is the variation across languages. But, because the mean bias is very close to zero, the coefficient of variation appears gigantic. To assist interpretability, we have simply omitted negligable effects like this from the analysis below, recognizing that this move limits the generality of the approach.</p>
@@ -395,7 +394,7 @@ Figure 16.2: Coefficient of variation across languages for signatures of languag
 </div>
 <p>Figure <a href="conclusion-consistency.html#fig:cons-cvs-plot-1">16.2</a> shows the coefficient of variation across languages for selected measures. For the sake of our analysis, we have divided measures from the preceding chapters into four categories. These are:</p>
 <p><em>Measures of the composition of vocabulary</em>, from Chapters <a href="categories-syntactic.html#categories-syntactic">11</a> and <a href="categories-semantic.html#categories-semantic">12</a>. These measures describe the over- and under-representation of various word categories in vocabulary. The units over which the CV is computed are bias scores; these are bounded from -.5 to .5 (deviation from unbiased acquisition of a particular category).</p>
-<p><em>Predictors of word difficulty</em>, from Chapter <a href="items-prediction.html#items-prediction">10</a>. The consistency of different regression predictors of age of acquisition are represented here by their cross-linguistic consistency. This analysis is distinct from the analysis presented in that chapter (which focused mostly on the <em>magnitude</em> rather than <em>variability</em> of the coefficients themselves). Despite that, we include it here for comparison with other signatures. The units over which CV is computed are standardized regression coefficients.<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a></p>
+<p><em>Predictors of word difficulty</em>, from Chapter <a href="items-prediction.html#items-prediction">10</a>. The consistency of different regression predictors of age of acquisition are represented here by their cross-linguistic consistency. This analysis is distinct from the analysis presented in that chapter (which focused mostly on the <em>magnitude</em> rather than <em>variability</em> of the coefficients themselves). Despite that, we include it here for comparison with other signatures. The units over which CV is computed are standardized regression coefficients.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p><em>Relational measures</em>, from Chapters <a href="gesture.html#gesture">7</a> and <a href="grammar.html#grammar">13</a>. These measures are originally correlations between vocabulary size and other aspects of early language.</p>
 <p><em>Vocabulary signatures</em>, from Chapters <a href="vocabulary.html#vocabulary">5</a> and <a href="demographics.html#demographics">6</a>. These measures document patterns in the overall size of vocabulary across individuals and demographic groups. The original units are themselves variability-based (MMAD scores).</p>
 <p>A number of local patterns are immediately apparent. First, comprehension is almost always more variable than production, even when a comparable number of languages are included. Why would comprehension be more variable across languages than production, especially given evidence that comprehension vocabulary tends to be <em>less</em> idiosyncratic than production <span class="citation">(Mayor and Plunkett <a href="references.html#ref-mayor2014" role="doc-biblioref">2014</a>)</span>? One strong possibility is the psychometric properties of comprehension vs. production reports. As described in Chapter <a href="psychometrics.html#psychometrics">4</a>, while comprehension scores are likely still a reliable and valid index of children’s abilities in the aggregate, individual comprehension questions tend to carry less information. Thus, there may simply be more noise in these measurements, leading to less cross-linguistic stability. This regularity illustrates a point we made in Chapter <a href="intro-theory.html#intro-theory">1</a>: the inferences from consistency and variability are asymmetric. In the case of consistency, we can make relatively strong inferences about some kind of shared process or mechanism. In contrast, in the case of variability, there are many sources of variance (including measurement error) that can account for a specific pattern of performance.</p>
@@ -413,8 +412,8 @@ Figure 16.2: Coefficient of variation across languages for signatures of languag
 </div>
 <div class="footnotes">
 <hr />
-<ol start="32">
-<li id="fn32"><p>We have excluded Valence and Arousal coefficients here as their CVs are quite high due to the very small mean effects for each.<a href="conclusion-consistency.html#fnref32" class="footnote-back">↩︎</a></p></li>
+<ol start="1">
+<li id="fn1"><p>We have excluded Valence and Arousal coefficients here as their CVs are quite high due to the very small mean effects for each.<a href="conclusion-consistency.html#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

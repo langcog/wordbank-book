@@ -242,11 +242,11 @@ demo_int_plot("birth_order", "WG", "comprehension")
 ```
 
 ```{r demo-mmad-age-plot-birth-order-wg-comp, fig.height=6, fig.cap=demo_mmad_age_cap('WG', 'comprehension', 'first-born'), dependson="demo-plot-funs"}
-demo_mmad_age_plot("birth_order", "WG", "comprehension", "first-born")
+demo_mmad_age_plot("birth_order", "WG", "comprehension", "firstborn")
 ```
 
 ```{r demo-mmad-plot-birth-order-wg-comp, fig.cap=demo_mmad_cap('WG', 'comprehension', 'first-born'), dependson="demo-plot-funs", fig.height=2}
-demo_mmad_plot("birth_order", "WG", "comprehension", "first-born")
+demo_mmad_plot("birth_order", "WG", "comprehension", "firstborn")
 ```
 
 ### Production (WS)
@@ -262,11 +262,11 @@ demo_int_plot("birth_order", "WS", "production")
 ```
 
 ```{r demo-mmad-age-plot-birth-order-ws-prod, fig.height=6, fig.cap=demo_mmad_age_cap('WS', 'production', 'first-born'), dependson="demo-plot-funs"}
-demo_mmad_age_plot("birth_order", "WS", "production", "first-born")
+demo_mmad_age_plot("birth_order", "WS", "production", "firstborn")
 ```
 
 ```{r demo-mmad-plot-birth-order-ws-prod, fig.cap=demo_mmad_cap('WS', 'production', 'first-born'), dependson="demo-plot-funs", fig.height=3}
-demo_mmad_plot("birth_order", "WS", "production", "first-born")
+demo_mmad_plot("birth_order", "WS", "production", "firstborn")
 ```
 
 ### Discussion

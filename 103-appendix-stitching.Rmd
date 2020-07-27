@@ -25,7 +25,7 @@ ggplot(eng_prod_data,
        aes(x = age, y = mean, col = form)) +
   facet_wrap(~language) +
   geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_smooth() +
+  geom_smooth(se = FALSE) +
   # geom_line(data = ws_prod_preds,
   #           aes(y = pred, col = percentile, group = percentile)) +
   .scale_colour_discrete(name="Instrument") +
@@ -33,7 +33,7 @@ ggplot(eng_prod_data,
                      breaks = seq(8, 30, 4),
                      limits = c(8, 30)) +
   scale_y_continuous(breaks = c(0, .5, 1), lim = c(0, 1),
-                     name = "Proportion Production") +
+                     name = "Proportion production") +
   theme(legend.position = "top")
 ```
 A second method is to use absolute numbers, rather than relative proportions. This method is shown in Figure \@ref(fig:appstitch-eng-prod-absolute). While this method appears better, a gap is also visible between the smoothed means from the two instruments. Here, the vocabulary estimated from the WS instrument is *larger*, presumably because the form affords more total items for parents to check, even if they are on average more difficult. 
@@ -43,14 +43,14 @@ ggplot(eng_prod_data,
        aes(x = age, y = production, col = form)) +
   facet_wrap(~language) +
   geom_jitter(width = .4, size = 1, alpha = .1) +
-  geom_smooth() +
+  geom_smooth(se = FALSE) +
   # geom_line(data = ws_prod_preds,
   #           aes(y = pred, col = percentile, group = percentile)) +
   .scale_colour_discrete(name="Instrument") +
   scale_x_continuous(name = "Age (months)",
                      breaks = seq(8, 30, 4),
                      limits = c(8, 30)) +
-  scale_y_continuous(name = "Total Production") +
+  scale_y_continuous(name = "Total production") +
   theme(legend.position = "top")
 ```
 

@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 # Vocabulary Size {#vocabulary}
 
 This chapter begins our substantive analysis of properties of language learning and their variation across languages and children. We begin with one canonical view of CDI data, in which each child is represented by a single vocabulary score: the proportion of words that child knows, out of the total in the form. We first quantify the median pattern of vocabulary growth observed in our data; we then turn to characterizing variability across individuals in these data. In these analyses as well as subsequent chapters, our inspiration comes from what we think of as the "Batesian" approach to variation.
@@ -180,12 +183,24 @@ highlight_data <- filter(medians, form %in% WSs,
                          !(language == "Hebrew"))  %>%
   mutate(highlight = ifelse(language %in% highlight_langs, 1, .2))
 
+highlight_labels <- highlight_data %>%
+  filter(language %in% highlight_langs) %>%
+  group_by(language) %>%
+  filter(age == max(age)) %>%
+  ungroup()
+
+lang_label_size <- 5
+
 ggplot(highlight_data, 
        aes(x = age, y = production_prop, col = language)) + 
   geom_point(aes(size = n, alpha = highlight)) +
   geom_smooth(se=FALSE, span = 1, 
               data = filter(highlight_data, language %in% highlight_langs)) +
   scale_alpha_continuous(guide=FALSE) + 
+  geom_text(aes(label = language), hjust = 1, nudge_y = -0.15, family = .font, size = lang_label_size,
+            show.legend = FALSE, data = highlight_labels %>% slice(1)) +
+  geom_text(aes(label = language), hjust = 1, nudge_y = 0.1, family = .font, size = lang_label_size,
+            show.legend = FALSE, data = highlight_labels %>% slice(2)) +
   xlab("Age (months)") + 
   ylab("Production proportion") + 
   guides(colour = guide_legend(ncol = 4)) +
@@ -208,10 +223,18 @@ select_medians <- vocab_data %>%
             comprehension_prop = median(comprehension/n), 
             n = n()) 
 
+select_median_labels <- select_medians %>%
+  filter(age == 30) %>%
+  ungroup()
+
 ggplot(select_medians, 
        aes(x = age, y = production_prop, col = language)) + 
   geom_point(aes(size = n)) + 
   geom_smooth(se=FALSE, span = 1) +
+  geom_text(aes(label = language), hjust = 1, nudge_y = -0.05, family = .font, size = lang_label_size,
+            show.legend = FALSE, data = select_median_labels %>% slice(1)) +
+  geom_text(aes(label = language), hjust = 1, nudge_y = 0.1, family = .font, size = lang_label_size,
+            show.legend = FALSE, data = select_median_labels %>% slice(2)) +
   theme(legend.position = "bottom") + 
   scale_colour_manual(values = lang_colours, name = "") +
   scale_size_continuous(name = "N") +

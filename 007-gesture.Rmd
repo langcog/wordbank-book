@@ -133,7 +133,7 @@ eng_first_gestures_binary <- eng_first_gestures %>%
 
 first_gestures_binary_ordered <- eng_first_gestures_binary %>%
   ungroup() %>%
-  mutate(definition = parse_factor(Unilemma, acq_order$Unilemma))
+  mutate(definition = parse_factor(Unilemma, acq_order$Unilemma)) 
 ```
 
 ```{r gesture-first-gesture-binary-figure, fig.width = 6, fig.height = 4, fig.cap='Trajectory over age of each First Gestures item for American English.'}
@@ -182,7 +182,13 @@ other_gestures_ordered <- other %>%
   ungroup() %>%
   mutate(type = parse_factor(type, other_type_order$type),
          type = type %>% str_replace("_", " ") %>% str_to_title()) %>%
-  mutate(definition = parse_factor(definition, other_indiv_order$definition))
+  mutate(definition = parse_factor(definition, 
+                                   other_indiv_order$definition)) %>%
+  mutate(type = factor(type, 
+                       labels = c("Imitating Other Adult Actions", 
+                                  "Games and Routines",
+                                  "Actions with Objects",
+                                  "Pretending to be a Parent")))
 ```
 
 While some are clearly learned later than the early gestures, a number of these appear to be learned quite early as well -- for example, peekaboo and pretend play with cups and spoons. They all also appear to have generally smooth and increasing trajectories with the exception of _so big_ (from Gestures Games) which, like _smack lips_ from the First Gestures section appears to be either less stereotyped, more difficult to identify, or more variable across children.
@@ -214,7 +220,13 @@ eng_gesture_aoas <- gesture_data %>%
                            if_else(value %in% c("often", "sometimes", "yes"),
                                    "produces", ""))) %>%
   fit_aoa(method = "glmrob") %>%
-  mutate(type = gsub("gestures_", "", type))
+  ungroup() %>%
+  mutate(type = gsub("gestures_", "", type),
+         type = factor(type, labels = c("Imitating Other Adult Actions",
+                                        "First Gestures",
+                                        "Games and Routines",
+                                        "Actions with Objects",
+                                        "Pretending to be a Parent")))
 
 order <- eng_gesture_aoas %>%
   group_by(type) %>%
@@ -222,13 +234,13 @@ order <- eng_gesture_aoas %>%
   arrange(aoa)
 
 eng_gesture_aoas %>%
-  mutate(type = parse_factor(type, order$type),
-         type = str_to_title(type)) %>%
+  mutate(type = fct_relevel(type, as.character(order$type))) %>%
   ggplot(aes(x = type, y = aoa, fill = type)) +
-    geom_dotplot(binaxis='y', stackdir='center') +
-    .scale_fill_discrete(guide = FALSE) +
-    scale_y_continuous(breaks = seq(8, 18, by = 2)) +
-    labs(x = "Gesture type", y = "Age of acquisition")
+  geom_dotplot(binaxis='y', stackdir='center') +
+  .scale_fill_discrete(guide = FALSE) +
+  scale_y_continuous(breaks = seq(8, 18, by = 2)) +
+  labs(x = "Gesture type", y = "Age of acquisition") + 
+  coord_flip()
 ```
 
 ### Consistency of the first gestures

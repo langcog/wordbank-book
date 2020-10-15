@@ -197,9 +197,10 @@ save(file = "data/grammar/grammar_combines_model.Rds", mod, age_offset)
 ```{r gram-combines-coefs, fig.height=3, fig.cap="Coeffient estimates from Combines model, with fixed effects in the top row and random effects in the bottom row."}
 load("data/grammar/grammar_combines_model.Rds")
 
-mod_effects <- broom::tidy(mod, effects = "fixed") %>%
-  select(term, estimate, std.error, statistic) %>%
+mod_effects <- coef(summary(mod)) %>% as_tibble(rownames = "term") %>%
+  select(term, estimate = Estimate, std.error = `Std. Error`, statistic = `z value`) %>%
   mutate(group = "Fixed", language = "Fixed")
+
 lang_effects <- lme4::ranef(mod, condVar = TRUE) %>% as_tibble() %>%
   select(-grpvar) %>%
   rename(estimate = condval, std.error = condsd, language = grp) %>%
@@ -236,8 +237,8 @@ vocabs <- seq(10, 680, 10)
 ex_data_vocab <- tibble(production_prop = vocabs / 680,
                         age = ex_age - age_offset,
                         language = "English (American)")
-ex_fits_vocab <- broom::augment(mod, newdata = ex_data_vocab) %>%
-  as_tibble() %>%
+ex_fits_vocab <- ex_data_vocab %>%
+  mutate(.fitted = predict(mod, newdata = ex_data_vocab)) %>%
   mutate(.fitted = arm::invlogit(.fitted),
          vocab = round(production_prop * 680),
          age = age + age_offset)
@@ -247,8 +248,8 @@ ages <- seq(16, 30)
 ex_data_age <- tibble(production_prop = ex_vocab / 680,
                       age = ages - age_offset,
                       language = "English (American)")
-ex_fits_age <- broom::augment(mod, newdata = ex_data_age) %>%
-  as_tibble() %>%
+ex_fits_age <- ex_data_age %>%
+  mutate(.fitted = predict(mod, newdata = ex_data_age)) %>%
   mutate(.fitted = arm::invlogit(.fitted),
          vocab = round(production_prop * 680),
          age = age + age_offset)

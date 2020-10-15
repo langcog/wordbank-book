@@ -139,6 +139,7 @@ plt_lexcat_baseline_coef_summary <- lexcat_baseline_coef_summary %>%
 
 lexcat_mean_cor <- function(lc) {
   lexcat_cor <- lexcat_coef_summary %>%
+    ungroup() %>%
     group_by(lexical_category) %>%
     summarise(mean_cor = mean(mean_cor)) %>%
     filter(lexical_category == lc) %>%

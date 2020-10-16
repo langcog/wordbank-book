@@ -1,6 +1,6 @@
 # Individual Variation in Vocabulary {#style}
 
-> Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development. If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). *Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures.* [@bates1994, p. 86]
+> Of all the individual differences described to date in the literature on early child language, variations in rate present the least interesting challenge to traditional 'universalist' models of development. If it can be shown that all children go through the same basic sequence, activating a common set of structures and processes, then small variations in the onset time for specific language milestones might represent little more than a minor perturbation to a maturational theory (like variations in the onset of puberty). Putative variations in style of development are more problematic, because they raise questions about the order in which structures are acquired, and the mechanisms used to acquire those structures. [@bates1994, p. 86]
 
 Preceding chapters have dealt with the degree of variability in vocabulary size between individuals in Chapter \@ref(vocabulary) and the stability of individuals' percentile rank in Chapter \@ref(psychometrics). Then Chapters \@ref(demographics) and \@ref(items-demographics) explored demographic factors as (partial) explanations of this variability. Throughout, our treatment of variability has focused on issues of learning rate in the sense discussed by Bates et al. in the quote above. With the exception of Chapter \@ref(items-demographics), which examined the rate of learning individual words, we have not dealt yet with issues of *style*. This chapter rectifies that omission, investigating three major topics: (1) whether there is stable individual variation in the category composition of vocabulary, (2) whether there are "spurts" in vocabulary growth, and (3) whether there is stable variation in the relationship between production and comprehension. To summarize, our answers are "yes," "no," and "difficult to determine," respectively.
 
@@ -300,7 +300,8 @@ filter(resid_vc_pred, form %in% WSs,
   xlab("Age (months)") + 
   ylab("Residualized noun proportion") + 
   .scale_colour_discrete(name = "Birth Order") + 
-  theme(legend.position = "top") + 
+  theme(legend.position = "top",
+        strip.text = element_text(size = rel(0.75))) + 
   ylim(c(-.5, .5))
 ```
 Further, when we examine the trend in the residualized noun proportion, it appears even weaker and is observed in even fewer languages. This pattern is shown in Figure \@ref(fig:style-sibs-vocab-comp-resid). Thus, we conclude that differences in vocabulary composition across birth order are likely to be small and may be, at least in part, due to faster learning by earlier-born siblings. 
@@ -512,14 +513,14 @@ We fit these functions (as well as a simple linear function) to our data. Fitted
 
 But, there is a puzzle. We can only confirm that the rate has leveled off if we have data at higher levels of production. Yet, for vocabulary sizes over 300 words, *every* child will level off in their rate because of the potential for ceiling effects, i.e., they have "run out of words" on the form. This example illustrates some of the difficulties in making strong inferences from data of this type.
 
-```{r style-model-sample-plot, fig.cap="Vocabulary growth rate as a function of vocabulary size for children with more than 7 datapoints, with curves showing various model fits.", fig.width=8, fig.height=7}
+```{r style-model-sample-plot, fig.cap="Vocabulary growth rate as a function of vocabulary size for children with more than 7 datapoints, with curves showing various model fits.", fig.width=8, fig.height=9}
 rates_admins <- rates %>% filter(n_admins > ADMIN_CUTOFF)
 models_admins <- model_preds %>%
   filter(original_id %in% rates_admins$original_id) %>%
   gather(model, rate, linear, quadratic, logistic)
 
 ggplot(rates_admins, aes(x = production, y = rate)) +
-  facet_wrap(~original_id) +
+  facet_wrap(~original_id, ncol = 5) +
   geom_line(aes(colour = model), size = 1, data = models_admins) +
   geom_point() +
   .scale_colour_discrete(name = "Model") +

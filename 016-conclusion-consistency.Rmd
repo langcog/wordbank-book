@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 # Variability and Consistency Within and Across Languages {#conclusion-consistency}
 
 In each of the analytic chapters of this book (roughly speaking from Chapter \@ref(vocabulary) to \@ref(style)), we have presented analyses of specific phenomena of theoretical interest. Wherever possible, we have generalized these analyses across languages so that their relative consistency can be examined and discussed. This chapter brings together a selection of the analyses from these different chapters into a single analytic framework, implementing the general idea discussed in Chapter \@ref(intro-theory).
@@ -71,16 +74,18 @@ The set of signatures we include in this analysis are necessarily a subjectively
 
 One example of such a choice is that we have made the decision throughout to omit estimates of early production from WG-type forms. Our judgment was motivated by the fact that such estimates are routinely quite noisy and difficult to interpret, likely due to the small size of early productive vocabularies. In chapter after chapter, we found unreliable or uninterpretable results that are plausibly due to data sparsity; thus, we choose to omit these patterns from our broader synthesis effort. 
 
-```{r cons-sim-plot, fig.cap="A theoretical analysis of the properties of the coefficient of variation (CV) method. CV is plotted by its two components: mean and standard deviation. Mean values are shown on the horizontal axis, with colors indicating different standard deviations."}
+```{r cons-sim-plot, fig.cap="A theoretical analysis of the properties of the coefficient of variation (CV) method. CV is plotted by its two components: mean and standard deviation (sd). Mean values are shown on the horizontal axis, with colors indicating different standard deviations."}
 cv_sim <- expand_grid(m = seq(-5,5,.1), 
-                      sd = seq(0,10,1)) %>%
-  mutate(cv = sd / abs(m)) 
+                      sd = seq(0,9,1)) %>%
+  mutate(cv = sd / abs(m))
 
 ggplot(cv_sim, aes(x = m, y = cv, col = sd, group = sd)) + 
   geom_line() + 
-  viridis::scale_color_viridis(guide = FALSE) + 
+  viridis::scale_colour_viridis(breaks = seq(0, 9, 3)) +
+  guides(colour = guide_colourbar(barwidth = 0.5, ticks = FALSE)) +
   xlab("Mean") + 
-  ylab("CV")
+  ylab("CV") +
+  theme(legend.position = c(0.95, 0.8))
 ```
 
 One key interpretive caution comes from the nature of the CV measure, however. The goal of the CV measure is to provide a unit-less way to compare variability across many measures. But because it is a ratio, when $\mu$ is small, CVs can be arbitrarily large. Figure \@ref(fig:cons-sim-plot) shows this relation. Concretely, this property will cause difficulties for us when we have phenomena within a particular grouping that have both small means and small standard deviations relative to other phenomena. For example, in Chapter \@ref(categories-semantic), the bias for household words is negligible -- as is the variation across languages. But, because the mean bias is very close to zero, the coefficient of variation appears gigantic. To assist interpretability, we have simply omitted negligable effects like this from the analysis below, recognizing that this move limits the generality of the approach.  

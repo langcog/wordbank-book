@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning</title>
   <meta name="description" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="D Estimating Age of Acquisition | Variability and Consistency in Early Language Learning" />
   <meta property="og:type" content="book" />
@@ -21,7 +21,7 @@
   
   
 
-<meta name="author" content="Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia M. Marchman" />
+<meta name="author" content="Michael C. Frank, Mika Braginsky, Daniel Yurovsky, and Virginia A. Marchman" />
 
 
 
@@ -32,7 +32,7 @@
   
 <link rel="prev" href="appendix-stitching.html"/>
 <link rel="next" href="references.html"/>
-<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/header-attrs-2.4/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,7 +50,9 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 
@@ -377,7 +379,7 @@
 </ol>
 <p>For the Bayesian GLM, we took an ad-hoc approach, experimenting substantially with prior setting in order to incorporate information about the slopes and intercepts we expected for words. We adopted default, long-tailed (Cauchy) priors over coefficients. We then used the empirical distribution of GLM slopes to set a strict prior over the age slopes we expected (guided in part by our investigations in Chapter <a href="psychometrics.html#psychometrics">4</a>, which indicated that most items should show positive developmental change). We then set a much weaker prior over intercepts. While these choices are somewhat arbitrary, in practice, in larger datasets only the most extreme words (e.g. <em>mommy</em>, for which there is a ceiling effect for nearly every age) were affected by this choice.</p>
 <p>In addition to these models, we investigated a hierarchical Bayesian model with shared distributional components across words. This model obviated the ad-hoc prior determination that we performed for the individual Bayesian GLMs, but it appeared to perform very similarly (at least in the presence of sufficient data) and was quite expensive to fit in terms of computation, so we do not discuss it here.</p>
-<p>Figure <a href="appendix-aoa.html#fig:appaoa-compare-dist">D.1</a> shows a comparison of these methods, in the form of histograms of recovered 50% values for American English AoA data. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (<em>N</em> = 5520). In contrast, all three models smooth the AoA distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently.</p>
+<p>Figure <a href="appendix-aoa.html#fig:appaoa-compare-dist">D.1</a> shows a comparison of these methods, in the form of histograms of recovered 50% values for American English AoA data. The empirical AoAs are clearly clumpy in precisely the way we describe above, even with a substantial amount of data in the analysis (<em>N</em> = 5846). In contrast, all three models smooth the AoA distribution substantially, which is likely beneficial to downstream analyses. Although there are some subtle differences in the shape of the main distribution between models, the main action is found on the tails. The different models treat floor and ceiling items differently.</p>
 <p>Both the GLM and robust GLM recover two AoAs that are below zero, which is logically impossible (<em>mommy</em> and <em>daddy</em> are both presumed learned before birth). In contrast, the priors of the Bayesian GLM regularize these AoAs to be 8 and 9 months respectively. Further, the Bayesian GLM estimates 10% of AoAs above 30 months (the max value in the data), while the other two methods estimate slightly fewer: 8% and 7% respectively. These Bayesian GLM results strike us as more reasonable than those returned by the other methods (although they only affect a small minority of words).</p>
 <div class="figure" style="text-align: left"><span id="fig:appaoa-compare-dist"></span>
 <img src="wordbank-book_files/figure-html/appaoa-compare-dist-1.png" alt="Histogram of English (American) age of acquisition values as estimated via a variety of statistical methods (panels)." width="\linewidth" />

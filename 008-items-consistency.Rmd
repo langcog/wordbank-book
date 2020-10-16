@@ -33,7 +33,6 @@ item_data <- map_dfr(1:nrow(items_nested),
                                       administrations = T))
 ```
 
-To estimate the similarity of each item's trajectory, we use a single measure of its difficulty: age of acquisition (AoA) -- the age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, using Words & Gestures forms to estimate age of acquisition in comprehension, and stitching across Words & Gestures and Words & Sentences forms to estimate age of acquisition in production. Because of this strategy of combining forms, we were restricted to the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages for which data for both forms were available.
 
 ```{r items-get_aoas, eval = FALSE}
 understand_items <- item_data %>%
@@ -99,6 +98,8 @@ write_feather(all_aoas,"data/items-consistency/aoas.feather")
 all_aoas <- read_feather("data/items-consistency/aoas.feather")
 ```
 
+To estimate the similarity of each item's trajectory, we use a single measure of its difficulty: age of acquisition (AoA) -- the age at which 50% of children in each language are estimated to have acquired it (Appendix \@ref(appendix-aoa)). We analyzed consistency in both comprehension and production, using Words & Gestures forms to estimate age of acquisition in comprehension, and stitching across Words & Gestures and Words & Sentences forms to estimate age of acquisition in production. Because of this strategy of combining forms, we were restricted to the `r n_distinct(all_aoas$language)` languages for which data for both forms were available.
+
 ```{r items-uni-lemma-completeness}
 IN_LANGS <- 8
 
@@ -122,7 +123,7 @@ cutoff_n <- cutoffs %>%
 cutoffs_prod <- cutoffs %>% filter(measure == "produces")
 ```
 
-In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r items %>% unnest() %>% distinct(language) %>% nrow()` languages. Unfortunately, not every word appeared on all forms. Figure \@ref(fig:items-uni-lemma-completeness-figure) shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the `r n_distinct(all_aoas$language)` languages. 
+In total, we estimated ages of acquisition for `r all_aoas %>% distinct(uni_lemma) %>% nrow()` total words spread across the `r n_distinct(all_aoas$language)` languages. Unfortunately, not every word appeared on all forms. Figure \@ref(fig:items-uni-lemma-completeness-figure) shows the cumulative proportion of forms on which every word appears. For our consistency analysis, we considered only the `r cutoff_n` words that appeared in at least `r IN_LANGS` of the `r n_distinct(all_aoas$language)` languages. 
 
 ```{r items-uni-lemma-completeness-figure, fig.width = 6, fig.height = 4, fig.cap = glue("The proportion of words found on at least each of a number of languages' CDI forms (e.g. all words appear on at least one form, {filter(cutoffs_prod, in_langs == 2)$n} words appear on at least 2 forms, and so on, with {filter(cutoffs_prod, in_langs == max(in_langs))$n} words appearing on all {max(cutoffs_prod$in_langs)} languages' forms). The dotted line shows the cutoff value we chose ({IN_LANGS}).")}
 ggplot(cutoffs_prod, aes(x = in_langs, y = cum_prop)) +
@@ -190,20 +191,20 @@ top10_measure <- function(meas, min_highlight) {
     select(-order)
 }
 
-top10_table <- function(meas, min_highlight) {
+top10_table <- function(meas, action, min_highlight) {
   df <- top10_measure(meas, min_highlight)
   kable(df, escape = FALSE, col.names = rep("", ncol(df)),
-        caption = glue("The 10 earliest words that children produce in each language. Bolded words appear in at least {min_highlight} languages.")) %>%
+        caption = glue("The 10 earliest words that children {action} in each language. Bolded words appear in at least {min_highlight} languages.")) %>%
   kable_styling(latex_options = "scale_down", font_size = 10) %>%
   add_header_above(str_replace(colnames(df), " ", "\n"), align = "l", line = FALSE) %>%
   landscape()
 }
-top10_table("produces", MIN_HIGHLIGHT_PRODUCTION)
+top10_table("produces", "produce", MIN_HIGHLIGHT_PRODUCTION)
 ```
 
 ```{r items-top10-comprehension, dependson="items-top10-production"}
 MIN_HIGHLIGHT_COMPREHENSION <- 6
-top10_table("understands", MIN_HIGHLIGHT_COMPREHENSION)
+top10_table("understands", "understand", MIN_HIGHLIGHT_COMPREHENSION)
 ```
 
 Strongly ratifying the conclusions of @tardif2009, similar words appeared in the top 10 across languages. Similarities were especially prominent in children's earliest productions. These words consist primarily of important family members (_mommy_, _daddy_, _grandma_), social routines (_hi_, _bye_, _peekaboo_), and sounds (_yum yum_, _vroom_, _woof woof_). 

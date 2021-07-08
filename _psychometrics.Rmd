@@ -178,7 +178,7 @@ d_ws_summary %>%
 <!-- CHUNKS BELOW BELONG TO PSYCHOMETRIC STABILITY ANALYSIS AND WERE NOT INCLUDED -->
 
 ```{r psycho-mirt, eval=FALSE}
-mirt_params <- function(dx) {
+get_mirt_params <- function(dx) {
   language <- dx$language
   form <- dx$form
   print(paste(language, form, sep = .inst_sep))
@@ -205,7 +205,7 @@ mirt_params <- function(dx) {
   rownames(d_lang_mat) <- d_lang_wide$data_id
 
   d_lang_mat <- d_lang_mat[complete.cases(d_lang_mat),]
-  mod_4pl <- mirt(d_lang_mat, 1, itemtype='4PL', verbose=TRUE)
+  mod_4pl <- mirt(d_lang_mat, 1, itemtype='2PL', verbose=TRUE)
 
   fscores <- data_frame(data_id = rownames(d_lang_mat),
                         ability = fscores(mod_4pl, method = "MAP")[,1])
@@ -224,7 +224,7 @@ mirt_params <- instruments %>%
   filter(form %in% WSs, language %in% c("Norwegian", "English (American)")) %>%
   mutate(idx = 1:n()) %>%
   split(.$idx) %>%
-  map_df(possibly(mirt_params, otherwise = data_frame()))
+  map_df(possibly(get_mirt_params, otherwise = data_frame()))
 
 write_feather(mirt_params, "data/psychometrics/long_mirt_params.feather")
 ```

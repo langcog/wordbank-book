@@ -6,7 +6,7 @@ subtitle: The Wordbank Project
 documentclass: book
 class_options: 7x9
 ISBN: 978-0262045100
-copyright_year: 2020
+copyright_year: 2021
 copyright_fonts: Source Serif Pro and Source Sans Pro
 
 biblio-style: apalike
@@ -98,7 +98,7 @@ Thanks to NSF Award #1528526, "Wordbank: An Open Repository for Developmental Vo
 This book benefited from thoughtful comments by Philip Dale and Eve Clark, as well as comments on Chapter \@ref(categories-syntactic) by Dedre Gentner.
 
 <script>
-document.body.innerHTML = document.body.innerHTML.replace(/0.1/g, "P.1")
+document.body.innerHTML = document.body.innerHTML.replace(/(?<![0-9])0.1/g, "P.1")
 </script>
 
 \renewcommand{\thefigure}{\thechapter.\arabic{figure}}

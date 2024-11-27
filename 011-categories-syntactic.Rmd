@@ -194,6 +194,7 @@ demo_data <- vocab_comp_data %>% filter(language == demo_lang, form == demo_form
 
 pts <- seq(0, 1, 0.01)
 
+# note: clm is from https://github.com/langcog/langcog-package/blob/master/R/clm.R
 demo_predictions <- demo_data %>%
   group_by(lexical_category) %>%
   nest() %>%
@@ -231,6 +232,7 @@ ggplot(demo_predictions, aes(x = vocab, y = prop, colour = lexical_category)) +
 Figure \@ref(fig:catsyn-plot-area-demo) shows this analysis for the American English WS data. Each point shows an individual child's vocabulary, and each panel shows a different lexical class (thus each child is represented once in each panel). The curves show the relationship between a class and the whole vocabulary. We capture the overall trend in this plot by estimating a generalized linear model over the data, predicting category proportion as a function of total production (shown by the thick lines). This model is fit with third-order polynomials (to allow both concave and convex functions, and changes in convexity). We fit these models with the constraint that they must predict the point (_x_ = 1, _y_ = 1), so that they are guaranteed to arrive at the diagonal point in the special case that all words on a form are checked.^[We experimented with a number of model classes and found that these polynomial models seemed flexible enough to provide good fit to a wide variety of patterns of data. Because our concern is not making statistical inferences about the shape of these curves (but rather estimating the area under them) we are not specifically worried about overfitting.]
 
 ```{r catsyn-resample}
+# note: clm is from https://github.com/langcog/langcog-package/blob/master/R/clm.R
 poly_area <- function(group_data) {
   model <- tryCatch(
     clm(prop ~ I(vocab ^ 3) + I(vocab ^ 2) + vocab - 1, data = group_data),
